@@ -5,3 +5,4 @@
 temporary\*
 ^\.travis\.yml$
 
+^D:\Documents\Source\git\sprawl\docs$
