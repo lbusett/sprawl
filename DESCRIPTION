@@ -1,0 +1,45 @@
+Package: sprawl
+Title: Spatial Processing (in) R: Amorphous Wrapper Library
+Version: 0.1.0.9000
+Date: 2017-07-02
+Authors@R: c(person("Lorenzo", "Busetto", email = "busetto.l@irea.cnr.it", role = c("aut", "cre")), 
+             person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut")))
+Description: **`sprawl` aims to simplify the execution of some "common" spatial processing tasks** 
+  (e.g., reading and writing spatial datasets, extracting statistics from large datasets, etc.) **by 
+  providing a single and (hopefully) simpler access point to functionalities spread in the `R` 
+  packages ecosystem.** The aforementioned broad objectives are accomplished in `sprawl` by: 
+      1. Providing simple **wrappers to common-use functions** for reading/writing patial data ; 
+      2. Providing **optimized functions for performing some common-use processing tasks**, often 
+      exploiting functions provided by less-known packages; 
+      3. Providing custom functions for performing more complex processing tasks; 4. Simplifying 
+      access/further analysis of results, by carefully formatting processing outputs to easy to 
+      understand and use `R` objects.
+Depends:
+    R (>= 3.3.2)
+Imports: gdalUtils,
+         DBI,
+         rgeos,
+         sp,
+         raster,
+         data.table,
+         dplyr,
+         xts,
+         lubridate,
+         methods,
+         rgdal,
+         sf, 
+         magrittr, 
+         tidyr,
+         foreach,
+         doParallel,
+         tibble,
+         maps,
+         doSNOW,
+         velox
+Suggests: testthat,
+          knitr,
+          rmarkdown
+License: GPL-3
+LazyData: true
+RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)
