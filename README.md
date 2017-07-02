@@ -8,7 +8,10 @@
     -   [Citation](#citation)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Travis-CI Build Status](https://travis-ci.org/IREA-CNR-MI/sprawl.svg?branch=master)](https://travis-ci.org/IREA-CNR-MI/sprawl) [![codecov](https://codecov.io/gh/IREA-CNR-MI/sprawl/branch/devel/graph/badge.svg)](https://codecov.io/gh/IREA-CNR-MI/sprawl)
+[![Travis-CI Build Status](https://travis-ci.org/IREA-CNR-MI/sprawl.svg?branch=master)](https://travis-ci.org/IREA-CNR-MI/sprawl) 
+[![codecov](https://codecov.io/gh/IREA-CNR-MI/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/IREA-CNR-MI/sprawl)
+
+
 
 sprawl - Spatial Processing (in) R: Amorphous Wrapper Library
 =============================================================
