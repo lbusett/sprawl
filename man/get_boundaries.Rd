@@ -4,14 +4,16 @@
 \alias{get_boundaries}
 \title{get_boundaries}
 \usage{
-get_boundaries(iso, level = 1, path = tempdir())
+get_boundaries(iso, level = 1, path = NULL, makefold = TRUE)
 }
 \arguments{
 \item{iso}{\code{character} iso name or 2/3 digits code of the country}
 
-\item{level}{\code{numeric} level of admoinistrative units returned, default: 0 (Country Level)}
+\item{level}{\code{numeric} level of administrative units returned, default: 0 (Country Level)}
 
 \item{path}{\code{character}}
+
+\item{makefold}{\code{character}}
 }
 \value{
 SpatialPolygonsDataFrame containing the desired data

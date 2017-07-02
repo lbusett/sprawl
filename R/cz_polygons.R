@@ -29,7 +29,7 @@
 #'  \code{\link[utils]{setTxtProgressBar}},\code{\link[utils]{txtProgressBar}}
 #' @rdname cz_polygons
 #' @export
-#' @importFrom data.table data.table rbindlist setkey melt
+#' @importFrom data.table data.table rbindlist setkey melt setcolorder
 #' @importFrom doSNOW registerDoSNOW
 #' @importFrom dplyr select group_by summarize
 #' @importFrom foreach foreach %dopar%
@@ -364,7 +364,7 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
     }
     # browser()
     # build the final output and convert to tibble
-    stat_data <- setcolorder(stat_data, keep_cols)
+    stat_data <- data.table::setcolorder(stat_data, keep_cols)
     if (is.null(cz_opts$id_field)) names(stat_data)[1] = "id_feat"
 
     # If `cz_opts$long`, reshape the stats output to a cz_opts$long table format
@@ -385,8 +385,8 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
         keep_cols    <- keep_cols[which(keep_cols != cz_opts$id_field)]
         keep_cols[1] <- eval(cz_opts$id_field)
       }
-      stat_data <- setcolorder(stat_data, keep_cols) %>%
-        as_tibble()
+      stat_data <- data.table::setcolorder(stat_data, keep_cols) %>%
+        tibble::as_tibble()
     }
     # If cz_opts$addgeom, convert to a sf object
     if (cz_opts$addgeom) {
@@ -428,7 +428,7 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
 
     # build the final output and convert to tibble
     all_data  <- all_data[ , .SD, .SDcols = keep_cols] %>%
-      as_tibble()
+      tibble::as_tibble()
 
     # If cz_opts$addgeom, convert to a sf object
     if (cz_opts$addgeom) {

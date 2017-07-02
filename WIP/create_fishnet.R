@@ -1,4 +1,4 @@
-#' create_fishnet
+#' create_fishnet_old
 #' @description funtion to create a raster and/or polygon fishnet of specified resolution over a
 #' a specified spatial extent. If both in_ext and crop_ext are declared, the fishnet is created
 #' according to in_ext (that is, the origin depends from in_ext), and then cropped on crop_ext (this
@@ -37,7 +37,7 @@
 #'
 #' }
 
-create_fishnet <- function(in_ext, cellsize, in_proj, out_raster = TRUE, out_shape = FALSE,
+create_fishnet_old <- function(in_ext, cellsize, in_proj, out_raster = TRUE, out_shape = FALSE,
                            overw = FALSE, out_shapefile = NULL, crop_ext = NULL,
                            out_rastfile = NULL, pypath = NULL) {
 
