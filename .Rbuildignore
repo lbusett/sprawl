@@ -4,5 +4,4 @@
 ^README-.*\.png$
 temporary\*
 ^\.travis\.yml$
-
-^D:\Documents\Source\git\sprawl\docs$
+^D:/Documents/Source/git/sprawl/docs$

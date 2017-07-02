@@ -2,13 +2,15 @@
 #' @description FUNCTION_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
 #' @param selbands PARAM_DESCRIPTION, Default: NA
+#' @param verbose PARAM_DESCRIPTION, Default: FALSE
 #' @return OUTPUT_DESCRIPTION
 #' @export
 #' @importFrom lubridate is.timepoint
 #' @importFrom raster stack nlayers getZ
 #' @examples
 #' \dontrun{
-#' cz_getbands(in_rast, selbands = c(-1,050))
+#' cz_getbands(in_rast, selbands = c(1, 2))
+#' cz_getbands(in_rast, selbands = c("2013-01-01", "2015-12-31"))
 #' }
 cz_getbands <- function(in_rast,
                         selbands = NULL,

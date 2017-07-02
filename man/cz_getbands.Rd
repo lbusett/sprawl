@@ -10,6 +10,8 @@ cz_getbands(in_rast, selbands = NULL, verbose = FALSE)
 \item{in_rast}{PARAM_DESCRIPTION}
 
 \item{selbands}{PARAM_DESCRIPTION, Default: NA}
+
+\item{verbose}{PARAM_DESCRIPTION, Default: FALSE}
 }
 \value{
 OUTPUT_DESCRIPTION
