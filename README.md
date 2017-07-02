@@ -4,6 +4,7 @@
     -   [Package philosopy](#package-philosopy)
     -   [Installation](#installation)
     -   [Currently available functions and examples](#currently-available-functions-and-examples)
+    -   [Contributing](#contributing)
     -   [Citation](#citation)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -51,7 +52,10 @@ Note that, given its scope, `sprawl` imports functions from several other packag
 Currently available functions and examples
 ------------------------------------------
 
-The main functions available in `sprawl` will be generally documented \[here - coming soon\], along with common-usage examples. \#\# Contributing
+The main functions available in `sprawl` will be generally documented \[here - coming soon\], along with common-usage examples.
+
+Contributing
+------------
 
 We are open for contributions/help in improving `sprawl` and extend its functionalities. If you have a suggestion, you can report it in our \[issues\] page, or fork the repository and then make a pull request. (note that we plan to provide som "good-practices" instructions for contributing new functions in the future.)
 

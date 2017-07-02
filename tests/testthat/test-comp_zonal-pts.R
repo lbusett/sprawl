@@ -3,7 +3,7 @@ testthat::test_that("Test On points extraction", {
   # skip_on_cran()
   skip_on_travis()
   in_pts   <- readshape(system.file("extdata","randpoints.shp", package = "sprawl"))
-  in_rast  <- in_rts
+  in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))
   testthat::expect_warning(out <- comp_zonal(in_rast, in_pts, id_field = "id", verbose = F, long = F, keep_null = T)  %>%
                    tibble::as_tibble())
 

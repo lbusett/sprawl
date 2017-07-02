@@ -5,13 +5,14 @@ testthat::test_that("Test extent_reproj",{
   # no proj set
   testthat::expect_error(extent_reproj(in_pts))
 
+  in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))
   # no proj set
-  testthat::expect_error(extent_reproj(extent(in_rts), "+init=epsg:3035", "+init=epsg:432ds6"))
+  testthat::expect_error(extent_reproj(extent(in_rast), "+init=epsg:3035", "+init=epsg:432ds6"))
 
-  testthat::expect_error(extent_reproj(extent(in_rts), "+init=epsg:3sss035", "+init=epsg:432ds6"))
+  testthat::expect_error(extent_reproj(extent(in_rast), "+init=epsg:3sss035", "+init=epsg:432ds6"))
 
   # All Ok - `sp` Extent object
-  testthat::expect_is(extent_reproj(raster::extent(in_rts), "+init=epsg:3035", "+init=epsg:4326"), "Extent")
+  testthat::expect_is(extent_reproj(raster::extent(in_rast), "+init=epsg:3035", "+init=epsg:4326"), "Extent")
 
   # All Ok - `sf` bbox
   in_pts   <- readshape(system.file("extdata","randpoints.shp", package = "sprawl"))

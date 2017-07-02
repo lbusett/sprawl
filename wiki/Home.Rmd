@@ -1,5 +1,5 @@
 ---
-title: "Welcome to ireaRscripts Wiki !"
+title: "Welcome to `sprawl` Wiki !"
 author: Lorenzo Busetto
 output: 
   html_document:

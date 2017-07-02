@@ -3,7 +3,7 @@ testthat::test_that("Test On polygons extraction", {
   # skip_on_cran()
   skip_on_travis()
   in_polys <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-  in_rast  <- get(load(system.file("data", "in_rts.rda", package = "sprawl")))
+  in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))
 
   # check errors in input selbands
   expect_error(comp_zonal(in_rast, in_polys, selbands = c(3,1)))

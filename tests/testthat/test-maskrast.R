@@ -3,7 +3,7 @@ testthat::test_that("Test On raster masking", {
   # skip_on_cran()
   skip_on_travis()
   in_polys <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-  in_rast  <- in_rts[[1]]
+  in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))[[1]]
 
   # check errors in input selbands
   expect_error(maskrast(in_rast, in_polys))  # TODO : automatic reprojection of the clipper !!!

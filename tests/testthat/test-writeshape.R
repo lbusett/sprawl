@@ -21,6 +21,6 @@ test_that("Test writeshape", {
   expect_silent(writeshape(in_polys, file, overwrite = TRUE, verbose = FALSE))
 
   # input is not a *sp or *sf object
-  expect_error(writeshape(in_rts, tempfile(), overwrite = TRUE, verbose = FALSE))
+  expect_error(writeshape(in_rast, tempfile(), overwrite = TRUE, verbose = FALSE))
 })
 

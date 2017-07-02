@@ -57,6 +57,7 @@ Note that, given its scope, `sprawl` imports functions from several other packag
 ## Currently available functions and examples
 
 The main functions available in `sprawl` will be generally documented [here - coming soon], along with common-usage examples. 
+
 ## Contributing
 
 We are open for contributions/help in improving `sprawl` and extend its functionalities. If you have a suggestion, you can report it in our [issues] page, or fork the repository and then make a pull request.
