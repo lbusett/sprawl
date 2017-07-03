@@ -5,7 +5,7 @@
 \title{build_testraster}
 \usage{
 build_testraster(nrows = 100, ncols = 100, nbands = 1,
-  with_nodata = TRUE, tofile = FALSE)
+  with_nodata = TRUE, to_file = FALSE, out_file = NULL, ...)
 }
 \arguments{
 \item{nrows}{\code{numeric} number of rows, Default: 100}
@@ -16,21 +16,45 @@ build_testraster(nrows = 100, ncols = 100, nbands = 1,
 
 \item{with_nodata}{PARAM_DESCRIPTION, Default: TRUE}
 
-\item{tofile}{\code{logical} if TRUE, the rasterStack is saved to a temporary file
-and the name of the temporary filename is returned instead than the stack itself,
-Default: FALSE}
+\item{out_file}{\code{character} filename where the test raster should be saved (ignored if
+\code{to_file} = NULL). If \code{out_file} is NULL, the file is saved in \code{R} temporary folder, otherwise the
+filename specified in \code{out_file} is used. In both cases, the name of the created TIFF file is
+returned instead than the \code{rasterStack} itself, Default: NULL.}
+
+\item{...}{Any other arguments to be passed to \code{raster::raster} while creating the output raster.}
+
+\item{tofile}{\code{logical} if TRUE, the rasterStack is saved to a TIFF file, Default: FALSE}
 }
 \value{
-either the "test" \code{rasterStack}, or a filename corresponding to it (if
+Either the "test" raster in \code{rasterStack} format, or the filename where it was saved (if
 \code{tofile} = TRUE)
 }
 \description{
-FUNCTION_DESCRIPTION
+helper function used to quickly create a \code{rasterStack} object with specified
+dimensions (useful for testing purposes).
+}
+\note{
+\itemize{
+\item Values of the test raster are integers between 1 and 250.
+\item If \code{out_file} is selected, the file is saved as a 8-bit unsigned integer tiff to save space.
+\item By default, the raster is created using a WGS84 lat/lon reference system, with extent
+corresponding to the entire globe (bbox = -180, 180; -90, 90). To specify a different projection
+and extent, specify them by passing the \code{crs} and \code{ext} arguments to `raster (see examples).
+}
 }
 \examples{
 \dontrun{
-if(interactive()){
- r <- build_testraster(100,100,10, tofile = F)
- }
+ # create a rasterstack of 100*100 cells and 10 bands and put it in test_rast
+ test_rast <- build_testraster(100,100,10)
+ test_rast
+
+ # create a rasterstack of 100*100 cells and 20 bands and save it to a temporary TIFF file
+ test_rast <- build_testraster(100,100,20, to_file = TRUE)
+ test_rast
+
+ # create a rasterstack of 100*100 cells and 10 in epsg:3857 projection on a given extent
+ build_testraster(100,100,10, crs = "+init=epsg:3857",
+                              ext = raster::extent(c(0, 200000, 0, 200000)))
+ test_rast
 }
 }

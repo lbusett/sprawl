@@ -31,7 +31,7 @@ get_boundaries <- function(iso,
 
   if (!is.numeric(level)) stop("get_boundaries --> level must be numeric. Aborting !")
 
-  data(iso3166)
+  data(iso3166, envir = environment())
   match_name <- match(iso, iso3166$ISOname)
   if (!is.na(match_name)) {
     iso_code <- maps::iso3166$a3[match_name]

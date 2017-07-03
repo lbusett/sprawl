@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>build_testraster � build_testraster • sprawl</title>
+<title>build_testraster — build_testraster • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,7 +63,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -79,11 +84,12 @@
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>helper function used to quickly create a <code>rasterStack</code> object with specified
+dimensions (useful for testing purposes).</p>
     
 
     <pre class="usage"><span class='fu'>build_testraster</span>(<span class='kw'>nrows</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>ncols</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>nbands</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>with_nodata</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>tofile</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>with_nodata</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -105,24 +111,52 @@
       <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
     </tr>
     <tr>
+      <th>out_file</th>
+      <td><p><code>character</code> filename where the test raster should be saved (ignored if
+<code>to_file</code> = NULL). If <code>out_file</code> is NULL, the file is saved in <code>R</code> temporary folder, otherwise the
+filename specified in <code>out_file</code> is used. In both cases, the name of the created TIFF file is
+returned instead than the <code>rasterStack</code> itself, Default: NULL.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Any other arguments to be passed to <code><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster::raster</a></code> while creating the output raster.</p></td>
+    </tr>
+    <tr>
       <th>tofile</th>
-      <td><p><code>logical</code> if TRUE, the rasterStack is saved to a temporary file
-and the name of the temporary filename is returned instead than the stack itself,
-Default: FALSE</p></td>
+      <td><p><code>logical</code> if TRUE, the rasterStack is saved to a TIFF file, Default: FALSE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>either the "test" <code>rasterStack</code>, or a filename corresponding to it (if
+    <p>Either the "test" raster in <code>rasterStack</code> format, or the filename where it was saved (if
 <code>tofile</code> = TRUE)</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <ul>
+<li><p>Values of the test raster are integers between 1 and 250.</p></li>
+<li><p>If <code>out_file</code> is selected, the file is saved as a 8-bit unsigned integer tiff to save space.</p></li>
+<li><p>By default, the raster is created using a WGS84 lat/lon reference system, with extent
+corresponding to the entire globe (bbox = -180, 180; -90, 90). To specify a different projection
+and extent, specify them by passing the <code>crs</code> and <code>ext</code> arguments to `raster (see examples).</p></li>
+</ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
- <span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='fu'>build_testraster</span>(<span class='fl'>100</span>,<span class='fl'>100</span>,<span class='fl'>10</span>, <span class='kw'>tofile</span> <span class='kw'>=</span> <span class='no'>F</span>)
- }
+ <span class='co'># create a rasterstack of 100*100 cells and 10 bands and put it in test_rast</span>
+ <span class='no'>test_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>build_testraster</span>(<span class='fl'>100</span>,<span class='fl'>100</span>,<span class='fl'>10</span>)
+ <span class='no'>test_rast</span>
+
+ <span class='co'># create a rasterstack of 100*100 cells and 20 bands and save it to a temporary TIFF file</span>
+ <span class='no'>test_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>build_testraster</span>(<span class='fl'>100</span>,<span class='fl'>100</span>,<span class='fl'>20</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+ <span class='no'>test_rast</span>
+
+ <span class='co'># create a rasterstack of 100*100 cells and 10 in epsg:3857 projection on a given extent</span>
+ <span class='fu'>build_testraster</span>(<span class='fl'>100</span>,<span class='fl'>100</span>,<span class='fl'>10</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:3857"</span>,
+                              <span class='kw'>ext</span> <span class='kw'>=</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>200000</span>, <span class='fl'>0</span>, <span class='fl'>200000</span>)))
+ <span class='no'>test_rast</span>
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -131,6 +165,8 @@ Default: FALSE</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#note">Note</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

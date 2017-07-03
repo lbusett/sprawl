@@ -24,12 +24,8 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
- r <- build_raster(100, 100, 1)
  p <- build_testshape(100)
- plot(r)
- plot(p[1], col = p$id, add = T)
- }
+ plot(p[1], col = p$id)
 }
 }
 \seealso{

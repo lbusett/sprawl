@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cz_getbands � cz_getbands • sprawl</title>
+<title>cz_getbands — cz_getbands • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -63,7 +63,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -95,6 +100,10 @@
       <th>selbands</th>
       <td><p>PARAM_DESCRIPTION, Default: NA</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -104,7 +113,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>cz_getbands</span>(<span class='no'>in_rast</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='fu'>c</span>(-<span class='fl'>1</span>,<span class='fl'>050</span>))
+<span class='fu'>cz_getbands</span>(<span class='no'>in_rast</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+<span class='fu'>cz_getbands</span>(<span class='no'>in_rast</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"2013-01-01"</span>, <span class='st'>"2015-12-31"</span>))
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

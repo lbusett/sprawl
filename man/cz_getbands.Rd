@@ -21,6 +21,7 @@ FUNCTION_DESCRIPTION
 }
 \examples{
 \dontrun{
-cz_getbands(in_rast, selbands = c(-1,050))
+cz_getbands(in_rast, selbands = c(1, 2))
+cz_getbands(in_rast, selbands = c("2013-01-01", "2015-12-31"))
 }
 }

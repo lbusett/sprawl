@@ -38,7 +38,14 @@
   <a href="reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -62,28 +69,28 @@
 <div id="intro-and-rationale" class="section level2">
 <h2 class="hasAnchor">
 <a href="#intro-and-rationale" class="anchor"></a>Intro and rationale</h2>
-<p>Support for spatial processing tasks is provided in <code>R</code> by several great packages, spanning from all-purpose packages providing generalized access to the main spatial data classes and corresponding processing methods (e.g., <a href="https://cran.r-project.org/web/packages/sp/index.html"><code>sp</code></a> and <a href="https://cran.r-project.org/web/packages/sf/index.html"><code>sf</code></a>, <a href="https://cran.r-project.org/web/packages/raster/index.html"><code>raster</code></a> and <a href="https://cran.r-project.org/web/packages/rgdal/index.html"><code>rgdal</code></a> - providing functions for handling raster and vector spatial data -), to more “specialized” ones meant to allow conducting more specific processing tasks (e.g., <a href="https://cran.r-project.org/web/packages/geosphere/index.html"><code>geosphere</code></a>, <a href="https://cran.r-project.org/web/packages/raster/index.html"><code>raster</code></a>, <a href="https://cran.r-project.org/web/packages/landsat/index.html"><code>landsat</code></a>, <a href="https://cran.r-project.org/web/packages/MODIStsp/index.html"><code>MODIStsp</code></a>), or to provide optimized/improved/easier solutions for methods already provided by the aforementioned general-purpose packages (e.g., <a href="https://cran.r-project.org/web/packages/velox/index.html"><code>velox</code></a>, <a href="https://cran.r-project.org/web/packages/mapview/index.html"><code>mapview</code></a>) (Curated lists of some great packages ones can be found <a href="https://cran.r-project.org/web/views/Spatial.html">here</a>, <a href="https://ropensci.org/blog/blog/2016/11/22/geospatial-suite">here</a> and <a href="https://github.com/ropensci/maptools">here</a>).</p>
-<p>This huge variability provides advanced <code>R</code> programmers with great flexibility for conducting simple or complex spatial data analyses, combining functionalities of different packages within custom custom scripts. At the same time, it may prove confusing for less skilled programmers, who may struggle with dealing with multiple packages, and don’t know that a certain processing task may be more efficiently conducted by using less-known and sometimes difficult to find packages.</p>
+<p>Support for spatial processing tasks is provided in <code>R</code> by several great packages, spanning from all-purpose packages providing generalized access to the main spatial data classes and corresponding processing methods (e.g., <a href="https://cran.r-project.org/web/packages/sp/index.html"><code>sp</code></a> and <a href="https://cran.r-project.org/web/packages/sf/index.html"><code>sf</code></a>, <a href="https://cran.r-project.org/web/packages/raster/index.html"><code>raster</code></a> and <a href="https://cran.r-project.org/web/packages/rgdal/index.html"><code>rgdal</code></a> - providing functions for handling raster and vector spatial data -), to more “specialized” ones meant to allow conducting more specific processing tasks (e.g., <a href="https://cran.r-project.org/web/packages/geosphere/index.html"><code>geosphere</code></a>, <a href="https://cran.r-project.org/web/packages/raster/index.html"><code>raster</code></a>, <a href="https://cran.r-project.org/web/packages/landsat/index.html"><code>landsat</code></a>, <a href="https://cran.r-project.org/web/packages/MODIStsp/index.html"><code>MODIStsp</code></a>), or to provide optimized/improved/easier solutions for methods already provided by the aforementioned general-purpose packages (e.g., <a href="https://cran.r-project.org/web/packages/velox/index.html"><code>velox</code></a>, <a href="https://cran.r-project.org/web/packages/mapview/index.html"><code>mapview</code></a>) (Curated lists of some very good packages can be found <a href="https://cran.r-project.org/web/views/Spatial.html">here</a>, <a href="https://ropensci.org/blog/blog/2016/11/22/geospatial-suite">here</a> and <a href="https://github.com/ropensci/maptools">here</a>).</p>
+<p>This huge variability provides advanced <code>R</code> programmers with great flexibility for conducting simple or complex spatial data analyses, by combining functionalities of different packages within custom scripts. At the same time, it may be confusing for less skilled programmers, who may struggle with dealing with multiple packages and don’t know that a certain processing task may be more efficiently conducted by using less-known (and sometimes difficult to find) packages.</p>
 <p>In this context, <strong><code>sprawl</code> aims to simplify the execution of some “common” spatial processing tasks</strong> (e.g., reading/writing spatial datasets, extracting statistics from large datasets, etc.) <strong>by providing a single and (hopefully) simpler access point to functionalities spread in the <code>R</code> packages ecosystem.</strong></p>
 </div>
 <div id="package-philosopy" class="section level2">
 <h2 class="hasAnchor">
 <a href="#package-philosopy" class="anchor"></a>Package philosopy</h2>
-<p>The aforementioned broad objectives are accomplished in <code>sprawl</code> by:</p>
+<p>The aforementioned objectives are accomplished in <code>sprawl</code> by:</p>
 <ol style="list-style-type: decimal">
-<li>Providing simple <strong>wrappers to common-use functions</strong> for reading/writing patial data (e.g., <code>readvec</code> and <code>writevec</code> to read/write vector files from/to disk);</li>
+<li>Providing simple <strong>wrappers to common-use functions</strong> for reading/writing spatial data (e.g., <code>readvec</code> and <code>writevec</code> to read/write vector files from/to disk);</li>
 <li>Providing <strong>optimized functions for performing some common-use processing tasks</strong>, often exploiting functions provided by less-known packages (e.g., <code>maskraster</code>);</li>
-<li>Providing custom functions for performing more complex processing tasks (e.g., <code>comp_zonal</code>);</li>
-<li>Optimizing code execution speed by providing under-the-hood support for multi-core processing using for exmaple <code>foreach</code> looping and <code>raster::MakeCluster</code> functionality</li>
+<li>Providing custom functions for performing more complex processing tasks (e.g., <code>comp_zonal</code>) involving the use of different functions and/or packages;</li>
+<li>Optimizing code execution speed by providing under-the-hood support for multi-core processing using for example <code>foreach</code> looping and <code>raster::MakeCluster</code> functionality;</li>
 <li>Simplifying access/further analysis of results, by carefully formatting processing outputs to easy to understand and use <code>R</code> objects.</li>
 </ol>
-<p>Given this, <code>sprawl</code> is expected to be a broadly-aimed (and therefore rather “amorphous”) and rapidly-changing package, which functionalities are expected to 1. gradually grow to accomodate more functions, and 2. be sometimes removed/changed as soon as similar or better functionalities start to be provided by different/more focused packages.</p>
-<p><code>sprawl</code> is currently developed and mainteined by personnel of the Milano section of CNR-IREA (Institute on Remote Sensing of Environment - National Research Council, Italy - <a href="http://www.irea.cnr.it/en/" class="uri">http://www.irea.cnr.it/en/</a>)</p>
+<p>Given this, <code>sprawl</code> is expected to be a broadly-aimed (and therefore rather “amorphous”) and rapidly-changing package, which functionalities are expected to 1. gradually grow to include additional functions/wrappers, and 2. be sometimes removed/changed as soon as similar or better functionalities start to be provided by different/more focused packages.</p>
+<p><code>sprawl</code> is currently developed and maintained by personnel of the Milan section of CNR-IREA (Institute on Remote Sensing of Environment - National Research Council, Italy - <a href="http://www.irea.cnr.it/en/" class="uri">http://www.irea.cnr.it/en/</a>)</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install sprawl from github with:</p>
+<p>You can install sprawl from git-hub with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
 devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/sprawl"</span>)</code></pre></div>
 <p>Note that, given its scope, <code>sprawl</code> imports functions from several other packages, which need to be installed in your system. Since some of those have quite specific System Requirements, it’s possible that you’ll struggle a bit in installation due to unresolved dependencies. In that case, please have a look at the installation error messages to see which package has problems in installation and try to install it beforehand (consulting its specific CRAN pages or doing a stackoverflow search may help !).</p>
@@ -96,13 +103,13 @@ devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/s
 <div id="contributing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contributing" class="anchor"></a>Contributing</h2>
-<p>We are open for contributions/help in improving <code>sprawl</code> and extend its functionalities. If you have a suggestion, you can report it in our [issues] page, or fork the repository and then make a pull request. (note that we plan to provide som “good-practices” instructions for contributing new functions in the future.)</p>
+<p>We are open for contributions/help in improving <code>sprawl</code> and extend its functionalities. If you have a suggestion, you can report it in our <a href="https://github.com/IREA-CNR-MI/sprawl/issues">issues</a> page, or fork the repository and then make a pull request. (note that we plan to provide some “good-practices” instructions for contributing new functions in the future.)</p>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>To cite package <code>sprawl</code> in publications use:</p>
-<p>Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amhorphous Wrapper Library. R package version 0.1.0.9000.</p>
+<p>Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amorphous Wrapper Library. R package version 0.1.0.9000.</p>
 </div>
 </div>
 </div>
@@ -110,7 +117,14 @@ devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/s
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2 class="hasAnchor">
-<a href="#sidebar" class="anchor"></a>License</h2>
+<a href="#sidebar" class="anchor"></a>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/IREA-CNR-MI/sprawl/">https://​github.com/​IREA-CNR-MI/​sprawl/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/IREA-CNR-MI/sprawl/issues%20%20">https://​github.com/​IREA-CNR-MI/​sprawl/​issues  </a>
+</li>
+</ul>
+<h2>License</h2>
 <p><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">
