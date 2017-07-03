@@ -148,16 +148,16 @@ pre .img img {
 }
 
 code a, pre a {
-  color: #375f84;
+  color: black;
 }
 
-.fl      {color: #1514b5;}
-.fu      {color: #000000;} /* function */
-.ch,.st  {color: #036a07;} /* string */
-.kw      {color: #264D66;} /* keyword */
-.co      {color: #888888;} /* comment */
+.fl      {color: red;}
+.fu      {color: blue;} /* function */
+.ch,.st  {color: orange;} /* string */
+.kw      {color: black;} /* keyword */
+.co      {color: green;} /* comment */
 
-.message { color: black;   font-weight: bolder;}
-.error   { color: orange;  font-weight: bolder;}
-.warning { color: #6A0366; font-weight: bolder;}
+.message { color: green   font-weight: bolder;}
+.error   { color: red;  font-weight: bolder;}
+.warning { color: orange; font-weight: bolder;}
 

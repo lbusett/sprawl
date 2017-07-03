@@ -1,0 +1,17 @@
+title: sprawl
+template:
+  params:
+    bootswatch: cerulean
+    highlight: tango
+output:
+  html_document:
+    highlight: tango
+
+reference:
+  - title: Main Functions
+    desc: ~
+    contents:
+      - '`comp_zonal`'
+      - '`build_testraster`'
+    params:
+     - highlight: tango
