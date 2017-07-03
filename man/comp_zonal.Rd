@@ -4,21 +4,21 @@
 \alias{comp_zonal}
 \title{comp_zonal}
 \usage{
-comp_zonal(in_rast, zone_object, selbands = NULL, mask_object = NULL,
+comp_zonal(in_rast, in_vect_zones, selbands = NULL, mask_object = NULL,
   rastres = NULL, id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, out_format = "dframe", small = TRUE, na.rm = TRUE,
-  maxchunk = 5e+07, long = FALSE, addfeat = TRUE, addgeom = TRUE,
-  keep_null = FALSE, verbose = TRUE, ncores = NULL)
+  comp_quant = FALSE, small = TRUE, na.rm = TRUE, maxchunk = 5e+07,
+  long = FALSE, addfeat = TRUE, addgeom = TRUE, keep_null = FALSE,
+  verbose = TRUE, ncores = NULL)
 }
 \arguments{
 \item{in_rast}{input raster. Can be wither:
 \enumerate{
 \item A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 All \code{gdal} raster formats are supported
-\item An \code{R} \code{raster}, 'rasterStack\code{or}rasterBrick` object
+\item An \code{raster}, \code{rasterStack} or \code{rasterBrick} object
 }}
 
-\item{zone_object}{input vector object. Can be either:
+\item{in_vect_zones}{input vector object. Can be either:
 \enumerate{
 \item A \code{file name} corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 \item An \code{R} \code{+sp} or \code{sf} object
@@ -44,8 +44,6 @@ in `out$ts_full', Default: TRUE}
 
 \item{comp_quant}{\code{logical} if TRUE, also quantiles of the distributions of values are computed for each zone
 and returned in  \code{out$ts_summ}, Default: FALSE}
-
-\item{out_format}{\code{character} either "dframe" or "xts" Define the output format, Default: 'dframe'}
 
 \item{small}{\code{logical} if TRUE, values are returned also for small polygons not including any
 pixel centroids, Default: TRUE}
@@ -77,7 +75,14 @@ corresponding to the features of a vector (Polygon, Point or Line)
 DETAILS
 }
 \examples{
-
+\dontrun{
+  library(sprawl)
+  in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))
+  in_zones <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
+  stats    <- comp_zonal(in_rast, in_zones, long = FALSE, verbose = FALSE)
+  options(tibble.width = Inf)
+  stats
+ }
 }
 \author{
 Lorenzo Busetto, phD (2014-2015) \email{lbusett@gmail.com}

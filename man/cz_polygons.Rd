@@ -4,11 +4,11 @@
 \alias{cz_polygons}
 \title{cz_polygons}
 \usage{
-cz_polygons(zone_object, in_rast, seldates, selbands, n_selbands, date_check,
+cz_polygons(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check,
   cz_opts)
 }
 \arguments{
-\item{zone_object}{PARAM_DESCRIPTION}
+\item{in_vect_zones}{PARAM_DESCRIPTION}
 
 \item{in_rast}{PARAM_DESCRIPTION}
 

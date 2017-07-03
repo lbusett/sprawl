@@ -1,6 +1,6 @@
 #' @title cz_polygons
 #' @description FUNCTION_DESCRIPTION
-#' @param zone_object PARAM_DESCRIPTION
+#' @param in_vect_zones PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
 #' @param seldates PARAM_DESCRIPTION
 #' @param selbands PARAM_DESCRIPTION
@@ -40,21 +40,22 @@
 #' @importFrom velox velox
 #' @importFrom parallel detectCores makeCluster stopCluster
 #' @importFrom utils setTxtProgressBar txtProgressBar
+#' @importFrom magrittr %>%
 
-cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, date_check, cz_opts) {
+cz_polygons <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check, cz_opts) {
 
   #   ____________________________________________________________________________
-  #   crop zone_object to in_rast extent if necessary and identify "removed"   ####
+  #   crop in_vect_zones to in_rast extent if necessary and identify "removed"   ####
   #   features + Find names of the attribute fields of the original shapefile
   #
-  crop             <- cz_crop_object(zone_object, in_rast, cz_opts$id_field)
-  zone_object_crop <- crop$zone_object_crop
-  outside_feat     <- crop$outside_feat
-  names_shp        <- names(zone_object_crop)[!names(zone_object_crop) %in% c("mdxtnq", "geometry")]
+  crop               <- cz_crop_object(in_vect_zones, in_rast, cz_opts$id_field)
+  in_vect_zones_crop <- crop$in_vect_zones_crop
+  outside_feat       <- crop$outside_feat
+  names_shp          <- names(in_vect_zones_crop)[!names(in_vect_zones_crop) %in% c("mdxtnq", "geometry")]
 
   #   ____________________________________________________________________________
   #   If `cz_opts$rastres` is not null and is cz_opts$smaller tha the original                ####
-  #   resolution of in_rast, both `zone_object` and `in_rast` are "super-sampled
+  #   resolution of in_rast, both `in_vect_zones` and `in_rast` are "super-sampled
   #   to `cz_opts$rastres` resolution (using nn resampling) prior to data extraction
 
   supersample <- 0
@@ -75,15 +76,15 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
 
   if (cz_opts$verbose) {message("comp_zonal--> Rasterizing shape")}
 
-  sp_polys                         <- as(zone_object_crop, "Spatial")
-  rastzone_object <- velox::velox(matrix(data = 0.0 ,
+  sp_polys                         <- as(in_vect_zones_crop, "Spatial")
+  rastin_vect_zones <- velox::velox(matrix(data = 0.0 ,
                                          nrow = dim(in_rast)[1],
                                          ncol = dim(in_rast)[2]),
-                                  extent = extent(in_rast[[1]]),
-                                  res = res(in_rast[[1]]),
-                                  crs = proj4string(in_rast[[1]]))
-  rastzone_object$crop(sp_polys)
-  rastzone_object$rasterize(sp_polys, field = "mdxtnq", band = 1)
+                                  extent = raster::extent(in_rast[[1]]),
+                                  res = raster::res(in_rast[[1]]),
+                                  crs = sp::proj4string(in_rast[[1]]))
+  rastin_vect_zones$crop(sp_polys)
+  rastin_vect_zones$rasterize(sp_polys, field = "mdxtnq", band = 1)
 
 
   #   ____________________________________________________________________________
@@ -91,7 +92,7 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
   #   This is used later to verify if, on chunked processing, all data from
   #   a polygon were already retrieved
   #
-  cells_per_poly <- rastzone_object$extract(sp_polys, fun = length) %>%
+  cells_per_poly <- rastin_vect_zones$extract(sp_polys, fun = length) %>%
     data.frame(mdxtnq = 1:length(.), count = (.)) %>%
     dplyr::select(2,3)
 
@@ -116,9 +117,9 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
 
   # Initialize other variables and progress bar
   cz_opts$maxchunk  <- cz_opts$maxchunk/cz_opts$ncores
-  n_cells           <- prod(rastzone_object$dim)
-  nrows             <- rastzone_object$dim[1]
-  ncols             <- rastzone_object$dim[2]
+  n_cells           <- prod(rastin_vect_zones$dim)
+  nrows             <- rastin_vect_zones$dim[1]
+  ncols             <- rastin_vect_zones$dim[2]
   n_chunks          <- floor(n_cells / cz_opts$maxchunk) + 1
 
   if (cz_opts$verbose) {
@@ -197,7 +198,7 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
         out_data  <- data.table::data.table(
           value   =  as.numeric(in_band$rasterbands[[1]][start_cell:end_cell]),
           cell    =  seq(start_cell,end_cell),
-          mdxtnq  =  as.numeric(rastzone_object$rasterbands[[1]][start_cell:end_cell])
+          mdxtnq  =  as.numeric(rastin_vect_zones$rasterbands[[1]][start_cell:end_cell])
           , key = "mdxtnq") %>%
           subset(mdxtnq != 0)    %>%   # remove data outside polygons (== zone_id = 0 OR NA)
           subset(!is.na(mdxtnq))
@@ -219,7 +220,7 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
               dplyr::group_by(mdxtnq) %>%
               dplyr::summarize(count = n())
             codes_in_chunk <- unique(out_data$mdxtnq)
-            # polys_in_chunk <- subset(zone_object_crop, mdxtnq %in% codes_in_chunk)
+            # polys_in_chunk <- subset(in_vect_zones_crop, mdxtnq %in% codes_in_chunk)
             complete_polys <- NA
             for (indcinc in seq_along(along.with = codes_in_chunk)) {
               cinc <- codes_in_chunk[indcinc]
@@ -259,9 +260,9 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
       #   ____________________________________________________________________________
       #   extract data for cz_opts$small polygons if requested and necessary              ####
 
-      if (cz_opts$small & length(unique(stat_data$mdxtnq) != length(unique(zone_object_crop$mdxtnq)))) {
+      if (cz_opts$small & length(unique(stat_data$mdxtnq) != length(unique(in_vect_zones_crop$mdxtnq)))) {
 
-        miss_feat <- setdiff(unique(zone_object_crop$mdxtnq), unique(stat_data$mdxtnq))
+        miss_feat <- setdiff(unique(in_vect_zones_crop$mdxtnq), unique(stat_data$mdxtnq))
         for (mfeat in miss_feat) {
 
           poly_miss         <- sp_polys[sp_polys@data$mdxtnq == mfeat,]
@@ -320,11 +321,11 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
   #
 
   # --------------------------------------------------------------------------------
-  # if cz_opts$keep_null selected and "outside features found, replace zone_object_crop ####
-  # with zone_object, so that later joins "include" the missing features
+  # if cz_opts$keep_null selected and "outside features found, replace in_vect_zones_crop ####
+  # with in_vect_zones, so that later joins "include" the missing features
 
   if (cz_opts$keep_null & !is.null(outside_feat)) {
-    zone_object_crop <- zone_object
+    in_vect_zones_crop <- in_vect_zones
   }
 
   #   ____________________________________________________________________________
@@ -336,7 +337,7 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
     stat_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 2)))
     # if cz_opts$addfeat, merge the extracted data with the shapefile features
     if (cz_opts$addfeat) {
-      stat_data <- merge(stat_data, zone_object_crop, by = "mdxtnq", all.y = TRUE)
+      stat_data <- merge(stat_data, in_vect_zones_crop, by = "mdxtnq", all.y = TRUE)
     }
 
     # define the order of the output columns
@@ -364,7 +365,9 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
     }
     # browser()
     # build the final output and convert to tibble
-    stat_data <- data.table::setcolorder(stat_data, keep_cols)
+    stat_data <- data.table::setcolorder(stat_data, keep_cols) %>%
+      as_tibble()
+
     if (is.null(cz_opts$id_field)) names(stat_data)[1] = "id_feat"
 
     # If `cz_opts$long`, reshape the stats output to a cz_opts$long table format
@@ -402,11 +405,11 @@ cz_polygons <- function(zone_object, in_rast, seldates, selbands, n_selbands, da
     # "bind" the different bands
     all_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 1))) %>%
       data.table::setkey("mdxtnq")
-    sf::st_geometry(zone_object_crop) <- NULL
+    sf::st_geometry(in_vect_zones_crop) <- NULL
 
     # if cz_opts$addfeat, merge the extracted data with the shapefile features
     if (cz_opts$addfeat) {
-      all_data <- merge(all_data, zone_object_crop, by = "mdxtnq", all.y = TRUE)
+      all_data <- merge(all_data, in_vect_zones_crop, by = "mdxtnq", all.y = TRUE)
     }
     # compute the coordinates of the extracted pixels and add them to all_data
     # then remove the "cell" column

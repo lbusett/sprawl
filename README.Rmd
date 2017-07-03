@@ -29,7 +29,7 @@ This huge variability provides advanced `R` programmers with great flexibility f
 
 In this context, **`sprawl` aims to simplify the execution of some "common" spatial processing tasks** (e.g., reading/writing spatial datasets, extracting statistics from large datasets, etc.) **by providing a single and (hopefully) simpler access point to functionalities spread in the `R` packages ecosystem.** 
 
-## Package philosopy
+## Package philosophy
 
 The aforementioned objectives are accomplished in `sprawl` by: 
 

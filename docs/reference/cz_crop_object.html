@@ -84,18 +84,18 @@
     </div>
 
     
-    <p>Accessory function for <code>comp_zonal</code>. Crops the zone_object on the extent of the raster
-to improve speed. Then check if some features in the original zone_object were dropped in
+    <p>Accessory function for <code>comp_zonal</code>. Crops the in_vect_zones on the extent of the raster
+to improve speed. Then check if some features in the original in_vect_zones were dropped in
 zone_raster_croppped</p>
     
 
-    <pre class="usage"><span class='fu'>cz_crop_object</span>(<span class='no'>zone_object</span>, <span class='no'>in_rast</span>, <span class='no'>id_field</span>)</pre>
+    <pre class="usage"><span class='fu'>cz_crop_object</span>(<span class='no'>in_vect_zones</span>, <span class='no'>in_rast</span>, <span class='no'>id_field</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>zone_object</th>
+      <th>in_vect_zones</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
@@ -111,7 +111,7 @@ zone_raster_croppped</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>list</code> with the following fields:</p><ul>
-<li><p>zone_object_crop = cropped <code>sf</code> object</p></li>
+<li><p>in_vect_zones_crop = cropped <code>sf</code> object</p></li>
 <li><p>outside_feat = data frame containg info on the "removed" features (sequential id and corresponding
 value ofthe "id" field (if provided)</p></li>
 </ul>

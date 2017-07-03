@@ -4,10 +4,10 @@
 \alias{cz_crop_object}
 \title{cz_crop_object}
 \usage{
-cz_crop_object(zone_object, in_rast, id_field)
+cz_crop_object(in_vect_zones, in_rast, id_field)
 }
 \arguments{
-\item{zone_object}{PARAM_DESCRIPTION}
+\item{in_vect_zones}{PARAM_DESCRIPTION}
 
 \item{in_rast}{PARAM_DESCRIPTION}
 
@@ -16,13 +16,13 @@ cz_crop_object(zone_object, in_rast, id_field)
 \value{
 \code{list} with the following fields:
 \itemize{
-\item zone_object_crop = cropped \code{sf} object
+\item in_vect_zones_crop = cropped \code{sf} object
 \item outside_feat = data frame containg info on the "removed" features (sequential id and corresponding
 value ofthe "id" field (if provided)
 }
 }
 \description{
-Accessory function for \code{comp_zonal}. Crops the zone_object on the extent of the raster
-to improve speed. Then check if some features in the original zone_object were dropped in
+Accessory function for \code{comp_zonal}. Crops the in_vect_zones on the extent of the raster
+to improve speed. Then check if some features in the original in_vect_zones were dropped in
 zone_raster_croppped
 }

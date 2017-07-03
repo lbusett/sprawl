@@ -4,8 +4,8 @@
 #' @param in_rast input raster. Can be wither:
 #' 1. A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 #' All `gdal` raster formats are supported
-#' 2. An `R` `raster`, 'rasterStack` or `rasterBrick` object
-#' @param zone_object input vector object. Can be either:
+#' 2. An `raster`, `rasterStack` or `rasterBrick` object
+#' @param in_vect_zones input vector object. Can be either:
 #' 1. A `file name` corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 #' 2. An `R` `+sp` or `sf` object
 #' @param selbands `2-element numeric array` defining starting and ending raster bands to be processed
@@ -23,7 +23,6 @@
 #' in `out$ts_full', Default: TRUE
 #' @param comp_quant `logical` if TRUE, also quantiles of the distributions of values are computed for each zone
 #' and returned in  `out$ts_summ`, Default: FALSE
-#' @param out_format `character` either "dframe" or "xts" Define the output format, Default: 'dframe'
 #' @param small `logical` if TRUE, values are returned also for small polygons not including any
 #' pixel centroids, Default: TRUE
 #' @param na.rm PARAM_DESCRIPTION, Default: TRUE
@@ -38,17 +37,25 @@
 #' @export
 #' @details DETAILS
 #' @examples
-#'
+#' \dontrun{
+#'   library(sprawl)
+#'   in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))
+#'   in_zones <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
+#'   stats    <- comp_zonal(in_rast, in_zones, long = FALSE, verbose = FALSE)
+#'   options(tibble.width = Inf)
+#'   stats
+#'  }
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
 #' @importFrom sp proj4string
-#' @importFrom xts xts
 #' @importFrom dplyr mutate_if
 #' @importFrom tibble as_tibble
+#' @importFrom raster getZ
+#' @importFrom magrittr %>%
 #'
 #' @author Lorenzo Busetto, phD (2014-2015) \email{lbusett@gmail.com}
 #'
 comp_zonal <- function(in_rast,
-                       zone_object,
+                       in_vect_zones,
                        selbands     = NULL,
                        mask_object  = NULL,
                        rastres      = NULL,
@@ -56,7 +63,6 @@ comp_zonal <- function(in_rast,
                        summ_data    = TRUE,
                        full_data    = TRUE,
                        comp_quant   = FALSE,
-                       out_format   = "dframe",
                        small        = TRUE,
                        na.rm        = TRUE,
                        maxchunk     = 50E6,
@@ -70,39 +76,39 @@ comp_zonal <- function(in_rast,
 {
   # create a list containing processing parameters (used to facilitate passing options to
   # accessory funcrtions)
-  cz_opts <- list(selbands = selbands,   mask_object = mask_object, rastres   = rastres,
-              id_field     = id_field,   summ_data   = summ_data,   full_data = full_data,
-              comp_quant   = comp_quant, out_format  = out_format,  small     = small,
-              na.rm        = na.rm,      maxchunk    = maxchunk,    long      = long,
-              addfeat      = addfeat,    addgeom     = addgeom,     keep_null = keep_null,
-              verbose      = verbose,    ncores      = ncores)
+  cz_opts <- list(selbands = selbands,   mask_object = mask_object,   rastres   = rastres,
+                  id_field     = id_field,   summ_data   = summ_data, full_data = full_data,
+                  comp_quant   = comp_quant, small       = small,     na.rm     = na.rm,
+                  maxchunk     = maxchunk,   long        = long,      addfeat   = addfeat,
+                  addgeom      = addgeom,    keep_null   = keep_null,   verbose   = verbose,
+                  ncores       = ncores)
 
   #   ______________________________________________________________________________________________
-  #   Check input types - send errors/warnings if not compliant + open the zone_object if      ####
+  #   Check input types - send errors/warnings if not compliant + open the in_vect_zones if      ####
   #   or raster file if filenames were passed instead than a *sp/*sf object or *raster object  ####
 
   ras_type   <-  check_spatype(in_rast)
-  zone_type  <-  check_spatype(zone_object)
+  zone_type  <-  check_spatype(in_vect_zones)
   if (!ras_type %in% "rastobject") {
     stop("Input in_rast is not a RasterStack or RasterBrick object")
   }
 
   if (zone_type == "none") {
-    stop("Input zone_object is not a valid vector/raster file or object !")
+    stop("Input in_vect_zones is not a valid vector/raster file or object !")
   }
   if (zone_type == "vectfile") {
-    zone_object <- readshape(zone_object, stringsAsFactors = TRUE)
+    in_vect_zones <- readshape(in_vect_zones, stringsAsFactors = TRUE)
     zone_type   <- "sfobject"
   }
 
   if (zone_type == "rastfile") {
-    zone_object <- raster(zone_object)
+    in_vect_zones <- raster(in_vect_zones)
     zone_type   <- "rastobject"
   }
 
   # convert to an *sf objet if input is a *sp object
   if (zone_type == "spobject") {
-    zone_object <- as(zone_object, "sf") %>%
+    in_vect_zones <- as(in_vect_zones, "sf") %>%
       dplyr::mutate_if(is.character,as.factor) %>%
       tibble::as_tibble() %>%
       sf::st_as_sf()
@@ -110,7 +116,7 @@ comp_zonal <- function(in_rast,
   }
 
   if (zone_type == "sfobject") {
-    zone_object <- zone_object %>%
+    in_vect_zones <- in_vect_zones %>%
       dplyr::mutate_if(is.character,as.factor) %>%
       tibble::as_tibble() %>%
       sf::st_as_sf()
@@ -122,12 +128,6 @@ comp_zonal <- function(in_rast,
   # if (!small_method %in% c("centroids", "full")) {
   #   warning("Unknown 'small_method' value - defaulting to 'centroids'")
   # }
-  if (!out_format %in% c("xts", "dframe")) {
-    if (verbose)
-      warning("Unknown 'out_format' value - defaulting to 'dframe'")
-    out_format <- "dframe"
-  }
-
 
   #   ____________________________________________________________________________
   #   Identify the bands/dates to be processed                                ####
@@ -136,20 +136,20 @@ comp_zonal <- function(in_rast,
   date_check  <- ifelse(attributes(selbands)$date_check, TRUE, FALSE )
   n_selbands  <- length(selbands)
   if (date_check) {
-    dates <- getZ(in_rast)
+    dates <- raster::getZ(in_rast)
   } else {
     dates <- names(in_rast)
   }
   seldates <- dates[selbands]
 
-  zone_object$mdxtnq = seq(1:dim(zone_object)[1])
+  in_vect_zones$mdxtnq = seq(1:dim(in_vect_zones)[1])
   #   ____________________________________________________________________________
   #   Start cycling on dates/bands                                            ####
 
   if (n_selbands > 0) {
 
     #   ____________________________________________________________________________
-    #   start processing for the case in which the zone_object is a vector      ####
+    #   start processing for the case in which the in_vect_zones is a vector      ####
 
     if (zone_type == "sfobject") {
 
@@ -158,12 +158,12 @@ comp_zonal <- function(in_rast,
       #
 
       if (length(id_field) != 0) {
-        if (!id_field %in% names(zone_object)) {
+        if (!id_field %in% names(in_vect_zones)) {
           warning("Invalid 'id_field' value. Names of output columns (or values of 'feature' field if
                   `long` == TRUE) will be set to the record number of the shapefile feature")
           id_field <- NULL
         } else {
-          if (length(unique(as.data.frame(zone_object[,eval(id_field)])[,1])) != dim(zone_object)[1]) {
+          if (length(unique(as.data.frame(in_vect_zones[,eval(id_field)])[,1])) != dim(in_vect_zones)[1]) {
             # warning("selected ID field is not univoc ! Names of output columns (or values of 'feature' field if
             #       `long` = TRUE) will be set to the record number of the shapefile feature")
             # id_field <- NULL
@@ -171,10 +171,10 @@ comp_zonal <- function(in_rast,
         }
       }
 
-      # check if the projection of the zone_object and raster are the same - otherwise
-      # reproject the zone_object on raster CRS
-      if (sf::st_crs(zone_object)$proj4string != sp::proj4string(in_rast)) {
-        zone_object <- sf::st_transform(zone_object, sp::proj4string(in_rast))
+      # check if the projection of the in_vect_zones and raster are the same - otherwise
+      # reproject the in_vect_zones on raster CRS
+      if (sf::st_crs(in_vect_zones)$proj4string != sp::proj4string(in_rast)) {
+        in_vect_zones <- sf::st_transform(in_vect_zones, sp::proj4string(in_rast))
       }
 
 
@@ -182,20 +182,20 @@ comp_zonal <- function(in_rast,
       #   Extract values if the zone pbject is a point shapefile                  ####
       #   TODO: extraction on LINES ! )
 
-      if (inherits(sf::st_geometry(zone_object), "sfc_POINT")) {
+      if (inherits(sf::st_geometry(in_vect_zones), "sfc_POINT")) {
         # Convert the zone object to *Spatial to allow use of "raster::extract"
-        ts <- cz_points(zone_object,
-                       in_rast,
-                       n_selbands,
-                       selbands,
-                       seldates,
-                       id_field,
-                       date_check,
-                       long,
-                       verbose,
-                       addfeat,
-                       addgeom,
-                       keep_null)
+        out_list <- cz_points(in_vect_zones,
+                              in_rast,
+                              n_selbands,
+                              selbands,
+                              seldates,
+                              id_field,
+                              date_check,
+                              long,
+                              verbose,
+                              addfeat,
+                              addgeom,
+                              keep_null)
 
         # end processing on points
 
@@ -205,21 +205,13 @@ comp_zonal <- function(in_rast,
         #   __________________________________________________________________________________
         #   Extract values if the zone object is a polygon shapefile or already a raster  ####
 
-        ts <- cz_polygons(zone_object, in_rast, seldates, selbands, n_selbands, date_check, cz_opts)
+        out_list <- cz_polygons(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check, cz_opts)
       }
     }
-
-    # Convert output to xts if necessary ------
-    if (out_format == "xts" & date_check == TRUE) {
-      ts <- xts::xts(ts[,-1], order.by = ts[,1])
-    }
-    #gc()
-    return(ts)
+    return(out_list)
   } else {
     warning("Selected time range does not overlap with the one of the rasterstack input dataset !")
   }
-  #gc()
-  return(ts)
 }
 
 

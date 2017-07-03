@@ -88,11 +88,11 @@
 corresponding to the features of a vector (Polygon, Point or Line)</p>
     
 
-    <pre class="usage"><span class='fu'>comp_zonal</span>(<span class='no'>in_rast</span>, <span class='no'>zone_object</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mask_object</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>comp_zonal</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect_zones</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mask_object</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>rastres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summ_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"dframe"</span>, <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>addfeat</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>addgeom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>keep_null</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>,
+  <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>addfeat</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>addgeom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep_null</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -102,11 +102,11 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
       <td><p>input raster. Can be wither:</p><ol>
 <li><p>A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 All <code>gdal</code> raster formats are supported</p></li>
-<li><p>An <code>R</code> <code>raster</code>, 'rasterStack<code>or</code>rasterBrick` object</p></li>
+<li><p>An <code>raster</code>, <code>rasterStack</code> or <code>rasterBrick</code> object</p></li>
 </ol></td>
     </tr>
     <tr>
-      <th>zone_object</th>
+      <th>in_vect_zones</th>
       <td><p>input vector object. Can be either:</p><ol>
 <li><p>A <code>file name</code> corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)</p></li>
 <li><p>An <code>R</code> <code>+sp</code> or <code>sf</code> object</p></li>
@@ -146,10 +146,6 @@ in `out$ts_full', Default: TRUE</p></td>
       <th>comp_quant</th>
       <td><p><code>logical</code> if TRUE, also quantiles of the distributions of values are computed for each zone
 and returned in  <code>out$ts_summ</code>, Default: FALSE</p></td>
-    </tr>
-    <tr>
-      <th>out_format</th>
-      <td><p><code>character</code> either "dframe" or "xts" Define the output format, Default: 'dframe'</p></td>
     </tr>
     <tr>
       <th>small</th>
@@ -200,8 +196,56 @@ pixel centroids, Default: TRUE</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-</div></pre>
+    <pre class="examples"><div class='input'>  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
+  <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='fu'>get</span>(<span class='fu'>load</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"in_rast.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>)))
+  <span class='no'>in_zones</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readshape.html'>readshape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
+  <span class='no'>stats</span>    <span class='kw'>&lt;-</span> <span class='fu'>comp_zonal</span>(<span class='no'>in_rast</span>, <span class='no'>in_zones</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: attribute variables are assumed to be spatially constant throughout all geometries</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Some features of the spatial object are outside or partially outside the extent of the input RasterStack !</span>
+#&gt; <span class='warning'>  Outputs for features only partially inside will be retrieved using only the available pixels !</span>
+#&gt; <span class='warning'>  Outputs for features outside rasterstack extent will be set to NA.</span></div><div class='input'>  <span class='fu'>options</span>(<span class='kw'>tibble.width</span> <span class='kw'>=</span> <span class='fl'>Inf</span>)
+  <span class='no'>stats</span></div><div class='output co'>#&gt; $stats
+#&gt; Simple feature collection with 552 features and 13 fields
+#&gt; geometry type:  POLYGON
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 12897990 ymin: 1685995 xmax: 12971590 ymax: 1780601
+#&gt; epsg (SRID):    NA
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
+#&gt; # A tibble: 552 x 14
+#&gt;    id_feat band_n       date    id  lc_type category sup_catego     N      avg   med       sd   min   max          geometry
+#&gt;      &lt;int&gt;  &lt;dbl&gt;     &lt;date&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;     &lt;fctr&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;S3: sfc_POLYGON&gt;
+#&gt;  1       1      1 2013-01-01     1 forest_1   Forest Vegetation    61 4830.820  4747 540.6097  3731  5987 &lt;S3: sfc_POLYGON&gt;
+#&gt;  2       1      2 2013-01-09     1 forest_1   Forest Vegetation    61 4605.131  4648 510.8426  3665  5547 &lt;S3: sfc_POLYGON&gt;
+#&gt;  3       1      3 2013-01-17     1 forest_1   Forest Vegetation    61 4837.902  4834 557.4429  3640  5827 &lt;S3: sfc_POLYGON&gt;
+#&gt;  4       1      4 2013-01-25     1 forest_1   Forest Vegetation    61 4484.984  4411 473.7452  3285  5275 &lt;S3: sfc_POLYGON&gt;
+#&gt;  5       1      5 2013-02-02     1 forest_1   Forest Vegetation    61 4284.197  4237 498.7366  3469  5318 &lt;S3: sfc_POLYGON&gt;
+#&gt;  6       1      6 2013-02-10     1 forest_1   Forest Vegetation    61 4374.525  4302 471.1914  3317  5363 &lt;S3: sfc_POLYGON&gt;
+#&gt;  7       1      7 2013-02-18     1 forest_1   Forest Vegetation    61 4113.246  4123 505.7164  2759  4991 &lt;S3: sfc_POLYGON&gt;
+#&gt;  8       1      8 2013-02-26     1 forest_1   Forest Vegetation    61 4050.689  4164 785.0554  1614  5350 &lt;S3: sfc_POLYGON&gt;
+#&gt;  9       1      9 2013-03-06     1 forest_1   Forest Vegetation    61 3937.738  3917 452.0158  3039  4850 &lt;S3: sfc_POLYGON&gt;
+#&gt; 10       1     10 2013-03-14     1 forest_1   Forest Vegetation    61 4281.672  4282 503.7382  3143  5320 &lt;S3: sfc_POLYGON&gt;
+#&gt; # ... with 542 more rows
+#&gt; 
+#&gt; $alldata
+#&gt; Simple feature collection with 147384 features and 9 fields
+#&gt; geometry type:  POINT
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 12897120 ymin: 1698852 xmax: 12973570 ymax: 1789198
+#&gt; epsg (SRID):    NA
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
+#&gt; # A tibble: 147,384 x 10
+#&gt;    mdxtnq band_n       date N_PIX    id  lc_type category sup_catego value        geometry
+#&gt;     &lt;int&gt;  &lt;dbl&gt;     &lt;date&gt; &lt;int&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;     &lt;fctr&gt; &lt;dbl&gt; &lt;S3: sfc_POINT&gt;
+#&gt;  1      1      1 2013-01-01     1     1 forest_1   Forest Vegetation  4454 &lt;S3: sfc_POINT&gt;
+#&gt;  2      1      1 2013-01-01     2     1 forest_1   Forest Vegetation  4260 &lt;S3: sfc_POINT&gt;
+#&gt;  3      1      1 2013-01-01     3     1 forest_1   Forest Vegetation  3987 &lt;S3: sfc_POINT&gt;
+#&gt;  4      1      1 2013-01-01     4     1 forest_1   Forest Vegetation  4814 &lt;S3: sfc_POINT&gt;
+#&gt;  5      1      1 2013-01-01     5     1 forest_1   Forest Vegetation  5242 &lt;S3: sfc_POINT&gt;
+#&gt;  6      1      1 2013-01-01     6     1 forest_1   Forest Vegetation  5353 &lt;S3: sfc_POINT&gt;
+#&gt;  7      1      1 2013-01-01     7     1 forest_1   Forest Vegetation  5074 &lt;S3: sfc_POINT&gt;
+#&gt;  8      1      1 2013-01-01     8     1 forest_1   Forest Vegetation  4434 &lt;S3: sfc_POINT&gt;
+#&gt;  9      1      1 2013-01-01     9     1 forest_1   Forest Vegetation  4224 &lt;S3: sfc_POINT&gt;
+#&gt; 10      1      1 2013-01-01    10     1 forest_1   Forest Vegetation  3904 &lt;S3: sfc_POINT&gt;
+#&gt; # ... with 147,374 more rows
+#&gt; </div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
