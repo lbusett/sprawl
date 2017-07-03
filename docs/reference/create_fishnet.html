@@ -148,8 +148,7 @@ Default: NULL</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
   <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
   <span class='no'>file_in</span> <span class='kw'>&lt;-</span> <span class='st'>"/somedir/somefile.tif"</span>
   <span class='no'>inrast</span>  <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='no'>file_in</span>)
@@ -160,9 +159,7 @@ Default: NULL</p></td>
   <span class='no'>out_file</span> <span class='kw'>&lt;-</span> <span class='st'>"/somedir/somefile.shp"</span>
   <span class='fu'>create_fishnet</span>(<span class='no'>ext_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='no'>csize</span>, <span class='kw'>out_shape</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>out_shapefile</span> <span class='kw'>=</span> <span class='no'>out_file</span>,
          <span class='kw'>overw</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>out_raster</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
- }
-
-<span class='co'># }</span></pre>
+ }</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): could not find function "raster"</span></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -138,20 +138,25 @@ depending on the specific geometry which is read.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'># Load sample data</span>
+    <pre class="examples"><div class='input'><span class='co'># Load sample data</span>
 <span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"testrast.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>))
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sp</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sp/topics/spsample'>spsample</a></span>(<span class='fu'>as</span>(<span class='no'>r</span>, <span class='st'>"SpatialPixels"</span>), <span class='fl'>20</span>, <span class='st'>"random"</span>)
 
 <span class='co'># Rectangular buffer (3x3 cells)</span>
-<span class='fu'>pBuffer</span>(<span class='no'>p</span>, <span class='no'>r</span>, <span class='fl'>3</span>)
-
+<span class='fu'>pBuffer</span>(<span class='no'>p</span>, <span class='no'>r</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; class       : SpatialPolygons 
+#&gt; features    : 20 
+#&gt; extent      : 12914335, 12966369, 1685694, 1780293  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : NA </div><div class='input'>
 <span class='co'># Squared buffer (100x100 metres)</span>
-<span class='fu'>pBuffer</span>(<span class='no'>p</span>, <span class='fu'>c</span>(<span class='fl'>100</span>,<span class='fl'>100</span>))
-
+<span class='fu'>pBuffer</span>(<span class='no'>p</span>, <span class='fu'>c</span>(<span class='fl'>100</span>,<span class='fl'>100</span>))</div><div class='output co'>#&gt; class       : SpatialPolygons 
+#&gt; features    : 20 
+#&gt; extent      : 12914633, 12966072, 1685991, 1779995  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : NA </div><div class='input'>
 <span class='co'># Circular buffer (radius = 50 metres)</span>
-<span class='fu'>pBuffer</span>(<span class='no'>p</span>, <span class='fl'>50</span>)
-<span class='co'># }</span><div class='input'>
+<span class='fu'>pBuffer</span>(<span class='no'>p</span>, <span class='fl'>50</span>)</div><div class='output co'>#&gt; class       : SpatialPolygons 
+#&gt; features    : 20 
+#&gt; extent      : 12914633, 12966072, 1685991, 1779995  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : NA </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
