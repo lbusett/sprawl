@@ -9,11 +9,11 @@
 #' @importFrom gdalUtils ogrinfo gdalinfo
 #' @examples \dontrun{
 #' # input is a raster file
-#' check_spatype(system.file("extdata","test_rast.tif", package = "sprawl"))
+#' check_spatype(system.file("extdata","testrast.tif", package = "sprawl"))
 #'
 #' # input is a shapefile
 #' shp_file <- system.file("extdata","lc_polys.shp", package = "sprawl")
-#' check_spatype("extdata/lc_polys.shp")
+#' check_spatype(shp_file)
 #'
 #' # input is a `sp` object
 #' obj <- readshape(shp_file, as_sp = TRUE)

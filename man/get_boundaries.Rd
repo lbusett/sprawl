@@ -28,12 +28,12 @@ on country name or ISO code
 }
 \examples{
 \dontrun{
-if(interactive()){
+ library(sprawl)
+ library(sp)
  ita_boundaries <- get_boundaries("Italy", 0)
  ita_region_boundaries <- get_boundaries("ITA", 1)
  plot(ita_region_boundaries)
  }
-}
 }
 \seealso{
 \code{\link[raster]{getData}}

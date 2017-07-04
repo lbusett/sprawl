@@ -10,12 +10,13 @@
 #' on country name or ISO code
 #' @examples
 #' \dontrun{
-#' if(interactive()){
+#'  library(sprawl)
+#'  library(sp)
 #'  ita_boundaries <- get_boundaries("Italy", 0)
 #'  ita_region_boundaries <- get_boundaries("ITA", 1)
 #'  plot(ita_region_boundaries)
 #'  }
-#' }
+
 #' @seealso
 #'  \code{\link[raster]{getData}}
 #' @rdname get_boundaries
@@ -31,7 +32,7 @@ get_boundaries <- function(iso,
 
   if (!is.numeric(level)) stop("get_boundaries --> level must be numeric. Aborting !")
 
-  data(iso3166, envir = environment())
+  data(iso3166, package = "maps", envir = environment())
   match_name <- match(iso, iso3166$ISOname)
   if (!is.na(match_name)) {
     iso_code <- maps::iso3166$a3[match_name]
@@ -52,10 +53,15 @@ get_boundaries <- function(iso,
   if (is.null(path)) {
     path = tempdir()
   } else {
-    if (!dir.exists(path) & makefold) {
-      builddir <- try(dir.create(path, recursive = TRUE, showWarnings = FALSE))
-      if (class(builddir == "try-error")) stop("Unable to create the ", path, "folder. Please
+    if (!dir.exists(path)) {
+      if (makefold) {
+        builddir <- try(dir.create(path, recursive = TRUE, showWarnings = FALSE))
+        if (class(builddir == "try-error")) stop("get_boundaries --> Unable to create the ", path, "folder. Please
                                                check your inputs and verify file system permissions. Aborting")
+      } else {
+        stop("get_boundaries --> `path` folder doesn't exist on your system. Either create it beforehand, or
+set `makefold` to TRUE. Aborting")
+      }
     }
   }
   #   ____________________________________________________________________________

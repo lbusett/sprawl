@@ -99,8 +99,8 @@ build_testraster <- function(nrows       = 100,
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#'  p <- build_testshape(100)
-#'  plot(p[1], col = p$id)
+#'  p <- build_testshape(20)
+#   plot(p[1], col = p$id, axes = T)
 #' }
 #' @seealso
 #'  \code{\link[dplyr]{filter}}
@@ -128,12 +128,17 @@ build_testshape <- function(maxpolys,
   polys <- sf::st_as_sf(xy, coords = c(2,3)) %>%
     sf::st_buffer(stats::runif(maxpolys, min = 2, max = rmax)) %>%
     sf::st_set_crs(4326)
-
+  browser()
   if (!allow_overlaps) {
+     res_poly <- polys
+      for(i in 1:dim(polys)[1]){
+        res_poly <- sf::st_difference(res_poly, polys[i,])
+      }
+    }
     int <- sf::st_intersection(polys, polys) %>%
       dplyr::filter(id != id.1) %>%
       sf::st_as_sf()
-    if (length(int$id) > 0) polys <- sf::st_difference(polys, sf::st_union(int))
+    if (length(int$id) > 0) polys <- sf::st_difference(x, sf::st_union(st_combine(y)))
   }
 
   if (tofile) {

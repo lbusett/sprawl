@@ -8,13 +8,24 @@ output:
     highlight: tango
 
 reference:
-  - title: Main Functions
+  - title: Reading/writing spatial data
     desc: ~
     contents:
       - '`readshape`'
       - '`writeshape`'
+  - title: Data fetching from public repositories
+    desc: ~
+    contents:
       - '`get_boundaries`'
+  - title: Raster processing
+    desc: ~
+    contents:
       - '`comp_zonal`'
+  - title: Miscellaneous
+    desc: ~
+    contents:
       - '`build_testraster`'
+      - '`build_testshape`'
+      - '`check_spatype`'
     params:
      - highlight: tango
