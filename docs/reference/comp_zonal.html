@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>comp_zonal � comp_zonal • sprawl</title>
+<title>comp_zonal — comp_zonal • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -88,8 +88,8 @@
 corresponding to the features of a vector (Polygon, Point or Line)</p>
     
 
-    <pre class="usage"><span class='fu'>comp_zonal</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect_zones</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mask_object</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>rastres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summ_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <pre class="usage"><span class='fu'>comp_zonal</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect_zones</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rastres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summ_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>,
   <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>addfeat</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>addgeom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep_null</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -106,41 +106,32 @@ All <code>gdal</code> raster formats are supported</p></li>
 </ol></td>
     </tr>
     <tr>
-      <th>in_vect_zones</th>
-      <td><p>input vector object. Can be either:</p><ol>
-<li><p>A <code>file name</code> corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)</p></li>
-<li><p>An <code>R</code> <code>+sp</code> or <code>sf</code> object</p></li>
-</ol></td>
-    </tr>
-    <tr>
       <th>selbands</th>
       <td><p><code>2-element numeric array</code> defining starting and ending raster bands to be processed
 (e.g., c(1, 10). Default: NULL, meaining that all bands will be processed</p></td>
     </tr>
     <tr>
-      <th>mask_object</th>
-      <td><p>Not used for now - will allow to mask the raster before extraction of values, Default: NULL</p></td>
-    </tr>
-    <tr>
       <th>rastres</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>numeric</code>, if not null, the input raster is resampled to rastres prior to
+data extraction using nearest neighbour resampling. This is useful in case the polygons are small
+with respect to <code>in_rast</code> resolution, Default: NULL (meaning no resampling is done)</p></td>
     </tr>
     <tr>
       <th>id_field</th>
       <td><p><code>character</code> (optional) field of the vector file to be used to identify the
-zones from which data is to be extracted. MUST correspond to a univoc attribute (i.e., no replicated
-values are allowed), If NULL (the default), zonal statistics are extracted on each row of the
+zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
 shapefile, and a new column named <code>id_feat</code> is used on the output to distinguish the zones, Default: NULL</p></td>
     </tr>
     <tr>
       <th>summ_data</th>
       <td><p><code>logical</code> If TRUE, summary statistics of values belonging to each vector zone
-are returned in <code>out$ts_summ~. Default statistics are average, median, standard deviation and variation coefficient. Quantiles of the distribution can be also returned if</code>comp_quant == TRUE`,  Default: TRUE</p></td>
+are returned in <code>out$stats</code>. Default statistics are average, median, standard deviation and variation
+coefficient. Quantiles of the distribution can be also returned if <code>comp_quant == TRUE</code>,  Default: TRUE</p></td>
     </tr>
     <tr>
       <th>full_data</th>
       <td><p><code>logical</code> If TRUE, values of all pixels belonging to each vector zone are returned
-in `out$ts_full', Default: TRUE</p></td>
+in `out$alldata' (Setting this to FALSE can be a good idea for large datasets....), Default: TRUE</p></td>
     </tr>
     <tr>
       <th>comp_quant</th>
@@ -150,59 +141,68 @@ and returned in  <code>out$ts_summ</code>, Default: FALSE</p></td>
     <tr>
       <th>small</th>
       <td><p><code>logical</code> if TRUE, values are returned also for small polygons not including any
-pixel centroids, Default: TRUE</p></td>
+pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, NA values are removed while computing statistics, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>maxchunk</th>
-      <td><p>PARAM_DESCRIPTION, Default: 5e+07</p></td>
+      <td><p>Maximum chunk size (provisional), Default: 5e+07</p></td>
     </tr>
     <tr>
       <th>long</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> If TRUE, <code>out$summ_data</code> is returned in long format, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>addfeat</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, columns of the attribute table of the <code>in_vect_zones</code> layer are
+joined to results of the computation, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>addgeom</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code>, If TRUE, the output sent out as an <code>sf</code> object, preserving the geometry
+of <code>in_vect_zones</code>. Note that this leads to dyuplication of geometries, and may be very slow for
+large datasets. Default: FALSE</p></td>
     </tr>
     <tr>
       <th>keep_null</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> If TRUE, the output preserves features of <code>in_vect_zones</code> falling outside
+the extent of <code>in_rast</code>. Values for these features are set to NA, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, messages concerning the processing status are shown in the
+console, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>ncores</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>numeric</code> maximum number of cores to be used in the processin. If NULL, defaults to
+available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
+or greater than 8, ncores is re-set to the minimum between those two.</p></td>
+    </tr>
+    <tr>
+      <th>input</th>
+      <td><p>vector object. Can be either:</p><ol>
+<li><p>A <code>file name</code> corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)</p></li>
+<li><p>An <code>R</code> <code>+sp</code> or <code>sf</code> object</p></li>
+</ol></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+    <p>out_list <code>list</code> containing two tibbles: <code>out_list$summ_data</code> contains summary statitstics,
+while <code>out_list$alldata</code> contains the data of all pixels extracted (see examples).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
+  <span class='fu'>options</span>(<span class='kw'>tibble.width</span> <span class='kw'>=</span> <span class='fl'>Inf</span>)
   <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='fu'>get</span>(<span class='fu'>load</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"in_rast.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>)))
   <span class='no'>in_zones</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readshape.html'>readshape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
-  <span class='no'>stats</span>    <span class='kw'>&lt;-</span> <span class='fu'>comp_zonal</span>(<span class='no'>in_rast</span>, <span class='no'>in_zones</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: attribute variables are assumed to be spatially constant throughout all geometries</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Some features of the spatial object are outside or partially outside the extent of the input RasterStack !</span>
-#&gt; <span class='warning'>  Outputs for features only partially inside will be retrieved using only the available pixels !</span>
-#&gt; <span class='warning'>  Outputs for features outside rasterstack extent will be set to NA.</span></div><div class='input'>  <span class='fu'>options</span>(<span class='kw'>tibble.width</span> <span class='kw'>=</span> <span class='fl'>Inf</span>)
-  <span class='no'>stats</span></div><div class='output co'>#&gt; $stats
+  <span class='no'>stats</span>    <span class='kw'>&lt;-</span> <span class='fu'>comp_zonal</span>(<span class='no'>in_rast</span>, <span class='no'>in_zones</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: attribute variables are assumed to be spatially constant throughout all geometries</span></div><div class='input'>  <span class='no'>stats</span></div><div class='output co'>#&gt; $stats
 #&gt; Simple feature collection with 552 features and 13 fields
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
@@ -253,8 +253,6 @@ pixel centroids, Default: TRUE</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

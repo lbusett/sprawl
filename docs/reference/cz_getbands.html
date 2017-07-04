@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cz_getbands � cz_getbands • sprawl</title>
+<title>cz_getbands — cz_getbands • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -112,7 +112,12 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>cz_getbands</span>(<span class='no'>in_rast</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt; <span class='error'>Error in inherits(object, "Spatial"): object 'in_rast' not found</span></div><div class='input'><span class='fu'>cz_getbands</span>(<span class='no'>in_rast</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"2013-01-01"</span>, <span class='st'>"2015-12-31"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in inherits(object, "Spatial"): object 'in_rast' not found</span></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>cz_getbands</span>(<span class='no'>in_rast</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>))</div><div class='output co'>#&gt; [1] 1 2
+#&gt; attr(,"date_check")
+#&gt; [1] 1</div><div class='input'><span class='fu'>cz_getbands</span>(<span class='no'>in_rast</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"2013-01-01"</span>, <span class='st'>"2015-12-31"</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to min; returning Inf</span></div><div class='output co'>#&gt; <span class='warning'>Warning: comp_zonal --&gt; End band (selbands[2]) greater than number of available layers ! Resetting End band to nlayers</span></div><div class='output co'>#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+#&gt; [26] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46
+#&gt; attr(,"date_check")
+#&gt; [1] 1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

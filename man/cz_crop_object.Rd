@@ -4,7 +4,7 @@
 \alias{cz_crop_object}
 \title{cz_crop_object}
 \usage{
-cz_crop_object(in_vect_zones, in_rast, id_field)
+cz_crop_object(in_vect_zones, in_rast, id_field, verbose)
 }
 \arguments{
 \item{in_vect_zones}{PARAM_DESCRIPTION}
@@ -12,6 +12,8 @@ cz_crop_object(in_vect_zones, in_rast, id_field)
 \item{in_rast}{PARAM_DESCRIPTION}
 
 \item{id_field}{PARAM_DESCRIPTION}
+
+\item{verbose}{PARAM_DESCRIPTION}
 }
 \value{
 \code{list} with the following fields:

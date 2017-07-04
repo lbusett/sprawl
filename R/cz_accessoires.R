@@ -103,6 +103,7 @@ cz_getbands <- function(in_rast,
 #' @param in_vect_zones PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
 #' @param id_field PARAM_DESCRIPTION
+#' @param verbose PARAM_DESCRIPTION
 #' @return `list` with the following fields:
 #' - in_vect_zones_crop = cropped `sf` object
 #' - outside_feat = data frame containg info on the "removed" features (sequential id and corresponding
@@ -113,8 +114,8 @@ cz_getbands <- function(in_rast,
 #' @importFrom tibble as_data_frame
 cz_crop_object <- function(in_vect_zones,
                            in_rast,
-                           id_field) {
-
+                           id_field,
+                           verbose) {
 
   #   ____________________________________________________________________________
   #   Crop input `sf` object to the extent of the input raster                ####
@@ -130,10 +131,12 @@ cz_crop_object <- function(in_vect_zones,
 
   if (!isTRUE(all.equal(sf::st_bbox(in_vect_zones_crop),
                         (sf::st_bbox(in_vect_zones)), scale = 100))) {
-    warning("Some features of the spatial object are outside or partially outside the extent of the input RasterStack !
+    if(verbose) {
+      message("Some features of the spatial object are outside or partially outside the extent of the input RasterStack !
   Outputs for features only partially inside will be retrieved using only the available pixels !
   Outputs for features outside rasterstack extent will be set to NA."
-    )
+      )
+    }
     if (!setequal(in_vect_zones$mdxtnq, in_vect_zones_crop$mdxtnq)) {
 
       outside_ids   <- setdiff(in_vect_zones$mdxtnq, in_vect_zones_crop$mdxtnq)

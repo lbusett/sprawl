@@ -11,6 +11,9 @@ reference:
   - title: Main Functions
     desc: ~
     contents:
+      - '`readshape`'
+      - '`writeshape`'
+      - '`get_boundaries`'
       - '`comp_zonal`'
       - '`build_testraster`'
     params:

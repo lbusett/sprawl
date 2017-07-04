@@ -21,21 +21,25 @@ summarized}
 \item{seldates}{aaa}
 
 \item{id_field}{\code{character} (optional) field of the vector file to be used to identify the
-zones from which data is to be extracted. MUST correspond to a univoc attribute (i.e., no replicated
-values are allowed), If NULL (the default), zonal statistics are extracted on each row of the
+zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
 shapefile, and a new column named \code{id_feat} is used on the output to distinguish the zones, Default: NULL}
 
 \item{date_check}{zzz}
 
-\item{long}{PARAM_DESCRIPTION, Default: FALSE}
+\item{long}{\code{logical} If TRUE, \code{out$summ_data} is returned in long format, Default: FALSE}
 
-\item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
+\item{verbose}{\code{logical} If TRUE, messages concerning the processing status are shown in the
+console, Default: TRUE}
 
-\item{addfeat}{PARAM_DESCRIPTION, Default: TRUE}
+\item{addfeat}{\code{logical} If TRUE, columns of the attribute table of the \code{in_vect_zones} layer are
+joined to results of the computation, Default: TRUE}
 
-\item{addgeom}{PARAM_DESCRIPTION, Default: TRUE}
+\item{addgeom}{\code{logical}, If TRUE, the output sent out as an \code{sf} object, preserving the geometry
+of \code{in_vect_zones}. Note that this leads to dyuplication of geometries, and may be very slow for
+large datasets. Default: FALSE}
 
-\item{keep_null}{PARAM_DESCRIPTION, Default: FALSE}
+\item{keep_null}{\code{logical} If TRUE, the output preserves features of \code{in_vect_zones} falling outside
+the extent of \code{in_rast}. Values for these features are set to NA, Default: FALSE}
 }
 \value{
 OUTPUT_DESCRIPTION

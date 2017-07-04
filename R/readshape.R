@@ -7,7 +7,7 @@
 #' Otherwise, an `sf` object is returned. Default: FALSE
 #' @param ... other arguments to be passed to[sf::st_read]
 #'
-#' @return Spatial* object (SpatialPolygons, SpatialPoints, eccetera)
+#' @return `sf` or `sp` object (depending on `as_sp` setting)
 #' @export
 #' @importFrom sf read_sf
 #' @examples \dontrun{
@@ -21,7 +21,7 @@
 #'}
 readshape = function(shp_file, as_sp = FALSE, ...){
   if (!file.exists(shp_file)) {
-    stop("readshape --> Input file doesn't exist on your system. Aborting. ")
+    stop("readshape --> Input file doesn't exist on your system ! Aborting !")
   }
   chk <- check_spatype(shp_file)
   if (chk == "vectfile") {

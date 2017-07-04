@@ -48,7 +48,7 @@ cz_polygons <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, 
   #   crop in_vect_zones to in_rast extent if necessary and identify "removed"   ####
   #   features + Find names of the attribute fields of the original shapefile
   #
-  crop               <- cz_crop_object(in_vect_zones, in_rast, cz_opts$id_field)
+  crop               <- cz_crop_object(in_vect_zones, in_rast, cz_opts$id_field, cz_opts$verbose)
   in_vect_zones_crop <- crop$in_vect_zones_crop
   outside_feat       <- crop$outside_feat
   names_shp          <- names(in_vect_zones_crop)[!names(in_vect_zones_crop) %in% c("mdxtnq", "geometry")]

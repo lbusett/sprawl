@@ -5,44 +5,52 @@
 #' 1. A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 #' All `gdal` raster formats are supported
 #' 2. An `raster`, `rasterStack` or `rasterBrick` object
-#' @param in_vect_zones input vector object. Can be either:
+#' @param  input vector object. Can be either:
 #' 1. A `file name` corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 #' 2. An `R` `+sp` or `sf` object
 #' @param selbands `2-element numeric array` defining starting and ending raster bands to be processed
 #' (e.g., c(1, 10). Default: NULL, meaining that all bands will be processed
-#' @param mask_object Not used for now - will allow to mask the raster before extraction of values, Default: NULL
-#' @param rastres PARAM_DESCRIPTION, Default: NULL
+#' @param rastres `numeric`, if not null, the input raster is resampled to rastres prior to
+#' data extraction using nearest neighbour resampling. This is useful in case the polygons are small
+#' with respect to `in_rast` resolution, Default: NULL (meaning no resampling is done)
 #' @param id_field `character` (optional) field of the vector file to be used to identify the
-#' zones from which data is to be extracted. MUST correspond to a univoc attribute (i.e., no replicated
-#' values are allowed), If NULL (the default), zonal statistics are extracted on each row of the
+#' zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
 #' shapefile, and a new column named `id_feat` is used on the output to distinguish the zones, Default: NULL
 #' @param summ_data `logical` If TRUE, summary statistics of values belonging to each vector zone
-#' are returned in `out$ts_summ~. Default statistics are average, median, standard deviation and variation
+#' are returned in `out$stats`. Default statistics are average, median, standard deviation and variation
 #' coefficient. Quantiles of the distribution can be also returned if `comp_quant == TRUE`,  Default: TRUE
 #' @param full_data `logical` If TRUE, values of all pixels belonging to each vector zone are returned
-#' in `out$ts_full', Default: TRUE
+#' in `out$alldata' (Setting this to FALSE can be a good idea for large datasets....), Default: TRUE
 #' @param comp_quant `logical` if TRUE, also quantiles of the distributions of values are computed for each zone
 #' and returned in  `out$ts_summ`, Default: FALSE
 #' @param small `logical` if TRUE, values are returned also for small polygons not including any
-#' pixel centroids, Default: TRUE
-#' @param na.rm PARAM_DESCRIPTION, Default: TRUE
-#' @param maxchunk PARAM_DESCRIPTION, Default: 5e+07
-#' @param long PARAM_DESCRIPTION, Default: FALSE
-#' @param addfeat PARAM_DESCRIPTION, Default: TRUE
-#' @param addgeom PARAM_DESCRIPTION, Default: TRUE
-#' @param keep_null PARAM_DESCRIPTION, Default: FALSE
-#' @param verbose PARAM_DESCRIPTION, Default: TRUE
-#' @param ncores PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
+#' pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE
+#' @param na.rm `logical` If TRUE, NA values are removed while computing statistics, Default: TRUE
+#' @param maxchunk Maximum chunk size (provisional), Default: 5e+07
+#' @param long `logical` If TRUE, `out$summ_data` is returned in long format, Default: FALSE
+#' @param addfeat `logical` If TRUE, columns of the attribute table of the `in_vect_zones` layer are
+#' joined to results of the computation, Default: TRUE
+#' @param addgeom `logical`, If TRUE, the output sent out as an `sf` object, preserving the geometry
+#' of `in_vect_zones`. Note that this leads to dyuplication of geometries, and may be very slow for
+#' large datasets. Default: FALSE
+#' @param keep_null `logical` If TRUE, the output preserves features of `in_vect_zones` falling outside
+#' the extent of `in_rast`. Values for these features are set to NA, Default: FALSE
+#' @param verbose `logical` If TRUE, messages concerning the processing status are shown in the
+#' console, Default: TRUE
+#' @param ncores `numeric` maximum number of cores to be used in the processin. If NULL, defaults to
+#'  available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
+#'  or greater than 8, ncores is re-set to the minimum between those two.
+#' @return out_list `list` containing two tibbles: `out_list$summ_data` contains summary statitstics,
+#' while `out_list$alldata` contains the data of all pixels extracted (see examples).
 #' @export
-#' @details DETAILS
+#' @details
 #' @examples
 #' \dontrun{
 #'   library(sprawl)
+#'   options(tibble.width = Inf)
 #'   in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))
 #'   in_zones <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
 #'   stats    <- comp_zonal(in_rast, in_zones, long = FALSE, verbose = FALSE)
-#'   options(tibble.width = Inf)
 #'   stats
 #'  }
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
@@ -57,7 +65,6 @@
 comp_zonal <- function(in_rast,
                        in_vect_zones,
                        selbands     = NULL,
-                       mask_object  = NULL,
                        rastres      = NULL,
                        id_field     = NULL,
                        summ_data    = TRUE,
@@ -76,7 +83,7 @@ comp_zonal <- function(in_rast,
 {
   # create a list containing processing parameters (used to facilitate passing options to
   # accessory funcrtions)
-  cz_opts <- list(selbands = selbands,   mask_object = mask_object,   rastres   = rastres,
+  cz_opts <- list(selbands = selbands,       rastres   = rastres,
                   id_field     = id_field,   summ_data   = summ_data, full_data = full_data,
                   comp_quant   = comp_quant, small       = small,     na.rm     = na.rm,
                   maxchunk     = maxchunk,   long        = long,      addfeat   = addfeat,

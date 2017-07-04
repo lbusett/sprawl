@@ -15,7 +15,7 @@ Otherwise, an \code{sf} object is returned. Default: FALSE}
 \item{...}{other arguments to be passed to\link[sf:st_read]{sf::st_read}}
 }
 \value{
-Spatial* object (SpatialPolygons, SpatialPoints, eccetera)
+\code{sf} or \code{sp} object (depending on \code{as_sp} setting)
 }
 \description{
 function for easily opening a ESRI shapefile (or other OGR compatible vector file)

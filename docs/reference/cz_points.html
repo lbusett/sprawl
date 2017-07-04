@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cz_points � cz_points • sprawl</title>
+<title>cz_points — cz_points • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -118,8 +118,7 @@ summarized</p></td>
     <tr>
       <th>id_field</th>
       <td><p><code>character</code> (optional) field of the vector file to be used to identify the
-zones from which data is to be extracted. MUST correspond to a univoc attribute (i.e., no replicated
-values are allowed), If NULL (the default), zonal statistics are extracted on each row of the
+zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
 shapefile, and a new column named <code>id_feat</code> is used on the output to distinguish the zones, Default: NULL</p></td>
     </tr>
     <tr>
@@ -128,23 +127,28 @@ shapefile, and a new column named <code>id_feat</code> is used on the output to 
     </tr>
     <tr>
       <th>long</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> If TRUE, <code>out$summ_data</code> is returned in long format, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, messages concerning the processing status are shown in the
+console, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>addfeat</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, columns of the attribute table of the <code>in_vect_zones</code> layer are
+joined to results of the computation, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>addgeom</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code>, If TRUE, the output sent out as an <code>sf</code> object, preserving the geometry
+of <code>in_vect_zones</code>. Note that this leads to dyuplication of geometries, and may be very slow for
+large datasets. Default: FALSE</p></td>
     </tr>
     <tr>
       <th>keep_null</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> If TRUE, the output preserves features of <code>in_vect_zones</code> falling outside
+the extent of <code>in_rast</code>. Values for these features are set to NA, Default: FALSE</p></td>
     </tr>
     </table>
     
