@@ -18,6 +18,13 @@ All \code{gdal} raster formats are supported
 \item An \code{raster}, \code{rasterStack} or \code{rasterBrick} object
 }}
 
+\item{in_vect_zones}{input vector object containing zones from which data has to be extracted.
+Can be either:
+\enumerate{
+\item A \code{file name} corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
+\item An \code{R} \code{+sp} or \code{sf} object
+}}
+
 \item{selbands}{\code{2-element numeric array} defining starting and ending raster bands to be processed
 (e.g., c(1, 10). Default: NULL, meaining that all bands will be processed}
 
@@ -64,12 +71,6 @@ console, Default: TRUE}
 \item{ncores}{\code{numeric} maximum number of cores to be used in the processin. If NULL, defaults to
 available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
 or greater than 8, ncores is re-set to the minimum between those two.}
-
-\item{input}{vector object. Can be either:
-\enumerate{
-\item A \code{file name} corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
-\item An \code{R} \code{+sp} or \code{sf} object
-}}
 }
 \value{
 out_list \code{list} containing two tibbles: \code{out_list$summ_data} contains summary statitstics,

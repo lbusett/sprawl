@@ -5,7 +5,8 @@
 #' 1. A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 #' All `gdal` raster formats are supported
 #' 2. An `raster`, `rasterStack` or `rasterBrick` object
-#' @param  input vector object. Can be either:
+#' @param in_vect_zones input vector object containing zones from which data has to be extracted.
+#'  Can be either:
 #' 1. A `file name` corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 #' 2. An `R` `+sp` or `sf` object
 #' @param selbands `2-element numeric array` defining starting and ending raster bands to be processed

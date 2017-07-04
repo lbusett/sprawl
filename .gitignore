@@ -38,3 +38,5 @@ ignore/
 .Rproj.user
 
 *.pdf
+
+docs/pkgdown\.css
