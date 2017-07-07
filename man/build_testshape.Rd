@@ -4,7 +4,8 @@
 \alias{build_testshape}
 \title{build_testshape}
 \usage{
-build_testshape(maxpolys, allow_overlaps = FALSE, tofile = FALSE)
+build_testshape(maxpolys, rmax = 10, allow_overlaps = FALSE,
+  to_file = FALSE, ext = NULL, crs = NULL, seed = 100)
 }
 \arguments{
 \item{maxpolys}{PARAM_DESCRIPTION}

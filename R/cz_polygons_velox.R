@@ -1,4 +1,4 @@
-#' @title cz_polygons
+#' @title cz_polygons_velox
 #' @description FUNCTION_DESCRIPTION
 #' @param in_vect_zones PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
@@ -42,12 +42,13 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @importFrom magrittr %>%
 
-cz_polygons <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check, cz_opts) {
+cz_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check, cz_opts) {
 
   #   ____________________________________________________________________________
   #   crop in_vect_zones to in_rast extent if necessary and identify "removed"   ####
   #   features + Find names of the attribute fields of the original shapefile
-  #
+
+
   crop               <- cz_crop_object(in_vect_zones, in_rast, cz_opts$id_field, cz_opts$verbose)
   in_vect_zones_crop <- crop$in_vect_zones_crop
   outside_feat       <- crop$outside_feat
@@ -76,15 +77,14 @@ cz_polygons <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, 
 
   if (cz_opts$verbose) {message("comp_zonal--> Rasterizing shape")}
 
-  sp_polys                         <- as(in_vect_zones_crop, "Spatial")
-  rastin_vect_zones <- velox::velox(matrix(data = 0.0 ,
-                                         nrow = dim(in_rast)[1],
-                                         ncol = dim(in_rast)[2]),
-                                  extent = raster::extent(in_rast[[1]]),
-                                  res = raster::res(in_rast[[1]]),
-                                  crs = sp::proj4string(in_rast[[1]]))
-  rastin_vect_zones$crop(sp_polys)
-  rastin_vect_zones$rasterize(sp_polys, field = "mdxtnq", band = 1)
+  # define the extent of the zone object
+  zones_ext <- raster::extent(as.numeric(sf::st_bbox(in_vect_zones_crop))[c(1,3,2,4)])
+  rastzone_object                  <- velox::velox(in_rast[[1]])
+  rastzone_object$rasterbands[[1]] <- matrix(0,dim(in_rast)[1],dim(in_rast)[2])
+  sp_polys <- as(in_vect_zones_crop, "Spatial")
+  rastzone_object$rasterize(sp_polys, field = "mdxtnq", band = 1)
+  rastzone_object$crop(zones_ext)
+  # rastzone_object <- velox::velox(temp_rasterfile)
 
 
   #   ____________________________________________________________________________
@@ -92,7 +92,7 @@ cz_polygons <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, 
   #   This is used later to verify if, on chunked processing, all data from
   #   a polygon were already retrieved
   #
-  cells_per_poly <- rastin_vect_zones$extract(sp_polys, fun = length) %>%
+  cells_per_poly <- rastzone_object$extract(sp_polys, fun = length) %>%
     data.frame(mdxtnq = 1:length(.), count = (.)) %>%
     dplyr::select(2,3)
 
@@ -117,9 +117,9 @@ cz_polygons <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, 
 
   # Initialize other variables and progress bar
   cz_opts$maxchunk  <- cz_opts$maxchunk/cz_opts$ncores
-  n_cells           <- prod(rastin_vect_zones$dim)
-  nrows             <- rastin_vect_zones$dim[1]
-  ncols             <- rastin_vect_zones$dim[2]
+  n_cells           <- prod(rastzone_object$dim)
+  nrows             <- rastzone_object$dim[1]
+  ncols             <- rastzone_object$dim[2]
   n_chunks          <- floor(n_cells / cz_opts$maxchunk) + 1
 
   if (cz_opts$verbose) {
@@ -201,7 +201,7 @@ cz_polygons <- function(in_vect_zones, in_rast, seldates, selbands, n_selbands, 
         out_data  <- data.table::data.table(
           value   =  as.numeric(in_band$rasterbands[[1]][start_cell:end_cell]),
           cell    =  seq(start_cell,end_cell),
-          mdxtnq  =  as.numeric(rastin_vect_zones$rasterbands[[1]][start_cell:end_cell])
+          mdxtnq  =  as.numeric(rastzone_object$rasterbands[[1]][start_cell:end_cell])
           , key = "mdxtnq") %>%
           subset(mdxtnq != 0)    %>%   # remove data outside polygons (== zone_id = 0 OR NA)
           subset(!is.na(mdxtnq))

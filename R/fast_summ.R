@@ -8,19 +8,19 @@
 #' @return OUTPUT_DESCRIPTION
 
 #' @importFrom stats median sd quantile
-#' 
+#'
 fast_summ <- function(in_data, var, comp_quant, band_n, selband) {
-  
+
   summ <- in_data[, list(band_n = band_n ,
                          date   = selband,
-                         N      = length(is.na(value) == TRUE),
+                         N_PIX  = length(is.na(value) == TRUE),
                          avg    = mean(value, na.rm = T),
                          med    = as.double(stats::median(value, na.rm = T)),
                          sd     = stats::sd(value, na.rm = T),
                          min    = as.double(min(value, na.rm = T)),
                          max    = as.double(max(value, na.rm = T))
   ) , by = var]
-  
+
   if (comp_quant) {
     quantiles <- in_data[, list(q01  = stats::quantile(value, .01, na.rm = TRUE),
                                 q05  = stats::quantile(value, .05, na.rm = TRUE),
@@ -35,9 +35,9 @@ fast_summ <- function(in_data, var, comp_quant, band_n, selband) {
                                 q95  = stats::quantile(value, .95, na.rm = TRUE),
                                 q99  = stats::quantile(value, .99, na.rm = TRUE))
                          , by = var]
-    
+
     summ <- cbind(summ, quantiles[,2:13])
   }
-  
+
   return(summ)
 }

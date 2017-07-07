@@ -28,10 +28,10 @@
 #     require(x,character.only=TRUE)}
 # }
 # for (pkg in pkg_list) {pkg_test(pkg)}
-# 
+#
 # memory.limit(8000)
 # #   rasterOptions (setfileext = F)
-# 
+#
 # # Retrieve parameters from the caller
 # in_raster_file = args[1]
 # in_nodata = args[2]
@@ -41,10 +41,10 @@
 # out_folder = args[6]
 # out_filename = args[7]
 # out_format = args[8]
-# 
+#
 # fc_threshold = as.numeric(args[9]).
-# 
-# 
+#
+#
 library(raster)
 library(sf)
 library(gdalUtils)
@@ -58,23 +58,23 @@ in_lc_file         <- "/home/lb/Temp/buttami/MOD15/Italy_mask_ARABLE.tif"
 
 
    file_in <- in_raster_file
-   inrast  <- raster(file_in)
+   inrast  <- raster(in_lc_file)
 
    ext_rast <- extent(inrast)
    csize    <- res(inrast)[1]
 
   out_grid_500file <- "/home/lb/Temp/buttami/MOD15/grid_500.shp"
-  out =  create_fishnet(inrast, cellsize = csize, out_shape = out_grid_500file, 
+  out =  create_fishnet(inrast, cellsize = csize, out_shape = out_grid_500file,
           overwrite = TRUE)
 
 in_grid <- readshape(in_ermes_grid_laea)
-in_grid2 = in_grid[5500:6500,] %>% 
+in_grid2 = in_grid[5500:6500,] %>%
   as("Spatial")
 tempgrid <- writeshape(in_grid2, "/home/lb/Temp/buttami/MOD15/smallgrid_250.shp")
 aa = readshape("/home/lb/Temp/buttami/MOD15/smallgrid_250.shp")
 mapview(in_grid2)
 
-out = fastzonal(raster(in_lc_file),"/home/lb/Temp/buttami/MOD15/grid_500.shp", full_data = FALSE, verbose = TRUE, ncores = 1)
+out = comp_zonal(raster(in_lc_file),"/home/lb/Temp/buttami/MOD15/grid_500.shp",full_data = FALSE,verbose = TRUE,ncores = 4, mode = "std", maxchunk = 506)
 
 
 
@@ -108,11 +108,11 @@ temp_res <- c(46.3312,46.3316)
 ERMES_cells_poly <- readshape(in_ermes_grid_laea)
 
 if(file.exists(out_ermes_grid_reproj) == FALSE) {
-  
-  ERMES_cells_poly_reproj = st_transform(ERMES_cells_poly, proj4string(in_raster_file)) %>% 
+
+  ERMES_cells_poly_reproj = st_transform(ERMES_cells_poly, proj4string(in_raster_file)) %>%
     as("Spatial")
   writeshape(ERMES_cells_poly_reproj, out_ermes_grid_reproj, overwrite = TRUE) #save the shapefile
-  
+
 } else {
   ERMES_cells_poly_reproj = readshape(out_ermes_grid_reproj, as_sp = T)
 }
@@ -134,28 +134,28 @@ temp_raster_lai = gdalwarp(tempmaskraster,out_file_raster, s_srs = in_raster_fil
 
 # NEW ------------------
 # Create a polygon reference Grid for the lc file, to be used to compute the arable_fc in each cell of the input raster
-# of each cell of the original input LAI image. Then "convert" it to a raster with values equal to the "id" of the grid 
+# of each cell of the original input LAI image. Then "convert" it to a raster with values equal to the "id" of the grid
 
 if (file.exists(aggregate_lc_RData_file) ==F ){
-  
+
   rtemp = raster(out_file_raster)		# get input resized on study area
   grid = getGridTopology(as(rtemp, "SpatialGrid"))		# create a grid
   pix_grid = SpatialGrid(grid,laea_crs)
   pix_grid_cell = SpatialGridDataFrame(pix_grid, data = data.frame(id = seq(1:(dim(rtemp)[1]*dim(rtemp)[2]))),laea_crs)
-  sp_polygons_lai = as(pix_grid_cell, "SpatialPolygonsDataFrame")	#create the shape - convert grid to polygons   
-  # write to shapefile	
+  sp_polygons_lai = as(pix_grid_cell, "SpatialPolygonsDataFrame")	#create the shape - convert grid to polygons
+  # write to shapefile
   out_file_lc_shape <- tempfile(fileext = ".shp")
   writeshape(sp_polygons_lai, out_file_lc_shape,  overwrite = T) #save the shapefile
   extent_poly_lai = extent(sp_polygons_lai)
   out_file_lc_grid <- tempfile(fileext = ".tif")
   temp_raster_cells_lc <- gdal_rasterize(out_file_lc_shape,out_file_lc_grid,a = "id", output_Raster = T,
-                 te = c(extent_poly_lai@xmin, extent_poly_lai@ymin,extent_poly_lai@xmax, extent_poly_lai@ymax), 
+                 te = c(extent_poly_lai@xmin, extent_poly_lai@ymin,extent_poly_lai@xmax, extent_poly_lai@ymax),
                  tr = temp_res, tap = F, output_Raster = T)
   data_raster_cells_lc = getValues(temp_raster_cells_lc)
-  
+
   # NEW --------------
   # Compute the arable_fc for each pixel of the raster, and save the fc to a RData file
-  
+
   # Get the values of the "dummy" raster of cells codes
   in_lc_rast = raster(in_lc_file)
   in_lc_raster_proj = CRS(proj4string(in_lc_rast))
@@ -164,17 +164,17 @@ if (file.exists(aggregate_lc_RData_file) ==F ){
   temp_raster_lc <- gdalwarp(in_lc_file,tempfile_raster_lc, s_srs = in_lc_raster_proj, t_srs = laea_crs,
            tr = temp_res, r = "near", te = c(extent_poly_lai@xmin, extent_poly_lai@ymin,extent_poly_lai@xmax, extent_poly_lai@ymax),
            dstnodata =  255,  overwrite = T, tap = F, output_Raster = T)
-  
+
   # temp_raster_lc <- raster(file.path(temp_folder, 'temporary_raster_lc.tif'))
   in_nodata = 255
   # temp_raster_lc <- raster(file.path(temp_folder, 'temporary_raster_lc.tif'))
   data_raster_lc = getValues(temp_raster_lc)
   nodata_pixs = which(data_raster_lc == in_nodata)		# set NODATA to NA
   data_raster_lc [nodata_pixs] = NA
-  
+
   # Create a Data.table with two columns. First column taken from the cell_codes raster - tells to which cell each pixel correspond
   # Second column taken from the increased resolution input lc zraster - tells which lc values correspond to each cell
-  
+
   cells_dt_lc = data.table(int_id = data_raster_cells_lc, value = data_raster_lc)
   names(cells_dt_lc)[2] = "value"
   setkey(cells_dt_lc, int_id)  # Set a indexing key to increase speed of zonal statistics computation
@@ -184,9 +184,9 @@ if (file.exists(aggregate_lc_RData_file) ==F ){
   cell_codes = unique(cells_dt_lc$int_id)
   good_codes = seq(1:max(cell_codes))
   aggregate_values_lc = aggregate_values_lc[.(good_codes)] # Remove rows corresponding to areas outside ERMES grid
-  
+
   save(aggregate_values_lc, file = aggregate_lc_RData_file)
-  
+
 }
 
 # - ---------------------------------------------------------------
@@ -217,7 +217,7 @@ writeRaster(temp_raster_lai , out_temp_raster_masked, NAflag = as.numeric(in_nod
 # #out_folder_raster_aggregated_stdev = file.path(out_folder,'ERMES_Grid/Raster/Stdev')
 # temp_folder = file.path(out_folder,'Temp_Data')
 # in_raster_file_masked = file.path(temp_folder,'maske_in_raster.tif')
-# 
+#
 # out_file_RData = file.path(out_folder_RData, paste(basename(in_raster_file),'_2x2Grid.RData', sep = ''))
 # out_file_RData_lc = file.path(out_folder_RData, paste(basename(in_raster_file),'_2x2Grid_lc.RData', sep = ''))
 # out_file_raster = file.path(out_folder_raster, paste(basename(in_raster_file),'_LAEA', sep = ''))
@@ -238,18 +238,18 @@ writeRaster(temp_raster_lai , out_temp_raster_masked, NAflag = as.numeric(in_nod
 # Define proj4 string for laea projection
 # laea_crs = CRS("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0 +units=m +no_defs")
 # raster_orig_crs = CRS(in_raster_file_proj4)
-# 
+#
 # # Load the ERMES polygon reference Grid (LAEA projection) and convert it to projection of original raster
 # # If reprojected grid already existing this is skipped and reprojected grid is read from existing file
 # # This avoid redo the transformation for each file to be reprojected/regridded !
-# 
+#
 # out_ermes_grid_reproj = file.path(temp_folder, paste('ERMES_Grid_reprojected',in_raster_proj,'.shp',sep = ''))
 # ERMES_cells_poly = readOGR(dirname(in_ermes_grid_laea),file_path_sans_ext(basename(in_ermes_grid_laea)))
-# 
-# 
+#
+#
 # extent_poly_laea = extent(ERMES_cells_poly)   # Retrieve extnt of ERMES grid in original LAEA proj
 # extent_poly_reproj = extent(ERMES_cells_poly_reproj)  # Retrieve extnt of ERMES grid in the projection of input raster
-# 
+#
 
 
 
@@ -261,7 +261,7 @@ writeRaster(temp_raster_lai , out_temp_raster_masked, NAflag = as.numeric(in_nod
 # Create a temporary raster file with higher spatial resolution than the original, resized on the extent of the ERMES reference grid
 temporary_raster = tempfile(fileext =  ".tif")
 temp_raster <- gdalwarp(out_temp_raster_masked,temporary_raster, s_srs = laea_crs, t_srs = laea_crs,
-         tr = temp_res, r = "near", 
+         tr = temp_res, r = "near",
          te = c(extent_poly_reproj@xmin, extent_poly_reproj@ymin,extent_poly_reproj@xmax, extent_poly_reproj@ymax),
          overwrite = T, tap = F, output_Raster = T)
 
@@ -277,7 +277,7 @@ data_raster = getValues(temp_raster)
 
 if (file.exists(grid_rasterized_laea) == FALSE){
   gdal_rasterize(out_ermes_grid_reproj,grid_rasterized_laea, a = "FID", output_Raster = T,
-                 te = c(extent_poly_reproj@xmin, extent_poly_reproj@ymin,extent_poly_reproj@xmax, extent_poly_reproj@ymax), 
+                 te = c(extent_poly_reproj@xmin, extent_poly_reproj@ymin,extent_poly_reproj@xmax, extent_poly_reproj@ymax),
                  tr = temp_res, tap = F)
 }
 # Get the values of the "dummy" raster of cells codes

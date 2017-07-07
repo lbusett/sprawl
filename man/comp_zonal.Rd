@@ -8,7 +8,7 @@ comp_zonal(in_rast, in_vect_zones, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,
   comp_quant = FALSE, small = TRUE, na.rm = TRUE, maxchunk = 5e+07,
   long = FALSE, addfeat = TRUE, addgeom = TRUE, keep_null = FALSE,
-  verbose = TRUE, ncores = NULL)
+  verbose = TRUE, ncores = NULL, mode = "velox")
 }
 \arguments{
 \item{in_rast}{input raster. Can be wither:

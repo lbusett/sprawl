@@ -73,13 +73,14 @@ comp_zonal <- function(in_rast,
                        comp_quant   = FALSE,
                        small        = TRUE,
                        na.rm        = TRUE,
-                       maxchunk     = 50E6,
+                       maxchunk     = 5E6,
                        long         = FALSE,
                        addfeat      = TRUE,
                        addgeom      = TRUE,
                        keep_null    = FALSE,
                        verbose      = TRUE,
-                       ncores       = NULL
+                       ncores       = NULL,
+                       mode         = "std"
 )
 {
   # create a list containing processing parameters (used to facilitate passing options to
@@ -213,7 +214,13 @@ comp_zonal <- function(in_rast,
         #   __________________________________________________________________________________
         #   Extract values if the zone object is a polygon shapefile or already a raster  ####
 
-        out_list <- cz_polygons(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check, cz_opts)
+        if (mode == "velox") {
+          out_list <- cz_polygons_velox(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check, cz_opts)
+        } else {
+          # browser()
+          out_list <- cz_polygons_std(in_vect_zones, in_rast, seldates, selbands,
+                                      n_selbands, date_check, cz_opts)
+        }
       }
     }
     return(out_list)
