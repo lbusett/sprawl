@@ -27,44 +27,58 @@ cz_getbands <- function(in_rast,
   }
   nbands <- raster::nlayers(in_rast)
 
-  # Check if selbands is a 2-element integer or dates array -----
+  # Check if dates attributes are present in in_rast -----
+
+  if (class(raster::getZ(in_rast)) == "Date") {
+    dates <- raster::getZ(in_rast)
+    date_chk <- 1
+  } else {
+    date_chk <- 0
+  }
+
+
   if (is.null(selbands)) {
     selbands_out = c(1,nbands)
+    seldates = NA
+  }
+
+  # Check if selbands is a 2-element integer array -----
+  if (is.numeric(selbands)) {
+    if (length(selbands[!is.na(selbands)]) != 2) stop(banderr_msg)
+    selbands_out <- selbands
+    seldates = NA
   } else {
+    # Check if selbands is a 2-element character array cohercible to date -----
     if (is.character(selbands)) {
       seldates <- try(as.Date(selbands), silent = TRUE)
       if (class(seldates) == "try-error") stop(banderr_msg)
       if (length(seldates[!is.na(seldates)]) != 2) stop(banderr_msg)
-      selbands_out <- seldates
+      dates <- seldates
     } else {
-      if (!(is.numeric(selbands) & length(selbands[!is.na(selbands)]) == 2))  stop(banderr_msg)
-      selbands_out <- selbands
+      # Check if selbands is a 2-element Date array -----
+      if (lubridate::is.timepoint(selbands)) {
+        seldates <- try(as.Date(selbands), silent = TRUE)
+        if (class(seldates) == "try-error") stop(banderr_msg)
+        if (length(seldates[!is.na(seldates)]) != 2) stop(banderr_msg)
+        dates <- seldates
+      }
     }
-  }
-  # Check if dates attributes are present in in_rast -----
-  date_chk <- 0
-  if (!class(raster::getZ(in_rast)) == "Date") {
-    if(verbose) message("comp_zonal --> Input doesn't contain valid dates in its 'Z' attribute. Band numbers will be used instead
-    on the outputs")
-    dates <-  NA
-  } else {
-    dates <- raster::getZ(in_rast)
-    date_chk <- 1
-    if ((max(is.na(dates))) != 0) {
-      warning("comp_zonal --> Dates of input time series raster contain some NA values - They will be ignored !")
-      dates <- NA
-      date_chk <- 0
-    }
+
   }
 
   # Input raster contains valid date information AND dates are passed as argument
 
-  if (date_chk & lubridate::is.timepoint((selbands_out))) {
+  if (date_chk & lubridate::is.timepoint(seldates)) {
     selbands_out    <- c(NA,NA)
     selbands_out[1] <- min(which(dates >= selbands[1]))
     selbands_out[2] <- min(which(dates > selbands[2])) - 1
+  } else {
+    # selbands provided as dates, but no dates in input raster --> aborting
+    if (lubridate::is.timepoint(seldates) & !date_chk) {
+      stop("comp_zonal --> Input raster doesn't contain valid dates in its 'Z' attribute.
+Please specify the layers to be processed using a numeric array (e.g., selbands = c(1,5)). Aborting. ")
+    }
   }
-
 
   # Check for consistency in selbands -----
   if (selbands_out[1] > nbands) {
