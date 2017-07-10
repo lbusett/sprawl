@@ -2,10 +2,9 @@ title: sprawl
 template:
   params:
     bootswatch: cerulean
-    highlight: tango
 output:
   html_document:
-    highlight: tango
+    highlight: zenburn
 
 reference:
   - title: Reading/writing spatial data
@@ -29,3 +28,27 @@ reference:
       - '`check_spatype`'
     params:
      - highlight: tango
+
+navbar:
+  type: inverse
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Reference"
+      href: reference/index.html
+    - text: "Articles"
+      menu:
+        - text: "Heading 1"
+        - text: "Article A"
+          href: articles/page_a.html
+        - text: "Article B"
+          href: articles/page_b.html
+        - text: "---------"
+        - text: "Heading 2"
+        - text: "Article C"
+          href: articles/page_c.html
+        - text: "Article D"
+          href: articles/page_d.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://example.com
