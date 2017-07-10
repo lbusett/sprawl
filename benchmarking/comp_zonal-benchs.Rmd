@@ -7,7 +7,7 @@ output:
     tab_caption: yes
 ---
 
-Perfom benchmarkinng tests on [`sprawl::comp_zonal`]
+Perfom benchmarkinng tests on `sprawl::comp_zonal`
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 

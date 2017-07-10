@@ -130,14 +130,19 @@ cz_crop_object <- function(in_vect_zones,
                            in_rast,
                            id_field,
                            verbose) {
-
+browser()
   #   ____________________________________________________________________________
   #   Crop input `sf` object to the extent of the input raster                ####
 
-  in_vect_zones_crop <- sf::st_intersection(in_vect_zones,
-                                            sf::st_set_crs(sf::st_as_sf(as(raster::extent(in_rast[[1]]),
-                                                                           "SpatialPolygons")),
-                                                           sf::st_crs(in_vect_zones)))
+  ext_sf <- sf::st_set_crs(sf::st_as_sf(as(raster::extent(in_rast[[1]]),
+                                           "SpatialPolygons")),
+                           sf::st_crs(in_vect_zones))
+
+  in_vect_zones_crop <- sf::st_intersection(in_vect_zones, st_geometry(ext_sf))
+
+  in_vect_zones_crop <- sf::st_intersection(st_geometry(in_vect_zones),
+                                            st_geometry(ext_sf))
+
   #   ____________________________________________________________________________
   #   Check if the cropped file has different extension (i.e., it was croppped) ####
   #   If so, check if any features were dropped because outside the raster extent
