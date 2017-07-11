@@ -5,7 +5,7 @@
 #' @param ncols `numeric` number of columns, Default: 100
 #' @param nbands `numeric` number of bands, Default: 1
 #' @param with_nodata PARAM_DESCRIPTION, Default: TRUE
-#' @param tofile `logical` if TRUE, the rasterStack is saved to a TIFF file, Default: FALSE
+#' @param to_file `logical` if TRUE, the rasterStack is saved to a TIFF file, Default: FALSE
 #' @param out_file `character` filename where the test raster should be saved (ignored if
 #' `to_file` = NULL). If `out_file` is NULL, the file is saved in `R` temporary folder, otherwise the
 #' filename specified in `out_file` is used. In both cases, the name of the created TIFF file is

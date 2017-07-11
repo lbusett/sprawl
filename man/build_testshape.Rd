@@ -10,9 +10,17 @@ build_testshape(maxpolys, rmax = 10, allow_overlaps = FALSE,
 \arguments{
 \item{maxpolys}{PARAM_DESCRIPTION}
 
+\item{rmax}{PARAM_DESCRIPTION, Default: 10}
+
 \item{allow_overlaps}{PARAM_DESCRIPTION, Default: FALSE}
 
 \item{to_file}{PARAM_DESCRIPTION, Default: FALSE}
+
+\item{ext}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{crs}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{seed}{PARAM_DESCRIPTION, Default: 100}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -25,10 +33,12 @@ DETAILS
 }
 \examples{
 \dontrun{
- p <- build_testshape(20)
+if(interactive()){
+ #EXAMPLE1
+ }
 }
 }
 \seealso{
-\code{\link[dplyr]{filter}}
 \code{\link[tibble]{as_tibble}}
+\code{\link[stats]{runif}}
 }

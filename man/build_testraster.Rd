@@ -16,14 +16,14 @@ build_testraster(nrows = 100, ncols = 100, nbands = 1,
 
 \item{with_nodata}{PARAM_DESCRIPTION, Default: TRUE}
 
+\item{to_file}{\code{logical} if TRUE, the rasterStack is saved to a TIFF file, Default: FALSE}
+
 \item{out_file}{\code{character} filename where the test raster should be saved (ignored if
 \code{to_file} = NULL). If \code{out_file} is NULL, the file is saved in \code{R} temporary folder, otherwise the
 filename specified in \code{out_file} is used. In both cases, the name of the created TIFF file is
 returned instead than the \code{rasterStack} itself, Default: NULL.}
 
 \item{...}{Any other arguments to be passed to \code{raster::raster} while creating the output raster.}
-
-\item{tofile}{\code{logical} if TRUE, the rasterStack is saved to a TIFF file, Default: FALSE}
 }
 \value{
 Either the "test" raster in \code{rasterStack} format, or the filename where it was saved (if

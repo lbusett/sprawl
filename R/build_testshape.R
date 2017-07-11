@@ -1,23 +1,29 @@
 #' @title build_testshape
 #' @description FUNCTION_DESCRIPTION
 #' @param maxpolys PARAM_DESCRIPTION
+#' @param rmax PARAM_DESCRIPTION, Default: 10
 #' @param allow_overlaps PARAM_DESCRIPTION, Default: FALSE
 #' @param to_file PARAM_DESCRIPTION, Default: FALSE
+#' @param ext PARAM_DESCRIPTION, Default: NULL
+#' @param crs PARAM_DESCRIPTION, Default: NULL
+#' @param seed PARAM_DESCRIPTION, Default: 100
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#'  p <- build_testshape(20)
-#   plot(p[1], col = p$id, axes = T)
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
 #' }
 #' @seealso
-#'  \code{\link[dplyr]{filter}}
 #'  \code{\link[tibble]{as_tibble}}
+
+#'  \code{\link[stats]{runif}}
 #' @rdname build_testshape
 #' @export
-#' @importFrom dplyr filter
-#' @importFrom sf st_as_sf st_buffer st_set_crs st_intersection st_difference st_union
+#' @importFrom sf st_crs st_as_sf st_buffer st_set_crs st_agr st_union st_within st_intersection st_difference
 #' @importFrom tibble as_tibble
+#' @importFrom stats runif
 #' @importFrom magrittr "%>%"
 #'
 build_testshape <- function(maxpolys,

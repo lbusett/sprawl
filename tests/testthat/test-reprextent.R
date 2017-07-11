@@ -5,7 +5,7 @@ testthat::test_that("Test extent_reproj",{
   # no proj set
   testthat::expect_error(extent_reproj(in_pts))
 
-  in_rast  <- get(load(system.file("extdata", "sprawl_EVItest", package = "sprawl")))
+  in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
   # no proj set
   testthat::expect_error(extent_reproj(extent(in_rast[[1]]), "+init=epsg:3035", "+init=epsg:432ds6"))
 

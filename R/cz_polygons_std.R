@@ -101,7 +101,7 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
 
   # then convert it to raster
   if (cz_opts$verbose) {(message("comp_zonal --> Writing temporary rasterized shapefile"))}
-  temp_rasterfile = tempfile(tmpdir = tempdir(), fileext = ".tiff")
+  temp_rasterfile = tempfile(tmpdir = tempdir(), fileext = ".tif")
   max_id <- max(in_vect_zones_crop$mdxtnq)
   ot <- dplyr::case_when(
     (max_id <= 255) == 1 ~ "Byte",
@@ -109,25 +109,32 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
     (max_id >= 65536) == 1 ~ "Int32"
   )
   # cropped_rast_vrt <- tempfile(fileext = ".vrt")
-browser()
-  gdalpath <- getOption("gdalUtils_gdalPath")[[1]]$path
-  rast_string <- paste("-tr", paste(cz_opts$rastres, collapse = " "),
+# browser()
+  gdalpath    <- getOption("gdalUtils_gdalPath")[[1]]$path
+  rast_string <- paste("-tr", paste(cz_opts$rastres/20, collapse = " "),
                                     "-te", paste(raster::extent(in_rast)[c(1, 3, 2, 4)], collapse = " "),
                                     "-a", "mdxtnq",
                                     "-co" , "COMPRESS=DEFLATE",
+                                     "-co" , "PREDICTOR=3",
+                                    "-co"  ,"NUM_THREADS=4",
                                     "-ot" , ot, sep = " ",
+                                    "-of GTiff",
                        temp_shapefile,
                        temp_rasterfile
                        )
-  system2(file.path(gdalpath, "gdal_rasterize"), args = rast_string)
+  system2(file.path(gdalpath, "gdal_rasterize"), args = rast_string, stdout = NULL)
 
-  # gdalUtils::gdal_rasterize(temp_shapefile,
-  #                           temp_rasterfile,
-  #                           tr = cz_opts$rastres,
-  #                           te = raster::extent(in_rast)[c(1, 3, 2, 4)],
-  #                           a  = "mdxtnq",
-  #                           co = c("COMPRESS=DEFLATE"),
-  #                           ot = ot)
+  aa = raster(temp_rasterfile)
+  bb = getValues(aa)
+  # browser()
+#   gdalUtils::gdal_rasterize(temp_shapefile,
+#                             temp_rasterfile,
+#                             tr = cz_opts$rastres,
+#                             te = raster::extent(in_rast)[c(1, 3, 2, 4)],
+#                             a  = "mdxtnq",
+#                             co = c("COMPRESS=DEFLATE", "NUM_THREADS=4"),
+#                             ot = ot,
+#                             verbose = T)
 
   # cropped_zones_vrt <- tempfile(fileext = ".vrt")
   # gdalUtils::gdalbuildvrt(temp_rasterfile,
@@ -179,15 +186,15 @@ browser()
   #   _______________________________________________________________________________
   #   Extract data from in_rast - foreach cycle on selected bands of in_rast    ####
 
-  # results <- foreach::foreach(band = 1:n_selbands,
-  #                             .packages = c("gdalUtils", "raster",
-  #                                           "dplyr", "tibble",
-  #                                           "data.table", "sf", "velox"),
-  #                             .verbose = TRUE,
-  #                             .options.snow = opts) %dopar%
-      # {
-  for (band in 1:1) {
-browser()
+  results <- foreach::foreach(band = 1:n_selbands,
+                              .packages = c("gdalUtils", "raster",
+                                            "dplyr", "tibble",
+                                            "data.table", "sf", "velox"),
+                              .verbose = FALSE,
+                              .options.snow = opts) %dopar%
+  {
+  # for (band in 1:1) {
+# browser()
     if (cz_opts$verbose) {
       message("comp_zonal--> Extracting data from ", ifelse(date_check, " dates", "bands"), " - Please wait !")
     }

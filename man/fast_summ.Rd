@@ -4,7 +4,7 @@
 \alias{fast_summ}
 \title{fast_summ}
 \usage{
-fast_summ(in_data, var, comp_quant, band_n, selband)
+fast_summ(in_data, var, comp_quant, FUN, band_n, selband)
 }
 \arguments{
 \item{in_data}{PARAM_DESCRIPTION}
@@ -12,6 +12,8 @@ fast_summ(in_data, var, comp_quant, band_n, selband)
 \item{var}{PARAM_DESCRIPTION}
 
 \item{comp_quant}{PARAM_DESCRIPTION}
+
+\item{FUN}{PARAM_DESCRIPTION}
 
 \item{band_n}{PARAM_DESCRIPTION}
 

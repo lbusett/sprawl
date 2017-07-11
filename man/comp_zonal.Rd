@@ -6,9 +6,9 @@
 \usage{
 comp_zonal(in_rast, in_vect_zones, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, small = TRUE, na.rm = TRUE, maxchunk = 5e+06,
-  long = FALSE, addfeat = TRUE, addgeom = TRUE, keep_null = FALSE,
-  verbose = TRUE, ncores = NULL, mode = "std")
+  comp_quant = FALSE, FUN = NULL, small = TRUE, na.rm = TRUE,
+  maxchunk = 5e+06, long = FALSE, addfeat = TRUE, addgeom = TRUE,
+  keep_null = FALSE, verbose = TRUE, ncores = NULL, mode = "std")
 }
 \arguments{
 \item{in_rast}{input raster. Can be wither:
@@ -51,7 +51,7 @@ pixel centroids. Values are taken from all cells "touched" by the small polygon,
 
 \item{na.rm}{\code{logical} If TRUE, NA values are removed while computing statistics, Default: TRUE}
 
-\item{maxchunk}{Maximum chunk size (provisional), Default: 5e+07}
+\item{maxchunk}{Maximum chunk size (provisional), Default: 5e+06}
 
 \item{long}{\code{logical} If TRUE, \code{out$summ_data} is returned in long format, Default: FALSE}
 
