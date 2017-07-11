@@ -4,11 +4,11 @@
 \alias{cz_points}
 \title{cz_points}
 \usage{
-cz_points(zone_object, in_rast, n_selbands, selbands, seldates, id_field,
+cz_points(in_vect_zones, in_rast, n_selbands, selbands, seldates, id_field,
   date_check, long, verbose, addfeat, addgeom, keep_null)
 }
 \arguments{
-\item{zone_object}{\code{sf} object on which features the zonal statistics has to be computed}
+\item{in_vect_zones}{\code{sf} object on which features the zonal statistics has to be computed}
 
 \item{in_rast}{single- or multi-band \code{rasterStack} object containing values to be extracted and
 summarized}
