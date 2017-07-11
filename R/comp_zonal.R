@@ -27,7 +27,7 @@
 #' @param small `logical` if TRUE, values are returned also for small polygons not including any
 #' pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE
 #' @param na.rm `logical` If TRUE, NA values are removed while computing statistics, Default: TRUE
-#' @param maxchunk Maximum chunk size (provisional), Default: 5e+07
+#' @param maxchunk Maximum chunk size (provisional), Default: 5e+06
 #' @param long `logical` If TRUE, `out$summ_data` is returned in long format, Default: FALSE
 #' @param addfeat `logical` If TRUE, columns of the attribute table of the `in_vect_zones` layer are
 #' joined to results of the computation, Default: TRUE
@@ -41,6 +41,7 @@
 #' @param ncores `numeric` maximum number of cores to be used in the processin. If NULL, defaults to
 #'  available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
 #'  or greater than 8, ncores is re-set to the minimum between those two.
+#' @param mode `character` "std" or "velox", Default: "std"
 #' @return out_list `list` containing two tibbles: `out_list$summ_data` contains summary statitstics,
 #' while `out_list$alldata` contains the data of all pixels extracted (see examples).
 #' @export
@@ -71,6 +72,7 @@ comp_zonal <- function(in_rast,
                        summ_data    = TRUE,
                        full_data    = TRUE,
                        comp_quant   = FALSE,
+                       FUN          = NULL,
                        small        = TRUE,
                        na.rm        = TRUE,
                        maxchunk     = 5E6,
@@ -85,12 +87,12 @@ comp_zonal <- function(in_rast,
 {
   # create a list containing processing parameters (used to facilitate passing options to
   # accessory funcrtions)
-  cz_opts <- list(selbands = selbands,       rastres   = rastres,
+  cz_opts <- list(selbands = selbands,       rastres     = rastres,
                   id_field     = id_field,   summ_data   = summ_data, full_data = full_data,
-                  comp_quant   = comp_quant, small       = small,     na.rm     = na.rm,
+                  comp_quant   = comp_quant, FUN         = FUN,       small       = small, na.rm     = na.rm,
                   maxchunk     = maxchunk,   long        = long,      addfeat   = addfeat,
-                  addgeom      = addgeom,    keep_null   = keep_null,   verbose   = verbose,
-                  ncores       = ncores)
+                  addgeom      = addgeom,    keep_null   = keep_null, verbose   = verbose,
+                  ncores       = ncores,     mode = mode)
 
   #   ______________________________________________________________________________________________
   #   Check input types - send errors/warnings if not compliant + open the in_vect_zones if      ####
@@ -215,7 +217,8 @@ comp_zonal <- function(in_rast,
         #   Extract values if the zone object is a polygon shapefile or already a raster  ####
 
         if (mode == "velox") {
-          out_list <- cz_polygons_velox(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check, cz_opts)
+          out_list <- cz_polygons_velox(in_vect_zones, in_rast, seldates, selbands, n_selbands,
+                                        date_check, cz_opts)
         } else {
           # browser()
           out_list <- cz_polygons_std(in_vect_zones, in_rast, seldates, selbands,

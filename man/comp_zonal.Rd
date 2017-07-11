@@ -6,9 +6,9 @@
 \usage{
 comp_zonal(in_rast, in_vect_zones, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, small = TRUE, na.rm = TRUE, maxchunk = 5e+07,
+  comp_quant = FALSE, small = TRUE, na.rm = TRUE, maxchunk = 5e+06,
   long = FALSE, addfeat = TRUE, addgeom = TRUE, keep_null = FALSE,
-  verbose = TRUE, ncores = NULL, mode = "velox")
+  verbose = TRUE, ncores = NULL, mode = "std")
 }
 \arguments{
 \item{in_rast}{input raster. Can be wither:
@@ -71,6 +71,8 @@ console, Default: TRUE}
 \item{ncores}{\code{numeric} maximum number of cores to be used in the processin. If NULL, defaults to
 available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
 or greater than 8, ncores is re-set to the minimum between those two.}
+
+\item{mode}{\code{character} "std" or "velox", Default: "std"}
 }
 \value{
 out_list \code{list} containing two tibbles: \code{out_list$summ_data} contains summary statitstics,

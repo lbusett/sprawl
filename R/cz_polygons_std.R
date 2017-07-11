@@ -49,6 +49,7 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
   #   features + Find names of the attribute fields of the original shapefile
 
   if (cz_opts$verbose) message("comp_zonal --> Cropping the zones object on extent of the raster")
+  #TODO  Do this only if extent of zone object is larger than that of the raster (in any direction)
   crop               <- cz_crop_object(in_vect_zones, in_rast, cz_opts$id_field, cz_opts$verbose)
   in_vect_zones_crop <- crop$in_vect_zones_crop
   outside_feat       <- crop$outside_feat
@@ -58,13 +59,15 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
   # polygon when processing in "chunks")
 
   if (cz_opts$verbose) message("comp_zonal --> Computing bounding boxes of input polygons")
+
   bboxes <- in_vect_zones_crop %>%
-    dplyr::group_by(mdxtnq) %>%
-    dplyr::summarize(min_y = sf::st_bbox(geometry)[2],
-                     max_y = sf::st_bbox(geometry)[4])
+    data.table::as.data.table()
+  bboxes = bboxes[, list(min_y = sf::st_bbox(geometry)[2],
+                   max_y = sf::st_bbox(geometry)[4]),
+            by = "mdxtnq"]
 
   # find out the file on disk to which the raster stack refers to
-  in_rastfilename    <- in_rast@layers[[1]]@file@name
+  # in_rastfilename    <- in_rast@layers[[1]]@file@name
 
   #   ____________________________________________________________________________
   #   If `cz_opts$rastres` is not null and is cz_opts$smaller tha the original                ####
@@ -87,7 +90,7 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
   #   ____________________________________________________________________________
   #   Rasterize the shape to a temporary file (use `velox` to improve speed)  ####
 
-  if (cz_opts$verbose) {message("comp_zonal--> Rasterizing shape")}
+  if (cz_opts$verbose) {message("comp_zonal --> Rasterizing shape")}
 
   # define the extent of the zone object
   # zones_ext <- raster::extent(as.numeric(sf::st_bbox(in_vect_zones_crop))[c(1,3,2,4)])
@@ -105,20 +108,32 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
     (max_id >= 255 & max_id < 65535) == 1 ~ "Int16",
     (max_id >= 65536) == 1 ~ "Int32"
   )
-  cropped_rast_vrt <- tempfile(fileext = ".vrt")
+  # cropped_rast_vrt <- tempfile(fileext = ".vrt")
+browser()
+  gdalpath <- getOption("gdalUtils_gdalPath")[[1]]$path
+  rast_string <- paste("-tr", paste(cz_opts$rastres, collapse = " "),
+                                    "-te", paste(raster::extent(in_rast)[c(1, 3, 2, 4)], collapse = " "),
+                                    "-a", "mdxtnq",
+                                    "-co" , "COMPRESS=DEFLATE",
+                                    "-ot" , ot, sep = " ",
+                       temp_shapefile,
+                       temp_rasterfile
+                       )
+  system2(file.path(gdalpath, "gdal_rasterize"), args = rast_string)
 
-  gdalUtils::gdal_rasterize(temp_shapefile,
-                            temp_rasterfile,
-                            tr = cz_opts$rastres,
-                            te = raster::extent(in_rast)[c(1, 3, 2, 4)],
-                            a  = "mdxtnq",
-                            ot = ot)
+  # gdalUtils::gdal_rasterize(temp_shapefile,
+  #                           temp_rasterfile,
+  #                           tr = cz_opts$rastres,
+  #                           te = raster::extent(in_rast)[c(1, 3, 2, 4)],
+  #                           a  = "mdxtnq",
+  #                           co = c("COMPRESS=DEFLATE"),
+  #                           ot = ot)
 
-  cropped_zones_vrt <- tempfile(fileext = ".vrt")
-  gdalUtils::gdalbuildvrt(temp_rasterfile,
-                          cropped_zones_vrt,
-                          te = sf::st_bbox(in_vect_zones_crop)
-  )
+  # cropped_zones_vrt <- tempfile(fileext = ".vrt")
+  # gdalUtils::gdalbuildvrt(temp_rasterfile,
+  #                         cropped_zones_vrt,
+  #                         te = sf::st_bbox(in_vect_zones_crop)
+  # )
   rast_zoneobject <- raster::raster(temp_rasterfile)
 
   # rast_zoneobject <- velox::velox(temp_rasterfile)
@@ -164,15 +179,15 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
   #   _______________________________________________________________________________
   #   Extract data from in_rast - foreach cycle on selected bands of in_rast    ####
 
-  results <- foreach::foreach(band = 1:n_selbands,
-                              .packages = c("gdalUtils", "raster",
-                                            "dplyr", "tibble",
-                                            "data.table", "sf", "velox"),
-                              .verbose = FALSE,
-                              .options.snow = opts) %dopar%
-      {
-  # for (band in 1:1) {
-
+  # results <- foreach::foreach(band = 1:n_selbands,
+  #                             .packages = c("gdalUtils", "raster",
+  #                                           "dplyr", "tibble",
+  #                                           "data.table", "sf", "velox"),
+  #                             .verbose = TRUE,
+  #                             .options.snow = opts) %dopar%
+      # {
+  for (band in 1:1) {
+browser()
     if (cz_opts$verbose) {
       message("comp_zonal--> Extracting data from ", ifelse(date_check, " dates", "bands"), " - Please wait !")
     }
@@ -281,36 +296,9 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
           # get the extent of the area analysed so far on the basis of the coordinates of the
           # last row "loaded"
 
-          tot_ext_y <- data.frame(y_min = (raster::yFromRow(in_band, endrow)   - cz_opts$rastres[1]/2),
+          tot_ext_y      <- data.frame(y_min = (raster::yFromRow(in_band, endrow)   - cz_opts$rastres[1]/2),
                                   y_max = (raster::yFromRow(in_band, 1) + cz_opts$rastres[1]/2))
           temp_outdata   <- data.table::rbindlist(list(temp_outdata,out_data))
-          # check_n        <- temp_outdata %>%
-          #   dplyr::group_by(mdxtnq) %>%
-          #   dplyr::summarize(count = n())
-
-          # codes_in_chunk <- unique(out_data$mdxtnq)
-          # polys_in_chunk <- subset(in_vect_zones_crop, mdxtnq %in% codes_in_chunk)
-          # cells_per_poly <- list()
-
-          # for (poly in seq_len(dim(polys_in_chunk)[1])) {
-          #   tmp_vrt     <- tempfile(fileext = ".vrt")
-          #   ext_inpoly  <- sf::st_bbox(in_vect_zones[poly,]) + c(-200, -200, 200, 200)
-          #
-          #   # vrt <- gdalbuildvrt(temp_rasterfile, tmp_vrt, te = ext_inpoly)
-          #   vrt <- try(system(paste("gdalbuildvrt -te",
-          #                           paste(ext_inpoly, collapse = " "),
-          #                           tmp_vrt, temp_rasterfile,
-          #                           sep = " "),
-          #                     ignore.stdout = T))
-          #   if (class(vrt) == "try-error") {
-          #     stop("comp_zonal --> error in gdalbuildvrt. Aborting ! ")
-          #   }
-          #   temp <- velox::velox(tmp_vrt)$as.matrix(band = 1)
-          #   cells_per_poly[[poly]] <- data.frame(mdxtnq  = poly,
-          #                                        n_cells = length(which(temp == poly)))
-          # }
-          # cells_per_poly <- rbindlist(cells_per_poly)
-
           complete_polys <- bboxes %>%
             dplyr::filter(min_y >= tot_ext_y$y_min)
 
@@ -324,10 +312,18 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
           #   those, and remove them from "temp_outdata", then put temp_outdata in out_data
           if (length(complete_polys$mdxtnq) != 0) {
 
-            data_for_summary          <- subset(temp_outdata, mdxtnq %in% unique(complete_polys$mdxtnq))
-            stat_data[[chunk_n_summ]] <- fast_summ(data_for_summary, "mdxtnq", cz_opts$comp_quant, selbands[band], selband)
+            data_for_summary          <- subset(temp_outdata, mdxtnq %in% unique(complete_polys$mdxtnq)) %>%
+                                            data.table::setkey("mdxtnq")
+
+            stat_data[[chunk_n_summ]] <- fast_summ(data_for_summary,
+                                                   "mdxtnq",
+                                                   cz_opts$comp_quant,
+                                                   cz_opts$FUN,
+                                                   selbands[band],
+                                                   selband)
             temp_outdata              <- subset(temp_outdata, !(mdxtnq %in% unique(complete_polys$mdxtnq)))
             chunk_n_summ              <- chunk_n_summ + 1
+
           }
         }
       }
@@ -380,7 +376,12 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
         }
         # compute the summary statistics for the current "cz_opts$small feature"
         if (cz_opts$summ_data) {
-          miss_feat_stats <- fast_summ(miss_feat_data, "mdxtnq", cz_opts$comp_quant, selbands[band], selband)
+          miss_feat_stats <- fast_summ(miss_feat_data,
+                                       "mdxtnq",
+                                       cz_opts$comp_quant,
+                                       cz_opts$FUN,
+                                       selbands[band],
+                                       selband)
           stat_data       <- rbind(stat_data, miss_feat_stats)
         }
       }
@@ -444,17 +445,27 @@ cz_polygons_std <- function(in_vect_zones, in_rast, seldates, selbands, n_selban
     }
 
     # define the order of the output columns
-    if (!cz_opts$comp_quant) {
+
+    if (!is.null(cz_opts$FUN)) {
       keep_cols <- c("mdxtnq", "band_n", "date",
                      names_shp,
-                     "N_PIX", "avg", "med", "sd", "min", "max",
+                     "N_PIX", "myfun",
                      "geometry")
-    } else {
-      keep_cols <- c("mdxtnq", "band_n", "date",
-                     names_shp,
-                     "N_PIX", "avg", "med", "sd", "min", "max",
-                     "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65", "q75", "q85", "q95", "q99",
-                     "geometry")
+   } else {
+
+      if (!cz_opts$comp_quant) {
+        keep_cols <- c("mdxtnq", "band_n", "date",
+                       names_shp,
+                       "N_PIX", "avg", "med", "sd", "min", "max",
+                       "geometry")
+      } else {
+        keep_cols <- c("mdxtnq", "band_n", "date",
+                       names_shp,
+                       "N_PIX", "avg", "med", "sd", "min", "max",
+                       "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65", "q75", "q85", "q95", "q99",
+                       "geometry")
+      }
+
     }
     if (!cz_opts$addfeat) keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
 

@@ -41,10 +41,10 @@ build_testshape <- function(maxpolys,
     }
   }
 
-  if (!is.null(extent)) {
-    if (is.numeric(extent) & length(extent) == 4)
+  if (!is.null(ext)) {
+    if (is.numeric(ext) & length(ext) == 4)
       x_limits <- c(extent[1], extent[3])
-      y_limits <- c(extent[2], extent[4])
+    y_limits <- c(extent[2], extent[4])
   }
 
   xy <- data.frame(
@@ -55,14 +55,21 @@ build_testshape <- function(maxpolys,
   polys <- sf::st_as_sf(xy, coords = c(2,3)) %>%
     sf::st_buffer(stats::runif(maxpolys, min = 2, max = rmax)) %>%
     sf::st_set_crs(4326)
+  sf::st_agr(polys) <- "constant"
   if (!allow_overlaps) {
     for (i in 1:dim(polys)[1]) {
       cur_pol <- polys[i,]
-      intersections <- sf::st_intersection(cur_pol, sf::st_union(polys[-i,]))
-      if (dim(intersections)[1] != 0) {
-        polys[i,] <- sf::st_difference(cur_pol, st_union(intersections))[1,1]
+      union <- sf::st_union(polys[-i,])
+      if (sf::st_within(cur_pol, union)[[1]] == 1) {
+        polys[i,] <- cur_pol
+      } else {
+        intersections <- sf::st_intersection(cur_pol, union)
+        if (dim(intersections)[1] != 0) {
+          union_intersects <- sf::st_union(intersections)
+          polys[i,] <- sf::st_difference(cur_pol, union_intersects) #[1,1]
+        }
       }
-      # res_poly <- sf::st_difference(res_poly, polys[i,])
+      # polys <- sf::st_make_valid(polys)
     }
   }
   #   int <- sf::st_intersection(polys, polys) %>%

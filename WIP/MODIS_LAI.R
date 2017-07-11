@@ -74,7 +74,8 @@ tempgrid <- writeshape(in_grid2, "/home/lb/Temp/buttami/MOD15/smallgrid_250.shp"
 aa = readshape("/home/lb/Temp/buttami/MOD15/smallgrid_250.shp")
 mapview(in_grid2)
 
-out = comp_zonal(raster(in_lc_file),"/home/lb/Temp/buttami/MOD15/grid_500.shp",full_data = FALSE,verbose = TRUE,ncores = 4, mode = "std", maxchunk = 506)
+out = comp_zonal(raster(in_lc_file),"/home/lb/Temp/buttami/MOD15/grid_500.shp",full_data = FALSE,
+                 verbose = TRUE, mode = "std", maxchunk = 50E6, FUN = mean)
 
 
 
