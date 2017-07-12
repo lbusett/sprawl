@@ -31,13 +31,13 @@ testthat::test_that("Test On polygons extraction", {
   expect_equal(out$alldata$value, out2$alldata$value, out3$alldata$value)
 
   # Check that processing with and without comp_quant are equal for a common variable
-  out   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id", comp_quant = TRUE)
+  # out   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id", comp_quant = TRUE)
   out2  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, comp_quant = TRUE)
   expect_equal(dplyr::filter(out$stats, variable == "avg")$value, dplyr::filter(out2$stats, variable == "avg")$value)
   expect_equal(dplyr::filter(out$stats, variable == "sd")$value, dplyr::filter(out2$stats, variable == "sd")$value)
 
   # Check that results are coherent with `raster::extract` on the test dataset
-  out_extract_rast  <- extract_rast(in_rast, in_polys, selbands = c(1,10), verbose = F, long = F, keep_null = T, addgeom = T, full_data = F, small = T,  comp_quant = FALSE)
+  out_extract_rast  <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = F, long = F, keep_null = T, addgeom = T, full_data = F, small = T,  comp_quant = FALSE)
   outcomp = out_extract_rast$stats$avg
   expect_warning(out_extract <- raster::extract(in_rast[[1:2]], as(in_polys, "Spatial"), fun = "mean", na.rm = T))
   expect_equal(mean(as.numeric(out_extract), na.rm = TRUE), mean(outcomp, na.rm = TRUE))

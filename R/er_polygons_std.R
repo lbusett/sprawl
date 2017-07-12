@@ -60,21 +60,24 @@ er_polygons_std <- function(in_vect_zones,
 
   if (er_opts$verbose) message("extract_rast --> Cropping the zones object on extent of the raster")
   #TODO  Do this only if extent of zone object is larger than that of the raster (in any direction)
-  crop               <- er_crop_object(in_vect_zones, in_rast, er_opts$id_field, er_opts$verbose)
-  in_vect_zones_crop <- crop$in_vect_zones_crop
-  outside_feat       <- crop$outside_feat
-  names_shp          <- names(in_vect_zones_crop)[!names(in_vect_zones_crop) %in% c("mdxtnq", "geometry")]
+
+  diff_ext <- as.numeric((extent(in_rast) + 461)[] ) -
+              as.numeric(sf::st_bbox(in_vect_zones)[c(1,3,2,4)])
+
+  if (max(abs(diff_ext) >= 1000)) {
+    crop               <- er_crop_object(in_vect_zones, in_rast, er_opts$id_field, er_opts$verbose)
+    in_vect_zones_crop <- crop$in_vect_zones_crop
+    outside_feat       <- crop$outside_feat
+  } else {
+    in_vect_zones_crop <- in_vect_zones
+    outside_feat       <- NULL
+  }
+  names_shp <- names(in_vect_zones_crop)[!names(in_vect_zones_crop) %in% c("mdxtnq", "geometry")]
 
   # Ientify the bboxes of polygons (required later to check if all data was loaded for a given
   # polygon when processing in "chunks")
 
   if (er_opts$verbose) message("extract_rast --> Computing bounding boxes of input polygons")
-
-  bboxes <- in_vect_zones_crop[c("mdxtnq", "geometry")] %>%
-    data.table::as.data.table()
-  bboxes = bboxes[, list(min_y = sf::st_bbox(geometry)[2],
-                         max_y = sf::st_bbox(geometry)[4]),
-                  by = "mdxtnq"]
 
   #   ____________________________________________________________________________
   #   If `er_opts$rastres` is not null and is er_opts$smaller tha the original                ####
@@ -213,6 +216,17 @@ er_polygons_std <- function(in_vect_zones,
           in_band$crop(sp_polys)
         }
 
+        if (n_chunks > 1) {
+
+          bboxes <- in_vect_zones_crop[c("mdxtnq", "geometry")] %>%
+            data.table::data.table()
+          bboxes = bboxes[, list(min_y = sf::st_bbox(geometry)[2],
+                                 max_y = sf::st_bbox(geometry)[4]),
+                          by = "mdxtnq"]
+        } else {
+          bboxes <- in_vect_zones_crop[c("mdxtnq", "geometry")]
+        }
+
         #   _______________________________________________________________________________
         #   Perform data extraction (in chunks if number of cells greater then max_chunk) ####
 
@@ -292,7 +306,11 @@ er_polygons_std <- function(in_vect_zones,
                                            y_max = (raster::yFromRow(in_band, 1) + er_opts$rastres[1]/2))
               temp_outdata   <- data.table::rbindlist(list(temp_outdata,out_data))
 
-              complete_polys <- bboxes[min_y >= tot_ext_y$y_min]
+              if (n_chunks > 1) {
+                complete_polys <- bboxes[min_y >= tot_ext_y$y_min]
+              } else {
+                complete_polys <- bboxes
+                }
               #   ____________________________________________________________________________
               #   If we have all data for any polygon, compute the summary statistics for ####
               #   those, and remove them from "temp_outdata", then put temp_outdata in out_data

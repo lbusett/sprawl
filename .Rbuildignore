@@ -1,7 +1,12 @@
 ^.*\.Rproj$
+^.*\.yaml$
 ^\.Rproj\.user$
 ^README\.Rmd$
+^index\.Rmd$
 ^README-.*\.png$
 temporary\*
+WIP\*
+wiki\*
+benchmarking\*
 ^\.travis\.yml$
 ^D:/Documents/Source/git/sprawl/docs$

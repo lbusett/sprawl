@@ -48,11 +48,26 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
   #   crop in_vect_zones to in_rast extent if necessary and identify "removed"   ####
   #   features + Find names of the attribute fields of the original shapefile
 
+  if (er_opts$verbose) message("extract_rast --> Cropping the zones object on extent of the raster")
+  #TODO  Do this only if extent of zone object is larger than that of the raster (in any direction)
 
-  crop               <- er_crop_object(in_vect_zones, in_rast, er_opts$id_field, er_opts$verbose)
-  in_vect_zones_crop <- crop$in_vect_zones_crop
-  outside_feat       <- crop$outside_feat
-  names_shp          <- names(in_vect_zones_crop)[!names(in_vect_zones_crop) %in% c("mdxtnq", "geometry")]
+  diff_ext <- as.numeric((extent(in_rast) + 461)[] ) -
+    as.numeric(sf::st_bbox(in_vect_zones)[c(1,3,2,4)])
+
+  if (max(abs(diff_ext) >= 1000)) {
+    crop               <- er_crop_object(in_vect_zones, in_rast, er_opts$id_field, er_opts$verbose)
+    in_vect_zones_crop <- crop$in_vect_zones_crop
+    outside_feat       <- crop$outside_feat
+  } else {
+    in_vect_zones_crop <- in_vect_zones
+    outside_feat       <- NULL
+  }
+  names_shp <- names(in_vect_zones_crop)[!names(in_vect_zones_crop) %in% c("mdxtnq", "geometry")]
+
+  # Ientify the bboxes of polygons (required later to check if all data was loaded for a given
+  # polygon when processing in "chunks")
+
+  if (er_opts$verbose) message("extract_rast --> Computing bounding boxes of input polygons")
 
   #   ____________________________________________________________________________
   #   If `er_opts$rastres` is not null and is er_opts$smaller tha the original                ####
@@ -86,17 +101,6 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
   rastzone_object$crop(zones_ext)
   # rastzone_object <- velox::velox(temp_rasterfile)
 
-
-  #   ____________________________________________________________________________
-  #   Compute the number of pixels included in each polygon                   ####
-  #   This is used later to verify if, on chunked processing, all data from
-  #   a polygon were already retrieved
-  #
-  cells_per_poly <- rastzone_object$extract(sp_polys, fun = length) %>%
-    data.frame(mdxtnq = 1:length(.), count = (.)) %>%
-    dplyr::select(2,3)
-
-
   #  ____________________________________________________________________________
   #  setup the processing: initialize variables and foreach loop            ####
 
@@ -117,23 +121,21 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
 
   # Initialize other variables and progress bar
   er_opts$maxchunk  <- er_opts$maxchunk/er_opts$ncores
-  n_cells           <- prod(rastzone_object$dim)
-  nrows             <- rastzone_object$dim[1]
-  ncols             <- rastzone_object$dim[2]
+  nrows             <- raster::nrow(in_vect_zones)
+  ncols             <- raster::ncol(in_vect_zones)
+  n_cells           <- nrows * ncols
   n_chunks          <- floor(n_cells / er_opts$maxchunk) + 1
 
   if (er_opts$verbose) {
     message("extract_rast--> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"),
             " - Please wait !")
-    progress <- function(n) utils::setTxtProgressBar(pb, n)
     pb       <- utils::txtProgressBar(max = n_selbands, style = 3)
+    progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts     <- list(progress = progress)
   } else {
     opts = list()
   }
 
-  # if(er_opts$verbose)
-  # progress          <- function(n) utils::setTxtProgressBar(pb, n)
   #   _______________________________________________________________________________
   #   Extract data from in_rast - foreach cycle on selected bands of in_rast    ####
 
@@ -141,178 +143,177 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
                               .packages = c("gdalUtils", "raster",
                                             "dplyr", "tibble",
                                             "data.table", "sf", "velox"),
-                              .verbose = TRUE,
+                              .verbose = FALSE,
                               .options.snow = opts) %dopar%
-    {
-      # for (band in 1:1) {
+                              {
+                                # for (band in 1:1) {
 
-      if (er_opts$verbose) {
-        message("extract_rast--> Extracting data from ", ifelse(date_check, " dates", "bands"), " - Please wait !")
-      }
+                                if (er_opts$verbose) {
+                                  message("extract_rast--> Extracting data from ", ifelse(date_check, " dates", "bands"), " - Please wait !")
+                                }
 
-      all_data     <- list()
-      stat_data    <- list()
-      temp_outdata <- list()
-      selband      <- seldates[band]
-      chunk_n_all  <- 1 # Counter for non-empty chunks for all_data
-      chunk_n_summ <- 1 # Counter for non-empty chunks for all_data
-      start_cell   <- 1
+                                all_data     <- list()
+                                stat_data    <- list()
+                                temp_outdata <- list()
+                                selband      <- seldates[band]
+                                chunk_n_all  <- 1 # Counter for non-empty chunks for all_data
+                                chunk_n_summ <- 1 # Counter for non-empty chunks for all_data
+                                start_cell   <- 1
 
-      #   ____________________________________________________________________________
-      #   Get current band as a `velox` object and crop it on polygons extent     ####
+                                #   ____________________________________________________________________________
+                                #   Get current band as a `velox` object and crop it on polygons extent     ####
 
-      if (!supersample) {
-        in_band    <- velox::velox(in_rast[[selbands[band]]])
-        in_band$crop(sp_polys)
-      } else {
-        # if "supersampling" requested, resample input raster to higher resolution ####
-        # (with nearest neaighbour) TODO: verify if replacing with velox
-        temprast  <- tempfile(fileext = ".tif")
-        raster::writeRaster(in_band, temprast)
-        tempsuper <- tempfile(fileext = ".tif")
-        in_band   <- gdalUtils::gdalwarp(temprast, tempsuper, tr = er_opts$rastres,
-                                         te = raster::extent(in_band)[c(1, 3, 2, 4)], output_Raster = TRUE ,
-                                         multi = TRUE)
-        in_band   <- velox::velox(in_band)
-        in_band$crop(sp_polys)
-      }
+                                if (!supersample) {
+                                  in_band    <- velox::velox(in_rast[[selbands[band]]])
+                                  in_band$crop(sp_polys)
+                                } else {
+                                  # if "supersampling" requested, resample input raster to higher resolution ####
+                                  # (with nearest neaighbour) TODO: verify if replacing with velox
+                                  temprast  <- tempfile(fileext = ".tif")
+                                  raster::writeRaster(in_band, temprast)
+                                  tempsuper <- tempfile(fileext = ".tif")
+                                  in_band   <- gdalUtils::gdalwarp(temprast, tempsuper, tr = er_opts$rastres,
+                                                                   te = raster::extent(in_band)[c(1, 3, 2, 4)], output_Raster = TRUE ,
+                                                                   multi = TRUE)
+                                  in_band   <- velox::velox(in_band)
+                                  in_band$crop(sp_polys)
+                                }
 
-      #   _______________________________________________________________________________
-      #   Perform data extraction (in chunks if number of cells greater then max_chunk) ####
+                                #   _______________________________________________________________________________
+                                #   Perform data extraction (in chunks if number of cells greater then max_chunk) ####
 
-      for (chunk in seq_len(n_chunks)) {
+                                #for (chunk in seq_len(n_chunks)) {
 
+                                if (er_opts$verbose) message("Working on chunk: ", chunk, " of: ", n_chunks, "of band: ", selband)
 
-        if (er_opts$verbose) message("Working on chunk: ", chunk, " of: ", n_chunks, "of band: ", selband)
+                                # Identify row numbers of the current "chunk" ----
+                                # startrow   <- ifelse(chunk == 1, 1, 1 + (chunk - 1) * ceiling(nrows / n_chunks))
+                                # chunkrows  <- ifelse(chunk != n_chunks,
+                                #                      ceiling(nrows / n_chunks),
+                                #                      (1 + nrows - startrow))
+                                # endrow     <- startrow + chunkrows - 1
+                                # ncells     <- ncols * chunkrows
+                                # end_cell   <- start_cell + ncells - 1
 
-        # Identify row numbers of the current "chunk" ----
-        startrow   <- ifelse(chunk == 1, 1, 1 + (chunk - 1) * ceiling(nrows / n_chunks))
-        chunkrows  <- ifelse(chunk != n_chunks,
-                             ceiling(nrows / n_chunks),
-                             (1 + nrows - startrow))
-        endrow     <- startrow + chunkrows - 1
-        ncells     <- ncols * chunkrows
-        end_cell   <- start_cell + ncells - 1
+                                #   ________________________________________________________________________
+                                #   retrieve data of current "chunk" for the pixels included in the polygons ####
+                                #   and put it in all_data[[chunk_n]] (if not null)
 
-        #   ________________________________________________________________________
-        #   retrieve data of current "chunk" for the pixels included in the polygons ####
-        #   and put it in all_data[[chunk_n]] (if not null)
+                                out_data  <- data.table::data.table(
+                                  value   =  as.numeric(in_band$rasterbands[[1]]),
+                                  cell    =  .N,
+                                  mdxtnq  =  as.numeric(rastzone_object$rasterbands[[1]])
+                                  , key = "mdxtnq") %>%
+                                  subset(mdxtnq != 0)    %>%   # remove data outside polygons (== zone_id = 0 OR NA)
+                                  subset(!is.na(mdxtnq))
 
-        out_data  <- data.table::data.table(
-          value   =  as.numeric(in_band$rasterbands[[1]][start_cell:end_cell]),
-          cell    =  seq(start_cell,end_cell),
-          mdxtnq  =  as.numeric(rastzone_object$rasterbands[[1]][start_cell:end_cell])
-          , key = "mdxtnq") %>%
-          subset(mdxtnq != 0)    %>%   # remove data outside polygons (== zone_id = 0 OR NA)
-          subset(!is.na(mdxtnq))
+                                # If out_data not empty (i.e., at least one pixel of current chunk beer_opts$longs to an
+                                # polygon), put out_data in all_data[[chubnk_n_all]], then compute er_opts$summ_data
+                                if (dim(out_data)[1] > 0) {
+                                  if (er_opts$full_data) {
+                                    all_data[[chunk_n_all]]  <- out_data
+                                    # chunk_n_all              <- chunk_n_all + 1
+                                  }
+                                  if (er_opts$summ_data) {
+                                    #   ____________________________________________________________________________
+                                    #   verify if currently in out_data we have all the data corresponding   ####
+                                    #   to any of the polygons. In that case, compute the summary statistics
+                                    #   for those polygons, and remove their data from "out_data"
+                                    # temp_outdata   <- data.table::rbindlist(list(temp_outdata,out_data))
+                                    # check_n        <- temp_outdata %>%
+                                    #   dplyr::group_by(mdxtnq) %>%
+                                    #   dplyr::summarize(count = n())
+                                    # codes_in_chunk <- unique(out_data$mdxtnq)
+                                    # # polys_in_chunk <- subset(in_vect_zones_crop, mdxtnq %in% codes_in_chunk)
+                                    # complete_polys <- NA
+                                    # for (indcinc in seq_along(along.with = codes_in_chunk)) {
+                                    #   cinc <- codes_in_chunk[indcinc]
+                                    #   complete_polys[indcinc] <- (check_n[check_n$mdxtnq == cinc, 2] ==
+                                    #                                 cells_per_poly[cells_per_poly$mdxtnq == cinc, 2])
+                                    # }
+                                    # #   ____________________________________________________________________________
+                                    # #   If we have all data for any polygon, compute the summary statistics for ####
+                                    # #   those, and remove them from "temp_outdata", then put temp_outdata in out_data
+                                    # if (any(complete_polys == TRUE)) {
 
-        # If out_data not empty (i.e., at least one pixel of current chunk beer_opts$longs to an
-        # polygon), put out_data in all_data[[chubnk_n_all]], then compute er_opts$summ_data
-        if (dim(out_data)[1] > 0) {
-          if (er_opts$full_data) {
-            all_data[[chunk_n_all]]  <- out_data
-            chunk_n_all              <- chunk_n_all + 1
-          }
-          if (er_opts$summ_data) {
-            #   ____________________________________________________________________________
-            #   verify if currently in out_data we have all the data corresponding   ####
-            #   to any of the polygons. In that case, compute the summary statistics
-            #   for those polygons, and remove their data from "out_data"
-            temp_outdata   <- data.table::rbindlist(list(temp_outdata,out_data))
-            check_n        <- temp_outdata %>%
-              dplyr::group_by(mdxtnq) %>%
-              dplyr::summarize(count = n())
-            codes_in_chunk <- unique(out_data$mdxtnq)
-            # polys_in_chunk <- subset(in_vect_zones_crop, mdxtnq %in% codes_in_chunk)
-            complete_polys <- NA
-            for (indcinc in seq_along(along.with = codes_in_chunk)) {
-              cinc <- codes_in_chunk[indcinc]
-              complete_polys[indcinc] <- (check_n[check_n$mdxtnq == cinc, 2] ==
-                                            cells_per_poly[cells_per_poly$mdxtnq == cinc, 2])
-            }
-            #   ____________________________________________________________________________
-            #   If we have all data for any polygon, compute the summary statistics for ####
-            #   those, and remove them from "temp_outdata", then put temp_outdata in out_data
-            if (any(complete_polys == TRUE)) {
+                                    # data_for_summary          <- temp_outdata
+                                    stat_data                 <- fast_summ(out_data, "mdxtnq", er_opts$comp_quant, selbands[band], selband)
+                                    # temp_outdata              <- subset(temp_outdata, !(mdxtnq %in% codes_in_chunk[complete_polys]))
+                                    # chunk_n_summ              <- chunk_n_summ + 1
+                                  }
+                                }
+                                # }
+                                # start_cell  <- end_cell + 1  # Increment start_cell to get the start of the next chunk
+                                # gc()
+                                #} # end cycle on chunks
 
-              data_for_summary          <- subset(temp_outdata, mdxtnq %in% codes_in_chunk[complete_polys])
-              stat_data[[chunk_n_summ]] <- fast_summ(data_for_summary, "mdxtnq", er_opts$comp_quant, selbands[band], selband)
-              temp_outdata              <- subset(temp_outdata, !(mdxtnq %in% codes_in_chunk[complete_polys]))
-              chunk_n_summ              <- chunk_n_summ + 1
-            }
-          }
-        }
-        start_cell  <- end_cell + 1  # Increment start_cell to get the start of the next chunk
-        # gc()
-      } # end cycle on chunks
+                                #   ____________________________________________________________________________
+                                #   bind data from all chunks in `all_data`  and 'stat_data'                ####
+                                # if (er_opts$full_data) {
+                                #
+                                #   all_data <- data.table::rbindlist(all_data) %>%
+                                #     data.table::setkey("mdxtnq")
+                                # }
+                                #
+                                # if (er_opts$summ_data) {
+                                #   stat_data <- data.table::rbindlist(stat_data) %>%
+                                #     data.table::setkey("mdxtnq")
+                                #
+                                # }
 
-      #   ____________________________________________________________________________
-      #   bind data from all chunks in `all_data`  and 'stat_data'                ####
-      if (er_opts$full_data) {
+                                #   ____________________________________________________________________________
+                                #   extract data for er_opts$small polygons if requested and necessary              ####
 
-        all_data <- data.table::rbindlist(all_data) %>%
-          data.table::setkey("mdxtnq")
-      }
+                                if (er_opts$small & length(unique(stat_data$mdxtnq) != length(unique(in_vect_zones_crop$mdxtnq)))) {
 
-      if (er_opts$summ_data) {
-        stat_data <- data.table::rbindlist(stat_data) %>%
-          data.table::setkey("mdxtnq")
+                                  miss_feat <- setdiff(unique(in_vect_zones_crop$mdxtnq), unique(stat_data$mdxtnq))
+                                  for (mfeat in miss_feat) {
 
-      }
+                                    poly_miss         <- sp_polys[sp_polys@data$mdxtnq == mfeat,]
+                                    data_feat         <- raster::extract(in_rast[[band]], poly_miss, small = TRUE,
+                                                                         method = "simple", df = TRUE, cellnumbers = TRUE)
+                                    cell              <- data_feat[,2]
+                                    miss_feat_data    <- data.table::data.table(value = data_feat[,3],
+                                                                                cell =  cell,
+                                                                                mdxtnq = mfeat)
+                                    if (er_opts$full_data) {
+                                      all_data        <- rbind(all_data, miss_feat_data)
+                                    }
+                                    # compute the summary statistics for the current "er_opts$small feature"
+                                    if (er_opts$summ_data) {
+                                      miss_feat_stats <- fast_summ(miss_feat_data, "mdxtnq", er_opts$comp_quant, selbands[band], selband)
+                                      stat_data       <- rbind(stat_data, miss_feat_stats)
+                                    }
+                                  }
+                                }
 
-      #   ____________________________________________________________________________
-      #   extract data for er_opts$small polygons if requested and necessary              ####
+                                # ____________________________________________________________________________
+                                # if er_opts$full_data required, extract all pixels values, and add some additional   ####
+                                # column
 
-      if (er_opts$small & length(unique(stat_data$mdxtnq) != length(unique(in_vect_zones_crop$mdxtnq)))) {
+                                if (er_opts$full_data) {
+                                  all_data <- all_data[, list(band_n = selbands[band],
+                                                              date   = seldates[band],
+                                                              N_PIX  = seq(along.with = value),
+                                                              value  = value,
+                                                              cell   = cell
+                                  ) , by = mdxtnq]
+                                }
 
-        miss_feat <- setdiff(unique(in_vect_zones_crop$mdxtnq), unique(stat_data$mdxtnq))
-        for (mfeat in miss_feat) {
+                                ##  ............................................................................
+                                ##  update progressbar                                                      ####
+                                if (er_opts$verbose) {
+                                  Sys.sleep(0.001)
+                                  utils::setTxtProgressBar(pb, band)
+                                }
 
-          poly_miss         <- sp_polys[sp_polys@data$mdxtnq == mfeat,]
-          data_feat         <- raster::extract(in_rast[[band]], poly_miss, small = TRUE,
-                                            method = "simple", df = TRUE, cellnumbers = TRUE)
-          cell              <- data_feat[,2]
-          miss_feat_data    <- data.table::data.table(value = data_feat[,3],
-                                       cell =  cell,
-                                       mdxtnq = mfeat)
-          if (er_opts$full_data) {
-            all_data        <- rbind(all_data, miss_feat_data)
-            }
-          # compute the summary statistics for the current "er_opts$small feature"
-          if (er_opts$summ_data) {
-            miss_feat_stats <- fast_summ(miss_feat_data, "mdxtnq", er_opts$comp_quant, selbands[band], selband)
-            stat_data       <- rbind(stat_data, miss_feat_stats)
-          }
-        }
-      }
+                                #   ____________________________________________________________________________
+                                #   return data processed by the "worker" (a.k.a. the "band" results)       ####
 
-      # ____________________________________________________________________________
-      # if er_opts$full_data required, extract all pixels values, and add some additional   ####
-      # column
+                                out <- list(alldata = all_data, stats = stat_data)
+                                return(out)
 
-      if (er_opts$full_data) {
-        all_data <- all_data[, list(band_n = selbands[band],
-                                    date   = seldates[band],
-                                    N_PIX  = seq(along.with = value),
-                                    value  = value,
-                                    cell   = cell
-        ) , by = mdxtnq]
-      }
-
-      ##  ............................................................................
-      ##  update progressbar                                                      ####
-      if (er_opts$verbose) {
-        Sys.sleep(0.001)
-        utils::setTxtProgressBar(pb, band)
-      }
-
-      #   ____________________________________________________________________________
-      #   return data processed by the "worker" (a.k.a. the "band" results)       ####
-
-      out <- list(alldata = all_data, stats = stat_data)
-      return(out)
-
-    } # End Foreach cycle on bands
+                              } # End Foreach cycle on bands
 
   parallel::stopCluster(cl)
 
@@ -324,8 +325,9 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
   #
 
   # --------------------------------------------------------------------------------
-  # if er_opts$keep_null selected and "outside features found, replace in_vect_zones_crop ####
-  # with in_vect_zones, so that later joins "include" the missing features
+  # if er_opts$keep_null selected and "outside features" found, replace
+  # in_vect_zones_crop  with in_vect_zones, so that later joins "include" the missing
+  # features
 
   if (er_opts$keep_null & !is.null(outside_feat)) {
     in_vect_zones_crop <- in_vect_zones
@@ -337,36 +339,53 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
   if (er_opts$summ_data) {
 
     # "bind" the different bands
-    stat_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 2)))
+    stat_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 2))) %>%
+      data.table::setkey("mdxtnq")
+
     # if er_opts$addfeat, merge the extracted data with the shapefile features
     if (er_opts$addfeat) {
-      stat_data <- merge(stat_data, in_vect_zones_crop, by = "mdxtnq", all.y = TRUE)
+      stat_data <- stat_data[{
+        data.table::as.data.table(in_vect_zones_crop) %>%
+          setkey("mdxtnq")}
+        ]
     }
 
     # define the order of the output columns
-    if (!er_opts$comp_quant) {
+
+    if (!is.null(er_opts$FUN)) {
       keep_cols <- c("mdxtnq", "band_n", "date",
                      names_shp,
-                     "N", "avg", "med", "sd", "min", "max",
+                     "N_PIX", "myfun",
                      "geometry")
     } else {
-      keep_cols <- c("mdxtnq", "band_n", "date",
-                     names_shp,
-                     "N", "avg", "med", "sd", "min", "max",
-                     "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65", "q75", "q85", "q95", "q99",
-                     "geometry")
+
+      if (!er_opts$comp_quant) {
+        keep_cols <- c("mdxtnq", "band_n", "date",
+                       names_shp,
+                       "N_PIX", "avg", "med", "sd", "min", "max",
+                       "geometry")
+      } else {
+        keep_cols <- c("mdxtnq", "band_n", "date",
+                       names_shp,
+                       "N_PIX", "avg", "med", "sd", "min", "max",
+                       "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65", "q75", "q85", "q95", "q99",
+                       "geometry")
+      }
+
     }
     if (!er_opts$addfeat) keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
+
     if (!er_opts$addgeom) {
+
       keep_cols <- keep_cols[-length(keep_cols)]
       stat_data <- stat_data[, geometry := NULL]
-      }
+    }
     if (!is.null(er_opts$id_field)) {
       stat_data <- stat_data[, mdxtnq := NULL]
       keep_cols <- keep_cols[which(keep_cols != er_opts$id_field)]
       keep_cols[1] <- eval(er_opts$id_field)
     }
-    # browser()
+
     # build the final output and convert to tibble
     stat_data <- data.table::setcolorder(stat_data, keep_cols) %>%
       as_tibble()
@@ -374,7 +393,7 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
     if (is.null(er_opts$id_field)) names(stat_data)[1] = "id_feat"
 
     # If `er_opts$long`, reshape the stats output to a er_opts$long table format
-
+    # (Consider removing)
     if (er_opts$long) {
       skip_cols <- ifelse(er_opts$comp_quant,18, 6)
       n_adds    <- length(names_shp)
@@ -414,19 +433,14 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
     if (er_opts$addfeat) {
       all_data <- merge(all_data, in_vect_zones_crop, by = "mdxtnq", all.y = TRUE)
     }
-    # compute the coordinates of the extracted pixels and add them to all_data
-    # then remove the "cell" column
-    infast    <- velox::velox(in_rast[[1]])
-    coords    <- infast$getCoordinates()[all_data$cell,]
-    all_data  <- all_data[,c("x_coord", "y_coord") := list(coords[,1], coords[,2])]
-    all_data  <- all_data[, cell := NULL]
 
     # define the order of the output columns
-    keep_cols <- c("mdxtnq", "band_n", "date", "N_PIX",
+    keep_cols <- c("mdxtnq", "band_n", "date", "N_PIX", "N",
                    names_shp,
                    "value",
                    "x_coord", "y_coord")
     if (!er_opts$addfeat) keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
+    if (!er_opts$addgeom) keep_cols <- keep_cols[which(!keep_cols %in% c("x_coord", "y_coord"))]
     if (!is.null(er_opts$id_field)) {
       keep_cols    <- keep_cols[which(keep_cols != er_opts$id_field)]
       keep_cols[1] <- eval(er_opts$id_field)
@@ -457,7 +471,9 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
 
   # create the final output list
   ts_out <- list(stats = stat_data, alldata = all_data)
-  # gc()
+
+  file.remove(temp_rasterfile)
+  file.remove(temp_shapefile)
 
   return(ts_out)
 }

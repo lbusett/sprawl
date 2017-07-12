@@ -60,7 +60,7 @@ create_fishnet <- function(in_obj,
 
   # checks on pypath
   if (is.null(pypath)) {
-    pypath <- Sys.which('gdal_polygonize.py')
+    pypath <- normalizePath(Sys.which('gdal_polygonize.py'))
   }
 
   # checks on out_shape
@@ -135,9 +135,10 @@ create_fishnet <- function(in_obj,
   cs <- c(cellsize,cellsize)  # cell size.
   # Identidfy the corner of the grid. Since extent of a spatial object in R is defined
   # by centroids, we need to move by half pixel
-  cc <- c(in_bbox[1], in_bbox[2]) + (cs/2)
+  cc <- c(in_bbox[1], in_bbox[2])  + (cs/2)
   # Compute number of cells per direction
-  cd     <- ceiling(c(((in_bbox[3] - in_bbox[1])/cs[1]),((in_bbox[4] - in_bbox[2])/cs[2])))
+  cd     <- ceiling(c(((in_bbox[3] - in_bbox[1])/cs[1]),
+                      ((in_bbox[4] - in_bbox[2])/cs[2]) - 1))
   # Build grid topology
   grd    <- sp::GridTopology(cellcentre.offset = cc, cellsize = cs, cells.dim = cd)   # Define grd characteristics
   # Create a SpatialGridDataFrame. ids are numbers between 1 and ns*nl
@@ -150,7 +151,7 @@ create_fishnet <- function(in_obj,
 
   out_rst   <- raster::raster(sp_grd)
   out_rst[] <- seq(1, dim(out_rst)[1]*dim(out_rst)[2],1)
-  gc()
+
   # if crop layer available, crop and mask the temporary raster on it
   if (!is.null(crop_layer)) {
     message("create_fishnet --> Cropping and masking the fishnet on `crop_layer`")
@@ -163,7 +164,7 @@ create_fishnet <- function(in_obj,
   # assign the ids
   out_rastfile <- tempfile("tempshp_", tempdir(), ".tif")
   raster::writeRaster(out_rst, out_rastfile, overwrite = TRUE)
-  gc()
+
 
   #   ____________________________________________________________________________
   #   if raster out selected, copy the raster fishnet to the path given       ####
@@ -185,14 +186,15 @@ create_fishnet <- function(in_obj,
 
   if (!is.null(return_sp)) {
 
-    if (is.null(out_shape)) out_shape = tempfile()
+    if (is.null(out_shape)) out_shape = tempfile(fileext = ".shp")
     #   ____________________________________________________________________________
     #   launch gdal_polygonize
     ####
+
     message("create_fishnet -> Writing Polygon Grid to: ", out_shape, " - Please Wait !")
     system2('python', args = paste(pypath,
                                    out_rastfile,
-                                   "-f 'ESRI Shapefile'",
+                                   '-f "ESRI Shapefile"',
                                    out_shape,
                                    "-fieldname id", sep = " "), stdout = NULL)
   }

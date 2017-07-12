@@ -1,14 +1,27 @@
-#' MODISmasker
-#'
-#'
-#' @importFrom raster raster extent intersect
-#' @importFrom sp proj4string
-#' @importFrom gdalUtils gdalwarp
-#' @return
-#' @export
-#'
+#' @title aggregate_rast
+#' @description FUNCTION_DESCRIPTION
+#' @param in_rast_values PARAM_DESCRIPTION
+#' @param in_obj_zones PARAM_DESCRIPTION
+#' @param FUN PARAM_DESCRIPTION, Default: mean
+#' @param method PARAM_DESCRIPTION, Default: 'fastdisk'
+#' @param to_file PARAM_DESCRIPTION, Default: FALSE
+#' @param out_file PARAM_DESCRIPTION, Default: NULL
+#' @param verbose PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
 #' @examples
-#'
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[sp]{proj4string}}
+#' @rdname aggregate_rast
+#' @export
+#' @importFrom raster writeRaster rasterize raster
+#' @importFrom sf st_set_crs st_transform st_crs st_coordinates st_centroid st_as_sf
+#' @importFrom sp proj4string
 
 aggregate_rast <- function(in_rast_values,
                            in_obj_zones,
@@ -32,7 +45,6 @@ aggregate_rast <- function(in_rast_values,
   in_fish <- create_fishnet(in_obj_zones,
                                  cellsize = res(in_obj_zones)[1]) %>%
     sf::st_set_crs(sp::proj4string(in_obj_zones))
-browser()
   if (verbose) message("aggregate_raster --> Aggregating values of in_rast_values on
                       cells of in_obj_zones")
 
@@ -45,7 +57,7 @@ browser()
                                maxchunk  = 7E7,
                                id_field  = "id")$stats
 
-  if (st_crs(agg_values) != st_crs(in_obj_zones)) {
+  if (sf::st_crs(agg_values) != sf::st_crs(in_obj_zones)) {
     agg_values <- sf::st_transform(agg_values, sf::st_crs(in_fish))
   }
 
@@ -68,33 +80,33 @@ browser()
     # file.copy(in_obj_zones, tempraster, overwrite = T)
     writeshape(agg_values,tempshape, overwrite = T)
     rasterize_string <- paste("-a myfun",
-                              "-tr ", paste(res(in_obj_zones), collapse = " "),
-                              "-co COMPRESS=DEFLATE",
-                              "-co PREDICTOR=3",
+                              # "-tr ", paste(res(in_obj_zones), collapse = " "),
+                              # "-co COMPRESS=DEFLATE",
+                              # "-co PREDICTOR=3",
                               tempshape,
                               tempraster)
     system2("gdal_rasterize", args = rasterize_string, stdout = NULL)
 
   } else {
-    agg_values <- data.table(agg_values)
+    agg_values <- data.table::data.table(agg_values)
     out        <- agg_values[,
                              {est <- sf::st_coordinates(sf::st_centroid(geometry))
                              list(X = est[,1], Y = est[,2], Z = myfun)}
                              ]   %>%
       sf::st_as_sf(coords = c("X","Y")) %>%
+      sf::st_set_crs(sf::st_crs(in_obj_zones)) %>%
       as("Spatial")
-
     out_rast <- raster::rasterize(out, in_obj_zones, field = "Z")
     if (to_file) {
-      writeRaster(out_rast, tempraster, options = c("COMPRESS=DEFLATE", "PREDICTOR=2"))
+      writeRaster(out_rast, tempraster, options = c("COMPRESS=DEFLATE", "PREDICTOR=3"), overwrite = TRUE)
     }
   }
   if (to_file) {
-    file.remove(tempshape)
+    if (method == "fastdisk") file.remove(tempshape)
     out_rast <- tempraster
   } else {
-    out_rast <- raster::raster(tempraster)
-    file.remove(tempshape)
+    # out_rast <- raster::raster(tempraster)
+    if (method == "fastdisk") file.remove(tempshape)
     file.remove(tempraster)
   }
   return(out_rast)
