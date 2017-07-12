@@ -1,4 +1,4 @@
-#' @title cz_poly
+#' @title er_poly
 #' @description FUNCTION_DESCRIPTION
 #' @param zone_object PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
@@ -6,7 +6,7 @@
 #' @param seldates aaa
 #' @param zone_type zone_type
 #' @param date_check zone_type
-#' @inheritParams comp_zonal
+#' @inheritParams extract_rast
 #' @return OUTPUT_DESCRIPTION
 
 #' @importFrom data.table data.table rbindlist setkey
@@ -19,7 +19,7 @@
 #' @importFrom stats median sd quantile
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom magrittr %>%
-cz_poly <- function(zone_object,
+er_poly <- function(zone_object,
                     in_rast,
                     rastres,
                     maxchunk,
@@ -44,7 +44,7 @@ cz_poly <- function(zone_object,
   #   crop zone_object to in_rast extent if necessary and identify "removed"   ####
   #   features
   #
-  crop             <- cz_crop_object(zone_object, in_rast, id_field)
+  crop             <- er_crop_object(zone_object, in_rast, id_field)
   zone_object_crop <- crop$zone_object_crop
   outside_feat     <- crop$outside_feat
 
@@ -64,20 +64,20 @@ cz_poly <- function(zone_object,
         rastres     <- rastres
         supersample <- 1
       } else {
-        warning("comp_zonal --> Provided `rastres = `", rastres, " seems invalid. It will be reset to `in_rast` resolution")
+        warning("extract_rast --> Provided `rastres = `", rastres, " seems invalid. It will be reset to `in_rast` resolution")
         rastres = raster::res(in_rast)
       }
     }
 
     # First of all, rasterize the shape to a temporary file
 
-    if (verbose) {message("comp_zonal --> Rasterizing shape")}
-    if (verbose) {message("comp_zonal --> Writing temporary shapefile")}
+    if (verbose) {message("extract_rast --> Rasterizing shape")}
+    if (verbose) {message("extract_rast --> Writing temporary shapefile")}
     temp_shapefile = tempfile(tmpdir = tempdir(), fileext = ".shp")
     writeshape(zone_object_crop, temp_shapefile, overwrite = TRUE)
 
     # then convert it to raster
-    if (verbose) {(message("comp_zonal --> Writing temporary rasterized shapefile"))}
+    if (verbose) {(message("extract_rast --> Writing temporary rasterized shapefile"))}
     temp_rasterfile = tempfile(tmpdir = tempdir(), fileext = ".tiff")
     max_id <- max(zone_object_crop$mdxtnq)
     ot <- dplyr::case_when(
@@ -95,7 +95,7 @@ cz_poly <- function(zone_object,
   } else {
     # if input zone_object already a raster (e.g., a fishnet) just crop it on raster extent
     rastzone_object = raster::crop(zone_object, raster::extent(in_rast[[1]]))
-    if (!is.null(rastres)) {"comp_zonal --> `rastres` is ignored since `zone_object` is already a
+    if (!is.null(rastres)) {"extract_rast --> `rastres` is ignored since `zone_object` is already a
       raster file. `in_rast` will be automatically supersampled to `zone_object` resolution prior
       to data extraction ! "
     }
@@ -126,7 +126,7 @@ cz_poly <- function(zone_object,
 
 
   if (verbose) {
-    message("comp_zonal --> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"), " - Please wait !")
+    message("extract_rast --> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"), " - Please wait !")
     pb <- utils::txtProgressBar(min = 0, max = n_selbands,
                                 char = "=",
                                 style = 3)

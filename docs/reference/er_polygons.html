@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>fast_summ — fast_summ • sprawl</title>
+<title>er_polygons_std — er_polygons_std • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,40 +80,77 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>fast_summ</h1>
+    <h1>er_polygons_std</h1>
     </div>
 
     
     <p>FUNCTION_DESCRIPTION</p>
+<p>FUNCTION_DESCRIPTION</p>
     
 
-    <pre class="usage"><span class='fu'>fast_summ</span>(<span class='no'>in_data</span>, <span class='no'>var</span>, <span class='no'>comp_quant</span>, <span class='no'>FUN</span>, <span class='no'>band_n</span>, <span class='no'>selband</span>)</pre>
+    <pre class="usage"><span class='fu'>er_polygons_std</span>(<span class='no'>in_vect_zones</span>, <span class='no'>in_rast</span>, <span class='no'>seldates</span>, <span class='no'>selbands</span>, <span class='no'>n_selbands</span>,
+  <span class='no'>date_check</span>, <span class='no'>er_opts</span>)
+
+<span class='fu'>er_polygons_velox</span>(<span class='no'>in_vect_zones</span>, <span class='no'>in_rast</span>, <span class='no'>seldates</span>, <span class='no'>selbands</span>, <span class='no'>n_selbands</span>,
+  <span class='no'>date_check</span>, <span class='no'>er_opts</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_data</th>
+      <th>in_vect_zones</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>var</th>
+      <th>in_rast</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>comp_quant</th>
+      <th>seldates</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>FUN</th>
+      <th>selbands</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>band_n</th>
+      <th>n_selbands</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>selband</th>
+      <th>date_check</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>er_opts</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>in_vect_zones</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>in_rast</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>seldates</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>selbands</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>n_selbands</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>date_check</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>er_opts</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     </table>
@@ -121,8 +158,35 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>OUTPUT_DESCRIPTION</p>
+<p>OUTPUT_DESCRIPTION</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>DETAILS</p>
+<p>DETAILS</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><code><a href='http://www.rdocumentation.org/packages/doSNOW/topics/registerDoSNOW'>registerDoSNOW</a></code>
+<code><a href='http://www.rdocumentation.org/packages/foreach/topics/foreach'>foreach</a></code>
+<code><a href='http://www.rdocumentation.org/packages/gdalUtils/topics/gdalwarp'>gdalwarp</a></code>
+<code><a href='http://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></code>
+<code><a href='http://www.rdocumentation.org/packages/velox/topics/velox'>velox</a></code>
+<code><a href='http://www.rdocumentation.org/packages/utils/topics/txtProgressBar'>setTxtProgressBar</a></code>,<code><a href='http://www.rdocumentation.org/packages/utils/topics/txtProgressBar'>txtProgressBar</a></code>
+    <code><a href='http://www.rdocumentation.org/packages/doSNOW/topics/registerDoSNOW'>registerDoSNOW</a></code>
+<code><a href='http://www.rdocumentation.org/packages/foreach/topics/foreach'>foreach</a></code>
+<code><a href='http://www.rdocumentation.org/packages/gdalUtils/topics/gdalwarp'>gdalwarp</a></code>
+<code><a href='http://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></code>
+<code><a href='http://www.rdocumentation.org/packages/velox/topics/velox'>velox</a></code>
+<code><a href='http://www.rdocumentation.org/packages/utils/topics/txtProgressBar'>setTxtProgressBar</a></code>,<code><a href='http://www.rdocumentation.org/packages/utils/topics/txtProgressBar'>txtProgressBar</a></code></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }</div><div class='output co'>#&gt; NULL</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -130,7 +194,13 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

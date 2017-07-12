@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="container template-vignette">
-      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -29,40 +29,18 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">Home</a>
+  <a href="/index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li class="dropdown-header">Heading 1</li>
-    <li>
-      <a href="articles/page_a.html">Article A</a>
-    </li>
-    <li>
-      <a href="articles/page_b.html">Article B</a>
-    </li>
-    <li class="divider">
-    </li>
-<li class="dropdown-header">Heading 2</li>
-    <li>
-      <a href="articles/page_c.html">Article C</a>
-    </li>
-    <li>
-      <a href="articles/page_d.html">Article D</a>
-    </li>
-  </ul>
-</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://example.com">
+  <a href="https://github.com/IREA-CNR-MI/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -102,7 +80,7 @@
 <ol style="list-style-type: decimal">
 <li>Providing simple <strong>wrappers to common-use functions</strong> for reading/writing spatial data (e.g., <code>readvec</code> and <code>writevec</code> to read/write vector files from/to disk);</li>
 <li>Providing <strong>optimized functions for performing some common-use processing tasks</strong>, often exploiting functions provided by less-known packages (e.g., <code>maskraster</code>);</li>
-<li>Providing custom functions for performing more complex processing tasks (e.g., <code>comp_zonal</code>) involving the use of different functions and/or packages;</li>
+<li>Providing custom functions for performing more complex processing tasks (e.g., <code>extract_rast</code>) involving the use of different functions and/or packages;</li>
 <li>Optimizing code execution speed by providing under-the-hood support for multi-core processing using for example <code>foreach</code> looping and <code>raster::MakeCluster</code> functionality;</li>
 <li>Simplifying access/further analysis of results, by carefully formatting processing outputs to easy to understand and use <code>R</code> objects.</li>
 </ol>

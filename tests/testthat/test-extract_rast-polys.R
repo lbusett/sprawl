@@ -5,44 +5,43 @@ testthat::test_that("Test On polygons extraction", {
   in_polys       <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
   in_rast        <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
   in_rast        <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
-    # get(load(system.file("extdata", "sprawl_EVItest.RData", package = "sprawl")))
 
   # check errors in input selbands
-  expect_error(comp_zonal(in_rast, in_polys, selbands = c(3,1)))
-  expect_error(comp_zonal(in_rast, in_polys, selbands = c(3,NA)))
-  expect_error(comp_zonal(in_rast, in_polys, selbands = 1))
-  expect_error(comp_zonal(in_rast, in_polys, selbands = c("2013-01-01",3)))
-  expect_error(comp_zonal(in_rast, in_polys, selbands = c("2013-01-20","2013-01-08")))
+  expect_error(extract_rast(in_rast, in_polys, selbands = c(3,1)))
+  expect_error(extract_rast(in_rast, in_polys, selbands = c(3,NA)))
+  expect_error(extract_rast(in_rast, in_polys, selbands = 1))
+  expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-01",3)))
+  expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-20","2013-01-08")))
 
-  out <- comp_zonal(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"), verbose = FALSE, mode = "std")
+  out <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"), verbose = FALSE, mode = "std")
   expect_is(out, "list")
-  out <- comp_zonal(in_rast, in_polys, selbands = c(1,2), verbose = FALSE, mode = "std")
+  out <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = FALSE, mode = "std")
   expect_is(out, "list")
   # Check that chunked and non-chunked processing yields the same results
-  out  <- comp_zonal(in_rast, in_polys, verbose = F, long = F, keep_null = T, selbands = c(1,2), small = F)
-  out2 <- comp_zonal(in_rast, in_polys, verbose = F, long = F, keep_null = T, selbands = c(1,2), maxchunk = 10000,  small = F)
+  out  <- extract_rast(in_rast, in_polys, verbose = F, long = F, keep_null = T, selbands = c(1,2), small = F)
+  out2 <- extract_rast(in_rast, in_polys, verbose = F, long = F, keep_null = T, selbands = c(1,2), maxchunk = 10000,  small = F)
   expect_equal(dplyr::select(out$alldata, -geometry), dplyr::select(out2$alldata, -geometry))
   expect_equal(dplyr::select(out$stats, -geometry), dplyr::select(out2$stats, -geometry))
 
   # Check that processing with and without id_field are identical
-  out   <- comp_zonal(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id")
-  out2  <- comp_zonal(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_type")
-  out3  <- comp_zonal(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T)
+  out   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id")
+  out2  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_type")
+  out3  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T)
   expect_equal(out$stats$value, out2$stats$value, out3$stats$value)
   expect_equal(out$alldata$value, out2$alldata$value, out3$alldata$value)
 
   # Check that processing with and without comp_quant are equal for a common variable
-  out   <- comp_zonal(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id", comp_quant = TRUE)
-  out2  <- comp_zonal(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, comp_quant = TRUE)
+  out   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id", comp_quant = TRUE)
+  out2  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, comp_quant = TRUE)
   expect_equal(dplyr::filter(out$stats, variable == "avg")$value, dplyr::filter(out2$stats, variable == "avg")$value)
   expect_equal(dplyr::filter(out$stats, variable == "sd")$value, dplyr::filter(out2$stats, variable == "sd")$value)
 
   # Check that results are coherent with `raster::extract` on the test dataset
-  out_comp_zonal  <- comp_zonal(in_rast, in_polys, selbands = c(1,2), verbose = F, long = F, keep_null = T, addgeom = F, full_data = F, small = T,  comp_quant = FALSE)
-  outcomp = out_comp_zonal$stats$avg
+  out_extract_rast  <- extract_rast(in_rast, in_polys, selbands = c(1,10), verbose = F, long = F, keep_null = T, addgeom = T, full_data = F, small = T,  comp_quant = FALSE)
+  outcomp = out_extract_rast$stats$avg
   expect_warning(out_extract <- raster::extract(in_rast[[1:2]], as(in_polys, "Spatial"), fun = "mean", na.rm = T))
   expect_equal(mean(as.numeric(out_extract), na.rm = TRUE), mean(outcomp, na.rm = TRUE))
-  outcustom <- comp_zonal(in_rast, in_polys, selbands = c(1,2), verbose = F, long = F, keep_null = T,
+  outcustom <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = F, long = F, keep_null = T,
                           addgeom = F, full_data = F, small = T,  comp_quant = FALSE, FUN = mean)
   outcomp = outcustom$stats$myfun
   expect_equal(mean(as.numeric(out_extract), na.rm = TRUE), mean(outcustom$stats$myfun, na.rm = TRUE))

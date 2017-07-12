@@ -42,7 +42,7 @@
 #'  \code{\link[tidyr]{gather}}
 
 #'  \code{\link[utils]{txtProgressBar}},\code{\link[utils]{setTxtProgressBar}}
-#' @rdname cz_poly_parallel
+#' @rdname er_poly_parallel
 #' @export
 #' @importFrom data.table data.table rbindlist setkey setcolorder
 #' @importFrom doSNOW registerDoSNOW
@@ -58,7 +58,7 @@
 #' @importFrom utils txtProgressBar setTxtProgressBar
 
 
-cz_poly_parallel <- function(zone_object,
+er_poly_parallel <- function(zone_object,
                              in_rast,
                              rastres,
                              maxchunk,
@@ -84,7 +84,7 @@ cz_poly_parallel <- function(zone_object,
   #   crop zone_object to in_rast extent if necessary and identify "removed"   ####
   #   features
   #
-  crop             <- cz_crop_object(zone_object, in_rast, id_field)
+  crop             <- er_crop_object(zone_object, in_rast, id_field)
   zone_object_crop <- crop$zone_object_crop
   outside_feat     <- crop$outside_feat
   # Find names of the attribute fields of the original shapefile
@@ -106,7 +106,7 @@ cz_poly_parallel <- function(zone_object,
       rastres     <- rastres
       supersample <- 1
     } else {
-      warning("comp_zonal--> Provided `rastres = `", rastres, " seems invalid. It will be reset to `in_rast` resolution")
+      warning("extract_rast--> Provided `rastres = `", rastres, " seems invalid. It will be reset to `in_rast` resolution")
       rastres = raster::res(in_rast)
     }
   }
@@ -114,11 +114,11 @@ cz_poly_parallel <- function(zone_object,
   #   ____________________________________________________________________________
   #   Rasterize the shape to a temporary file                                 ####
 
-  if (verbose) {message("comp_zonal--> Rasterizing shape")}
-  if (verbose) {message("comp_zonal--> Writing temporary shapefile")}
+  if (verbose) {message("extract_rast--> Rasterizing shape")}
+  if (verbose) {message("extract_rast--> Writing temporary shapefile")}
   # temp_shapefile <- tempfile(tmpdir = tempdir(), fileext = ".shp")
   # writeshape(zone_object_crop, temp_shapefile, overwrite = TRUE)
-  # if (verbose) {(message("comp_zonal--> Writing temporary rasterized shapefile"))}
+  # if (verbose) {(message("extract_rast--> Writing temporary rasterized shapefile"))}
   # temp_rasterfile = tempfile(tmpdir = tempdir(), fileext = ".tiff")
   # max_id <- max(zone_object_crop$mdxtnq)
   # ot <- dplyr::case_when(
@@ -178,7 +178,7 @@ cz_poly_parallel <- function(zone_object,
   if (verbose) {
     pb <- txtProgressBar(max = n_selbands, style = 3)
     progress  <- function(n) utils::setTxtProgressBar(pb, n)
-    message("comp_zonal--> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"),
+    message("extract_rast--> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"),
             " - Please wait !")
     pb <- utils::txtProgressBar(max = n_selbands, style = 3)
 
@@ -192,7 +192,7 @@ cz_poly_parallel <- function(zone_object,
         {
           # for (band in 1:2) {
           if (verbose) {
-            message("comp_zonal--> Extracting data from ", ifelse(date_check, " dates", "bands"), " - Please wait !")
+            message("extract_rast--> Extracting data from ", ifelse(date_check, " dates", "bands"), " - Please wait !")
           }
 
 
@@ -387,7 +387,7 @@ cz_poly_parallel <- function(zone_object,
 
   parallel::stopCluster(cl)
   # browser()
-  if (verbose) message("comp_zonal--> building outputs")
+  if (verbose) message("extract_rast--> building outputs")
   # ___________________________________________________________________________________
   # End of data loading from in_rast. Now in all_data/stat_data we have all values  ####
   # needed to build the output

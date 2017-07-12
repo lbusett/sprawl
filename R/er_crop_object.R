@@ -1,5 +1,5 @@
-#' @title cz_crop_object
-#' @description Accessory function for `comp_zonal`. Crops the in_vect_zones on the extent of the raster
+#' @title er_crop_object
+#' @description Accessory function for `extract_rast`. Crops the in_vect_zones on the extent of the raster
 #' to improve speed. Then check if some features in the original in_vect_zones were dropped in
 #' zone_raster_croppped
 #' @param in_vect_zones PARAM_DESCRIPTION
@@ -14,7 +14,7 @@
 #' @importFrom raster extent
 #' @importFrom sf st_intersection st_set_crs st_as_sf st_crs st_bbox
 #' @importFrom tibble as_data_frame
-cz_crop_object <- function(in_vect_zones,
+er_crop_object <- function(in_vect_zones,
                            in_rast,
                            id_field,
                            verbose) {

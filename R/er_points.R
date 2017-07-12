@@ -1,4 +1,4 @@
-#' @title cz_points
+#' @title er_points
 #' @description FUNCTION_DESCRIPTION
 #' @param in_vect_zones `sf` object on which features the zonal statistics has to be computed
 #' @param in_rast single- or multi-band `rasterStack` object containing values to be extracted and
@@ -6,7 +6,7 @@
 #' @param n_selbands aa
 #' @param seldates aaa
 #' @param date_check zzz
-#' @inheritParams comp_zonal
+#' @inheritParams extract_rast
 #' @return OUTPUT_DESCRIPTION
 #'
 #' @importFrom dplyr mutate right_join select
@@ -16,7 +16,7 @@
 #' @importFrom tidyr gather
 #' @importFrom magrittr %>%
 
-cz_points <- function(in_vect_zones,
+er_points <- function(in_vect_zones,
                       in_rast,
                       n_selbands,
                       selbands,
@@ -29,19 +29,19 @@ cz_points <- function(in_vect_zones,
                       addgeom,
                       keep_null) {
 
-  if (verbose) message("comp_zonal --> Cropping the zones object on extent of the raster")
-  crop               <- cz_crop_object(in_vect_zones, in_rast, id_field, verbose)
+  if (verbose) message("extract_rast --> Cropping the zones object on extent of the raster")
+  crop               <- er_crop_object(in_vect_zones, in_rast, id_field, verbose)
   in_vect_zones_crop <- crop$in_vect_zones_crop
   outside_feat     <- crop$outside_feat
 
-  if (verbose) { message("comp_zonal --> On point and lines shapefiles, the standard `extract` function is used. This could be slow !")}
+  if (verbose) { message("extract_rast --> On point and lines shapefiles, the standard `extract` function is used. This could be slow !")}
 
   tserie <- matrix(nrow = n_selbands, ncol = dim(in_vect_zones_crop)[1])
 
   for (band in seq_len(n_selbands)) {
     selband <- selbands[band]
     if (verbose) {
-      message(paste0("comp_zonal --> Extracting data from ", ifelse(date_check, "date: ", "band: "),
+      message(paste0("extract_rast --> Extracting data from ", ifelse(date_check, "date: ", "band: "),
                      seldates[band]))
     }
     tserie[band,] <- in_rast[[selband]] %>%

@@ -87,7 +87,8 @@
     <p>FUNCTION_DESCRIPTION</p>
     
 
-    <pre class="usage"><span class='fu'>build_testshape</span>(<span class='no'>maxpolys</span>, <span class='kw'>allow_overlaps</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>tofile</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>build_testshape</span>(<span class='no'>maxpolys</span>, <span class='kw'>rmax</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>allow_overlaps</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ext</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>100</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -97,12 +98,28 @@
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
+      <th>rmax</th>
+      <td><p>PARAM_DESCRIPTION, Default: 10</p></td>
+    </tr>
+    <tr>
       <th>allow_overlaps</th>
       <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
     </tr>
     <tr>
-      <th>tofile</th>
+      <th>to_file</th>
       <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>ext</th>
+      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>crs</th>
+      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>PARAM_DESCRIPTION, Default: 100</p></td>
     </tr>
     </table>
     
@@ -116,12 +133,14 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></code>
-<code><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></code></p>
+    <p><code><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></code>
+<code><a href='http://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>build_testshape</span>(<span class='fl'>100</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: attribute variables are assumed to be spatially constant throughout all geometries</span></div><div class='output co'>#&gt; <span class='warning'>Warning: attribute variables are assumed to be spatially constant throughout all geometries</span></div><div class='input'> <span class='fu'>plot</span>(<span class='no'>p</span>[<span class='fl'>1</span>], <span class='kw'>col</span> <span class='kw'>=</span> <span class='no'>p</span>$<span class='no'>id</span>)</div><div class='img'><img src='build_testshape-6.png' alt='' width='700' height='432.632880098887' /></div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }</div><div class='output co'>#&gt; NULL</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

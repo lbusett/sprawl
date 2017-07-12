@@ -1,6 +1,6 @@
 
 
-# outbig   <- comp_zonal(in_rast, in_polys, verbose = FALSE,
+# outbig   <- extract_rast(in_rast, in_polys, verbose = FALSE,
 #                          mode = "std",selbands = c(1,46),    maxchunk = 100E4, addgeom = F)
 # in_rastfile = tempfile(fileext = ".tif")
 # in_rast <- writeRaster(in_rast, in_rastfile)
@@ -28,7 +28,7 @@
 # sp_polys = as(in_polys, "Spatial")
 #
 # mb = microbenchmark::microbenchmark(
-#   out_comp_zonal  = comp_zonal(in_rast, in_polys, verbose = F, long = F,
+#   out_extract_rast  = extract_rast(in_rast, in_polys, verbose = F, long = F,
 #                                 keep_null = T, addfeat = F, addgeom = F,
 #                                 full_data = F, small = T,  comp_quant = FALSE, maxchunk = 1E7
 #                                , ncores = 4),times = 1, unit = "s"),
@@ -38,23 +38,23 @@
 # autoplot(mb) + theme_bw() + scale_y_continuous()
 #
 # mb = microbenchmark::microbenchmark(
-#   # out_comp_zonal  = comp_zonal(in_rast, in_polys, verbose = T, long = F,
+#   # out_extract_rast  = extract_rast(in_rast, in_polys, verbose = T, long = F,
 #   #                              keep_null = T, addfeat = F, addgeom = F,
 #   #                              full_data = F, small = T,  comp_quant = FALSE
 #   # ),
-#   out_comp_zonal2  = comp_zonal(in_rast, in_polys, verbose = T, long = F,
+#   out_extract_rast2  = extract_rast(in_rast, in_polys, verbose = T, long = F,
 #                                keep_null = T, addfeat = F, addgeom = F,
 #                                full_data = F, small = T,  comp_quant = FALSE,
 #                                maxchunk = 2E6
 #   ),
-#   out_comp_zonal3  = comp_zonal(in_rast, in_polys, verbose = T, long = F,
+#   out_extract_rast3  = extract_rast(in_rast, in_polys, verbose = T, long = F,
 #                                 keep_null = T, addfeat = F, addgeom = F,
 #                                 full_data = F, small = T,  comp_quant = FALSE,
 #                                 maxchunk = 1E5),
 #   times = 5, unit = "s")
 # mb
 # S
-# profvis({out_comp_zonal  = sprawl::comp_zonal(in_rast, in_polys, verbose = T, long = F,
+# profvis({out_extract_rast  = sprawl::extract_rast(in_rast, in_polys, verbose = T, long = F,
 #                              keep_null = T, addfeat = F, addgeom = F,
 #                              full_data = F, small = T,  comp_quant = FALSE, ncores = 4, maxchunk = 1E7)})
 #

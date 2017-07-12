@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>fast_summ — fast_summ • sprawl</title>
+<title>er_points — er_points • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,41 +80,75 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>fast_summ</h1>
+    <h1>er_points</h1>
     </div>
 
     
     <p>FUNCTION_DESCRIPTION</p>
     
 
-    <pre class="usage"><span class='fu'>fast_summ</span>(<span class='no'>in_data</span>, <span class='no'>var</span>, <span class='no'>comp_quant</span>, <span class='no'>FUN</span>, <span class='no'>band_n</span>, <span class='no'>selband</span>)</pre>
+    <pre class="usage"><span class='fu'>er_points</span>(<span class='no'>in_vect_zones</span>, <span class='no'>in_rast</span>, <span class='no'>n_selbands</span>, <span class='no'>selbands</span>, <span class='no'>seldates</span>, <span class='no'>id_field</span>,
+  <span class='no'>date_check</span>, <span class='no'>long</span>, <span class='no'>verbose</span>, <span class='no'>addfeat</span>, <span class='no'>addgeom</span>, <span class='no'>keep_null</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_data</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>in_vect_zones</th>
+      <td><p><code>sf</code> object on which features the zonal statistics has to be computed</p></td>
     </tr>
     <tr>
-      <th>var</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>in_rast</th>
+      <td><p>single- or multi-band <code>rasterStack</code> object containing values to be extracted and
+summarized</p></td>
     </tr>
     <tr>
-      <th>comp_quant</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>n_selbands</th>
+      <td><p>aa</p></td>
     </tr>
     <tr>
-      <th>FUN</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>selbands</th>
+      <td><p><code>2-element numeric array</code> defining starting and ending raster bands to be processed
+(e.g., c(1, 10). Default: NULL, meaining that all bands will be processed</p></td>
     </tr>
     <tr>
-      <th>band_n</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>seldates</th>
+      <td><p>aaa</p></td>
     </tr>
     <tr>
-      <th>selband</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>id_field</th>
+      <td><p><code>character</code> (optional) field of the vector file to be used to identify the
+zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
+shapefile, and a new column named <code>id_feat</code> is used on the output to distinguish the zones, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>date_check</th>
+      <td><p>zzz</p></td>
+    </tr>
+    <tr>
+      <th>long</th>
+      <td><p><code>logical</code> If TRUE, <code>out$summ_data</code> is returned in long format, Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> If TRUE, messages concerning the processing status are shown in the
+console, Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>addfeat</th>
+      <td><p><code>logical</code> If TRUE, columns of the attribute table of the <code>in_vect_zones</code> layer are
+joined to results of the computation, Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>addgeom</th>
+      <td><p><code>logical</code>, If TRUE, the output sent out as an <code>sf</code> object, preserving the geometry
+of <code>in_vect_zones</code>. Note that this leads to dyuplication of geometries, and may be very slow for
+large datasets. Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>keep_null</th>
+      <td><p><code>logical</code> If TRUE, the output preserves features of <code>in_vect_zones</code> falling outside
+the extent of <code>in_rast</code>. Values for these features are set to NA, Default: FALSE</p></td>
     </tr>
     </table>
     

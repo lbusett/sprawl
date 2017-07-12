@@ -1,4 +1,4 @@
-#' @title comp_zonal
+#' @title extract_rast
 #' @description Function used to extract values of a single- or multi- band raster for pixels
 #' corresponding to the features of a vector (Polygon, Point or Line)
 #' @param in_rast input raster. Can be wither:
@@ -49,10 +49,12 @@
 #' @examples
 #' \dontrun{
 #'   library(sprawl)
+#'   library(raster)
 #'   options(tibble.width = Inf)
-#'   in_rast  <- get(load(system.file("extdata", "in_rast.rda", package = "sprawl")))
+#'   in_rast  <- raster::stack(system.file("extdata", "in_rast.tif", package = "sprawl"))
+#'   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 #'   in_zones <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-#'   stats    <- comp_zonal(in_rast, in_zones, long = FALSE, verbose = FALSE)
+#'   stats    <- extract_rast(in_rast, in_zones, long = FALSE, verbose = FALSE)
 #'   stats
 #'  }
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
@@ -64,7 +66,7 @@
 #'
 #' @author Lorenzo Busetto, phD (2014-2015) \email{lbusett@gmail.com}
 #'
-comp_zonal <- function(in_rast,
+extract_rast <- function(in_rast,
                        in_vect_zones,
                        selbands     = NULL,
                        rastres      = NULL,
@@ -87,7 +89,7 @@ comp_zonal <- function(in_rast,
 {
   # create a list containing processing parameters (used to facilitate passing options to
   # accessory funcrtions)
-  cz_opts <- list(selbands = selbands,       rastres     = rastres,
+  er_opts <- list(selbands = selbands,       rastres     = rastres,
                   id_field     = id_field,   summ_data   = summ_data, full_data = full_data,
                   comp_quant   = comp_quant, FUN         = FUN,       small       = small, na.rm     = na.rm,
                   maxchunk     = maxchunk,   long        = long,      addfeat   = addfeat,
@@ -143,7 +145,7 @@ comp_zonal <- function(in_rast,
   #   ____________________________________________________________________________
   #   Identify the bands/dates to be processed                                ####
 
-  selbands    <- cz_getbands(in_rast, selbands, cz_opts$verbose)
+  selbands    <- er_getbands(in_rast, selbands, er_opts$verbose)
   date_check  <- ifelse(attributes(selbands)$date_check, TRUE, FALSE )
   n_selbands  <- length(selbands)
   if (date_check) {
@@ -185,6 +187,7 @@ comp_zonal <- function(in_rast,
       # check if the projection of the in_vect_zones and raster are the same - otherwise
       # reproject the in_vect_zones on raster CRS
       if (sf::st_crs(in_vect_zones)$proj4string != sp::proj4string(in_rast)) {
+        if(verbose) message("extract_rast --> Transforming in_vect_xones to the CRS of in_rast")
         in_vect_zones <- sf::st_transform(in_vect_zones, sp::proj4string(in_rast))
       }
 
@@ -195,7 +198,7 @@ comp_zonal <- function(in_rast,
 
       if (inherits(sf::st_geometry(in_vect_zones), "sfc_POINT")) {
         # Convert the zone object to *Spatial to allow use of "raster::extract"
-        out_list <- cz_points(in_vect_zones,
+        out_list <- er_points(in_vect_zones,
                               in_rast,
                               n_selbands,
                               selbands,
@@ -217,12 +220,12 @@ comp_zonal <- function(in_rast,
         #   Extract values if the zone object is a polygon shapefile or already a raster  ####
 
         if (mode == "velox") {
-          out_list <- cz_polygons_velox(in_vect_zones, in_rast, seldates, selbands, n_selbands,
-                                        date_check, cz_opts)
+          out_list <- er_polygons_velox(in_vect_zones, in_rast, seldates, selbands, n_selbands,
+                                        date_check, er_opts)
         } else {
           # browser()
-          out_list <- cz_polygons_std(in_vect_zones, in_rast, seldates, selbands,
-                                      n_selbands, date_check, cz_opts)
+          out_list <- er_polygons_std(in_vect_zones, in_rast, seldates, selbands,
+                                      n_selbands, date_check, er_opts)
         }
       }
     }

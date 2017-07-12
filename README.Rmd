@@ -35,7 +35,7 @@ The aforementioned objectives are accomplished in `sprawl` by:
 
 1. Providing simple **wrappers to common-use functions** for reading/writing spatial data (e.g., `readvec` and `writevec` to read/write vector files from/to disk); 
 2. Providing **optimized functions for performing some common-use processing tasks**, often exploiting functions provided by less-known packages (e.g., `maskraster`); 
-3. Providing custom functions for performing more complex processing tasks (e.g., `comp_zonal`) involving the use of different functions and/or packages;
+3. Providing custom functions for performing more complex processing tasks (e.g., `extract_rast`) involving the use of different functions and/or packages;
 4. Optimizing code execution speed by providing under-the-hood support for multi-core processing using for example `foreach` looping and `raster::MakeCluster` functionality;
 4. Simplifying access/further analysis of results, by carefully formatting processing outputs to easy to understand and use `R` objects.
 

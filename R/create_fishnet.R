@@ -194,7 +194,7 @@ create_fishnet <- function(in_obj,
                                    out_rastfile,
                                    "-f 'ESRI Shapefile'",
                                    out_shape,
-                                   "-fieldname id", sep = " "))
+                                   "-fieldname id", sep = " "), stdout = NULL)
   }
 
   if (return_sp) {
