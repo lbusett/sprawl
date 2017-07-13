@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>extract_rast — extract_rast • sprawl</title>
+<title>extract_rast � extract_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -210,7 +210,7 @@ while <code>out_list$alldata</code> contains the data of all pixels extracted (s
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl</span>)
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='fu'>options</span>(<span class='kw'>tibble.width</span> <span class='kw'>=</span> <span class='fl'>Inf</span>)
-<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readshape.html'>readshape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
 <span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
@@ -256,7 +256,7 @@ while <code>out_list$alldata</code> contains the data of all pixels extracted (s
 
     <h2>Author</h2>
     
-Lorenzo Busetto, phD (2014-2015) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
+Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

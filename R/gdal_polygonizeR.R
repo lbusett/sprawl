@@ -7,7 +7,7 @@
 #' @param x          `character`filename of a raster file, or "R" raster object
 #' @param outshape   `character`filename of the desired output polygon shapefile
 #' @param gdalformat  defaults to ESRI - don't change
-#' @param pypath     `character` path of python  - if `NULL` (the default) the script tries to 
+#' @param pypath     `character` path of python  - if `NULL` (the default) the script tries to
 #' automatically retrieve it
 #' @param readpoly   `logical` If TRUE sends back the shapefile as a SpataialPolygonsDataFrame to R
 #'     (defaults to FALSE)
@@ -23,18 +23,18 @@
 #' slight modifications by L.Busetto
 
 
-gdal_polygonizeR <- function(x, 
-                             outshape   = NULL, 
+gdal_polygonizeR <- function(x,
+                             outshape   = NULL,
                              gdalformat = 'ESRI Shapefile',
-                             pypath     = NULL, 
-                             readpoly   = TRUE, 
-                             quiet      = TRUE, 
+                             pypath     = NULL,
+                             readpoly   = TRUE,
+                             quiet      = TRUE,
                              overwrite  = FALSE) {
-  
+
   if (is.null(pypath)) {
     pypath <- Sys.which('gdal_polygonize.py')
   }
-  
+
   if (!file.exists(pypath)) stop("Can't find gdal_polygonize.py on your system.")
   owd <- getwd()
   on.exit(setwd(owd))
@@ -52,17 +52,17 @@ gdal_polygonizeR <- function(x,
       )
     }
     if (methods::is(x, 'Raster')) {
-      
+
       raster::writeRaster(x, {f <- tempfile(fileext = '.tif')})
       rastpath <- normalizePath(f)
     } else if (is.character(x)) {
       rastpath <- normalizePath(x)
     } else stop('x must be a file path (character string), or a Raster object.')
-    
+
     system2('python', args = (paste0(sprintf('"%1$s" "%2$s" -f "%3$s" "%4$s.shp"',
                                              pypath, rastpath, gdalformat, outshape), " -fieldname id")))
     if (isTRUE(readpoly)) {
-      shp <- readshape(outshape)
+      shp <- read_shape(outshape)
       return(shp)
     }
     return(NULL)

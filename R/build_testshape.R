@@ -86,7 +86,7 @@ build_testshape <- function(maxpolys,
 
   if (to_file) {
     tempfilename <- tempfile(fileext = ".shp")
-    tempfile <- writeshape(polys, out_file = tempfilename)
+    tempfile <- write_shape(polys, out_file = tempfilename)
     return(tempfilename)
   } else {
     return(polys)

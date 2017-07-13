@@ -13,7 +13,7 @@
 #'  saved in a shapefile,  Default: NULL
 #' @param overwrite `logical` If TRUE, existing files are overwritten, Default: FALSE
 #' @param crop_layer (optional) object of `Extent`. If not null, the fishnet extent will be cropped on
-#' this extent, without "moving" the nodes of the grid (this is useful to crop a grid created on
+#' this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on
 #' the basis of a different raster coordinates on top of a different raster, Default: NULL
 #' @param return_sp `logical`, If true, the grid is returned to the caller as a `SpatialGridDataFrame ,
 #' Default: FALSE
@@ -23,18 +23,23 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'   # create a fishnet over an input raster file and save it as a shapefile
-#'   file_in <- "/somedir/somefile.tif"
-#'   inrast  <- raster(file_in)
+#'   library(raster)
+#'   library(sprawl)
 #'
-#'   ext_rast <- extent(inrast)
-#'   csize    <- res(inrast)[1]
+#'   file_in  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))[[1]]
+#'   inrast   <- raster::raster(file_in)
+#'   cellsize <- raster::res(inrast)[1]
 #'
 #'   out_file <- "/somedir/somefile.shp"
-#'   create_fishnet(ext_rast, cellsize = csize, out_shape = TRUE, out_shapefile = out_file,
-#'          overw = TRUE, out_raster = FALSE)
-#'  }
+#'   fishnet  <- create_fishnet(inrast,
+#'                              cellsize,
+#'                              return_sp = TRUE
+#'                              )
+#'
+#'   plot(inrast)
+#'   plot(fishnet, add = TRUE, col = "transparent")
+#'
 #'  }
 #' @rdname create_fishnet
 #' @export
@@ -42,15 +47,13 @@
 #' @importFrom sf st_as_sf st_set_crs st_bbox st_crs st_transform st_buffer st_combine
 #' @importFrom sp proj4string GridTopology SpatialGridDataFrame
 #' @importFrom tools file_path_sans_ext
-#' @importFrom parallel makeCluster
-#' @importFrom doParallel registerDoParallel
 
 create_fishnet <- function(in_obj,
                            cellsize,
                            crop_layer = NULL,
                            out_raster = NULL,
                            out_shape  = NULL,
-                           overwrite  = FALSE,
+                           overwrite  = TRUE,
                            return_sp  = TRUE,
                            pypath     = NULL) {
 
@@ -69,7 +72,7 @@ create_fishnet <- function(in_obj,
       if (overwrite == TRUE) {
         unlink(paste(out_shape, c('shp', 'shx', 'dbf')))
       } else {
-        stop("writeshape --> Shapefile already exists. Aborting ! Set `overwrite = TRUE` to allow overwriting.")
+        stop("create_fishnet --> Shapefile already exists. Aborting ! Set `overwrite = TRUE` to allow overwriting.")
       }
     }
   }
@@ -159,7 +162,7 @@ create_fishnet <- function(in_obj,
     # cropper <- as(sf::st_buffer(sf::st_combine(crop_layer), cellsize), "Spatial")
     # gc()
 
-    out_rst <- maskrast(out_rst, crop_layer, buffer = res(out_rst)[1])
+    out_rst <- mask_rast(out_rst, crop_layer, buffer = res(out_rst)[1])
   }
   # assign the ids
   out_rastfile <- tempfile("tempshp_", tempdir(), ".tif")
@@ -201,7 +204,7 @@ create_fishnet <- function(in_obj,
 
   if (return_sp) {
     message("create_fishnet -> Reading Polygon Grid ", out_shape, " to R - Please Wait !")
-    outdata <- readshape(out_shape)
+    outdata <- read_shape(out_shape)
     return(outdata)
   }
 }

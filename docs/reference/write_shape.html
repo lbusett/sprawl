@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>writeshape — writeshape â€¢ sprawl</title>
+<title>write_shape — write_shape â€¢ sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,7 +80,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>writeshape</h1>
+    <h1>write_shape</h1>
     </div>
 
     
@@ -88,7 +88,7 @@
 format</p>
     
 
-    <pre class="usage"><span class='fu'>writeshape</span>(<span class='no'>out_obj</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>write_shape</span>(<span class='no'>out_obj</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>encoding</span> <span class='kw'>=</span> <span class='st'>"UTF-8"</span>, <span class='kw'>create_dir</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -138,7 +138,7 @@ folder tree up to out_file is created, Default: FALSE (use with caution !)</p></
 <span class='co'># Save it to a shape file</span>
 <span class='no'>out_file</span>  <span class='kw'>=</span> <span class='fu'>tempfile</span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>tmpdir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(), <span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".shp"</span>)
 <span class='no'>mysp_object</span> <span class='kw'>=</span> <span class='no'>points</span>
-<span class='fu'>writeshape</span>(<span class='no'>mysp_object</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
+<span class='fu'>write_shape</span>(<span class='no'>mysp_object</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

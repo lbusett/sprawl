@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>check_spatype — check_spatype • sprawl</title>
+<title>check_spatype � check_spatype • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -112,10 +112,10 @@ or a file corresponding to a raster</p>
 <span class='no'>shp_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>)
 <span class='fu'>check_spatype</span>(<span class='no'>shp_file</span>)</div><div class='output co'>#&gt; [1] "vectfile"</div><div class='input'>
 <span class='co'># input is a `sp` object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readshape.html'>readshape</a></span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>check_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "spobject"</div><div class='input'>
 <span class='co'># input is a `sf` object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readshape.html'>readshape</a></span>(<span class='no'>shp_file</span>)
+<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='no'>shp_file</span>)
 <span class='fu'>check_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "sfobject"</div><div class='input'>
 </div></pre>
   </div>

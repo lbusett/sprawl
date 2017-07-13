@@ -17,19 +17,19 @@
 #' @examples
 #'
 
-extent_reproj <- function(ext_in, in_proj = NULL, out_proj = NULL) {
+reproj_extent <- function(ext_in, in_proj = NULL, out_proj = NULL) {
 
   if (is.null(in_proj) | is.null(out_proj)) {
     stop("Input or Output projection not set ! Aborting !")
   }
 
   if (class(try(sp::CRS(in_proj), silent = TRUE)) == "try-error") {
-    stop("extent_reproj --> Invalid input projection ! Aborting !")
+    stop("reproj_extent --> Invalid input projection ! Aborting !")
   }
 
   if (class(try(sp::CRS(out_proj), silent = TRUE)) == "try-error") {
     # print(paste("MY_ERROR:  ",err))
-    stop("extent_reproj --> Invalid input projection ! Aborting !")
+    stop("reproj_extent --> Invalid input projection ! Aborting !")
   }
 
   # If in_proj and out_proj differ, reproject the shape extent

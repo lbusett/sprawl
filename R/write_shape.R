@@ -1,4 +1,4 @@
-#' @title writeshape
+#' @title write_shape
 #' @description Wrapper to ~st_read~ for writing an `sf` or `sp` object to disk in ESRI shapefile
 #' format
 #' @param out_obj `character` object to be written to the shapefile. Must be a valid `*sp` or `sf`
@@ -27,9 +27,9 @@
 #' # Save it to a shape file
 #' out_file  = tempfile(pattern = "test", tmpdir = tempdir(), fileext = ".shp")
 #' mysp_object = points
-#' writeshape(mysp_object, out_file, overwrite = TRUE)
+#' write_shape(mysp_object, out_file, overwrite = TRUE)
 #'}
-writeshape = function(out_obj,
+write_shape = function(out_obj,
                       out_file,
                       overwrite  = FALSE,
                       verbose    = FALSE,
@@ -40,11 +40,11 @@ writeshape = function(out_obj,
   rgdal::setCPLConfigOption("SHAPE_ENCODING", encoding)
 
   if (file.exists(out_file) & overwrite == FALSE) {
-    stop("writeshape --> Shapefile already exists. Aborting ! Set `overwrite = TRUE` to allow overwriting.")
+    stop("write_shape --> Shapefile already exists. Aborting ! Set `overwrite = TRUE` to allow overwriting.")
   }
 
   if (!dir.exists(dirname(out_file)) & create_dir == FALSE) {
-    stop("writeshape --> Output folder doesn't exist on your system. Either create it beforehand with
+    stop("write_shape --> Output folder doesn't exist on your system. Either create it beforehand with
          `dir.create` or set the `create_dir` argument to `TRUE`")
   }
 

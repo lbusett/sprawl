@@ -76,13 +76,13 @@ crop_vect <- function(in_vect,
   }
   if (objtype == "vectfile") {
     ext_in <- in_obj %>%
-      readshape() %>%
+      read_shape() %>%
       raster::extent()[c(1,3,2,4)]
     crs_ext <- st_crs(ext_in)
   }
 
   if (vectype == "vectfile") {
-    in_vect  <- readshape(in_vect)
+    in_vect  <- read_shape(in_vect)
   }
 
   if (vectype %in% c("vectfile", "sfobject")) {

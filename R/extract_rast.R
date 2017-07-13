@@ -52,7 +52,7 @@
 #' library(sprawl)
 #' library(raster)
 #' options(tibble.width = Inf)
-#' in_polys <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
+#' in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
 #' in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
 #' in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 #' out      <- extract_rast(in_rast, in_polys, long = FALSE, verbose = FALSE)
@@ -112,7 +112,7 @@ extract_rast <- function(in_rast,
     stop("Input in_vect_zones is not a valid vector/raster file or object !")
   }
   if (zone_type == "vectfile") {
-    in_vect_zones <- readshape(in_vect_zones, stringsAsFactors = TRUE)
+    in_vect_zones <- read_shape(in_vect_zones, stringsAsFactors = TRUE)
     zone_type   <- "sfobject"
   }
 

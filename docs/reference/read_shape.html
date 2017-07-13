@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>crop_vect — crop_vect â€¢ sprawl</title>
+<title>read_shape -&gt; Read an ESRI shapefile into <code>R</code> — read_shape â€¢ sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,55 +80,69 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>crop_vect</h1>
+    <h1>read_shape -&gt; Read an ESRI shapefile into <code>R</code></h1>
     </div>
 
     
-    <p>Function allowing to crop an input vector object or shapefile on the extent of a
-different spatial object. in_vect must be an *sp, *sf object or vector file, while in_obj should
-be a valid spatial object (sp, sf, vector file, raster or rasterfile)</p>
+    <p>function for easily opening a ESRI shapefile (or other OGR compatible vector file)
+by simply specifying its filename</p>
     
 
-    <pre class="usage"><span class='fu'>crop_vect</span>(<span class='no'>in_vect</span>, <span class='no'>in_obj</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>read_shape</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_vect</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>in_obj</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>to_file</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <th>shp_file</th>
+      <td><p><code>character</code> Filename of ESRI shapefile to be opened</p></td>
     </tr>
     <tr>
       <th>as_sp</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> If TRUE, the opened object is automatically converted to <code>sp</code> format.
+Otherwise, an <code>sf</code> object is returned. Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>other arguments to be passed to<a href='http://www.rdocumentation.org/packages/sf/topics/st_read'>sf::st_read</a></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
+    <p><code>sf</code> or <code>sp</code> object (depending on <code>as_sp</code> setting)</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>DETAILS</p>
+    <p>simple wrapper around <code><a href='http://www.rdocumentation.org/packages/sf/topics/st_read'>sf::read_sf</a></code>, with some checks on inputs and possibility of
+automatic re-casting to <code>*sp</code> objects</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></code></p>
+    <p><code><a href='http://www.rdocumentation.org/packages/sf/topics/st_read'>read_sf</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
- <span class='co'>#EXAMPLE1</span>
- }</div><div class='output co'>#&gt; NULL</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># open a shapefile as a `sf` object</span>
+ <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"clip_shape.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>)
+ <span class='fu'>read_shape</span>(<span class='no'>shp_file</span>)</div><div class='output co'>#&gt; Simple feature collection with 1 feature and 1 field
+#&gt; geometry type:  POLYGON
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 12897040 ymin: 1685960 xmax: 12973620 ymax: 1789470
+#&gt; epsg (SRID):    NA
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
+#&gt;   id                       geometry
+#&gt; 1  1 POLYGON((12897044.4296022 1...</div><div class='input'>
+<span class='co'># open a shapefile as a `sp` object</span>
+ <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"clip_shape.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>)
+ <span class='fu'>read_shape</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
+#&gt; features    : 1 
+#&gt; extent      : 12897044, 12973623, 1685960, 1789470  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs 
+#&gt; variables   : 1
+#&gt; names       : id 
+#&gt; min values  :  1 
+#&gt; max values  :  1 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

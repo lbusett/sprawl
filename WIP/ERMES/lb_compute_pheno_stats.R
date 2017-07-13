@@ -21,7 +21,7 @@ lb_compute_pheno_stats = function(cc,in_rast_ricemap = NULL,in_rast_flw = NULL, 
     in_shp = readshape(in_shp_saved)
   } else {
     in_shp = lb_get_PGIS(schema_name, table_name, geom_field = 'geom', con, verbose = T)
-    lb_writeshape(in_shp, filename = in_shp_saved )
+    write_shape(in_shp, filename = in_shp_saved )
   }
 
   if (cc == 'it') in_shp = subset(in_shp, type == "municip")
@@ -114,7 +114,7 @@ lb_compute_pheno_stats = function(cc,in_rast_ricemap = NULL,in_rast_flw = NULL, 
 
   polynew = SpatialPolygons(polys, proj4string = CRS(proj4string(in_shp)))
   out_shp= SpatialPolygonsDataFrame(polynew, out)
-  lb_writeshape(out_shp,out_shapefile)
+  write_shape(out_shp,out_shapefile)
 
   return(out_shp@data)
 

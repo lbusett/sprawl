@@ -103,7 +103,7 @@ er_polygons_std <- function(in_vect_zones,
   if (er_opts$verbose) {message("extract_rast --> Rasterizing shape")}
   if (er_opts$verbose) {message("extract_rast --> Writing temporary shapefile")}
   temp_shapefile = tempfile(tmpdir = tempdir(), fileext = ".shp")
-  writeshape(in_vect_zones_crop, temp_shapefile, overwrite = TRUE)
+  write_shape(in_vect_zones_crop, temp_shapefile, overwrite = TRUE)
 
   # then convert it to raster
   if (er_opts$verbose) {(message("extract_rast --> Writing temporary rasterized shapefile"))}

@@ -25,7 +25,7 @@ DETAILS
 \examples{
 \dontrun{
 if(interactive()){
- indata    <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"))
+ indata    <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"))
  byvar     <- "category"
  out_shape <- dissolve_shape(indata, byvar)
  out_shape

@@ -138,6 +138,6 @@ for (cc in c('gr','es','it')) {
   out_shp@data = out
   proj4string(out_shp) = "+init=epsg:3035"
 
-  lb_writeshape(out_shp,out_filename)
+  write_shape(out_shp,out_filename)
 
 }

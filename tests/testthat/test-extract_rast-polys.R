@@ -2,7 +2,7 @@ context("Zonal Statistics - polygons")
 testthat::test_that("Test On polygons extraction", {
   # skip_on_cran()
   skip_on_travis()
-  in_polys       <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
+  in_polys       <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
   in_rast        <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
   in_rast        <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 
@@ -30,9 +30,10 @@ testthat::test_that("Test On polygons extraction", {
   # out2  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_type")
   out3  <- expect_warning(extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_tydfse"))
   out4  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T)
-  expect_equal(out$stats$value, out2$stats$value, out3$stats$value, out4$stats$value, tolerance = 0.0001)
-  expect_equal(out$alldata$value, out2$alldata$value, out3$alldata$value, out4$alldata$value, tolerance = 0.0001)
-
+  expect_equal(out$stats$value, out2$stats$value)
+  expect_equal(out2$stats$value, out4$stats$value)
+  expect_equal(out$alldata$value, out2$alldata$value)
+  expect_equal(out$alldata$value, out4$alldata$value)
   # Check that processing with and without comp_quant are equal for a common variable
   # out   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id", comp_quant = TRUE)
   out2  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, comp_quant = TRUE)

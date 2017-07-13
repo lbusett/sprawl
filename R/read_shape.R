@@ -1,4 +1,4 @@
-#' @title readshape
+#' @title read_shape -> Read an ESRI shapefile into `R`
 #' @description function for easily opening a ESRI shapefile (or other OGR compatible vector file)
 #' by simply specifying its filename
 #'
@@ -8,20 +8,28 @@
 #' @param ... other arguments to be passed to[sf::st_read]
 #'
 #' @return `sf` or `sp` object (depending on `as_sp` setting)
+#' @details simple wrapper around `sf::read_sf`, with some checks on inputs and possibility of
+#' automatic re-casting to `*sp` objects
 #' @export
 #' @importFrom sf read_sf
 #' @examples \dontrun{
 #' # open a shapefile as a `sf` object
 #'  shp_file = system.file("extdata","clip_shape.shp", package = "sprawl")
-#'  readshape(shp_file)
+#'  read_shape(shp_file)
 #'
 #' # open a shapefile as a `sp` object
 #'  shp_file = system.file("extdata","clip_shape.shp", package = "sprawl")
-#'  readshape(shp_file, as_sp = TRUE)
+#'  read_shape(shp_file, as_sp = TRUE)
 #'}
-readshape = function(shp_file, as_sp = FALSE, ...){
+#'@seealso
+#'  \code{\link[sf]{read_sf}}
+#' @rdname read_shape
+#' @export
+#' @importFrom sf read_sf
+#'
+read_shape = function(shp_file, as_sp = FALSE, ...){
   if (!file.exists(shp_file)) {
-    stop("readshape --> Input file doesn't exist on your system ! Aborting !")
+    stop("read_shape --> Input file doesn't exist on your system ! Aborting !")
   }
   chk <- check_spatype(shp_file)
   if (chk == "vectfile") {

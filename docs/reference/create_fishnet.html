@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>create_fishnet — create_fishnet • sprawl</title>
+<title>create_fishnet � create_fishnet • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,7 +92,7 @@ crop it on a desired extgent without "moving" the corners of the cells ")</p>
     
 
     <pre class="usage"><span class='fu'>create_fishnet</span>(<span class='no'>in_obj</span>, <span class='no'>cellsize</span>, <span class='kw'>crop_layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_raster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>out_shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>return_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>pypath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>out_shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>return_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>pypath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -109,7 +109,7 @@ built from the corner of <code>in_obj</code>, with a resolution equal to <code>c
     <tr>
       <th>crop_layer</th>
       <td><p>(optional) object of <code>Extent</code>. If not null, the fishnet extent will be cropped on
-this extent, without "moving" the nodes of the grid (this is useful to crop a grid created on
+this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on
 the basis of a different raster coordinates on top of a different raster, Default: NULL</p></td>
     </tr>
     <tr>
@@ -148,18 +148,21 @@ Default: NULL</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
-  <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
-  <span class='no'>file_in</span> <span class='kw'>&lt;-</span> <span class='st'>"/somedir/somefile.tif"</span>
-  <span class='no'>inrast</span>  <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='no'>file_in</span>)
+    <pre class="examples"><div class='input'>  <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
+  <span class='fu'>library</span>(<span class='no'>raster</span>)
+  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
 
-  <span class='no'>ext_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>extent</span>(<span class='no'>inrast</span>)
-  <span class='no'>csize</span>    <span class='kw'>&lt;-</span> <span class='fu'>res</span>(<span class='no'>inrast</span>)[<span class='fl'>1</span>]
+  <span class='no'>file_in</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
+  <span class='no'>inrast</span>   <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>file_in</span>)
+  <span class='no'>cellsize</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/resolution'>res</a></span>(<span class='no'>inrast</span>)[<span class='fl'>1</span>]
 
   <span class='no'>out_file</span> <span class='kw'>&lt;-</span> <span class='st'>"/somedir/somefile.shp"</span>
-  <span class='fu'>create_fishnet</span>(<span class='no'>ext_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='no'>csize</span>, <span class='kw'>out_shape</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>out_shapefile</span> <span class='kw'>=</span> <span class='no'>out_file</span>,
-         <span class='kw'>overw</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>out_raster</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
- }</div><div class='output co'>#&gt; <span class='error'>Error in .rasterObjectFromFile(x, band = band, objecttype = "RasterLayer",     ...): Cannot create a RasterLayer object from this file. (file does not exist)</span></div><div class='input'> </div></pre>
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>inrast</span>,
+                             <span class='no'>cellsize</span>,
+                             <span class='kw'>return_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+                             )</div><div class='output co'>#&gt; <span class='message'>create_fishnet -&gt; Writing Polygon Grid to: C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp0eUuAc\file32e474ae1717.shp - Please Wait !</span></div><div class='output co'>#&gt; <span class='warning'>Warning: running command '"python" C:\OSGeo4W64\bin\gdal_polygonize.py C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp0eUuAc\tempshp_32e436367a73.tif -f "ESRI Shapefile" C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp0eUuAc\file32e474ae1717.shp -fieldname id' had status 1</span></div><div class='output co'>#&gt; <span class='message'>create_fishnet -&gt; Reading Polygon Grid C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp0eUuAc\file32e474ae1717.shp to R - Please Wait !</span></div><div class='output co'>#&gt; <span class='error'>Error in read_shape(out_shape): read_shape --&gt; Input file doesn't exist on your system ! Aborting !</span></div><div class='input'>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>inrast</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .plotraster2(x, col = col, maxpixels = maxpixels, add = add,     ext = ext, interpolate = interpolate, colNA = colNA, main = main,     addfun = addfun, facvar = facvar, alpha = alpha, npretty = npretty,     ...): no values associated with this RasterLayer</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>fishnet</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(fishnet, add = TRUE, col = "transparent"): object 'fishnet' not found</span></div><div class='input'>
+ </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

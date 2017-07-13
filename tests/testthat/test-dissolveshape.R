@@ -2,7 +2,7 @@ context("Checking shape dissolve")
 testthat::test_that("Test dissolve shapefile",{
   # skip_on_cran()
   skip_on_travis()
-  indata <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"))
+  indata <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"))
   byvar = "category"
 
   # correct processing: no error and output is "sf" object

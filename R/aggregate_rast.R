@@ -78,7 +78,7 @@ aggregate_rast <- function(in_rast_values,
     raster(in_obj_zones) %>%
       raster::writeRaster(filename = tempraster, overwrite = TRUE)
     # file.copy(in_obj_zones, tempraster, overwrite = T)
-    writeshape(agg_values,tempshape, overwrite = T)
+    write_shape(agg_values,tempshape, overwrite = T)
     rasterize_string <- paste("-a myfun",
                               # "-tr ", paste(res(in_obj_zones), collapse = " "),
                               # "-co COMPRESS=DEFLATE",

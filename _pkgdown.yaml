@@ -9,14 +9,15 @@ reference:
   - title: Reading/writing spatial data
     desc: ~
     contents:
-      - '`readshape`'
-      - '`writeshape`'
+      - '`read_shape`'
+      - '`write_shape`'
   - title: Raster processing
     desc: ~
     contents:
       - '`extract_rast`'
       - '`reclass_rast`'
       - '`aggregate_rast`'
+      - '`mask_rast`'
   - title: Vector processing
     desc: ~
     contents:

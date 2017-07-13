@@ -106,7 +106,7 @@ ERMES_cells_poly = readOGR(dirname(in_ermes_grid_laea),file_path_sans_ext(basena
 if(file.exists(out_ermes_grid_reproj) == FALSE) {
 
   ERMES_cells_poly_reproj = spTransform(ERMES_cells_poly, raster_orig_crs)
-  lb_writeshape(ERMES_cells_poly_reproj,out_ermes_grid_reproj)
+  write_shape(ERMES_cells_poly_reproj,out_ermes_grid_reproj)
 
 } else {ERMES_cells_poly_reproj = readOGR(dirname(out_ermes_grid_reproj),layer =file_path_sans_ext(basename(out_ermes_grid_reproj)))}
 
@@ -120,7 +120,7 @@ lb_writeshape(cropped_grid,out_ermes_grid_reproj)
 ext_cropped = extent (cropped_grid)
 ext_cropped_laea = extent(spTransform(cropped_grid, laea_crs))
 cropped_grid_LAEA = spTransform(cropped_grid, laea_crs)
-lb_writeshape(cropped_grid_LAEA,"D:/Documents/ERMES/Documents/Data_Processing/aggregate_for_local/Test/Spain/Temp_Data/ERMES_Grid_reprojected_LAEA.shp")
+write_shape(cropped_grid_LAEA,"D:/Documents/ERMES/Documents/Data_Processing/aggregate_for_local/Test/Spain/Temp_Data/ERMES_Grid_reprojected_LAEA.shp")
 
 # Reproject the original raster to LAEA projection , clip it on ERMES Grid extent
 gdalwarp(in_raster_file,out_file_raster, s_srs = raster_orig_crs, t_srs = laea_crs,
