@@ -1,7 +1,10 @@
 #' @title crop_vect
-#' @description FUNCTION_DESCRIPTION
+#' @description Function allowing to crop an input vector object or shapefile on the extent of a
+#' different spatial object. in_vect must be an *sp, *sf object or vector file, while in_obj should
+#' be a valid spatial object (sp, sf, vector file, raster or rasterfile)
 #' @param in_vect PARAM_DESCRIPTION
 #' @param in_obj PARAM_DESCRIPTION
+#' @param to_file PARAM_DESCRIPTION, Default: FALSE
 #' @param as_sp PARAM_DESCRIPTION, Default: FALSE
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
@@ -12,20 +15,17 @@
 #'  }
 #' }
 #' @seealso
-#'  \code{\link[dplyr]{case_when}}
-
-#'  \code{\link[raster]{extent}},\code{\link[raster]{raster}}
-
-#'  \code{\link[sp]{crop}}
+#'  \code{\link[sp]{proj4string}}
 #' @rdname crop_vect
 #' @export
 #' @importFrom raster extent raster crop
-#' @importFrom sf st_as_sf st_bbox st_crs st_as_sfc st_sf st_set_agr st_transform st_intersection
+#' @importFrom sf st_as_sf st_bbox st_crs st_as_sfc st_set_agr st_transform st_intersection
 #' @importFrom sp proj4string
 #'
 crop_vect <- function(in_vect,
                       in_obj,
-                      as_sp = FALSE) {
+                      to_file = FALSE,
+                      as_sp   = FALSE) {
 
   #   ____________________________________________________________________________
   #   Check arguments                                                         ####
@@ -44,7 +44,7 @@ crop_vect <- function(in_vect,
   #   ____________________________________________________________________________
   #   If both in_vect and in_obj are sp objects, use `raster::crop`           ####
 
-  if (vectype == "spobject" & vectype == "spobject") {
+  if (vectype == "spobject" & objtype == "spobject") {
     out_vec  <- crop(in_vect, in_obj)
     if (!as_sp) {
       out_vec <- sf::st_as_sf(out_vec)

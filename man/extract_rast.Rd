@@ -46,6 +46,8 @@ in `out$alldata' (Setting this to FALSE can be a good idea for large datasets...
 \item{comp_quant}{\code{logical} if TRUE, also quantiles of the distributions of values are computed for each zone
 and returned in  \code{out$ts_summ}, Default: FALSE}
 
+\item{FUN}{\code{character} or function name, Default: NULL}
+
 \item{small}{\code{logical} if TRUE, values are returned also for small polygons not including any
 pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE}
 
@@ -84,16 +86,17 @@ corresponding to the features of a vector (Polygon, Point or Line)
 }
 \examples{
 \dontrun{
-  library(sprawl)
-  library(raster)
-  options(tibble.width = Inf)
-  in_rast  <- raster::stack(system.file("extdata", "in_rast.tif", package = "sprawl"))
-  in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
-  in_zones <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-  stats    <- extract_rast(in_rast, in_zones, long = FALSE, verbose = FALSE)
-  stats
- }
+library(sprawl)
+library(raster)
+options(tibble.width = Inf)
+in_polys <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
+in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
+in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
+out      <- extract_rast(in_rast, in_polys, long = FALSE, verbose = FALSE)
+head(out$stats)
+head(out$alldata)
+}
 }
 \author{
-Lorenzo Busetto, phD (2014-2015) \email{lbusett@gmail.com}
+Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 }

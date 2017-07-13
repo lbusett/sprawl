@@ -4,12 +4,14 @@
 \alias{crop_vect}
 \title{crop_vect}
 \usage{
-crop_vect(in_vect, in_obj, as_sp = FALSE)
+crop_vect(in_vect, in_obj, to_file = FALSE, as_sp = FALSE)
 }
 \arguments{
 \item{in_vect}{PARAM_DESCRIPTION}
 
 \item{in_obj}{PARAM_DESCRIPTION}
+
+\item{to_file}{PARAM_DESCRIPTION, Default: FALSE}
 
 \item{as_sp}{PARAM_DESCRIPTION, Default: FALSE}
 }
@@ -17,7 +19,9 @@ crop_vect(in_vect, in_obj, as_sp = FALSE)
 OUTPUT_DESCRIPTION
 }
 \description{
-FUNCTION_DESCRIPTION
+Function allowing to crop an input vector object or shapefile on the extent of a
+different spatial object. in_vect must be an *sp, *sf object or vector file, while in_obj should
+be a valid spatial object (sp, sf, vector file, raster or rasterfile)
 }
 \details{
 DETAILS
@@ -30,7 +34,5 @@ if(interactive()){
 }
 }
 \seealso{
-\code{\link[dplyr]{case_when}}
-\code{\link[raster]{extent}},\code{\link[raster]{raster}}
-\code{\link[sp]{crop}}
+\code{\link[sp]{proj4string}}
 }

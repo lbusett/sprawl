@@ -5,24 +5,33 @@ template:
 output:
   html_document:
     highlight: zenburn
-
 reference:
   - title: Reading/writing spatial data
     desc: ~
     contents:
       - '`readshape`'
       - '`writeshape`'
-  - title: Data fetching from public repositories
-    desc: ~
-    contents:
-      - '`get_boundaries`'
   - title: Raster processing
     desc: ~
     contents:
       - '`extract_rast`'
+      - '`reclass_rast`'
+      - '`aggregate_rast`'
+  - title: Vector processing
+    desc: ~
+    contents:
+      - '`dissolve_shape`'
+      - '`create_fishnet`'
+      - '`crop_vect`'
+  - title: Data fetching from public repositories
+    desc: ~
+    contents:
+      - '`get_boundaries`'
   - title: Miscellaneous
     desc: ~
     contents:
+      - '`doytodate`'
+      - '`datetodoy`'
       - '`build_testraster`'
       - '`build_testshape`'
       - '`check_spatype`'

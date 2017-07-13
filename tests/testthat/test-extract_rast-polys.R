@@ -19,17 +19,19 @@ testthat::test_that("Test On polygons extraction", {
   expect_is(out, "list")
   # Check that chunked and non-chunked processing yields the same results
   out  <- extract_rast(in_rast, in_polys, verbose = F, long = F, keep_null = T, selbands = c(1,2), small = F)
-  out2 <- extract_rast(in_rast, in_polys, verbose = F, long = F, keep_null = T, selbands = c(1,2), maxchunk = 10000,  small = F)
+  out2 <- extract_rast(in_rast, in_polys, verbose = F, long = F, keep_null = T, selbands = c(1,2), maxchunk = 30000,  small = F)
   expect_equal(dplyr::select(out$alldata, -geometry), dplyr::select(out2$alldata, -geometry))
   expect_equal(dplyr::select(out$stats, -geometry), dplyr::select(out2$stats, -geometry))
 
   # Check that processing with and without valid id_field are identical
-  out   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id")
-  out2  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_type")
+  out    <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id")
+  out2   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_type",
+                         addfeat = FALSE)
+  # out2  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_type")
   out3  <- expect_warning(extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "lc_tydfse"))
   out4  <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T)
-  expect_equal(out$stats$value, out2$stats$value, out3$stats$value, out4$stats$value, tolerance = .00002)
-  expect_equal(out$alldata$value, out2$alldata$value, out3$alldata$value, out4$alldata$value, tolerance = .00002)
+  expect_equal(out$stats$value, out2$stats$value, out3$stats$value, out4$stats$value, tolerance = 0.0001)
+  expect_equal(out$alldata$value, out2$alldata$value, out3$alldata$value, out4$alldata$value, tolerance = 0.0001)
 
   # Check that processing with and without comp_quant are equal for a common variable
   # out   <- extract_rast(in_rast, in_polys, verbose = F, long = T, keep_null = T, selbands = c(1,2), small = T, id_field = "id", comp_quant = TRUE)

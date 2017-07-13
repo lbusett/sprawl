@@ -4,34 +4,47 @@
 \alias{reclass_rast}
 \title{reclass_rast}
 \usage{
-reclass_rast(in_rast, rcl_mat, out_rast, r_out = FALSE, ovr = FALSE)
+reclass_rast(in_rast, rcl_mat, out_rast = NULL, r_out = TRUE,
+  overwrite = FALSE)
 }
 \arguments{
 \item{in_rast}{Input raster file or "R" raster layer to be reclassified}
 
-\item{rcl_mat}{input reclassification matrix. list of list created  as follows:
-rcl_mat <- list(
-list(start = X,  end  = Y , new = n1),
-list(start = X1, end  = Y1, new = n2),
-.....,
-list(start = Xn, end = Yn, new = nn)
-)
-IMPORTANT ! Intervals are CLOSED on THE LEFT and OPEN ON THE RIGHT !
-\itemize{
-\item see examples !!!! -
-}}
+\item{rcl_mat}{\code{data.frame} 3 column data frame with column names equal to \code{start}, \code{end} and \code{new}
+Each line specifies an intervals of values in the original raster and the value they will
+assume in the output. Can be created for example as follows:
+rcl_mat <- tibble::tribble(
+~start, ~end, ~new,
+0,   0,   NA,   # --> 0 in input goes to NA in output
+1,   4,   1,    # --> values from 1 to 4 (excluded) go to 1 in output
+...,  ..., ...,
+...,  ..., ...,
+9,  11,   0,   # --> values from 9 to 11 (excluded) go to 0 in output
+11, 100, NA)   # --> everything equal/above 11 go to NA in output
 
-\item{out_rast}{name of the output raster file}
+\strong{IMPORTANT ! Intervals are CLOSED on THE LEFT and OPEN ON THE RIGHT !} - see examples !!!! -}
 
-\item{r_out}{logical flag indicating if the output raster should be sent back to "R"}
+\item{out_rast}{\code{character} Name of the output raster file. If NULL, a temporary raster is created
+in "R" tempdir(), Default: NULL}
 
-\item{ovr}{logical indicateing if the output file should be overwritten if already existing}
+\item{r_out}{\code{logical} If TRUE, the reclassified raster is returned to the caller, Default: TRUE}
+
+\item{overwrite}{\code{logical} If TRUE and `out_rast`` already exists, the file is overwritten,
+Default: FALSE}
 }
 \value{
-if (r_out == TRUE), returns a "R" raster object corresponding to the reclassified raster
+if (r_out == TRUE), "R" \code{raster} object corresponding to the reclassified raster,
+otherwise  the name of the file where it was saved (either corresponfing to \code{out_rast} or to the
+name of thetemporary file created (if \code{out_rast == NULL}))
 }
 \description{
+FUNCTION_DESCRIPTION
+}
+\details{
 reclass_rast
+
+this is a simple wrapper for the \link[raster:reclassify]{raster::reclassify} function, providing somehow easier
+use and extended I/O functionality
 }
 \examples{
 \dontrun{
@@ -40,19 +53,23 @@ reclass_rast
 # Open  the masking file
 in_mask <- raster(in_maskfile)
 # setup the reclassification matrix
-rcl_mat <- list(
-   list(start = 0, end  = 0, new = NA),
-   list(start = 1, end  = 5, new = 0),
-   list(start = 5, end  = 6, new = 1),
-   list(start = 6, end  = 9, new = 1),
-   list(start = 9, end  = 11, new = 1),
-   list(start = 11, end = 100, new = NA)
-  )
 
+ rcl_mat <- tibble::tribble(
+                ~start, ~end, ~new,
+                     0,   0,   NA,
+                     1,   5,   0,
+                     5,   6,   1,
+                     6,   9,   1,
+                     9,  11,   1,
+                     11, 100, NA)
 
 reclass_file = "/home/lb/Temp/buttami/pippo_reclass.tif"
-outmask = raster_reclassifier(in_mask, rcl_mat, out_rast = reclass_file,
-                                r_out = TRUE, ovr = TRUE)
-summary(outmask)
+outmask = reclass_rast(in_rast,
+                       rcl_mat,
+                       r_out = TRUE)
+plot(outmask)
 }
+}
+\seealso{
+\code{\link[raster]{reclassify}}
 }

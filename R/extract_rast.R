@@ -24,6 +24,7 @@
 #' in `out$alldata' (Setting this to FALSE can be a good idea for large datasets....), Default: TRUE
 #' @param comp_quant `logical` if TRUE, also quantiles of the distributions of values are computed for each zone
 #' and returned in  `out$ts_summ`, Default: FALSE
+#' @param FUN `character` or function name, Default: NULL
 #' @param small `logical` if TRUE, values are returned also for small polygons not including any
 #' pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE
 #' @param na.rm `logical` If TRUE, NA values are removed while computing statistics, Default: TRUE
@@ -48,15 +49,16 @@
 #' @details
 #' @examples
 #' \dontrun{
-#'   library(sprawl)
-#'   library(raster)
-#'   options(tibble.width = Inf)
-#'   in_rast  <- raster::stack(system.file("extdata", "in_rast.tif", package = "sprawl"))
-#'   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
-#'   in_zones <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-#'   stats    <- extract_rast(in_rast, in_zones, long = FALSE, verbose = FALSE)
-#'   stats
-#'  }
+#' library(sprawl)
+#' library(raster)
+#' options(tibble.width = Inf)
+#' in_polys <- readshape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
+#' in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
+#' in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
+#' out      <- extract_rast(in_rast, in_polys, long = FALSE, verbose = FALSE)
+#' head(out$stats)
+#' head(out$alldata)
+#'}
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
 #' @importFrom sp proj4string
 #' @importFrom dplyr mutate_if
@@ -64,7 +66,7 @@
 #' @importFrom raster getZ
 #' @importFrom magrittr %>%
 #'
-#' @author Lorenzo Busetto, phD (2014-2015) \email{lbusett@gmail.com}
+#' @author Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 #'
 extract_rast <- function(in_rast,
                        in_vect_zones,

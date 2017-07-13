@@ -5,8 +5,8 @@
 ^index\.Rmd$
 ^README-.*\.png$
 temporary\*
-WIP\*
-wiki\*
+/WIP\*
+/wiki\*
 benchmarking\*
 ^\.travis\.yml$
 ^D:/Documents/Source/git/sprawl/docs$

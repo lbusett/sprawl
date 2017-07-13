@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>crop_vect — crop_vect • sprawl</title>
+<title>aggregate_rast — aggregate_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,35 +80,46 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>crop_vect</h1>
+    <h1>aggregate_rast</h1>
     </div>
 
     
-    <p>Function allowing to crop an input vector object or shapefile on the extent of a
-different spatial object. in_vect must be an *sp, *sf object or vector file, while in_obj should
-be a valid spatial object (sp, sf, vector file, raster or rasterfile)</p>
+    <p>FUNCTION_DESCRIPTION</p>
     
 
-    <pre class="usage"><span class='fu'>crop_vect</span>(<span class='no'>in_vect</span>, <span class='no'>in_obj</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_rast_values</span>, <span class='no'>in_obj_zones</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"fastdisk"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_vect</th>
+      <th>in_rast_values</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>in_obj</th>
+      <th>in_obj_zones</th>
       <td><p>PARAM_DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>FUN</th>
+      <td><p>PARAM_DESCRIPTION, Default: mean</p></td>
+    </tr>
+    <tr>
+      <th>method</th>
+      <td><p>PARAM_DESCRIPTION, Default: 'fastdisk'</p></td>
     </tr>
     <tr>
       <th>to_file</th>
       <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
     </tr>
     <tr>
-      <th>as_sp</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <th>out_file</th>
+      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
     </tr>
     </table>
     

@@ -1,7 +1,4 @@
 #' @title er_polygons_std
-#   ____________________________________________________________________________
-#       # if "supersampling" requested, resample input raster to higher reso####
-
 #' @description FUNCTION_DESCRIPTION
 #' @param in_vect_zones PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
@@ -10,6 +7,8 @@
 #' @param n_selbands PARAM_DESCRIPTION
 #' @param date_check PARAM_DESCRIPTION
 #' @param er_opts PARAM_DESCRIPTION
+#' @param verb_foreach `logical` if TRUE, verbose output is sent out from within the foreach cycle,
+#' Default: FALSE
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -30,19 +29,20 @@
 #'  \code{\link[velox]{velox}}
 
 #'  \code{\link[utils]{setTxtProgressBar}},\code{\link[utils]{txtProgressBar}}
-#' @rdname er_polygons
+#' @rdname er_polygons_std
 #' @export
-#' @importFrom data.table data.table rbindlist setkey melt setcolorder
+#' @importFrom data.table data.table rbindlist setkey as.data.table setcolorder melt
 #' @importFrom doSNOW registerDoSNOW
-#' @importFrom dplyr select group_by summarize
+#' @importFrom dplyr case_when filter
 #' @importFrom foreach foreach %dopar%
 #' @importFrom gdalUtils gdalwarp
-#' @importFrom raster res writeRaster extent extract
-#' @importFrom sf st_as_sf st_geometry st_set_crs
+#' @importFrom raster res extent raster nrow ncol writeRaster getValues yFromRow extract xyFromCell
+#' @importFrom sf st_bbox st_as_sf st_geometry st_set_crs
 #' @importFrom sp proj4string
+#' @importFrom tibble as_tibble
 #' @importFrom velox velox
 #' @importFrom parallel detectCores makeCluster stopCluster
-#' @importFrom utils setTxtProgressBar txtProgressBar
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom magrittr %>%
 
 er_polygons_std <- function(in_vect_zones,
@@ -167,7 +167,7 @@ er_polygons_std <- function(in_vect_zones,
   n_chunks          <- floor(n_cells / er_opts$maxchunk) + 1
 
   if (er_opts$verbose) {
-    message("extract_rast--> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"),
+    message("extract_rast --> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"),
             " - Please wait !")
     pb       <- utils::txtProgressBar(max = n_selbands, style = 3)
     progress <- function(n) utils::setTxtProgressBar(pb, n)
@@ -453,6 +453,14 @@ er_polygons_std <- function(in_vect_zones,
         data.table::as.data.table(in_vect_zones_crop) %>%
           setkey("mdxtnq")}
         ]
+    } else {
+      if (!is.null(er_opts$id_field)) {
+
+        stat_data <- stat_data[{
+          data.table::as.data.table(in_vect_zones_crop[,c(eval(er_opts$id_field), "mdxtnq")]) %>%
+            setkey("mdxtnq")}
+          ]
+      }
     }
 
     # define the order of the output columns
@@ -478,13 +486,20 @@ er_polygons_std <- function(in_vect_zones,
       }
 
     }
-    if (!er_opts$addfeat) keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
+    if (!er_opts$addfeat) {
+      if (is.null(er_opts$id_field)) {
+        keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
+      } else {
+        keep_cols <- keep_cols[which((!keep_cols %in% names_shp) & (keep_cols != er_opts$id_field))]
+      }
+    }
 
     if (!er_opts$addgeom) {
 
       keep_cols <- keep_cols[-length(keep_cols)]
       stat_data <- stat_data[, geometry := NULL]
     }
+    # browser()
     if (!is.null(er_opts$id_field)) {
       stat_data <- stat_data[, mdxtnq := NULL]
       keep_cols <- keep_cols[which(keep_cols != er_opts$id_field)]
@@ -529,6 +544,7 @@ er_polygons_std <- function(in_vect_zones,
   #   coordinates and transforming to a `sf` object                           ####
 
   if (er_opts$full_data) {
+
     # "bind" the different bands
     all_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 1))) %>%
       data.table::setkey("mdxtnq")
@@ -537,6 +553,14 @@ er_polygons_std <- function(in_vect_zones,
     # if er_opts$addfeat, merge the extracted data with the shapefile features
     if (er_opts$addfeat) {
       all_data <- merge(all_data, in_vect_zones_crop, by = "mdxtnq", all.y = TRUE)
+    } else {
+      if (!is.null(er_opts$id_field)) {
+
+        all_data <- all_data[{
+          data.table::as.data.table(in_vect_zones_crop[,c(eval(er_opts$id_field), "mdxtnq")]) %>%
+            setkey("mdxtnq")}
+          ]
+      }
     }
 
     # define the order of the output columns
@@ -544,7 +568,14 @@ er_polygons_std <- function(in_vect_zones,
                    names_shp,
                    "value",
                    "x_coord", "y_coord")
-    if (!er_opts$addfeat) keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
+    if (!er_opts$addfeat) {
+      if (is.null(er_opts$id_field)) {
+        keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
+      } else {
+        keep_cols <- keep_cols[which((!keep_cols %in% names_shp) & (keep_cols != er_opts$id_field))]
+      }
+    }
+
     if (!er_opts$addgeom) keep_cols <- keep_cols[which(!keep_cols %in% c("x_coord", "y_coord"))]
     if (!is.null(er_opts$id_field)) {
       keep_cols    <- keep_cols[which(keep_cols != er_opts$id_field)]

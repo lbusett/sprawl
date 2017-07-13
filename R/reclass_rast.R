@@ -1,63 +1,97 @@
 #' reclass_rast
 #'
+#' @title reclass_rast
+#' @description FUNCTION_DESCRIPTION
 #' @param in_rast Input raster file or "R" raster layer to be reclassified
-#' @param rcl_mat input reclassification matrix. list of list created  as follows:
-#'    rcl_mat <- list(
-#'       list(start = X,  end  = Y , new = n1),
-#'       list(start = X1, end  = Y1, new = n2),
-#'       .....,
-#'       list(start = Xn, end = Yn, new = nn)
-#'    )
-#'    IMPORTANT ! Intervals are CLOSED on THE LEFT and OPEN ON THE RIGHT !
-#'    - see examples !!!! -
-# Therefore, start = 1, end = 5 means from 1 to 4.999999, etcetera !)
-#' @param out_rast name of the output raster file
-#' @param r_out    logical flag indicating if the output raster should be sent back to "R"
-#' @param ovr      logical indicateing if the output file should be overwritten if already existing
+#' @param rcl_mat `data.frame` 3 column data frame with column names equal to `start`, `end` and `new`
+#' Each line specifies an intervals of values in the original raster and the value they will
+#' assume in the output. Can be created for example as follows:
+#'  rcl_mat <- tibble::tribble(
+#'                 ~start, ~end, ~new,
+#'                      0,   0,   NA,   # --> 0 in input goes to NA in output
+#'                      1,   4,   1,    # --> values from 1 to 4 (excluded) go to 1 in output
+#'                   ...,  ..., ...,
+#'                   ...,  ..., ...,
+#'                      9,  11,   0,   # --> values from 9 to 11 (excluded) go to 0 in output
+#'                      11, 100, NA)   # --> everything equal/above 11 go to NA in output
 #'
-#' @return if (r_out == TRUE), returns a "R" raster object corresponding to the reclassified raster
-#' @export
-#'
-#' @importFrom raster reclassify raster
-#' @importFrom data.table rbindlist
-#'
-#' @examples \dontrun{
+#'    **IMPORTANT ! Intervals are CLOSED on THE LEFT and OPEN ON THE RIGHT !** - see examples !!!! -
+#' @param out_rast `character` Name of the output raster file. If NULL, a temporary raster is created
+#' in "R" tempdir(), Default: NULL
+#' @param r_out `logical` If TRUE, the reclassified raster is returned to the caller, Default: TRUE
+#' @param overwrite `logical` If TRUE and `out_rast`` already exists, the file is overwritten,
+#' Default: FALSE
+#' @return if (r_out == TRUE), "R" `raster` object corresponding to the reclassified raster,
+#' otherwise  the name of the file where it was saved (either corresponfing to `out_rast` or to the
+#' name of thetemporary file created (if `out_rast == NULL`))
+#' @details this is a simple wrapper for the [raster::reclassify] function, providing somehow easier
+#' use and extended I/O functionality
+##' @examples \dontrun{
 #' # reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5 and 9, putting
 #' # the rest to 0 and values >= 11 to NA
 #' # Open  the masking file
 #' in_mask <- raster(in_maskfile)
 #' # setup the reclassification matrix
-#' rcl_mat <- list(
-#'    list(start = 0, end  = 0, new = NA),
-#'    list(start = 1, end  = 5, new = 0),
-#'    list(start = 5, end  = 6, new = 1),
-#'    list(start = 6, end  = 9, new = 1),
-#'    list(start = 9, end  = 11, new = 1),
-#'    list(start = 11, end = 100, new = NA)
-#'   )
 #'
+#'  rcl_mat <- tibble::tribble(
+#'                 ~start, ~end, ~new,
+#'                      0,   0,   NA,
+#'                      1,   5,   0,
+#'                      5,   6,   1,
+#'                      6,   9,   1,
+#'                      9,  11,   1,
+#'                      11, 100, NA)
 #'
 #' reclass_file = "/home/lb/Temp/buttami/pippo_reclass.tif"
-#' outmask = raster_reclassifier(in_mask, rcl_mat, out_rast = reclass_file,
-#'                                 r_out = TRUE, ovr = TRUE)
-#' summary(outmask)
+#' outmask = reclass_rast(in_rast,
+#'                        rcl_mat,
+#'                        r_out = TRUE)
+#' plot(outmask)
 #' }
+#' @seealso
+#'  \code{\link[raster]{reclassify}}
+#' @rdname reclass_rast
+#' @export
+#' @importFrom raster reclassify
+#'
+reclass_rast <- function(in_rast,
+                         rcl_mat,
+                         out_rast  = NULL,
+                         r_out     = TRUE,
+                         overwrite = FALSE){
 
-reclass_rast <- function(in_rast, rcl_mat, out_rast, r_out = FALSE, ovr = FALSE){
 
-  # reformat the hash table to the format wanted by "reclassify"
-  # rclmat  <- data.table::rbindlist(rcl_mat)
+  #   ____________________________________________________________________________
+  #   determine the required data type based on maximum value of the output   ####
+  #   raster
+
   max_out <- max(rcl_mat$new, na.rm = TRUE)
-  if (max_out <= 255) {ot = "INT1U"}  else
-  {
+  if (max_out <= 255) {
+    ot = "INT1U"
+  }  else  {
     if (max_out <= 65536) {
-      ot = "INT2S"} else {ot = "INT4S" }
+      ot = "INT2S"
+    } else {
+      ot = "INT4S"
+    }
   }
-  raster::reclassify(in_rast, rcl_mat, filename = out_rast,
-                     include.lowest = TRUE, right = FALSE, overwrite = ovr,
-                     datatype = ot)
+
+  #   ____________________________________________________________________________
+  #   Launch raster::reclassify, using intervals open on the left and closed o####
+  #   on the right
+  if (is.null(out_rast)) {
+    out_rast <- tempfile(fileext = ".tif")
+  }
+  raster::reclassify(in_rast,
+                     rcl_mat,
+                     filename       = out_rast,
+                     include.lowest = TRUE,
+                     right          = FALSE,
+                     overwrite      = overwrite,
+                     datatype       = ot)
   if (r_out == TRUE) {
     return(raster(out_rast))
+  } else {
+    return(out_rast)
   }
-
 }
