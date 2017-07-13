@@ -87,6 +87,9 @@ aggregate_rast <- function(in_rast_values,
                               tempraster)
     system2("gdal_rasterize", args = rasterize_string, stdout = NULL)
 
+    if (!to_file) {
+      out_rast <- raster(tempraster)
+    }
   } else {
     agg_values <- data.table::data.table(agg_values)
     out        <- agg_values[,
@@ -107,7 +110,7 @@ aggregate_rast <- function(in_rast_values,
   } else {
     # out_rast <- raster::raster(tempraster)
     if (method == "fastdisk") file.remove(tempshape)
-    file.remove(tempraster)
+    # file.remove(tempraster)
   }
   return(out_rast)
 }

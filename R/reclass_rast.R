@@ -1,4 +1,4 @@
-#' rast_reclass
+#' reclass_rast
 #'
 #' @param in_rast Input raster file or "R" raster layer to be reclassified
 #' @param rcl_mat input reclassification matrix. list of list created  as follows:
@@ -43,17 +43,17 @@
 #' summary(outmask)
 #' }
 
-rast_reclass <- function(in_rast, rcl_mat, out_rast, r_out = FALSE, ovr = FALSE){
+reclass_rast <- function(in_rast, rcl_mat, out_rast, r_out = FALSE, ovr = FALSE){
 
   # reformat the hash table to the format wanted by "reclassify"
-  rclmat  <- data.table::rbindlist(rcl_mat)
-  max_out <- max(rclmat$new, na.rm = TRUE)
+  # rclmat  <- data.table::rbindlist(rcl_mat)
+  max_out <- max(rcl_mat$new, na.rm = TRUE)
   if (max_out <= 255) {ot = "INT1U"}  else
   {
     if (max_out <= 65536) {
       ot = "INT2S"} else {ot = "INT4S" }
   }
-  raster::reclassify(in_rast, rclmat, filename = out_rast,
+  raster::reclassify(in_rast, rcl_mat, filename = out_rast,
                      include.lowest = TRUE, right = FALSE, overwrite = ovr,
                      datatype = ot)
   if (r_out == TRUE) {

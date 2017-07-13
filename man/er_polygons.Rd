@@ -6,7 +6,7 @@
 \title{er_polygons_std}
 \usage{
 er_polygons_std(in_vect_zones, in_rast, seldates, selbands, n_selbands,
-  date_check, er_opts, verb_foreach = FALSE)
+  date_check, er_opts, verb_foreach = TRUE)
 
 er_polygons_velox(in_vect_zones, in_rast, seldates, selbands, n_selbands,
   date_check, er_opts)
