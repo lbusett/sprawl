@@ -52,7 +52,7 @@ er_polygons_std <- function(in_vect_zones,
                             n_selbands,
                             date_check,
                             er_opts,
-                            verb_foreach = TRUE) {
+                            verb_foreach = FALSE) {
 
   #   ____________________________________________________________________________
   #   crop in_vect_zones to in_rast extent if necessary and identify "removed"   ####

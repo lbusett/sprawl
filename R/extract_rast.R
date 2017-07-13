@@ -175,6 +175,7 @@ extract_rast <- function(in_rast,
           warning("Invalid 'id_field' value. Names of output columns (or values of 'feature' field if
                   `long` == TRUE) will be set to the record number of the shapefile feature")
           id_field <- NULL
+          er_opts$id_field <- NULL
         } else {
           if (length(unique(as.data.frame(in_vect_zones[,eval(id_field)])[,1])) != dim(in_vect_zones)[1]) {
             # warning("selected ID field is not univoc ! Names of output columns (or values of 'feature' field if

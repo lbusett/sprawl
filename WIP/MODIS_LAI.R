@@ -55,23 +55,31 @@ library(data.table)
 #   ____________________________________________________________________________
 #   aggregate arable land raster to MODIS grid                              ####
 in_lc_file     <- raster::raster("/home/lb/Temp/buttami/MOD15/Italy_mask_ARABLE.tif")
-in_zones_layer <- raster::raster("/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/MOD15A2H/IT_LAI_MOD_2017_001.tif")
+in_zones_layer <- raster::raster("/home/lb/projects/ermes/datasets/rs_products/MODIS/IT/LAI_8Days_500m_v6/Lai/MOD15A2H_Lai_2003_009.tif")
 t1 <- Sys.time()
 aggr_lc_raster <- aggregate_rast(in_lc_file,
                                   in_zones_layer,
                                   FUN = mean,
                                   method = "fastdisk",
-                                  to_file = FALSE,
+                                  to_file = TRUE,
+                                  out_file = "/home/lb/Temp/buttami/MOD15/ERMES_fc_ARABLE_500m.tif",
                                   verbose = TRUE)
 elapsed <- Sys.time() - t1
 elapsed
-
+# aggr_lc_raster <- "/home/lb/Temp/buttami/MOD15/ERMES_fc_ARABLE_500m.tif"
 rcl_mat <- tibble::tribble(
   ~start, ~end, ~new,
-       0, 0.5,   0,
-     0.5, 1.01,  1)
-mask_arable_500 <- reclass_rast(aggr_lc_raster, rcl_mat, r_out = TRUE, out_rast = tempfile(fileext = ".tif"))
-#
+       0, 0.7,   0,
+     0.7, 1.01,  1)
+
+
+mask_arable_500 <- reclass_rast(raster(aggr_lc_raster), rcl_mat, r_out = TRUE, out_rast = tempfile(fileext = ".tif"))
+
+file.copy("/tmp/RtmpQKrXTK/file53883c685a94.tif", "/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/MOD15A2H/mask/ERMES_mask_ARABLE_500m_07_new.tif")
+
+a = raster("/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/MOD15A2H/mask/ERMES_mask_ARABLE_500m_07_new.tif")
+plot(a)
+
 # in_raster_file     <- ("/home/lb/Temp/buttami/MOD15/LAI_8Days_500m_v6/Lai/MCD15A2H_Lai_2017_137.dat")
 # QA_file            <- raster("/home/lb/Temp/buttami/MOD15/LAI_8Days_500m_v6/QC_SCF/MCD15A2H_QC_SCF_2017_137.dat")
 # QC_bits            <- raster("/home/lb/Temp/buttami/MOD15/LAI_8Days_500m_v6/QC_bits/MCD15A2H_QC_bits_2017_137.dat")
