@@ -3,6 +3,7 @@ testthat::test_that("Test On raster masking", {
   # skip_on_cran()
   skip_on_travis()
   in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
+  in_polys <- system.file("extdata","lc_polys.shp", package = "sprawl")
   in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))[[1]]
 
   # check errors in input selbands

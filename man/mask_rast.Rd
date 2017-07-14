@@ -2,7 +2,7 @@
 % Please edit documentation in R/mask_rast.R
 \name{mask_rast}
 \alias{mask_rast}
-\title{mask_rast}
+\title{mask a raster file based on a vector file}
 \usage{
 mask_rast(in_rast, mask_shape, out_nodata = "NA", buffer = NULL,
   verbose = TRUE)
@@ -12,7 +12,7 @@ mask_rast(in_rast, mask_shape, out_nodata = "NA", buffer = NULL,
 
 \item{mask_shape}{PARAM_DESCRIPTION}
 
-\item{out_nodata}{PARAM_DESCRIPTION}
+\item{out_nodata}{PARAM_DESCRIPTION, Default: 'NA'}
 
 \item{buffer}{PARAM_DESCRIPTION, Default: NULL}
 
@@ -41,6 +41,6 @@ plot(masked)
 }
 \seealso{
 \code{\link[dplyr]{case_when}}
-\code{\link[gdalUtils]{gdal_rasterize}}
-\code{\link[raster]{raster}},\code{\link[raster]{origin}}
+\code{\link[gdalUtils]{gdalsrsinfo}}
+\code{\link[raster]{raster}},\code{\link[raster]{extent}}
 }
