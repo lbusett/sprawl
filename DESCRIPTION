@@ -40,7 +40,7 @@ Suggests: testthat,
           knitr,
           rmarkdown
 URL: https://github.com/IREA-CNR-MI/sprawl/
-BugReports: https://github.com/IREA-CNR-MI/sprawl/issues  
+BugReports: https://github.com/IREA-CNR-MI/sprawl/issues
 Encoding: UTF-8
 License: GPL-3
 LazyData: true
