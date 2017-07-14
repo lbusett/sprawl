@@ -2,6 +2,7 @@
 #' @description FUNCTION_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
 #' @param mask_shape PARAM_DESCRIPTION
+#' @param out_nodata PARAM_DESCRIPTION
 #' @param buffer PARAM_DESCRIPTION, Default: NULL
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @return OUTPUT_DESCRIPTION
@@ -29,8 +30,9 @@
 #' @importFrom gdalUtils gdal_rasterize
 #' @importFrom raster raster origin
 #' @importFrom sf st_combine st_cast st_buffer st_sf
+#' @importFrom magrittr %>%
 #'
-mask_rast <- function(in_rast, mask_shape, buffer = NULL, verbose = TRUE) {
+mask_rast <- function(in_rast, mask_shape, out_nodata = "NA", buffer = NULL, verbose = TRUE) {
   #   ____________________________________________________________________________
   #   Check the arguments                                                     ####
 
@@ -94,21 +96,21 @@ mask_rast <- function(in_rast, mask_shape, buffer = NULL, verbose = TRUE) {
   )
   te = extent(in_rast)[c(1,3,2,4)][] - c(0,0,res(in_rast)[1],0)
   temp_rasterfile = tempfile(tmpdir = tempdir(), fileext = ".tif")
-  rastzone_object <- gdalUtils::gdal_rasterize(temp_shapefile,
-                                               temp_rasterfile,
-                                               tr = res(in_rast),
-                                               te = te,
-                                               burn = 1,
-                                               at = FALSE,
-                                               ot = ot,
-                                               tap = F,
-                                               output_Raster = TRUE,
-                                               a_nodata = NA,
-                                               verbose = T
-  )
 
-  raster::origin(rastzone_object) = raster::origin(in_rast)
-  masked <- in_rast*rastzone_object
+  rasterize_string <- paste("-at",
+                            "-burn 1" ,
+                            "-a_nodata" , out_nodata,
+                            "-te", paste(te, collapse = " "),
+                            "-tr", paste(res(in_rast),  collapse = " "),
+                            "-tap",
+                            "-ot", ot,
+                            temp_shapefile,
+                            temp_rasterfile
+                            )
+  system2("gdal_rasterize", args = rasterize_string)
+  tempmask <- raster(temp_rasterfile)
+  masked <- in_rast*tempmask
+  file.remove(temp_shapefile)
 
   return(masked)
 

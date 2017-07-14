@@ -4,12 +4,15 @@
 \alias{mask_rast}
 \title{mask_rast}
 \usage{
-mask_rast(in_rast, mask_shape, buffer = NULL, verbose = TRUE)
+mask_rast(in_rast, mask_shape, out_nodata = "NA", buffer = NULL,
+  verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{PARAM_DESCRIPTION}
 
 \item{mask_shape}{PARAM_DESCRIPTION}
+
+\item{out_nodata}{PARAM_DESCRIPTION}
 
 \item{buffer}{PARAM_DESCRIPTION, Default: NULL}
 
