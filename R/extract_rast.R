@@ -65,7 +65,7 @@
 #' @importFrom tibble as_tibble
 #' @importFrom raster getZ
 #' @importFrom magrittr %>%
-#'
+#' @rdname extract_rast
 #' @author Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 #'
 extract_rast <- function(in_rast,

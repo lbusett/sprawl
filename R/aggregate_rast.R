@@ -1,5 +1,6 @@
 #' @title aggregate_rast
-#' @description FUNCTION_DESCRIPTION
+#' @description Function used to extract values of a single- or multi- band raster for pixels
+#' corresponding to the features of a vector (Polygon, Point or Line)
 #' @param in_rast_values PARAM_DESCRIPTION
 #' @param in_obj_zones PARAM_DESCRIPTION
 #' @param FUN PARAM_DESCRIPTION, Default: mean
@@ -9,6 +10,7 @@
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
+#' @author Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 #' @examples
 #' \dontrun{
 #' if(interactive()){

@@ -1,5 +1,5 @@
 Package: sprawl
-Title: Spatial Processing (in) R: Amorphous Wrapper Library
+Title: sprawl: Spatial Processing (in) R: Advanced Workflows Library
 Version: 0.1.0.9000
 Date: 2017-07-02
 Authors@R: c(person("Lorenzo", "Busetto", email = "busetto.l@irea.cnr.it", role = c("aut", "cre")), 
@@ -8,12 +8,18 @@ Description: **`sprawl` aims to simplify the execution of some "common" spatial 
   (e.g., reading and writing spatial datasets, extracting statistics from large datasets, etc.) **by 
   providing a single and (hopefully) simpler access point to functionalities spread in the `R` 
   packages ecosystem.** The aforementioned broad objectives are accomplished in `sprawl` by: 
-      1. Providing simple **wrappers to common-use functions** for reading/writing patial data ; 
-      2. Providing **optimized functions for performing some common-use processing tasks**, often 
-      exploiting functions provided by less-known packages; 
-      3. Providing custom functions for performing more complex processing tasks; 4. Simplifying 
-      access/further analysis of results, by carefully formatting processing outputs to easy to 
-      understand and use `R` objects.
+      1. Providing simple **wrappers to common-use functions** for reading/writing spatial data and 
+      performing common-use operations; 
+      2. Providing **optimized functions for performing some frequently used processing tasks**, by 
+      using custom `sprawl` functions or exploiting functions provided by less-known packages;
+      3. Optimizing **code execution speed** by providing under-the-hood support for multi-core 
+      processing using for example `foreach` looping along raster bands or `raster::MakeCluster` 
+      functionality;
+      4. Providing **custom functions or workflows for performing more complex processing tasks**, 
+      involving the sequential application of different processing steps; 
+      5. Simplifying **access and further analysis of processing results**, by carefully formatting 
+      processing outputs to easy to use `R` objects.
+      6. Providing **custom functions for visualization** of processing results.
 Depends:
     R (>= 3.3.2)
 Imports: gdalUtils,

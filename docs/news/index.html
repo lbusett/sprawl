@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>extent_reproj � extent_reproj • sprawl</title>
+<title>All news • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -23,7 +23,7 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
+  <link href="../extra.css" rel="stylesheet">
   
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -37,7 +37,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -52,13 +52,47 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Function Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples of Use
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Raster Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article A</a>
+    </li>
+    <li>
+      <a href="../articles/tet_1.html">Article B</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Vector Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Visualization</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Other</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../articles/faq.html">FAQ</a>
+</li>
+<li>
+  <a href="../articles/tet_1.html">Contributing</a>
 </li>
       </ul>
       
@@ -78,55 +112,32 @@
       </header>
 
       <div class="row">
-  <div class="col-md-9 contents">
+
+  <div class="col-md-9">
     <div class="page-header">
-    <h1>extent_reproj</h1>
+      <h1>Change log <small>All releases</small></h1>
     </div>
 
-    
-    <p>accessory function to convert the extent of a spatial object to a different
-projection. simple wrapper for the <code>spTransform</code> function on an <code><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>raster::extent</a></code> object</p>
-    
-
-    <pre class="usage"><span class='fu'>extent_reproj</span>(<span class='no'>ext_in</span>, <span class='kw'>in_proj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_proj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>ext_in</th>
-      <td><p>object of class <code><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>raster::extent</a></code></p></td>
-    </tr>
-    <tr>
-      <th>in_proj</th>
-      <td><p><code>character</code> proj4string representing the projection of the input extent</p></td>
-    </tr>
-    <tr>
-      <th>out_proj</th>
-      <td><p><code>character</code> proj4string representing the desired projection for the output extent</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>reprojected extent (in out_proj projection)</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-</div></pre>
+    <div class="contents">
+    <div id="sprawl-0-1-0-9000" class="section level1">
+<h1 class="hasAnchor">
+<a href="#sprawl-0-1-0-9000" class="anchor"></a>sprawl 0.1.0.9000</h1>
+<ul>
+<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+</ul>
+</div>
+    </div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+    <div id="tocnav">
+      <h2>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+        <li><a href="#sprawl-0-1-0-9000">0.1.0.9000</a></li>
+      </ul>
+    </div>
   </div>
+
 </div>
 
       <footer>

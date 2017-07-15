@@ -1,12 +1,18 @@
-#' @title doytodate
-#' @description Converts a doy (or array of doys) to date format.
-#' Year of origni has to be specified
-#' @param doys numeric array DOYs to be converted. Range must be between 0 and 366
-#' @param year numeric year to be used as basis.
+#' @title FUNCTION_TITLE
+#' @description Converts a doy (or array of doys) to date format. Year of origin has to be specified, to allow proper handling of leap years
+#' @param doys 'numeric array' DOYs to be converted.
+#' @param year 'numeric year to be used as basis.
 #' @param verbose 'logical' if TRUE, print messages, default = TRUE
 #' @return `Date` array resulting from the conversion
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname doytodate
 #' @export
-#'
 
 doytodate = function(doys, year, verbose = TRUE){
 
@@ -27,22 +33,28 @@ doytodate = function(doys, year, verbose = TRUE){
   # send message if outside range
   if (((min(doys) < min(range))) | (max(doys) > max(range))) {
    if (verbose) message("doytodate --> `doy` is not within [0,365] (or [0,366] for leap years)  !
-           dates for doys outside this range will report a different year !" )
+   dates for doys outside this range will report a different year !" )
   }
 
   dates = as.Date(doys - 1, origin = paste0(year, "-01-01"))
   return(dates)
 }
 
-
-#' @title datetodoy
-#' @description Converts an array of `Date` (or cohercible to `Date`)values to DOY (Day Of the Year)
-#' values (simple wrapper of 'strftime(date, format = '%j')`)
+#' @title Convert dates to Day Of the Year
+#' @description Converts an array of `Date` (or cohercible to `Date`) values to DOY (Day Of the Year) values.
 #' @param dates array of dates to be converted. Class must be `Date` or character parsable to `Date`
-#' using [`as.Date`] (format "yyyy-mm-dd")
-#' @return array of DOYs resulting from the conversion
+#' using [`as.Date`] (format "yyyy-mm-dd").
+#' @note  This function is a simple wrapper around \`strftime(date, format = "\%j")\`.
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
 #' @export
-
+#' @rdname datetodoy
+#' @author AUTHOR [AUTHOR_2]
 
 datetodoy = function(dates = dates){
   dates <- as.Date(dates)

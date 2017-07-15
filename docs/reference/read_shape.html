@@ -23,7 +23,7 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
+  <link href="../extra.css" rel="stylesheet">
   
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -52,13 +52,47 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Function Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples of Use
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Raster Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article A</a>
+    </li>
+    <li>
+      <a href="../articles/tet_1.html">Article B</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Vector Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Visualization</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Other</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../articles/faq.html">FAQ</a>
+</li>
+<li>
+  <a href="../articles/tet_1.html">Contributing</a>
 </li>
       </ul>
       
@@ -123,26 +157,15 @@ automatic re-casting to <code>*sp</code> objects</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># open a shapefile as a `sf` object</span>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># open a shapefile as a `sf` object</span>
  <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"clip_shape.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>)
- <span class='fu'>read_shape</span>(<span class='no'>shp_file</span>)</div><div class='output co'>#&gt; Simple feature collection with 1 feature and 1 field
-#&gt; geometry type:  POLYGON
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 12897040 ymin: 1685960 xmax: 12973620 ymax: 1789470
-#&gt; epsg (SRID):    NA
-#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
-#&gt;   id                       geometry
-#&gt; 1  1 POLYGON((12897044.4296022 1...</div><div class='input'>
+ <span class='fu'>read_shape</span>(<span class='no'>shp_file</span>)
+
 <span class='co'># open a shapefile as a `sp` object</span>
  <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"clip_shape.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>)
- <span class='fu'>read_shape</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
-#&gt; features    : 1 
-#&gt; extent      : 12897044, 12973623, 1685960, 1789470  (xmin, xmax, ymin, ymax)
-#&gt; coord. ref. : +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs 
-#&gt; variables   : 1
-#&gt; names       : id 
-#&gt; min values  :  1 
-#&gt; max values  :  1 </div></pre>
+ <span class='fu'>read_shape</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>datetodoy — datetodoy â€¢ sprawl</title>
+<title>Convert dates to Day Of the Year — datetodoy â€¢ sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -23,7 +23,7 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
+  <link href="../extra.css" rel="stylesheet">
   
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -52,13 +52,47 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Function Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples of Use
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Raster Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article A</a>
+    </li>
+    <li>
+      <a href="../articles/tet_1.html">Article B</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Vector Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Visualization</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Other</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../articles/faq.html">FAQ</a>
+</li>
+<li>
+  <a href="../articles/tet_1.html">Contributing</a>
 </li>
       </ul>
       
@@ -80,12 +114,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>datetodoy</h1>
+    <h1>Convert dates to Day Of the Year</h1>
     </div>
 
     
-    <p>Converts an array of <code>Date</code> (or cohercible to <code>Date</code>)values to DOY (Day Of the Year)
-values (simple wrapper of 'strftime(date, format = '<!-- %j')`) --></p>
+    <p>Converts an array of <code>Date</code> (or cohercible to <code>Date</code>) values to DOY (Day Of the Year) values.</p>
     
 
     <pre class="usage"><span class='fu'>datetodoy</span>(<span class='kw'>dates</span> <span class='kw'>=</span> <span class='no'>dates</span>)</pre>
@@ -96,23 +129,41 @@ values (simple wrapper of 'strftime(date, format = '<!-- %j')`) --></p>
     <tr>
       <th>dates</th>
       <td><p>array of dates to be converted. Class must be <code>Date</code> or character parsable to <code>Date</code>
-using <code>as.Date</code> (format "yyyy-mm-dd")</p></td>
+using <code>as.Date</code> (format "yyyy-mm-dd").</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>array of DOYs resulting from the conversion</p>
+    <p>DETAILS</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>This function is a simple wrapper around `strftime(date, format = "%j")`.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-          </ul>
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#note">Note</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
+    <h2>Author</h2>
+    
+AUTHOR AUTHOR_2
 
   </div>
 </div>

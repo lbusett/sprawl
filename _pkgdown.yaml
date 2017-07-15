@@ -2,12 +2,9 @@ title: sprawl
 template:
   params:
     bootswatch: cerulean
-output:
-  html_document:
-    highlight: zenburn
 reference:
   - title: Reading/writing spatial data
-    desc: ~
+    desc: chissacose non lo so vediamo....
     contents:
       - '`read_shape`'
       - '`write_shape`'
@@ -39,4 +36,36 @@ reference:
       - '`find_command`'
     params:
      - highlight: tango
-
+navbar:
+  type: default
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Function Reference"
+      href: reference/index.html
+    - text: "Examples of Use"
+      menu:
+        - text: "Raster Processing"
+        - text: "Article A"
+          href: articles/tet_1.html
+        - text: "Article B"
+          href: articles/tet_1.html
+        - text: "---------"
+        - text: "Vector Processing"
+        - text: "Article C"
+          href: articles/tet_1.html
+        - text: "---------"
+        - text: "Visualization"
+        - text: "Article C"
+          href: articles/tet_1.html
+        - text: "---------"
+        - text: "Other"
+        - text: "Article C"
+          href: articles/tet_1.html
+    - text: "FAQ"
+      href: articles/faq.html
+    - text: "Contributing"
+      href: articles/tet_1.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/IREA-CNR-MI/sprawl/

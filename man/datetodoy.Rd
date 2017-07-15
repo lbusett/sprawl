@@ -2,18 +2,30 @@
 % Please edit documentation in R/datesconversion.R
 \name{datetodoy}
 \alias{datetodoy}
-\title{datetodoy}
+\title{Convert dates to Day Of the Year}
 \usage{
 datetodoy(dates = dates)
 }
 \arguments{
 \item{dates}{array of dates to be converted. Class must be \code{Date} or character parsable to \code{Date}
-using \code{\link{as.Date}} (format "yyyy-mm-dd")}
-}
-\value{
-array of DOYs resulting from the conversion
+using \code{\link{as.Date}} (format "yyyy-mm-dd").}
 }
 \description{
-Converts an array of \code{Date} (or cohercible to \code{Date})values to DOY (Day Of the Year)
-values (simple wrapper of 'strftime(date, format = '%j')`)
+Converts an array of \code{Date} (or cohercible to \code{Date}) values to DOY (Day Of the Year) values.
+}
+\details{
+DETAILS
+}
+\note{
+This function is a simple wrapper around `strftime(date, format = "\%j")`.
+}
+\examples{
+\dontrun{
+if(interactive()){
+ #EXAMPLE1
+ }
+}
+}
+\author{
+AUTHOR \link{AUTHOR_2}
 }

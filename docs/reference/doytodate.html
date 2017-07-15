@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>doytodate — doytodate â€¢ sprawl</title>
+<title>FUNCTION_TITLE — doytodate â€¢ sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -23,7 +23,7 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
+  <link href="../extra.css" rel="stylesheet">
   
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -52,13 +52,47 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Function Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples of Use
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Raster Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article A</a>
+    </li>
+    <li>
+      <a href="../articles/tet_1.html">Article B</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Vector Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Visualization</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Other</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../articles/faq.html">FAQ</a>
+</li>
+<li>
+  <a href="../articles/tet_1.html">Contributing</a>
 </li>
       </ul>
       
@@ -80,12 +114,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>doytodate</h1>
+    <h1>FUNCTION_TITLE</h1>
     </div>
 
     
-    <p>Converts a doy (or array of doys) to date format.
-Year of origni has to be specified</p>
+    <p>Converts a doy (or array of doys) to date format. Year of origin has to be specified, to allow proper handling of leap years</p>
     
 
     <pre class="usage"><span class='fu'>doytodate</span>(<span class='no'>doys</span>, <span class='no'>year</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
@@ -95,11 +128,11 @@ Year of origni has to be specified</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>doys</th>
-      <td><p>numeric array DOYs to be converted. Range must be between 0 and 366</p></td>
+      <td><p>'numeric array' DOYs to be converted.</p></td>
     </tr>
     <tr>
       <th>year</th>
-      <td><p>numeric year to be used as basis.</p></td>
+      <td><p>'numeric year to be used as basis.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -111,7 +144,17 @@ Year of origni has to be specified</p>
 
     <p><code>Date</code> array resulting from the conversion</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>DETAILS</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -119,7 +162,11 @@ Year of origni has to be specified</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#details">Details</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

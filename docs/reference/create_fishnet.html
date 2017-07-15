@@ -23,7 +23,7 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
+  <link href="../extra.css" rel="stylesheet">
   
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -52,13 +52,47 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="..//index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../index.html">Home</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../reference/index.html">Function Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Examples of Use
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Raster Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article A</a>
+    </li>
+    <li>
+      <a href="../articles/tet_1.html">Article B</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Vector Processing</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Visualization</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Other</li>
+    <li>
+      <a href="../articles/tet_1.html">Article C</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="../articles/faq.html">FAQ</a>
+</li>
+<li>
+  <a href="../articles/tet_1.html">Contributing</a>
 </li>
       </ul>
       
@@ -148,7 +182,8 @@ Default: NULL</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+  <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
   <span class='fu'>library</span>(<span class='no'>raster</span>)
   <span class='fu'>library</span>(<span class='no'>sprawl</span>)
 
@@ -160,9 +195,13 @@ Default: NULL</p></td>
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>inrast</span>,
                              <span class='no'>cellsize</span>,
                              <span class='kw'>return_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-                             )</div><div class='output co'>#&gt; <span class='message'>create_fishnet -&gt; Writing Polygon Grid to: C:\Users\LB_LAP~1\AppData\Local\Temp\RtmpKsqB9M\file193870ed767c.shp - Please Wait !</span></div><div class='output co'>#&gt; <span class='warning'>Warning: running command '"python" C:\OSGeo4W64\bin\gdal_polygonize.py C:\Users\LB_LAP~1\AppData\Local\Temp\RtmpKsqB9M\tempshp_193876044f22.tif -f "ESRI Shapefile" C:\Users\LB_LAP~1\AppData\Local\Temp\RtmpKsqB9M\file193870ed767c.shp -fieldname id' had status 1</span></div><div class='output co'>#&gt; <span class='message'>create_fishnet -&gt; Reading Polygon Grid C:\Users\LB_LAP~1\AppData\Local\Temp\RtmpKsqB9M\file193870ed767c.shp to R - Please Wait !</span></div><div class='output co'>#&gt; <span class='error'>Error in read_shape(out_shape): read_shape --&gt; Input file doesn't exist on your system ! Aborting !</span></div><div class='input'>
-  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>inrast</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .plotraster2(x, col = col, maxpixels = maxpixels, add = add,     ext = ext, interpolate = interpolate, colNA = colNA, main = main,     addfun = addfun, facvar = facvar, alpha = alpha, npretty = npretty,     ...): no values associated with this RasterLayer</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>fishnet</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(fishnet, add = TRUE, col = "transparent"): object 'fishnet' not found</span></div><div class='input'>
- </div></pre>
+                             )
+
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>inrast</span>)
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>fishnet</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>)
+
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

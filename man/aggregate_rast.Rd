@@ -26,7 +26,8 @@ aggregate_rast(in_rast_values, in_obj_zones, FUN = mean,
 OUTPUT_DESCRIPTION
 }
 \description{
-FUNCTION_DESCRIPTION
+Function used to extract values of a single- or multi- band raster for pixels
+corresponding to the features of a vector (Polygon, Point or Line)
 }
 \details{
 DETAILS
@@ -40,4 +41,7 @@ if(interactive()){
 }
 \seealso{
 \code{\link[sp]{proj4string}}
+}
+\author{
+Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 }

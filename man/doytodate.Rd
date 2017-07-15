@@ -2,14 +2,14 @@
 % Please edit documentation in R/datesconversion.R
 \name{doytodate}
 \alias{doytodate}
-\title{doytodate}
+\title{FUNCTION_TITLE}
 \usage{
 doytodate(doys, year, verbose = TRUE)
 }
 \arguments{
-\item{doys}{numeric array DOYs to be converted. Range must be between 0 and 366}
+\item{doys}{'numeric array' DOYs to be converted.}
 
-\item{year}{numeric year to be used as basis.}
+\item{year}{'numeric year to be used as basis.}
 
 \item{verbose}{'logical' if TRUE, print messages, default = TRUE}
 }
@@ -17,6 +17,15 @@ doytodate(doys, year, verbose = TRUE)
 \code{Date} array resulting from the conversion
 }
 \description{
-Converts a doy (or array of doys) to date format.
-Year of origni has to be specified
+Converts a doy (or array of doys) to date format. Year of origin has to be specified, to allow proper handling of leap years
+}
+\details{
+DETAILS
+}
+\examples{
+\dontrun{
+if(interactive()){
+ #EXAMPLE1
+ }
+}
 }

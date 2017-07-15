@@ -70,3 +70,4 @@ To cite package `sprawl` in publications use:
   Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amorphous
   Wrapper Library. R package version 0.1.0.9000.
 
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
