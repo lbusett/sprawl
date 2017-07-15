@@ -29,6 +29,7 @@ DETAILS
 }
 \examples{
 \dontrun{
+libray(sprawl)
 library(raster)
 in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
 in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl"))[[1]]
@@ -39,8 +40,6 @@ plot(in_rast)
 plot(masked)
 }
 }
-\seealso{
-\code{\link[dplyr]{case_when}}
-\code{\link[gdalUtils]{gdalsrsinfo}}
-\code{\link[raster]{raster}},\code{\link[raster]{extent}}
+\author{
+Lorenzo Busetto \href{mailto:lbusett@gmnail.com}{lbusett@gmnail.com} \link{aut}
 }

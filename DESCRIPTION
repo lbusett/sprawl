@@ -36,6 +36,7 @@ Imports: gdalUtils,
          maps,
          doSNOW,
          velox
+Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,
           rmarkdown

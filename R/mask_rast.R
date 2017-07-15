@@ -9,6 +9,7 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
+#' libray(sprawl)
 #' library(raster)
 #' in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
 #' in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl"))[[1]]
@@ -18,20 +19,22 @@
 #' plot(in_rast)
 #' plot(masked)
 #' }
-#' @seealso
-#'  \code{\link[dplyr]{case_when}}
-
-#'  \code{\link[gdalUtils]{gdalsrsinfo}}
-
-#'  \code{\link[raster]{raster}},\code{\link[raster]{extent}}
 #' @rdname mask_rast
 #' @export
+#' @author Lorenzo Busetto <lbusett@gmnail.com> [aut]
 #' @importFrom dplyr case_when
 #' @importFrom gdalUtils gdalsrsinfo
 #' @importFrom raster raster extent
 #' @importFrom sf st_buffer st_crs st_transform st_as_sf st_combine st_sf
-#'
-mask_rast <- function(in_rast, mask_shape, out_nodata = "NA", buffer = NULL, verbose = TRUE) {
+
+mask_rast <- function(in_rast,
+                      mask_shape,
+                      out_nodata = "NA",
+                      buffer = NULL,
+                      verbose = TRUE) {
+
+  rasterize_path <- find_command("gdal_rasterize")
+
   #   ____________________________________________________________________________
   #   Check the arguments                                                     ####
 
@@ -103,14 +106,13 @@ mask_rast <- function(in_rast, mask_shape, out_nodata = "NA", buffer = NULL, ver
     (max_id >= 65536) == 1 ~ "Int32"
   )
 
-
   #   ____________________________________________________________________________
   #   correct the extent for gdal_rasterize to get                            ####
-  #   an identical sized output
+  #   an identically sized output
   te = raster::extent(in_rast)[c(1, 3, 2, 4)][] - c(0, -res(in_rast)[1], res(in_rast)[1], 0)
 
   #   ____________________________________________________________________________
-  #   Rasterize the msk shapefile                                             ####
+  #   Rasterize the mask shapefile                                            ####
 
   temp_rasterfile = tempfile(tmpdir = tempdir(), fileext = ".tif")
   rasterize_string <- paste("-at",
@@ -123,7 +125,7 @@ mask_rast <- function(in_rast, mask_shape, out_nodata = "NA", buffer = NULL, ver
                             temp_shapefile,
                             temp_rasterfile)
 
-  system2(normalizePath(file.path(getOption("gdalUtils_gdalPath")[[1]]$path, "gdal_rasterize")),
+  system2(rasterize_path,
           args = rasterize_string,
           stdout = NULL)
   tempmask <- raster(temp_rasterfile)

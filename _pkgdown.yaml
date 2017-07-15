@@ -36,6 +36,7 @@ reference:
       - '`build_testraster`'
       - '`build_testshape`'
       - '`check_spatype`'
+      - '`find_command`'
     params:
      - highlight: tango
 
