@@ -6,7 +6,7 @@ testthat::test_that("Test On raster aggregation", {
   library(raster)
   library(dplyr)
 
-  in_rast_values <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))[[20]]
+  in_rast_values <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))[[20]]
   tempraster     <- tempfile(fileext = ".tif")
   in_obj_zones   <- raster::aggregate(in_rast_values,
                                       fact = 4,
@@ -23,11 +23,3 @@ testthat::test_that("Test On raster aggregation", {
                                         verbose = FALSE))
   expect_is(test, "RasterLayer")
 })
-#
-# profvis::profvis({test = aggregate_rast(in_rast_values,
-#                                         in_obj_zones,
-#                                         FUN = mean,
-#                                         method = "fastdisk",
-#                                         to_file = TRUE,
-#                                         out_file = "D:\\Documents\\Source\\git\\sprawl\\inst\\extdata\\testaggr.tif",
-#                                         verbose = FALSE)}, torture = 1, interval = 0.005)

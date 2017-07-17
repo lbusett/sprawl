@@ -50,7 +50,7 @@ DETAILS
   library(raster)
   library(sprawl)
 
-  file_in  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))[[1]]
+  file_in  <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
   inrast   <- raster::raster(file_in)
   cellsize <- raster::res(inrast)[1]
 

@@ -4,7 +4,7 @@
 \alias{aggregate_rast}
 \title{aggregate_rast}
 \usage{
-aggregate_rast(in_rast_values, in_obj_zones, FUN = mean,
+aggregate_rast(in_rast_values, in_obj_zones, FUN = mean, maxchunk = 5e+07,
   method = "fastdisk", to_file = FALSE, out_file = NULL, verbose = TRUE)
 }
 \arguments{

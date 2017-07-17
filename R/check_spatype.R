@@ -30,7 +30,7 @@ check_spatype <- function(object) {
 
   if (inherits(object,"Spatial")) {sp_type <- "spobject"}
 
-  if (inherits(object,"sf"))      {sp_type <- "sfobject"}
+  if (inherits(object,"sf") | inherits(object,"sfc"))      {sp_type <- "sfobject"}
 
   if (inherits(object,"Raster"))  {sp_type <- "rastobject"}
 
