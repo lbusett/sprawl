@@ -55,44 +55,19 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
+  <a href="../articles/sprawl.html">Getting Started</a>
+</li>
+<li>
   <a href="../reference/index.html">Function Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples of Use
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Raster Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article A</a>
-    </li>
-    <li>
-      <a href="../articles/tet_1.html">Article B</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Vector Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Visualization</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Other</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-  </ul>
+<li>
+  <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
   <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
-  <a href="../articles/tet_1.html">Contributing</a>
+  <a href="../articles/contributing.html">Contributing</a>
 </li>
       </ul>
       
@@ -122,8 +97,9 @@
 corresponding to the features of a vector (Polygon, Point or Line)</p>
     
 
-    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_rast_values</span>, <span class='no'>in_obj_zones</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"fastdisk"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_rast_values</span>, <span class='no'>zones_rast</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"fastdisk"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nodata_out</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -133,7 +109,7 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>in_obj_zones</th>
+      <th>zones_rast</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
@@ -172,11 +148,9 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
  <span class='co'>#EXAMPLE1</span>
- }
-<span class='co'># }</span></pre>
+ }</div><div class='output co'>#&gt; NULL</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

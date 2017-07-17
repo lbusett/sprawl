@@ -41,31 +41,16 @@ navbar:
   left:
     - text: "Home"
       href: index.html
+    - text: "Getting Started"
+      href: articles/sprawl.html
     - text: "Function Reference"
       href: reference/index.html
     - text: "Examples of Use"
-      menu:
-        - text: "Raster Processing"
-        - text: "Article A"
-          href: articles/tet_1.html
-        - text: "Article B"
-          href: articles/tet_1.html
-        - text: "---------"
-        - text: "Vector Processing"
-        - text: "Article C"
-          href: articles/tet_1.html
-        - text: "---------"
-        - text: "Visualization"
-        - text: "Article C"
-          href: articles/tet_1.html
-        - text: "---------"
-        - text: "Other"
-        - text: "Article C"
-          href: articles/tet_1.html
+      href: articles/examples.html
     - text: "FAQ"
       href: articles/faq.html
     - text: "Contributing"
-      href: articles/tet_1.html
+      href: articles/contributing.html
   right:
     - icon: fa-github fa-lg
       href: https://github.com/IREA-CNR-MI/sprawl/

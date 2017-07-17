@@ -55,44 +55,19 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
+  <a href="../articles/sprawl.html">Getting Started</a>
+</li>
+<li>
   <a href="../reference/index.html">Function Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples of Use
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Raster Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article A</a>
-    </li>
-    <li>
-      <a href="../articles/tet_1.html">Article B</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Vector Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Visualization</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Other</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-  </ul>
+<li>
+  <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
   <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
-  <a href="../articles/tet_1.html">Contributing</a>
+  <a href="../articles/contributing.html">Contributing</a>
 </li>
       </ul>
       
@@ -160,14 +135,11 @@ on country name or ISO code</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
- <span class='fu'>library</span>(<span class='no'>sprawl</span>)
+    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl</span>)
  <span class='fu'>library</span>(<span class='no'>sp</span>)
  <span class='no'>ita_boundaries</span> <span class='kw'>&lt;-</span> <span class='fu'>get_boundaries</span>(<span class='st'>"Italy"</span>, <span class='fl'>0</span>)
  <span class='no'>ita_region_boundaries</span> <span class='kw'>&lt;-</span> <span class='fu'>get_boundaries</span>(<span class='st'>"ITA"</span>, <span class='fl'>1</span>)
- <span class='fu'>plot</span>(<span class='no'>ita_region_boundaries</span>)
-
-<span class='co'># }</span></pre>
+ <span class='fu'>plot</span>(<span class='no'>ita_region_boundaries</span>)</div><div class='img'><img src='get_boundaries-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

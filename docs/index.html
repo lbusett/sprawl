@@ -33,47 +33,19 @@
   <a href="index.html">Home</a>
 </li>
 <li>
+  <a href="articles/sprawl.html">Getting Started</a>
+</li>
+<li>
   <a href="reference/index.html">Function Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples of Use
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li class="dropdown-header">Raster Processing</li>
-    <li>
-      <a href="articles/tet_1.html">Article A</a>
-    </li>
-    <li>
-      <a href="articles/tet_1.html">Article B</a>
-    </li>
-    <li class="divider">
-    </li>
-<li class="dropdown-header">Vector Processing</li>
-    <li>
-      <a href="articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider">
-    </li>
-<li class="dropdown-header">Visualization</li>
-    <li>
-      <a href="articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider">
-    </li>
-<li class="dropdown-header">Other</li>
-    <li>
-      <a href="articles/tet_1.html">Article C</a>
-    </li>
-  </ul>
+<li>
+  <a href="articles/examples.html">Examples of Use</a>
 </li>
 <li>
   <a href="articles/faq.html">FAQ</a>
 </li>
 <li>
-  <a href="articles/tet_1.html">Contributing</a>
+  <a href="articles/contributing.html">Contributing</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -106,29 +78,29 @@
 <a href="#sprawl-spatial-processing-in-r-advanced-workflows-library" class="anchor"></a>sprawl: Spatial Processing (in) R: Advanced Workflows Library</h1></div>
 <p>Support for spatial processing tasks is provided in <code>R</code> by several great packages, spanning from all-purpose packages providing generalized access to the main spatial data classes and corresponding processing methods (e.g., <a href="https://cran.r-project.org/web/packages/sp/index.html"><code>sp</code></a> and <a href="https://cran.r-project.org/web/packages/sf/index.html"><code>sf</code></a>, <a href="https://cran.r-project.org/web/packages/raster/index.html"><code>raster</code></a> and <a href="https://cran.r-project.org/web/packages/rgdal/index.html"><code>rgdal</code></a> - providing functions for handling raster and vector spatial data -), to more “specialized” ones meant to allow conducting more specific processing tasks (e.g., <a href="https://cran.r-project.org/web/packages/geosphere/index.html"><code>geosphere</code></a>, <a href="https://cran.r-project.org/web/packages/raster/index.html"><code>raster</code></a>, <a href="https://cran.r-project.org/web/packages/landsat/index.html"><code>landsat</code></a>, <a href="https://cran.r-project.org/web/packages/MODIStsp/index.html"><code>MODIStsp</code></a>), or to provide optimized/improved/easier solutions for methods already provided by the aforementioned general-purpose packages (e.g., <a href="https://cran.r-project.org/web/packages/velox/index.html"><code>velox</code></a>, <a href="https://cran.r-project.org/web/packages/mapview/index.html"><code>mapview</code></a>) (Curated lists of some very good packages can be found <a href="https://cran.r-project.org/web/views/Spatial.html">here</a>, <a href="https://ropensci.org/blog/blog/2016/11/22/geospatial-suite">here</a> and <a href="https://github.com/ropensci/maptools">here</a>).</p>
 <p>This huge variability provides advanced <code>R</code> programmers with great flexibility for conducting simple or complex spatial data analyses, by combining functionalities of different packages within custom scripts. At the same time, it may be confusing for less skilled programmers, who may struggle with dealing with multiple packages and don’t know that a certain processing task may be more efficiently conducted by using less-known (and sometimes difficult to find) packages.</p>
-<p><strong><code>sprawl</code></strong> aims to simplify the execution of some spatial processing tasks by <strong>providing a single and (hopefully) simpler access point to functionalities spread in the <code>R</code> packages ecosystem, introducing optimixed functions for exection of frequently used processing tasks, and providing custom functions or workflows for the execution of more complex processing tasks</strong> (See <a href="https://irea-cnr-mi.github.io/sprawl/articles/sprawl.html">here</a> for further details).</p>
+<p><strong><code>sprawl</code></strong> aims to simplify the execution of some spatial processing tasks by <strong>providing a single and (hopefully) simpler access point to functionalities spread in the <code>R</code> packages ecosystem, introducing optimixed functions for exection of frequently used processing tasks, and providing custom functions or workflows for the execution of more complex processing tasks</strong> (See <a href="https://lbusett.github.io/sprawl/articles/sprawl.html">here</a> for further details).</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install sprawl from git-hub with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
-devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/sprawl"</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"lbusett/sprawl"</span>)</code></pre></div>
 <p><font size="2"> <em>Note that, given its rather broad scope, <code>sprawl</code> <strong>imports functions from several other packages</strong>. Since some of those have quite specific System Requirements, it’s possible that you’ll struggle a bit in installation due to unresolved dependencies. In that case, please have a look at the installation error messages to see which package has problems in installation and try to install it beforehand (consulting its specific CRAN pages or doing a stackoverflow search may help !).</em> </font></p>
 </div>
 <div id="function-documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#function-documentation" class="anchor"></a>Function Documentation</h2>
-<p>The main functions available in <code>sprawl</code> are documented <a href="https://irea-cnr-mi.github.io/sprawl/reference/index.html">here</a>, along with simple usage examples.</p>
+<p>The main functions available in <code>sprawl</code> are documented <a href="https://lbusett.github.io/sprawl/reference/index.html">here</a>, along with simple usage examples.</p>
 </div>
 <div id="examples-of-use" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples-of-use" class="anchor"></a>Examples of use</h2>
-<p>Worked-out examples of the more comlex <code>sprawl</code> functions and workflows can be found <a href="https://irea-cnr-mi.github.io/sprawl/Examples/index.html">here</a></p>
+<p>Worked-out examples of the more comlex <code>sprawl</code> functions and workflows can be found <a href="https://lbusett.github.io/sprawl/docs/articles/examples.html">here</a></p>
 </div>
 <div id="contributing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contributing" class="anchor"></a>Contributing</h2>
-<p>We are open for contributions/help in improving <code>sprawl</code> and extend its functionalities. If you have a <strong>suggestion for and additional functionality</strong> please report it in our <a href="https://github.com/IREA-CNR-MI/sprawl/issues">issues</a> page. If you <strong>wish to contribute to <code>sprawl</code> development</strong>, please see our [Contributing page] on github.</p>
+<p>We are open for contributions/help in improving <code>sprawl</code> and extend its functionalities. If you have a <strong>suggestion for and additional functionality</strong> please report it in our <a href="https://github.com/lbusett/sprawl/issues">issues</a> page. If you <strong>wish to contribute to <code>sprawl</code> development</strong>, please see our [Contributing page] on github.</p>
 </div>
 <div id="authors" class="section level2">
 <h2 class="hasAnchor">
@@ -140,7 +112,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/s
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>To cite package <code>sprawl</code> in publications use:</p>
 <p>Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amorphous Wrapper Library. R package version 0.1.0.9000.</p>
-<p>Please note that this project is released with a <a href="CONDUCT.md">Contributor Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
+<p>Please note that this project is released with a <a href="https://lbusett.github.io/sprawl/articles/conduct.html">Contributor Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
 </div>
 </div>
 </div>
@@ -164,8 +136,8 @@ devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/s
 </ul>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/IREA-CNR-MI/sprawl"><img src="https://travis-ci.org/IREA-CNR-MI/sprawl.svg?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="https://codecov.io/gh/IREA-CNR-MI/sprawl"><img src="https://codecov.io/gh/IREA-CNR-MI/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7" alt="codecov"></a></li>
+<li><a href="https://travis-ci.org/lbusett/sprawl"><img src="https://travis-ci.org/lbusett/sprawl.svg?branch=master" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://codecov.io/gh/lbusett/sprawl"><img src="https://codecov.io/gh/lbusett/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7" alt="codecov"></a></li>
 <li><a href="http://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3"></a></li>
 </ul>
 </div>

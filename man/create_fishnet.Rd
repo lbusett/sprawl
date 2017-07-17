@@ -41,20 +41,24 @@ DETAILS
   # create a fishnet over an input raster file and save it as a shapefile
   library(raster)
   library(sprawl)
+  library(rasterVis)
 
-  in_rast  <- build_testraster(20,20,1, ext = extent(c(0,100,0,100)), crs = "+init=epsg:3035")
-  fishnet  <- create_fishnet(in_rast)
-  plot(in_rast)
-  plot(fishnet, add = TRUE, col = "transparent")
+  in_rast  <- build_testraster(20,20,1)
 
-  fishnet2  <- create_fishnet(in_rast, pix_for_cell = c(2,2))
-  plot(in_rast)
-  plot(fishnet2, add = TRUE, col = "transparent", lwd = 2)
+  fishnet  <- create_fishnet(in_rast) \%>\%
+                as("Spatial")
+  print(levelplot(in_rast, margin = FALSE, col.regions = topo.colors) +
+        layer(sp.polygons(fishnet)))
 
-  fishnet2  <- create_fishnet(in_rast, cellsize = c(22,50))
-  plot(in_rast)
-  plot(fishnet2, add = TRUE, col = "transparent", lwd = 2)
-  sf::st_area(fishnet2)
+  fishnet  <- create_fishnet(in_rast, pix_for_cell = c(2,2)) \%>\%
+                as("Spatial")
+  print(levelplot(in_rast, margin = FALSE, col.regions = topo.colors) +
+        layer(sp.polygons(fishnet)))
+
+  fishnet  <- create_fishnet(in_rast, cellsize = c(22,50))\%>\%
+                as("Spatial")
+  print(levelplot(in_rast, margin = FALSE, col.regions = topo.colors) +
+        layer(sp.polygons(fishnet)))
  }
 }
 \seealso{

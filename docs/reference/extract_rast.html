@@ -55,44 +55,19 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
+  <a href="../articles/sprawl.html">Getting Started</a>
+</li>
+<li>
   <a href="../reference/index.html">Function Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples of Use
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Raster Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article A</a>
-    </li>
-    <li>
-      <a href="../articles/tet_1.html">Article B</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Vector Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Visualization</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Other</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-  </ul>
+<li>
+  <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
   <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
-  <a href="../articles/tet_1.html">Contributing</a>
+  <a href="../articles/contributing.html">Contributing</a>
 </li>
       </ul>
       
@@ -125,7 +100,7 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
     <pre class="usage"><span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect_zones</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rastres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summ_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+06</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>addfeat</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>addgeom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>addfeat</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>addgeom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>keep_null</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"std"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -241,17 +216,13 @@ while <code>out_list$alldata</code> contains the data of all pixels extracted (s
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>sprawl</span>)
+    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl</span>)
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='fu'>options</span>(<span class='kw'>tibble.width</span> <span class='kw'>=</span> <span class='fl'>Inf</span>)
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
-<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)
-<span class='co'># }</span></pre>
+<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: path[1]="": The filename, directory name, or volume label syntax is incorrect</span></div><div class='output co'>#&gt; <span class='warning'>Warning: running command '"" -a mdxtnq -co COMPRESS=DEFLATE -co NUM_THREADS=4 -te 12897699.388008 1685994.973524 12971597.76621 1780742.423946 -tr 231.656357999998 231.656358 -co PREDICTOR=2 -ot Byte -of GTiff C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp8S0GXl\file1624f623378.shp C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp8S0GXl\file162428547e55.tif' had status 127</span></div><div class='output co'>#&gt; <span class='error'>Error in .rasterObjectFromFile(x, band = band, objecttype = "RasterLayer",     ...): Cannot create a RasterLayer object from this file. (file does not exist)</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; <span class='error'>Error in head(out$stats): object 'out' not found</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; <span class='error'>Error in head(out$alldata): object 'out' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
