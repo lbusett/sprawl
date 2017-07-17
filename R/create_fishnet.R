@@ -62,9 +62,9 @@ create_fishnet <- function(in_obj,
   #
 
   # checks on pypath
-  if (is.null(pypath)) {
-    pypath <- normalizePath(Sys.which('gdal_polygonize.py'))
-  }
+  # if (is.null(pypath)) {
+  #   pypath <- normalizePath(Sys.which('gdal_polygonize.py'))
+  # }
 
   # checks on out_shape
   if (!is.null(out_shape)) {
@@ -77,8 +77,8 @@ create_fishnet <- function(in_obj,
     }
   }
 
-  inrast <- build_testraster(100,100,1)
-  bbox <- raster::extent(inrast)
+  # inrast <- build_testraster(100,100,1)
+  bbox <- raster::extent(in_obj)
   ext_poly   <- sf::st_as_sfc(c(paste0("POLYGON((",
                                        bbox[1], " ", bbox[3], ", ",
                                        bbox[1], " ", bbox[4], ", ",
@@ -86,9 +86,11 @@ create_fishnet <- function(in_obj,
                                        bbox[2], " ", bbox[3], ", ",
                                        bbox[1], " ", bbox[3], "",
                                        "))")),
-                              crs = proj4string(inrast))
-  fish <- sf::st_make_grid(ext_poly, res(inrast),  what = "polygons")
+                              crs = proj4string(in_obj))
+  geometry <- sf::st_make_grid(ext_poly, raster::res(in_obj),  what = "polygons")
+  fish <- st_sf(id = seq_len(length(geometry)[1]), geometry = geometry)
 
+  return(fish)
   # if (!file.exists(pypath)) {
   #   stop("create_fishnet --> gdal_polygonize.py was not found ! please check that it is available on your system
   #          and specify its position through the `py_path` argument ! Aborting !")
