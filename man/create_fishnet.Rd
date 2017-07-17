@@ -2,44 +2,36 @@
 % Please edit documentation in R/create_fishnet.R
 \name{create_fishnet}
 \alias{create_fishnet}
-\title{create_fishnet}
+\title{create a "fishnet" vector based on cells of a raster}
 \usage{
-create_fishnet(in_obj, cellsize, crop_layer = NULL, out_raster = NULL,
-  out_shape = NULL, overwrite = TRUE, return_sp = TRUE, pypath = NULL)
+create_fishnet(in_rast, pix_for_cell = 1, cellsize = NULL,
+  to_file = FALSE, out_shape = NULL, overwrite = TRUE,
+  crop_layer = NULL)
 }
 \arguments{
-\item{in_obj}{object of \code{sf} or \code{raster*} class from which the fishnet needs to be derived. The fishnet is
-built from the corner of \code{in_obj}, with a resolution equal to \code{cellsize}}
+\item{in_rast}{raster file or object of class \code{raster*} on which the fishnet needs to be derived.}
 
-\item{cellsize}{numeric Dimensions of the desired cells}
+\item{pix_for_cell}{\code{numeric} (optional) 1/2 element numeric array specifying how many pixels of the #' raster will be included in each polygon of the fishnet (if only one element is provided, the #' same number of pixel is aggregated in each direction). Ignored if \code{cellsize} is not null, #' Default: 1}
 
-\item{crop_layer}{(optional) object of \code{Extent}. If not null, the fishnet extent will be cropped on
-this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on
-the basis of a different raster coordinates on top of a different raster, Default: NULL}
+\item{cellsize}{\code{numeric} (optional) 1/2 element array specifying the dimensions of the desired #' cells in the x and y directions (if only one element is provided, the same cellsize is #' used in each direction), Default: NULL}
 
-\item{out_raster}{character (optional) name of the output raster file. If NULL the grid is NOT
-saved in a raster file Default: NULL}
+\item{to_file}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{out_shape}{character (optional) name of the output shape file. If NULL the grid is NOT
-saved in a shapefile,  Default: NULL}
+\item{out_shape}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{overwrite}{\code{logical} If TRUE, existing files are overwritten, Default: FALSE}
+\item{overwrite}{PARAM_DESCRIPTION, Default: TRUE}
 
-\item{return_sp}{\code{logical}, If true, the grid is returned to the caller as a `SpatialGridDataFrame ,
-Default: FALSE}
-
-\item{pypath}{path to \code{gdal_polygonize.py}. If NULL, the path is searched on the user's machine,
-Default: NULL}
+\item{crop_layer}{(optional) object of clss \code{Extent}. If not null, the fishnet iscropped on #' this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on #' the basis of a different raster coordinates on top of a different raster, Default: NULL}
 }
 \value{
-if return_sp == TRUE, returns the grid as a SpatialGridDataFrame
+OUTPUT_DESCRIPTION
 }
 \description{
 funtion to create a raster and/or polygon fishnet of specified resolution over a
-a specified spatial extent. If both in_ext and crop_ext are declared, the fishnet is created
-according to in_ext (that is, the origin depends from in_ext), and then cropped on crop_ext (this
-allows for example to create a fishnet based on a given raster/resolution, and then to automatically
-crop it on a desired extgent without "moving" the corners of the cells ")
+raster dataset. By default, the fishnet is built so that each cell corresponds to a raster cell.
+If the \code{pix_for_cell} argument is set, then the polygons of the fishnet are built so to include
+the specified number of cells in each direction. If the \code{cellsize} option is set, a fishnet of the
+specified resolution is created over the extent of the raster)
 }
 \details{
 DETAILS
@@ -50,18 +42,25 @@ DETAILS
   library(raster)
   library(sprawl)
 
-  file_in  <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
-  inrast   <- raster::raster(file_in)
-  cellsize <- raster::res(inrast)[1]
-
-  out_file <- "/somedir/somefile.shp"
-  fishnet  <- create_fishnet(inrast,
-                             cellsize,
-                             return_sp = TRUE
-                             )
-
-  plot(inrast)
+  in_rast  <- build_testraster(20,20,1, ext = extent(c(0,100,0,100)), crs = "+init=epsg:3035")
+  fishnet  <- create_fishnet(in_rast)
+  plot(in_rast)
   plot(fishnet, add = TRUE, col = "transparent")
 
+  fishnet2  <- create_fishnet(in_rast, pix_for_cell = c(2,2))
+  plot(in_rast)
+  plot(fishnet2, add = TRUE, col = "transparent", lwd = 2)
+
+  fishnet2  <- create_fishnet(in_rast, cellsize = c(22,50))
+  plot(in_rast)
+  plot(fishnet2, add = TRUE, col = "transparent", lwd = 2)
+  sf::st_area(fishnet2)
  }
+}
+\seealso{
+\code{\link[raster]{extent}},\code{\link[raster]{res}}
+\code{\link[sf]{st_as_sfc}},\code{\link[sf]{st_make_grid}}
+}
+\author{
+AUTHOR \link{AUTHOR_2}
 }

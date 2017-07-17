@@ -4,13 +4,14 @@
 \alias{aggregate_rast}
 \title{aggregate_rast}
 \usage{
-aggregate_rast(in_rast_values, in_obj_zones, FUN = mean, maxchunk = 5e+07,
-  method = "fastdisk", to_file = FALSE, out_file = NULL, verbose = TRUE)
+aggregate_rast(in_rast_values, zones_rast, FUN = mean, maxchunk = 5e+07,
+  method = "fastdisk", to_file = FALSE, out_file = NULL,
+  nodata_out = NA, verbose = TRUE)
 }
 \arguments{
 \item{in_rast_values}{PARAM_DESCRIPTION}
 
-\item{in_obj_zones}{PARAM_DESCRIPTION}
+\item{zones_rast}{PARAM_DESCRIPTION}
 
 \item{FUN}{PARAM_DESCRIPTION, Default: mean}
 
