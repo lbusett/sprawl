@@ -168,4 +168,4 @@ results <- foreach::foreach(folder = seq_along(in_folds),
 stopCluster(cl)
 out_list <- list.files("/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/VGT/2k_grid",
                        full.names = T)
-pippo = stack(out_list)
+pippo = raster::stack(out_list)

@@ -2,8 +2,9 @@ context("Reading a Shapefile")
 testthat::test_that("Test read_shape", {
   # skip_on_cran()
   skip_on_travis()
+  library(sprawl.data)
   # open a shapefile as a `sf` object
-  shp_file <- system.file("extdata","clip_shape.shp", package = "sprawl")
+  shp_file <- system.file("extdata","clip_shape.shp", package = "sprawl.data")
   shp      <- read_shape(shp_file)
   testthat::expect_true(inherits(shp, "sf"))
   # open a shapefile as a `sp` object

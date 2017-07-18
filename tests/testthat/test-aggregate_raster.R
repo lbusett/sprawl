@@ -5,6 +5,7 @@ testthat::test_that("Test On raster aggregation", {
 
   library(raster)
   library(dplyr)
+  library(sprawl.data)
 
   in_rast_values <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))[[20]]
   tempraster     <- tempfile(fileext = ".tif")
@@ -13,8 +14,6 @@ testthat::test_that("Test On raster aggregation", {
                                       filename = tempraster,
                                       overwrite = T)
 
-  # raster::writeRaster(in_obj_zones, file = "D:\\Documents\\Source\\git\\sprawl\\inst\\extdata\\sprawl_EVItest_agg.tif",
-  #                     overwrite = T)
   expect_warning(test <- aggregate_rast(in_rast_values,
                                         in_obj_zones,
                                         FUN = mean,

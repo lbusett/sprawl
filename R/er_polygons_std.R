@@ -79,7 +79,7 @@ er_polygons_std <- function(in_vect_zones,
 
   #   ____________________________________________________________________________
   #   find a correct cropping bounding box which allows to not "move" the corn####
-  #    the corners while creating the cropped vrt file
+  #    the corners while creating a vrt file
   # browser()
   vect_bbox <- sf::st_bbox(in_vect_zones_crop)
   rast_bbox <- raster::extent(in_rast)[c(1,3,2,4)]
@@ -146,10 +146,9 @@ er_polygons_std <- function(in_vect_zones,
   rasterizepath    <- normalizePath(Sys.which("gdal_rasterize"))
   rast_string <- paste("-a", "mdxtnq",
                        "-co" , "COMPRESS=DEFLATE",
-                       "-co"  ,"NUM_THREADS=4",
+                       "-co"  ,"NUM_THREADS=ALL_CPUS",
                        "-te", paste(te, collapse = " "),
                        "-tr", paste(er_opts$rastres, collapse = " "),
-                       "-co" , "PREDICTOR=2",
                        "-ot" , ot, sep = " ",
                        "-of GTiff",
                        temp_shapefile,
@@ -183,8 +182,8 @@ er_polygons_std <- function(in_vect_zones,
   er_opts$ncores <- min(c(er_opts$ncores, (parallel::detectCores() - 2)), 8)
   if (n_selbands < er_opts$ncores) (er_opts$ncores <- n_selbands)
 
-  # cl      <- parallel::makeCluster(er_opts$ncores, outfile = "")
-  cl <- parallel::makeCluster(er_opts$ncores)
+  cl      <- parallel::makeCluster(er_opts$ncores, outfile = "")
+  # cl <- parallel::makeCluster(er_opts$ncores)
   doSNOW::registerDoSNOW(cl)
 
   # Initialize other variables and progress bar
@@ -239,10 +238,12 @@ er_polygons_std <- function(in_vect_zones,
       in_band <- raster(temprastfile)
     }
 
-    gdalUtils::gdalbuildvrt(in_band@file@name,
-                            b = band ,
-                            tempvrt,
-                            te = paste(te, collapse = " "))
+    buildvrt_path   <- find_command("gdalbuildvrt")
+    buildvrt_string <- paste("-te ", paste(te, collapse = " "),
+                              "-b ", band,
+                              tempvrt,
+                              in_band@file@name, " ")
+    system2(buildvrt_path, args = buildvrt_string, stdout = NULL)
 
     # "reload" in_band from the cropped vrt
     in_band    <- raster::raster(tempvrt)
@@ -292,7 +293,7 @@ er_polygons_std <- function(in_vect_zones,
       #   ________________________________________________________________________
       #   retrieve data of current "chunk" for the pixels included in the polygons ####
       #   and put it in all_data[[chunk_n]] (if not null)
-      # browser()
+
       out_data  <- data.table::data.table(
         value   =  as.numeric(raster::getValues(in_band, startrow, chunkrows)),
         cell    =  seq(start_cell,end_cell),

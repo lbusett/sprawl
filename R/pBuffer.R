@@ -34,7 +34,9 @@
 
 #' @examples \dontrun{
 #' # Load sample data
-#' r <- raster::raster(system.file("extdata","testrast.tif", package = "sprawl"))
+#' library(sprawl)
+#' library(sprawl.data)
+#' r <- raster::raster(system.file("extdata","testrast.tif", package = "sprawl.data"))
 #' p <- sp::spsample(as(r, "SpatialPixels"), 20, "random")
 #'
 #' # Rectangular buffer (3x3 cells)

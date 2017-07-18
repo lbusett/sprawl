@@ -2,8 +2,9 @@ context("Zonal Statistics - polygons")
 testthat::test_that("Test On polygons extraction", {
   # skip_on_cran()
   skip_on_travis()
-  in_polys       <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-  in_rast        <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
+  library(sprawl.data)
+  in_polys       <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"), stringsAsFactors = T)
+  in_rast        <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
   in_rast        <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 
   # check errors in input selbands

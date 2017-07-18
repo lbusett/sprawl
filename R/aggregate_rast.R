@@ -57,7 +57,7 @@ aggregate_rast <- function(in_rast_values,
                                mode      = "std",
                                maxchunk  = maxchunk,
                                FUN       = FUN,
-                               id_field  = "id")$stats
+                               id_field  = "cell_id")$stats
   # if (!is.na(nodata_out)) {
     where_na <- which(is.na(agg_values$myfun))
     agg_values$myfun[where_na] <- nodata_out
@@ -124,7 +124,7 @@ aggregate_rast <- function(in_rast_values,
 
       writeRaster(out_rast,
                   tempraster,
-                  options = c("COMPRESS=DEFLATE", "PREDICTOR=3"),
+                  options = c("COMPRESS=DEFLATE"),
                   overwrite = TRUE,
                   NAflag = nodata_out)
     }

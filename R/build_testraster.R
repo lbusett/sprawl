@@ -82,7 +82,7 @@ build_testraster <- function(nrows       = 100,
     if (is.null(out_file)) {
       out_file <- tempfile(fileext = ".tif")
     }
-    tempfile <- raster::writeRaster(stack, filename = out_file, options = c("COMPRESS=NONE", datatype = "INT1U"))
+    tempfile <- raster::writeRaster(stack, filename = out_file, options = c("COMPRESS=DEFLATE", datatype = "INT1U"))
     return(out_file)
   } else {
     return(stack)

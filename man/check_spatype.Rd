@@ -19,11 +19,12 @@ or a file corresponding to a raster
 }
 \examples{
 \dontrun{
+library(sprawl.data)
 # input is a raster file
-check_spatype(system.file("extdata","testrast.tif", package = "sprawl"))
+check_spatype(system.file("extdata","testrast.tif", package = "sprawl.data"))
 
 # input is a shapefile
-shp_file <- system.file("extdata","lc_polys.shp", package = "sprawl")
+shp_file <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
 check_spatype(shp_file)
 
 # input is a `sp` object

@@ -50,10 +50,11 @@
 #' @examples
 #' \dontrun{
 #' library(sprawl)
+#' library(sprawl.data)
 #' library(raster)
 #' options(tibble.width = Inf)
-#' in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-#' in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
+#' in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"), stringsAsFactors = T)
+#' in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
 #' in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 #' out      <- extract_rast(in_rast, in_polys, long = FALSE, verbose = FALSE)
 #' head(out$stats)
@@ -226,7 +227,7 @@ extract_rast <- function(in_rast,
           out_list <- er_polygons_velox(in_vect_zones, in_rast, seldates, selbands, n_selbands,
                                         date_check, er_opts)
         } else {
-          # browser()
+
           out_list <- er_polygons_std(in_vect_zones, in_rast, seldates, selbands,
                                       n_selbands, date_check, er_opts)
         }

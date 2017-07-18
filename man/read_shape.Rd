@@ -27,12 +27,13 @@ automatic re-casting to \code{*sp} objects
 }
 \examples{
 \dontrun{
+library(sprawl.data)
 # open a shapefile as a `sf` object
- shp_file = system.file("extdata","clip_shape.shp", package = "sprawl")
+ shp_file = system.file("extdata","clip_shape.shp", package = "sprawl.data")
  read_shape(shp_file)
 
 # open a shapefile as a `sp` object
- shp_file = system.file("extdata","clip_shape.shp", package = "sprawl")
+ shp_file = system.file("extdata","clip_shape.shp", package = "sprawl.data")
  read_shape(shp_file, as_sp = TRUE)
 }
 }
