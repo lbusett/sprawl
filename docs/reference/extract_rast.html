@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>extract_rast � extract_rast • sprawl</title>
+<title>extract_rast — extract_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -217,12 +217,42 @@ while <code>out_list$alldata</code> contains the data of all pixels extracted (s
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl</span>)
+<span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='fu'>options</span>(<span class='kw'>tibble.width</span> <span class='kw'>=</span> <span class='fl'>Inf</span>)
-<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
-<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>))
+<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
-<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: path[1]="": The filename, directory name, or volume label syntax is incorrect</span></div><div class='output co'>#&gt; <span class='warning'>Warning: running command '"" -a mdxtnq -co COMPRESS=DEFLATE -co NUM_THREADS=4 -te 12897699.388008 1685994.973524 12971597.76621 1780742.423946 -tr 231.656357999998 231.656358 -co PREDICTOR=2 -ot Byte -of GTiff C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp8S0GXl\file1624f623378.shp C:\Users\LB_LAP~1\AppData\Local\Temp\Rtmp8S0GXl\file162428547e55.tif' had status 127</span></div><div class='output co'>#&gt; <span class='error'>Error in .rasterObjectFromFile(x, band = band, objecttype = "RasterLayer",     ...): Cannot create a RasterLayer object from this file. (file does not exist)</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; <span class='error'>Error in head(out$stats): object 'out' not found</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; <span class='error'>Error in head(out$alldata): object 'out' not found</span></div></pre>
+<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 6 features and 13 fields
+#&gt; geometry type:  POLYGON
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 12918420 ymin: 1752797 xmax: 12920610 ymax: 1755103
+#&gt; epsg (SRID):    NA
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
+#&gt; # A tibble: 6 x 14
+#&gt;   id_feat band_n       date    id  lc_type category sup_catego N_PIX      avg   med       sd   min   max          geometry
+#&gt;     &lt;dbl&gt;  &lt;dbl&gt;     &lt;date&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;     &lt;fctr&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;S3: sfc_POLYGON&gt;
+#&gt; 1       1      1 2013-01-01     1 forest_1   Forest Vegetation    61 4830.820  4747 540.6097  3731  5987 &lt;S3: sfc_POLYGON&gt;
+#&gt; 2       1      2 2013-01-09     1 forest_1   Forest Vegetation    61 4605.131  4648 510.8426  3665  5547 &lt;S3: sfc_POLYGON&gt;
+#&gt; 3       1      3 2013-01-17     1 forest_1   Forest Vegetation    61 4837.902  4834 557.4429  3640  5827 &lt;S3: sfc_POLYGON&gt;
+#&gt; 4       1      4 2013-01-25     1 forest_1   Forest Vegetation    61 4484.984  4411 473.7452  3285  5275 &lt;S3: sfc_POLYGON&gt;
+#&gt; 5       1      5 2013-02-02     1 forest_1   Forest Vegetation    61 4284.197  4237 498.7366  3469  5318 &lt;S3: sfc_POLYGON&gt;
+#&gt; 6       1      6 2013-02-10     1 forest_1   Forest Vegetation    61 4374.525  4302 471.1914  3317  5363 &lt;S3: sfc_POLYGON&gt;</div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; Simple feature collection with 6 features and 10 fields
+#&gt; geometry type:  POINT
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 12918200 ymin: 1754797 xmax: 12919360 ymax: 1754797
+#&gt; epsg (SRID):    NA
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
+#&gt; # A tibble: 6 x 11
+#&gt;   mdxtnq band_n       date N_PIX     N    id  lc_type category sup_catego value        geometry
+#&gt;    &lt;int&gt;  &lt;int&gt;     &lt;date&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;     &lt;fctr&gt; &lt;dbl&gt; &lt;S3: sfc_POINT&gt;
+#&gt; 1      1      1 2013-01-01    61     1     1 forest_1   Forest Vegetation  4454 &lt;S3: sfc_POINT&gt;
+#&gt; 2      1      1 2013-01-01    61     2     1 forest_1   Forest Vegetation  4260 &lt;S3: sfc_POINT&gt;
+#&gt; 3      1      1 2013-01-01    61     3     1 forest_1   Forest Vegetation  4224 &lt;S3: sfc_POINT&gt;
+#&gt; 4      1      1 2013-01-01    61     4     1 forest_1   Forest Vegetation  4344 &lt;S3: sfc_POINT&gt;
+#&gt; 5      1      1 2013-01-01    61     5     1 forest_1   Forest Vegetation  4489 &lt;S3: sfc_POINT&gt;
+#&gt; 6      1      1 2013-01-01    61     6     1 forest_1   Forest Vegetation  4970 &lt;S3: sfc_POINT&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

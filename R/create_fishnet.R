@@ -67,7 +67,7 @@ create_fishnet <- function(in_rast,
   }
 
   if (in_type == "rastfile") {
-    in_rast <- raster(in_file)
+    in_rast <- raster::raster(in_rast)
   }
 
   bbox     <- raster::extent(in_rast)
@@ -87,7 +87,7 @@ create_fishnet <- function(in_rast,
                                      bbox[2], " ", bbox[3], ", ",
                                      bbox[1], " ", bbox[3], "",
                                      "))")),
-                            crs = proj4string(in_rast))
+                            crs = sp::proj4string(in_rast))
 
   geometry <- sf::st_make_grid(ext_poly,
                                cellsize,

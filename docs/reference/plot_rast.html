@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>aggregate_rast — aggregate_rast • sprawl</title>
+<title>FUNCTION_TITLE — plot_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -89,48 +89,81 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>aggregate_rast</h1>
+    <h1>FUNCTION_TITLE</h1>
     </div>
 
     
-    <p>Function used to extract values of a single- or multi- band raster for pixels
-corresponding to the features of a vector (Polygon, Point or Line)</p>
+    <p>FUNCTION_DESCRIPTION</p>
     
 
-    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_rast_values</span>, <span class='no'>zones_rast</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"fastdisk"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nodata_out</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>in_points</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>background</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>tails</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.01</span>, <span class='fl'>0.99</span>),
+  <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>, <span class='kw'>legend_type</span> <span class='kw'>=</span> <span class='st'>"standard"</span>, <span class='kw'>col_outlow</span> <span class='kw'>=</span> <span class='st'>"gray10"</span>,
+  <span class='kw'>col_outhigh</span> <span class='kw'>=</span> <span class='st'>"gray90"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Raster Plot"</span>,
+  <span class='kw'>plot_now</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_rast_values</th>
+      <th>in_rast</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>zones_rast</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>band</th>
+      <td><p>PARAM_DESCRIPTION, Default: 1</p></td>
     </tr>
     <tr>
-      <th>FUN</th>
-      <td><p>PARAM_DESCRIPTION, Default: mean</p></td>
-    </tr>
-    <tr>
-      <th>method</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'fastdisk'</p></td>
-    </tr>
-    <tr>
-      <th>to_file</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
-    </tr>
-    <tr>
-      <th>out_file</th>
+      <th>in_poly</th>
       <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
     </tr>
     <tr>
-      <th>verbose</th>
+      <th>in_points</th>
+      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>background</th>
+      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>limits</th>
+      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>tails</th>
+      <td><p>PARAM_DESCRIPTION, Default: c(0.01, 0.99)</p></td>
+    </tr>
+    <tr>
+      <th>palette</th>
+      <td><p>PARAM_DESCRIPTION, Default: 'RdYlGn'</p></td>
+    </tr>
+    <tr>
+      <th>legend_type</th>
+      <td><p>PARAM_DESCRIPTION, Default: 'standard'</p></td>
+    </tr>
+    <tr>
+      <th>col_outlow</th>
+      <td><p>PARAM_DESCRIPTION, Default: 'gray10'</p></td>
+    </tr>
+    <tr>
+      <th>col_outhigh</th>
+      <td><p>PARAM_DESCRIPTION, Default: 'gray90'</p></td>
+    </tr>
+    <tr>
+      <th>maxpixels</th>
+      <td><p>PARAM_DESCRIPTION, Default: 1e+05</p></td>
+    </tr>
+    <tr>
+      <th>title</th>
+      <td><p>PARAM_DESCRIPTION, Default: 'Raster Plot'</p></td>
+    </tr>
+    <tr>
+      <th>plot_now</th>
       <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     </table>
     
@@ -144,13 +177,29 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></code></p>
+    <p><code><a href='http://www.rdocumentation.org/packages/latticeExtra/topics/layer'>layer</a></code>
+<code><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></code>,<code><a href='http://www.rdocumentation.org/packages/raster/topics/quantile'>quantile</a></code>
+<code><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></code>
+<code><a href='http://www.rdocumentation.org/packages/RColorBrewer/topics/ColorBrewer'>brewer.pal</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
- <span class='co'>#EXAMPLE1</span>
- }</div><div class='output co'>#&gt; NULL</div></pre>
+ <span class='fu'>library</span>(<span class='no'>sprawl</span>)
+
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"gNDVI.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+ <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>150</span>)
+
+ <span class='co'># plot only the raster</span>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)
+
+ <span class='co'># add a polygon and change the legend</span>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_vect</span>,
+           <span class='kw'>tails</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.1</span>, <span class='fl'>0.99</span>),
+           <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>,
+           <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span> ,
+           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)
+ }</div><div class='img'><img src='plot_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='img'><img src='plot_rast-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -165,10 +214,6 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
-
-    <h2>Author</h2>
-    
-Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

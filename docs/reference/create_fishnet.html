@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>create a "fishnet" vector based on cells of a raster � create_fishnet • sprawl</title>
+<title>create a "fishnet" vector based on cells of a raster — create_fishnet • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -153,24 +153,19 @@ specified resolution is created over the extent of the raster)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>  <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
-  <span class='fu'>library</span>(<span class='no'>raster</span>)
-  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
-  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)
-
+  <span class='fu'>library</span>(<span class='no'>raster</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: sp</span></div><div class='input'>  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
+  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: lattice</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: latticeExtra</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: RColorBrewer</span></div><div class='input'>
   <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='build_testraster.html'>build_testraster</a></span>(<span class='fl'>20</span>,<span class='fl'>20</span>,<span class='fl'>1</span>)
 
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>) <span class='kw'>%&gt;%</span>
-                <span class='fu'>as</span>(<span class='st'>"Spatial"</span>)
-  <span class='fu'>print</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></span>(<span class='no'>in_rast</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.regions</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>) +
-        <span class='fu'>layer</span>(<span class='fu'>sp.polygons</span>(<span class='no'>fishnet</span>)))</div><div class='img'><img src='create_fishnet-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                <span class='fu'>as</span>(<span class='st'>"Spatial"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in create_fishnet(in_rast) %&gt;% as("Spatial"): could not find function "%&gt;%"</span></div><div class='input'>  <span class='fu'>print</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></span>(<span class='no'>in_rast</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.regions</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>) +
+        <span class='fu'>layer</span>(<span class='fu'>sp.polygons</span>(<span class='no'>fishnet</span>)))</div><div class='img'><img src='create_fishnet-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>2</span>)) <span class='kw'>%&gt;%</span>
-                <span class='fu'>as</span>(<span class='st'>"Spatial"</span>)
-  <span class='fu'>print</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></span>(<span class='no'>in_rast</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.regions</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>) +
-        <span class='fu'>layer</span>(<span class='fu'>sp.polygons</span>(<span class='no'>fishnet</span>)))</div><div class='img'><img src='create_fishnet-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                <span class='fu'>as</span>(<span class='st'>"Spatial"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in create_fishnet(in_rast, pix_for_cell = c(2, 2)) %&gt;% as("Spatial"): could not find function "%&gt;%"</span></div><div class='input'>  <span class='fu'>print</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></span>(<span class='no'>in_rast</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.regions</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>) +
+        <span class='fu'>layer</span>(<span class='fu'>sp.polygons</span>(<span class='no'>fishnet</span>)))</div><div class='img'><img src='create_fishnet-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>22</span>,<span class='fl'>50</span>))<span class='kw'>%&gt;%</span>
-                <span class='fu'>as</span>(<span class='st'>"Spatial"</span>)
-  <span class='fu'>print</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></span>(<span class='no'>in_rast</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.regions</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>) +
-        <span class='fu'>layer</span>(<span class='fu'>sp.polygons</span>(<span class='no'>fishnet</span>)))</div><div class='img'><img src='create_fishnet-15.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
+                <span class='fu'>as</span>(<span class='st'>"Spatial"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in create_fishnet(in_rast, cellsize = c(22, 50)) %&gt;% as("Spatial"): could not find function "%&gt;%"</span></div><div class='input'>  <span class='fu'>print</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></span>(<span class='no'>in_rast</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.regions</span> <span class='kw'>=</span> <span class='no'>topo.colors</span>) +
+        <span class='fu'>layer</span>(<span class='fu'>sp.polygons</span>(<span class='no'>fishnet</span>)))</div><div class='img'><img src='create_fishnet-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

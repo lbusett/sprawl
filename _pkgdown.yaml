@@ -21,6 +21,10 @@ reference:
       - '`dissolve_shape`'
       - '`create_fishnet`'
       - '`crop_vect`'
+  - title: Visualization and plotting
+    desc: ~
+    contents:
+      - '`plot_rast`'
   - title: Data fetching from public repositories
     desc: ~
     contents:

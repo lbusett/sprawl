@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mask a raster file based on a vector file � mask_rast • sprawl</title>
+<title>Mask a raster file (or object) based on a vector file (or object) — mask_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -89,59 +89,75 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>mask a raster file based on a vector file</h1>
+    <h1>Mask a raster file (or object) based on a vector file (or object)</h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>Masks a raster file or object on the basis of a vector file or object. Pixels not
+covered by the vector features are set to NoData. If the input raster is multi-band, the
+mask is automatically applied to all bands. An optional buffer can be applied to the input
+vector to allow a more "lenient" masking, or to remove also the borders of the vector.</p>
     
 
-    <pre class="usage"><span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>mask_shape</span>, <span class='kw'>out_nodata</span> <span class='kw'>=</span> <span class='st'>"NA"</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>mask_vect</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>out_nodata</span> <span class='kw'>=</span> <span class='st'>"NoData"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_rast</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>out_dt</span> <span class='kw'>=</span> <span class='st'>"FLT4S"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_rast</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p>Raster file or object inheriting class <code>raster</code> to be masked</p></td>
     </tr>
     <tr>
-      <th>mask_shape</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>mask_vect</th>
+      <td><p>Vector file or object of class <code>*sf</code> or <code>sp</code> to be used as a mask</p></td>
     </tr>
     <tr>
-      <th>out_nodata</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'NA'</p></td>
+      <th>crop</th>
+      <td><p><code>logical</code> if TRUE, <code>in_rast</code> is also cropped on the extent of <code>mask_vect</code>,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>buffer</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>numeric</code> if not NULL, width of a buffer to be applied to <code>mask_vect</code> before
+masking <code>in_rast</code>. If negative, mask_vect is "reduced" prior to masking (see examples),
+Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>out_nodata</th>
+      <td><p><code>numeric</code> value to be assigned to areas outside the mask, Default: 'NoData'</p></td>
+    </tr>
+    <tr>
+      <th>to_file</th>
+      <td><p><code>logical</code> If TRUE, the output masked raster is save to file instead than sent back
+to the caller. In this case, the path to the saved file is returned instead</p></td>
+    </tr>
+    <tr>
+      <th>out_rast</th>
+      <td><p><code>character</code> filename where the masked raster should be saved (ignorted if
+to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
+file in the <code>R</code> temporary folder. The file is saved in TIFF format, with <code>DAFLATE</code> compression.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> if TRUE, extended processing information is sent to the console in the
+form of messages</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+    <p>object of class <code>raster</code> (if to_file == FALSE), or <code>character</code> string corresponding to
+the filename of the created raster (if to_file == TRUE)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>libray</span>(<span class='no'>sprawl</span>)</div><div class='output co'>#&gt; <span class='error'>Error in libray(sprawl): could not find function "libray"</span></div><div class='input'><span class='fu'>library</span>(<span class='no'>raster</span>)
-<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
-<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"testrast.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
-<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in find_command("gdal_rasterize"): find_command --&gt; `gdal_rasterize` was not found on your system. Please install it and/or check</span>
-#&gt; <span class='error'>           your PATH environment variables. Aborting !</span></div><div class='input'><span class='fu'>par</span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>))
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>in_rast</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>masked</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(masked): object 'masked' not found</span></div><div class='img'><img src='mask_rast-1.png' alt='' width='700' height='432.632880098887' /></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>libray</span>(<span class='no'>sprawl</span>)</div><div class='output co'>#&gt; <span class='error'>Error in libray(sprawl): could not find function "libray"</span></div><div class='input'><span class='fu'>libray</span>(<span class='no'>sprawl.data</span>)</div><div class='output co'>#&gt; <span class='error'>Error in libray(sprawl.data): could not find function "libray"</span></div><div class='input'><span class='fu'>library</span>(<span class='no'>raster</span>)
+<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"testrast.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt; <span class='error'>Error in .rasterObjectFromFile(x, objecttype = "RasterBrick", ...): provide a valid filename</span></div><div class='input'><span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))</div><div class='output co'>#&gt; <span class='error'>Error in proj4string(in_rast): object 'in_rast' not found</span></div><div class='input'><span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in inherits(object, "Spatial"): object 'in_rast' not found</span></div><div class='input'><span class='fu'>par</span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>))
+<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(in_rast): object 'in_rast' not found</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>masked</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(masked): object 'masked' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -149,15 +165,13 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
 
     <h2>Author</h2>
     
-Lorenzo Busetto <a href='mailto:lbusett@gmnail.com'>lbusett@gmnail.com</a> aut
+Lorenzo Busetto, PhD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a> aut
 
   </div>
 </div>
