@@ -1,6 +1,6 @@
 context("Masking a raster")
 testthat::test_that("Test On raster masking", {
-  # skip_on_cran()
+  skip_on_cran()
   skip_on_travis()
 
   library(sprawl.data)

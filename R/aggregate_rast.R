@@ -4,13 +4,14 @@
 #' @param in_rast_values PARAM_DESCRIPTION
 #' @param zones_rast PARAM_DESCRIPTION
 #' @param FUN PARAM_DESCRIPTION, Default: mean
+#' @param maxchunk PARAM_DESCRIPTION, Default: 5e+07
 #' @param method PARAM_DESCRIPTION, Default: 'fastdisk'
 #' @param to_file PARAM_DESCRIPTION, Default: FALSE
 #' @param out_file PARAM_DESCRIPTION, Default: NULL
+#' @param nodata_out PARAM_DESCRIPTION, Default: NA
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @author Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -18,11 +19,19 @@
 #'  }
 #' }
 #' @seealso
+#'  \code{\link[data.table]{data.table}}
+
+#'  \code{\link[raster]{raster}},\code{\link[raster]{writeRaster}},\code{\link[raster]{rasterize}}
+
+#'  \code{\link[sf]{st_crs}},\code{\link[sf]{st_transform}},\code{\link[sf]{st_bbox}},\code{\link[sf]{st_coordinates}},\code{\link[sf]{st_centroid}},\code{\link[sf]{st_as_sf}},\code{\link[sf]{st_set_crs}}
+
 #'  \code{\link[sp]{proj4string}}
 #' @rdname aggregate_rast
 #' @export
-#' @importFrom raster writeRaster rasterize raster
-#' @importFrom sf st_set_crs st_transform st_crs st_coordinates st_centroid st_as_sf
+#' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
+#' @importFrom data.table data.table
+#' @importFrom raster raster writeRaster rasterize
+#' @importFrom sf st_crs st_transform st_bbox st_coordinates st_centroid st_as_sf st_set_crs
 #' @importFrom sp proj4string
 
 aggregate_rast <- function(in_rast_values,

@@ -1,6 +1,6 @@
 context("Zonal Statistics - points")
 testthat::test_that("Test On points extraction", {
-  # skip_on_cran()
+  skip_on_cran()
   skip_on_travis()
   library(sprawl.data)
   in_pts   <- read_shape(system.file("extdata","randpoints.shp", package = "sprawl.data"))

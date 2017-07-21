@@ -1,6 +1,6 @@
 context("Checking shape dissolve")
 testthat::test_that("Test dissolve shapefile",{
-  # skip_on_cran()
+  skip_on_cran()
   skip_on_travis()
   library(sprawl.data)
   indata <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"))

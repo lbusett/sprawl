@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>find the path to a specified command — find_command • sprawl</title>
+<title>remove outliers from a raster image — cuttails_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -89,39 +89,67 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>find the path to a specified command</h1>
+    <h1>remove outliers from a raster image</h1>
     </div>
 
     
-    <p>helper function allowing to find the path to a given command on the system of the
-user. If the command is not found, a <code>stop</code> is issued and the program aborts (gracefully).</p>
+    <p>the function allows to automatically set to NoData eventual outliers present in a
+raster single- or multi-band object (or file). For each band, quantiles of the distribution
+of pixel values are computed using <code><a href='http://www.rdocumentation.org/packages/raster/topics/quantile'>raster::quantile</a></code>, and the values falling outside the
+limits set with the <code>tails</code> argument are set to NoData in the output</p>
     
 
-    <pre class="usage"><span class='fu'>find_command</span>(<span class='no'>command</span>, <span class='kw'>stop_on_missing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>cuttails_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>tails</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.02</span>, <span class='fl'>0.98</span>), <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>command</th>
-      <td><p><code>character</code> command to be search in the system (e.g., "gdalinfo")</p></td>
+      <th>in_rast</th>
+      <td><p><code>*raster</code> object (single layer or stack), or filename of a raster file</p></td>
     </tr>
     <tr>
-      <th>stop_on_missing</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <th>tails</th>
+      <td><p><code>numeric array (2)</code> quantiles of the distribution of pixel values used for the cut.
+For example, setting tails = c(0.05, 0.95) will set to NoData all pixels below the 5th and
+above the 95th percentile,  Default: c(0.02, 0.98)</p></td>
+    </tr>
+    <tr>
+      <th>to_file</th>
+      <td><p>DESCRIPTION</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>DESCRIPTION</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>character</code> normalized path to the desired command</p>
+    <p>OUTPUT_DESCRIPTION</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>DETAILS</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><code><a href='http://www.rdocumentation.org/packages/raster/topics/quantile'>quantile</a></code>,<code><a href='http://www.rdocumentation.org/packages/raster/topics/getValues'>getValues</a></code>,<code><a href='http://www.rdocumentation.org/packages/raster/topics/setValues'>setValues</a></code>,<code><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
- <span class='co'># Find the path to `gdalinfo`</span>
- <span class='no'>gdalinfo_path</span> <span class='kw'>&lt;-</span> <span class='fu'>find_command</span>(<span class='st'>"gdalinfo"</span>)
-
+<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='no'>r</span>     <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>100</span>, <span class='kw'>nrow</span><span class='kw'>=</span><span class='fl'>100</span>)
+ <span class='no'>r</span>     <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/setValues'>setValues</a></span>(<span class='no'>r</span>, <span class='fl'>1</span>:<span class='fl'>10000</span>)
+ <span class='no'>s</span>     <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='no'>r</span>,<span class='no'>r</span>,<span class='no'>r</span>)
+ <span class='fu'>summary</span>(<span class='no'>s</span>)
+ <span class='no'>s_cut</span> <span class='kw'>&lt;-</span> <span class='fu'>cuttails_rast</span>(<span class='no'>s</span>)
+ <span class='fu'>summary</span>(<span class='no'>s_cut</span>)
+ <span class='no'>s_cutb1</span> <span class='kw'>&lt;-</span> <span class='fu'>cuttails_rast</span>(<span class='no'>s</span><span class='kw'>[[</span><span class='fl'>1</span>]])
+ <span class='fu'>summary</span>(<span class='no'>s_cutb1</span>)
+ }
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -130,13 +158,13 @@ user. If the command is not found, a <code>stop</code> is issued and the program
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
-
-    <h2>Author</h2>
-    
-Lorenzo Busetto <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

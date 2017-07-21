@@ -232,8 +232,8 @@ er_polygons_std <- function(in_vect_zones,
     if (in_band@file@name == "") {
       temprastfile <- tempfile(fileext = ".tif")
       writeRaster(in_band,
-                  file = temprastfile,
-                  options = c("COMPRESS=DEFLATE", "PREDICTOR=3"),
+                  filename  = temprastfile,
+                  options   = c("COMPRESS=DEFLATE", "PREDICTOR=3"),
                   overwrite = TRUE)
       in_band <- raster(temprastfile)
     }

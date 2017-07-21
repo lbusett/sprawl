@@ -29,6 +29,8 @@ to the caller. In this case, the path to the saved file is returned instead}
 to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
 file in the \code{R} temporary folder. The file is saved in TIFF format, with \code{DAFLATE} compression.}
 
+\item{out_dt}{TO BE CHECKED !!!!}
+
 \item{verbose}{\code{logical} if TRUE, extended processing information is sent to the console in the
 form of messages}
 }
@@ -47,7 +49,8 @@ vector to allow a more "lenient" masking, or to remove also the borders of the v
 libray(sprawl)
 libray(sprawl.data)
 library(raster)
-in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"), stringsAsFactors = T)
+in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
+                       stringsAsFactors = T)
 in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl.data"))[[1]]
 in_polys <- sf::st_transform(in_polys, proj4string(in_rast))
 masked   <- mask_rast(in_rast, in_polys, verbose = FALSE)
@@ -57,5 +60,5 @@ plot(masked)
 }
 }
 \author{
-Lorenzo Busetto, PhD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com} \link{aut}
+Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }

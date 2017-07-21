@@ -1,6 +1,6 @@
 context("Raster aggregation")
 testthat::test_that("Test On raster aggregation", {
-  # skip_on_cran()
+  skip_on_cran()
   skip_on_travis()
 
   library(raster)

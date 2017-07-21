@@ -66,5 +66,5 @@ DETAILS
 \code{\link[sf]{st_as_sfc}},\code{\link[sf]{st_make_grid}}
 }
 \author{
-AUTHOR \link{AUTHOR_2}
+Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }

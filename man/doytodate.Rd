@@ -29,3 +29,6 @@ if(interactive()){
  }
 }
 }
+\author{
+Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
+}

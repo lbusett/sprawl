@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -39,7 +39,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -97,9 +97,9 @@
     
 
     <pre class="usage"><span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>in_points</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>background</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>tails</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.01</span>, <span class='fl'>0.99</span>),
+  <span class='kw'>background</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>limits</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>tails</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.02</span>, <span class='fl'>0.98</span>),
   <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>, <span class='kw'>legend_type</span> <span class='kw'>=</span> <span class='st'>"standard"</span>, <span class='kw'>col_outlow</span> <span class='kw'>=</span> <span class='st'>"gray10"</span>,
-  <span class='kw'>col_outhigh</span> <span class='kw'>=</span> <span class='st'>"gray90"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Raster Plot"</span>,
+  <span class='kw'>col_outhigh</span> <span class='kw'>=</span> <span class='st'>"gray90"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Raster Plot"</span>,
   <span class='kw'>plot_now</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -107,7 +107,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_rast</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p>Input raster object or file</p></td>
     </tr>
     <tr>
       <th>band</th>
@@ -115,55 +115,64 @@
     </tr>
     <tr>
       <th>in_poly</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p>optional input polygon vector object or file to be overlayed on the
+plot, Default: NULL</p></td>
     </tr>
     <tr>
       <th>in_points</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p>optional input points vector object or file to be overlayed on the
+plot, Default: NULL</p></td>
     </tr>
     <tr>
       <th>background</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p>not used, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>limits</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>numeric array [2]</code> optional limits governing the range of values to be plotted
+(e.g., c(0.2,0.4)), Default: NULL</p></td>
     </tr>
     <tr>
       <th>tails</th>
-      <td><p>PARAM_DESCRIPTION, Default: c(0.01, 0.99)</p></td>
+      <td><p><code>numeric array [2]</code> percentiles used to "cut" the values to be plotted to allow
+a "good" representation. Values outside the specified percentiles will be plotted as NoData,
+or using the colors specified in <code>col_outlow</code> and <code>col_outhigh</code>, Default: c(0.02, 0.98) (meaning)
+cutting the values at the 2nd and 98th percentile)</p></td>
     </tr>
     <tr>
       <th>palette</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'RdYlGn'</p></td>
+      <td><p>Palette to be used for colors (see <code><a href='http://www.rdocumentation.org/packages/RColorBrewer/topics/ColorBrewer'>RColorBrewer::brewer.pal</a></code>), Default: 'RdYlGn'</p></td>
     </tr>
     <tr>
       <th>legend_type</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'standard'</p></td>
+      <td><p>"standard" or "custom" (see ecamples), Default: 'standard'</p></td>
     </tr>
     <tr>
       <th>col_outlow</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'gray10'</p></td>
+      <td><p>Color used to plot the values below the lower limit/tail. Can be a string
+corresponding to a valid "R" color or HEX representation, Default: 'gray10'</p></td>
     </tr>
     <tr>
       <th>col_outhigh</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'gray90'</p></td>
+      <td><p>Color used to plot the values below the lower limit/tail. Can be a string
+corresponding to a valid "R" color or HEX representation, Default: 'gray90'</p></td>
     </tr>
     <tr>
       <th>maxpixels</th>
-      <td><p>PARAM_DESCRIPTION, Default: 1e+05</p></td>
+      <td><p><code>numeric</code> Maximum number of pixels to be plotted, Default: 5e+05</p></td>
     </tr>
     <tr>
       <th>title</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'Raster Plot'</p></td>
+      <td><p><code>character</code> Title for the plot, Default: 'Raster Plot'</p></td>
     </tr>
     <tr>
       <th>plot_now</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logic</code> If TRUE, the plot is immediately printed to screen. Otherwise, an object
+allowing later plotting/modifications is returned, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p>Any other arguments (?)</p></td>
     </tr>
     </table>
     
@@ -184,22 +193,28 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
 
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"gNDVI.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>150</span>)
-
  <span class='co'># plot only the raster</span>
  <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)
 
- <span class='co'># add a polygon and change the legend</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_vect</span>,
-           <span class='kw'>tails</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.1</span>, <span class='fl'>0.99</span>),
-           <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>,
-           <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span> ,
+ <span class='co'># plot only the raster with custom legend</span>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)
+
+ <span class='co'># add a polygon and change the legend, palette and maxpixels</span>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>,
+           <span class='kw'>in_poly</span>   <span class='kw'>=</span> <span class='no'>in_vect</span>,
+           <span class='kw'>tails</span>     <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.1</span>, <span class='fl'>0.99</span>),
+           <span class='kw'>legend</span>    <span class='kw'>=</span> <span class='st'>"custom"</span>,
+           <span class='kw'>palette</span>   <span class='kw'>=</span> <span class='st'>"RdYlBu"</span> ,
+           <span class='kw'>title</span>     <span class='kw'>=</span> <span class='st'>"RapidEye - GNDVI"</span>,
            <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)
- }</div><div class='img'><img src='plot_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='img'><img src='plot_rast-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
+ }
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -214,6 +229,10 @@
       
       <li><a href="#examples">Examples</a></li>
     </ul>
+
+    <h2>Author</h2>
+    
+Lorenzo Busetto, PhD (2017), email: <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

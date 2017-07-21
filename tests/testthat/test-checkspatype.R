@@ -1,6 +1,6 @@
 context("Checking types of spatial objects")
 testthat::test_that("check_spatype",{
-  # skip_on_cran()
+  skip_on_cran()
   skip_on_travis()
   library(sprawl.data)
   # input is a raster file

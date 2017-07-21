@@ -15,11 +15,15 @@ aggregate_rast(in_rast_values, zones_rast, FUN = mean, maxchunk = 5e+07,
 
 \item{FUN}{PARAM_DESCRIPTION, Default: mean}
 
+\item{maxchunk}{PARAM_DESCRIPTION, Default: 5e+07}
+
 \item{method}{PARAM_DESCRIPTION, Default: 'fastdisk'}
 
 \item{to_file}{PARAM_DESCRIPTION, Default: FALSE}
 
 \item{out_file}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{nodata_out}{PARAM_DESCRIPTION, Default: NA}
 
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
 }
@@ -41,8 +45,11 @@ if(interactive()){
 }
 }
 \seealso{
+\code{\link[data.table]{data.table}}
+\code{\link[raster]{raster}},\code{\link[raster]{writeRaster}},\code{\link[raster]{rasterize}}
+\code{\link[sf]{st_crs}},\code{\link[sf]{st_transform}},\code{\link[sf]{st_bbox}},\code{\link[sf]{st_coordinates}},\code{\link[sf]{st_centroid}},\code{\link[sf]{st_as_sf}},\code{\link[sf]{st_set_crs}}
 \code{\link[sp]{proj4string}}
 }
 \author{
-Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
+Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }

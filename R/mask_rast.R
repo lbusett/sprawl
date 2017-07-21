@@ -16,6 +16,7 @@
 #' @param out_rast `character` filename where the masked raster should be saved (ignorted if
 #'   to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
 #'   file in the `R` temporary folder. The file is saved in TIFF format, with `DAFLATE` compression.
+#' @param out_dt TO BE CHECKED !!!!
 #' @param verbose `logical` if TRUE, extended processing information is sent to the console in the
 #'   form of messages
 #' @return object of class `raster` (if to_file == FALSE), or `character` string corresponding to
@@ -26,7 +27,8 @@
 #' libray(sprawl)
 #' libray(sprawl.data)
 #' library(raster)
-#' in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"), stringsAsFactors = T)
+#' in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
+#'                        stringsAsFactors = T)
 #' in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl.data"))[[1]]
 #' in_polys <- sf::st_transform(in_polys, proj4string(in_rast))
 #' masked   <- mask_rast(in_rast, in_polys, verbose = FALSE)
@@ -36,7 +38,7 @@
 #' }
 #' @rdname mask_rast
 #' @export
-#' @author Lorenzo Busetto, PhD (2017) <lbusett@gmail.com> [aut]
+#' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 #' @importFrom dplyr case_when
 #' @importFrom gdalUtils gdalsrsinfo
 #' @importFrom raster raster extent
@@ -165,8 +167,8 @@ mask_rast <- function(in_rast,
     if (in_rast[[1]]@file@name == "") {
       temprastfile <- tempfile(fileext = ".tif")
       writeRaster(in_rast,
-                  file = temprastfile,
-                  options = c("COMPRESS=DEFLATE"),
+                  filename  = temprastfile,
+                  options   = c("COMPRESS=DEFLATE"),
                   overwrite = TRUE)
       in_rast <- raster(temprastfile)
     }

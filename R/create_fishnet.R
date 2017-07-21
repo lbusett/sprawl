@@ -44,7 +44,7 @@
 #' @export
 #' @importFrom raster extent res
 #' @importFrom sf st_as_sfc st_make_grid st_sf
-#' @author AUTHOR [AUTHOR_2]
+#' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 create_fishnet <- function(in_rast,
                            pix_for_cell = 1,
                            cellsize     = NULL,
