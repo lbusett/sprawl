@@ -90,6 +90,14 @@ plot_rast <- function(in_rast,
     in_rastplot <- in_rast
   }
 
+  if (!is.null(in_poly)) {
+    proj4_rast <- proj4string(in_rast)
+    proj4_vect <- sf::st_crs(in_poly)$proj4string
+    if (proj4_vect != proj4_rast) {
+      in_poly <- sf::st_transform(in_poly, proj4_rast)
+    }
+  }
+
   #   ____________________________________________________________________________
   #   If limits not passed, compute limits for the plot on the basis of       ####
   #   the values of "cut_tails" and of the distribution of values in in_rast
