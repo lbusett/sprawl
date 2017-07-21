@@ -7,3 +7,5 @@ title: Examples of use
 knitr::opts_chunk$set(echo = TRUE)
 ```
 Worked-out examples of `sprawl` functionality will be documented here.
+
+## [Extract values from a multi-band raster for the different features of a vector file](https://lbusett.github.io/sprawl/articles/extract_rast_example.html)

@@ -139,7 +139,8 @@ above the 95th percentile,  Default: c(0.02, 0.98)</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
  <span class='no'>r</span>     <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span><span class='kw'>=</span><span class='fl'>100</span>, <span class='kw'>nrow</span><span class='kw'>=</span><span class='fl'>100</span>)
  <span class='no'>r</span>     <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/setValues'>setValues</a></span>(<span class='no'>r</span>, <span class='fl'>1</span>:<span class='fl'>10000</span>)
  <span class='no'>s</span>     <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='no'>r</span>,<span class='no'>r</span>,<span class='no'>r</span>)
@@ -148,7 +149,8 @@ above the 95th percentile,  Default: c(0.02, 0.98)</p></td>
  <span class='fu'>summary</span>(<span class='no'>s_cut</span>)
  <span class='no'>s_cutb1</span> <span class='kw'>&lt;-</span> <span class='fu'>cuttails_rast</span>(<span class='no'>s</span><span class='kw'>[[</span><span class='fl'>1</span>]])
  <span class='fu'>summary</span>(<span class='no'>s_cutb1</span>)
- }</div><div class='output co'>#&gt; <span class='error'>Error in .local(object, ...): no cell values associated with this RasterBrick</span></div></pre>
+ }
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

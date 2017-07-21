@@ -1,6 +1,6 @@
 context("Zonal Statistics - polygons")
 testthat::test_that("Test On polygons extraction", {
-  skip_on_cran()
+  # skip_on_cran()
   skip_on_travis()
   library(sprawl.data)
   in_polys       <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"), stringsAsFactors = T)

@@ -1,6 +1,6 @@
 context("doy to date conversions")
 testthat::test_that("Test datesconversions", {
-  skip_on_cran()
+  # skip_on_cran()
   skip_on_travis()
   # convert date to doy OK
   expect_equal(doytodate(100, 2015), as.Date("2015-04-10"))

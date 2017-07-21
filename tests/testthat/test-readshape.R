@@ -1,6 +1,6 @@
 context("Reading a Shapefile")
 testthat::test_that("Test read_shape", {
-  skip_on_cran()
+  # skip_on_cran()
   skip_on_travis()
   library(sprawl.data)
   # open a shapefile as a `sf` object
