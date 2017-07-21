@@ -25,6 +25,7 @@
 #'   allowing later plotting/modifications is returned, Default: TRUE
 #' @param ... Any other arguments (?)
 #' @return OUTPUT_DESCRIPTION
+
 #' @details DETAILS
 #' @examples
 #' \dontrun{
@@ -59,7 +60,6 @@
 #'  \code{\link[rasterVis]{levelplot}}
 
 #'  \code{\link[RColorBrewer]{brewer.pal}}
-#' @author Lorenzo Busetto, PhD (2017), email: <lbusett@gmail.com>
 #' @rdname plot_rast
 #' @export
 #' @importFrom latticeExtra layer

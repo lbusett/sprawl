@@ -89,6 +89,3 @@ if(interactive()){
 \code{\link[rasterVis]{levelplot}}
 \code{\link[RColorBrewer]{brewer.pal}}
 }
-\author{
-Lorenzo Busetto, PhD (2017), email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
-}
