@@ -7,7 +7,7 @@
 extract_rast(in_rast, in_vect_zones, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,
   comp_quant = FALSE, FUN = NULL, small = TRUE, na.rm = TRUE,
-  maxchunk = 5e+06, long = FALSE, addfeat = TRUE, addgeom = TRUE,
+  maxchunk = 5e+07, long = FALSE, addfeat = TRUE, addgeom = TRUE,
   keep_null = FALSE, verbose = TRUE, ncores = NULL, mode = "std")
 }
 \arguments{
@@ -87,10 +87,12 @@ corresponding to the features of a vector (Polygon, Point or Line)
 \examples{
 \dontrun{
 library(sprawl)
+library(sprawl.data)
 library(raster)
 options(tibble.width = Inf)
-in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl"))
+in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
+                       stringsAsFactors = T)
+in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
 in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 out      <- extract_rast(in_rast, in_polys, long = FALSE, verbose = FALSE)
 head(out$stats)

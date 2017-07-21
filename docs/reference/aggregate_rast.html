@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>aggregate_rast � aggregate_rast • sprawl</title>
+<title>aggregate_rast — aggregate_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -39,7 +39,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -55,44 +55,19 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
+  <a href="../articles/sprawl.html">Getting Started</a>
+</li>
+<li>
   <a href="../reference/index.html">Function Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples of Use
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Raster Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article A</a>
-    </li>
-    <li>
-      <a href="../articles/tet_1.html">Article B</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Vector Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Visualization</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Other</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-  </ul>
+<li>
+  <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
   <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
-  <a href="../articles/tet_1.html">Contributing</a>
+  <a href="../articles/contributing.html">Contributing</a>
 </li>
       </ul>
       
@@ -122,8 +97,9 @@
 corresponding to the features of a vector (Polygon, Point or Line)</p>
     
 
-    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_rast_values</span>, <span class='no'>in_obj_zones</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"fastdisk"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_rast_values</span>, <span class='no'>zones_rast</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"fastdisk"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nodata_out</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -133,12 +109,16 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
-      <th>in_obj_zones</th>
+      <th>zones_rast</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
       <th>FUN</th>
       <td><p>PARAM_DESCRIPTION, Default: mean</p></td>
+    </tr>
+    <tr>
+      <th>maxchunk</th>
+      <td><p>PARAM_DESCRIPTION, Default: 5e+07</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -151,6 +131,10 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
     <tr>
       <th>out_file</th>
       <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>nodata_out</th>
+      <td><p>PARAM_DESCRIPTION, Default: NA</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -168,7 +152,10 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></code></p>
+    <p><code><a href='http://www.rdocumentation.org/packages/data.table/topics/data.table'>data.table</a></code>
+<code><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></code>,<code><a href='http://www.rdocumentation.org/packages/raster/topics/writeRaster'>writeRaster</a></code>,<code><a href='http://www.rdocumentation.org/packages/raster/topics/rasterize'>rasterize</a></code>
+<code><a href='http://www.rdocumentation.org/packages/sf/topics/st_crs'>st_crs</a></code>,<code><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></code>,<code><a href='http://www.rdocumentation.org/packages/sf/topics/st_bbox'>st_bbox</a></code>,<code><a href='http://www.rdocumentation.org/packages/sf/topics/st_coordinates'>st_coordinates</a></code>,<code><a href='http://www.rdocumentation.org/packages/sf/topics/geos_unary'>st_centroid</a></code>,<code><a href='http://www.rdocumentation.org/packages/sf/topics/st_as_sf'>st_as_sf</a></code>,<code><a href='http://www.rdocumentation.org/packages/sf/topics/st_crs'>st_set_crs</a></code>
+<code><a href='http://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -194,7 +181,7 @@ corresponding to the features of a vector (Polygon, Point or Line)</p>
 
     <h2>Author</h2>
     
-Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
+Lorenzo Busetto, PhD (2017) email: <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

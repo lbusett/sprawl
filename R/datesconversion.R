@@ -12,6 +12,7 @@
 #'  }
 #' }
 #' @rdname doytodate
+#' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 #' @export
 
 doytodate = function(doys, year, verbose = TRUE){
@@ -54,7 +55,7 @@ doytodate = function(doys, year, verbose = TRUE){
 #' }
 #' @export
 #' @rdname datetodoy
-#' @author AUTHOR [AUTHOR_2]
+#' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 
 datetodoy = function(dates = dates){
   dates <- as.Date(dates)

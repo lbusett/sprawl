@@ -22,26 +22,30 @@ Description: **`sprawl` aims to simplify the execution of some "common" spatial 
       6. Providing **custom functions for visualization** of processing results.
 Depends:
     R (>= 3.3.2)
-Imports: gdalUtils,
-         DBI,
-         rgeos,
-         sp,
-         raster,
-         data.table,
-         dplyr,
-         xts,
-         lubridate,
-         methods,
-         rgdal,
-         sf, 
-         magrittr, 
-         tidyr,
-         foreach,
-         doParallel,
-         tibble,
-         maps,
-         doSNOW,
-         velox
+Imports: data.table,
+        raster,
+        sf,
+        sp,
+        stats,
+        tibble,
+        gdalUtils,
+        DBI,
+        rgeos,
+        dplyr,
+        lubridate,
+        tidyr,
+        doSNOW,
+        foreach,
+        velox,
+        parallel,
+        utils,
+        methods,
+        rgdal,
+        latticeExtra,
+        rasterVis,
+        RColorBrewer,
+        tools,
+        magrittr
 Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,
@@ -49,7 +53,7 @@ Suggests: testthat,
 URL: https://github.com/IREA-CNR-MI/sprawl/
 BugReports: https://github.com/IREA-CNR-MI/sprawl/issues
 Encoding: UTF-8
-License: GPL-3
+License: GPL-3 + file LICENSE
 LazyData: true
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)

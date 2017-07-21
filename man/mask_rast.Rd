@@ -2,37 +2,56 @@
 % Please edit documentation in R/mask_rast.R
 \name{mask_rast}
 \alias{mask_rast}
-\title{mask a raster file based on a vector file}
+\title{Mask a raster file (or object) based on a vector file (or object)}
 \usage{
-mask_rast(in_rast, mask_shape, out_nodata = "NA", buffer = NULL,
-  verbose = TRUE)
+mask_rast(in_rast, mask_vect, crop = FALSE, buffer = NULL,
+  out_nodata = "NoData", to_file = FALSE, out_rast = NULL,
+  out_dt = "FLT4S", verbose = TRUE)
 }
 \arguments{
-\item{in_rast}{PARAM_DESCRIPTION}
+\item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
 
-\item{mask_shape}{PARAM_DESCRIPTION}
+\item{mask_vect}{Vector file or object of class \code{*sf} or \code{sp} to be used as a mask}
 
-\item{out_nodata}{PARAM_DESCRIPTION, Default: 'NA'}
+\item{crop}{\code{logical} if TRUE, \code{in_rast} is also cropped on the extent of \code{mask_vect},
+Default: FALSE}
 
-\item{buffer}{PARAM_DESCRIPTION, Default: NULL}
+\item{buffer}{\code{numeric} if not NULL, width of a buffer to be applied to \code{mask_vect} before
+masking \code{in_rast}. If negative, mask_vect is "reduced" prior to masking (see examples),
+Default: NULL}
 
-\item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
+\item{out_nodata}{\code{numeric} value to be assigned to areas outside the mask, Default: 'NoData'}
+
+\item{to_file}{\code{logical} If TRUE, the output masked raster is save to file instead than sent back
+to the caller. In this case, the path to the saved file is returned instead}
+
+\item{out_rast}{\code{character} filename where the masked raster should be saved (ignorted if
+to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
+file in the \code{R} temporary folder. The file is saved in TIFF format, with \code{DAFLATE} compression.}
+
+\item{out_dt}{TO BE CHECKED !!!!}
+
+\item{verbose}{\code{logical} if TRUE, extended processing information is sent to the console in the
+form of messages}
 }
 \value{
-OUTPUT_DESCRIPTION
+object of class \code{raster} (if to_file == FALSE), or \code{character} string corresponding to
+the filename of the created raster (if to_file == TRUE)
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
+Masks a raster file or object on the basis of a vector file or object. Pixels not
+covered by the vector features are set to NoData. If the input raster is multi-band, the
+mask is automatically applied to all bands. An optional buffer can be applied to the input
+vector to allow a more "lenient" masking, or to remove also the borders of the vector.
 }
 \examples{
 \dontrun{
 libray(sprawl)
+libray(sprawl.data)
 library(raster)
-in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl"), stringsAsFactors = T)
-in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl"))[[1]]
+in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
+                       stringsAsFactors = T)
+in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl.data"))[[1]]
 in_polys <- sf::st_transform(in_polys, proj4string(in_rast))
 masked   <- mask_rast(in_rast, in_polys, verbose = FALSE)
 par(mfrow=c(1,2))
@@ -41,5 +60,5 @@ plot(masked)
 }
 }
 \author{
-Lorenzo Busetto \href{mailto:lbusett@gmnail.com}{lbusett@gmnail.com} \link{aut}
+Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }

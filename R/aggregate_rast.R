@@ -2,15 +2,16 @@
 #' @description Function used to extract values of a single- or multi- band raster for pixels
 #' corresponding to the features of a vector (Polygon, Point or Line)
 #' @param in_rast_values PARAM_DESCRIPTION
-#' @param in_obj_zones PARAM_DESCRIPTION
+#' @param zones_rast PARAM_DESCRIPTION
 #' @param FUN PARAM_DESCRIPTION, Default: mean
+#' @param maxchunk PARAM_DESCRIPTION, Default: 5e+07
 #' @param method PARAM_DESCRIPTION, Default: 'fastdisk'
 #' @param to_file PARAM_DESCRIPTION, Default: FALSE
 #' @param out_file PARAM_DESCRIPTION, Default: NULL
+#' @param nodata_out PARAM_DESCRIPTION, Default: NA
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @author Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -18,19 +19,29 @@
 #'  }
 #' }
 #' @seealso
+#'  \code{\link[data.table]{data.table}}
+
+#'  \code{\link[raster]{raster}},\code{\link[raster]{writeRaster}},\code{\link[raster]{rasterize}}
+
+#'  \code{\link[sf]{st_crs}},\code{\link[sf]{st_transform}},\code{\link[sf]{st_bbox}},\code{\link[sf]{st_coordinates}},\code{\link[sf]{st_centroid}},\code{\link[sf]{st_as_sf}},\code{\link[sf]{st_set_crs}}
+
 #'  \code{\link[sp]{proj4string}}
 #' @rdname aggregate_rast
 #' @export
-#' @importFrom raster writeRaster rasterize raster
-#' @importFrom sf st_set_crs st_transform st_crs st_coordinates st_centroid st_as_sf
+#' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
+#' @importFrom data.table data.table
+#' @importFrom raster raster writeRaster rasterize
+#' @importFrom sf st_crs st_transform st_bbox st_coordinates st_centroid st_as_sf st_set_crs
 #' @importFrom sp proj4string
 
 aggregate_rast <- function(in_rast_values,
-                           in_obj_zones,
+                           zones_rast,
                            FUN      = mean,
+                           maxchunk = 50E6,
                            method   = "fastdisk",
                            to_file  = FALSE,
                            out_file = NULL,
+                           nodata_out = NA,
                            verbose  = TRUE ){
 
   #   ____________________________________________________________________________
@@ -38,28 +49,32 @@ aggregate_rast <- function(in_rast_values,
 
   if (verbose) message("aggregate_raster --> Checking Arguments")
 
-
   #   ____________________________________________________________________________
   #   Compute aggregated values using `sprawl::extract_rast` or               ####
   #   `sprawl::comp_zonestats`
-  if (verbose) message("aggregate_raster --> Creating Fishnet on in_obj_zones")
+  if (verbose) message("aggregate_raster --> Creating Fishnet on zones_rast")
 
-  in_fish <- create_fishnet(in_obj_zones,
-                                 cellsize = res(in_obj_zones)[1]) %>%
-    sf::st_set_crs(sp::proj4string(in_obj_zones))
+  in_fish <- create_fishnet(zones_rast,
+                                 cellsize = res(zones_rast)[1])
   if (verbose) message("aggregate_raster --> Aggregating values of in_rast_values on
-                      cells of in_obj_zones")
+                      cells of zones_rast")
 
   agg_values   <- extract_rast(in_rast_values,
                                in_fish,
                                full_data = FALSE,
                                verbose   = verbose,
                                mode      = "std",
+                               maxchunk  = maxchunk,
                                FUN       = FUN,
-                               maxchunk  = 7E7,
-                               id_field  = "id")$stats
+                               id_field  = "cell_id")$stats
+  # if (!is.na(nodata_out)) {
+    where_na <- which(is.na(agg_values$myfun))
+    agg_values$myfun[where_na] <- nodata_out
+  # } else {
+    # agg_values$myfun[where_na] <- NA
+  # }
 
-  if (sf::st_crs(agg_values) != sf::st_crs(in_obj_zones)) {
+  if (sf::st_crs(agg_values) != sf::st_crs(in_fish)) {
     agg_values <- sf::st_transform(agg_values, sf::st_crs(in_fish))
   }
 
@@ -77,14 +92,25 @@ aggregate_rast <- function(in_rast_values,
   if (method == "fastdisk") {
     tempshape  <- tempfile(fileext = ".shp")
 
-    raster(in_obj_zones) %>%
-      raster::writeRaster(filename = tempraster, overwrite = TRUE)
-    # file.copy(in_obj_zones, tempraster, overwrite = T)
+    if (is.na(nodata_out)) {
+      raster::raster(zones_rast) %>%
+        raster::writeRaster(filename = tempraster,
+                            overwrite = TRUE)
+    } else {
+      raster::raster(zones_rast) %>%
+        raster::writeRaster(filename = tempraster,
+                            overwrite = TRUE, NAflag = nodata_out)
+    }
+
     write_shape(agg_values,tempshape, overwrite = T)
     rasterize_string <- paste("-a myfun",
-                              # "-tr ", paste(res(in_obj_zones), collapse = " "),
+                              "-tr ", paste(res(zones_rast), collapse = " "),
+                              "-te ", paste(sf::st_bbox(in_fish), collapse = " "),
                               # "-co COMPRESS=DEFLATE",
                               # "-co PREDICTOR=3",
+                              #"-init ", nodata_out,
+                              ifelse(!is.na(nodata_out), paste0("-a_nodata ", nodata_out),
+                                     paste0("-a_nodata NoData")),
                               tempshape,
                               tempraster)
     system2("gdal_rasterize", args = rasterize_string, stdout = NULL)
@@ -99,11 +125,17 @@ aggregate_rast <- function(in_rast_values,
                              list(X = est[,1], Y = est[,2], Z = myfun)}
                              ]   %>%
       sf::st_as_sf(coords = c("X","Y")) %>%
-      sf::st_set_crs(sf::st_crs(in_obj_zones)) %>%
+      sf::st_set_crs(sp::proj4string(zones_rast)) %>%
       as("Spatial")
-    out_rast <- raster::rasterize(out, in_obj_zones, field = "Z")
+    # browser()
+    out_rast <- raster::rasterize(out, zones_rast, field = "Z")
     if (to_file) {
-      writeRaster(out_rast, tempraster, options = c("COMPRESS=DEFLATE", "PREDICTOR=3"), overwrite = TRUE)
+
+      writeRaster(out_rast,
+                  tempraster,
+                  options = c("COMPRESS=DEFLATE"),
+                  overwrite = TRUE,
+                  NAflag = nodata_out)
     }
   }
   if (to_file) {
@@ -120,7 +152,7 @@ aggregate_rast <- function(in_rast_values,
 
 # inrast <- raster::raster("/home/lb/projects/ermes/datasets/rs_products/MODIS/IT/LAI_8Days_500m_v6/LAI_masked/MOD15A2H_Lai_2003_001.tif")
 # in_rast_values <- raster::raster("/home/lb/Temp/buttami/MOD15/Italy_mask_ARABLE.tif")
-# in_obj_zones   <- readshape("/home/lb/Temp/buttami/MOD15/grid_500.shp")
+# zones_rast   <- readshape("/home/lb/Temp/buttami/MOD15/grid_500.shp")
 # FUN = mean
 
 #   in_maskfile <- "/home/lb/projects/ermes/datasets/rs_products/RICE_map/Gambia/Delivery/Classification2016_Geographic"

@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>reclass_rast � reclass_rast • sprawl</title>
+<title>reclassify values of a raster — reclass_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -39,7 +39,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -55,44 +55,19 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
+  <a href="../articles/sprawl.html">Getting Started</a>
+</li>
+<li>
   <a href="../reference/index.html">Function Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples of Use
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Raster Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article A</a>
-    </li>
-    <li>
-      <a href="../articles/tet_1.html">Article B</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Vector Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Visualization</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Other</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-  </ul>
+<li>
+  <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
   <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
-  <a href="../articles/tet_1.html">Contributing</a>
+  <a href="../articles/contributing.html">Contributing</a>
 </li>
       </ul>
       
@@ -114,14 +89,17 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>reclass_rast</h1>
+    <h1>reclassify values of a raster</h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>function to reclassify values of a raster object or raster file based on a
+reclassification matrix which specifies which value in the output should be taken by different
+<strong>intervals</strong> of values of the input raster (simple wrapper for the
+raster::reclassify function, providing a (somehow) easier and extended I/O functionality)</p>
     
 
-    <pre class="usage"><span class='fu'>reclass_rast</span>(<span class='no'>in_rast</span>, <span class='no'>rcl_mat</span>, <span class='kw'>out_rast</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>r_out</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+    <pre class="usage"><span class='fu'>reclass_rast</span>(<span class='no'>in_rast</span>, <span class='no'>reclass_matrix</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_rast</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -132,29 +110,22 @@
       <td><p>Input raster file or "R" raster layer to be reclassified</p></td>
     </tr>
     <tr>
-      <th>rcl_mat</th>
+      <th>reclass_matrix</th>
       <td><p><code>data.frame</code> 3 column data frame with column names equal to <code>start</code>, <code>end</code> and <code>new</code>
 Each line specifies an intervals of values in the original raster and the value they will
-assume in the output. Can be created for example as follows:
-rcl_mat &lt;- tibble::tribble(
-~start, ~end, ~new,
-0,   0,   NA,   # --&gt; 0 in input goes to NA in output
-1,   4,   1,    # --&gt; values from 1 to 4 (excluded) go to 1 in output
-...,  ..., ...,
-...,  ..., ...,
-9,  11,   0,   # --&gt; values from 9 to 11 (excluded) go to 0 in output
-11, 100, NA)   # --&gt; everything equal/above 11 go to NA in output
-
-<strong>IMPORTANT ! Intervals are CLOSED on THE LEFT and OPEN ON THE RIGHT !</strong> - see examples !!!! -</p></td>
+assume in the output. See Details.   <strong>IMPORTANT !</strong> Intervals in <code>reclass_matrix</code> will be considered
+as <strong>CLOSED on THE LEFT and OPEN ON THE RIGHT !</strong> - see examples !!!! -</p></td>
+    </tr>
+    <tr>
+      <th>to_file</th>
+      <td><p><code>logical</code> If TRUE, the reclassified raster is saved to a tiff file and its
+name is returned to the caller, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>out_rast</th>
-      <td><p><code>character</code> Name of the output raster file. If NULL, a temporary raster is created
+      <td><p><code>character</code> Name of the output raster file. If NULL and to_file == TRUE ,
+the raster is saved to a file in the <code>R</code> temporary folder
 in "R" tempdir(), Default: NULL</p></td>
-    </tr>
-    <tr>
-      <th>r_out</th>
-      <td><p><code>logical</code> If TRUE, the reclassified raster is returned to the caller, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
@@ -165,15 +136,30 @@ Default: FALSE</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>if (r_out == TRUE), "R" <code>raster</code> object corresponding to the reclassified raster,
-otherwise  the name of the file where it was saved (either corresponfing to <code>out_rast</code> or to the
-name of thetemporary file created (if <code>out_rast == NULL</code>))</p>
+    
+<ul>
+<li><p>if to_file == FALSE:  <code>*raster</code> corresponding to the reclassified raster</p></li>
+<li><p>if to_file == TRUE: name of the file where it was saved (either corresponfing to <code>out_rast</code>
+or to the name of the temporary file created (if <code>out_rast == NULL</code>))</p></li>
+</ul>
+
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>reclass_rast</p>
-<p>this is a simple wrapper for the <a href='http://www.rdocumentation.org/packages/raster/topics/reclassify'>raster::reclassify</a> function, providing somehow easier
-use and extended I/O functionality</p>
+    <p>reclass_rast
+    <code>reclass_matrix</code> must be a 3-columns <code>data.frame</code> (or similar), including the <code>start</code>, <code>end</code> and
+<code>new</code> columns. It can be easily created by, for example:</p><pre>reclass_matrix &lt;- tribble(~start, ~end, ~new,
+                               0,    1,   NA, # values &gt;=0 and &lt; 1 will be set to NA
+                               1,    5,   1,  # values &gt;=1 and &lt; 5 will be set to 1
+                               5,    7,   2,  # values &gt;=5 and &lt; 7 will be set to 2
+                             ...,  ..., ...,
+                             ...,  ..., ...,
+                              11, 100, NA)   # values &gt;=11 and &lt; 100 will be set to NA
+</pre>
+    <p>, or:</p><pre>reclass_matrix &lt;- data.frame(start = c(0,  1, 5, ..., ..., 11),
+                             end   = c(1,  5, 7, ..., ..., 100),
+                             new   = c(NA, 1, 2, ..., ..., NA)
+</pre>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -188,7 +174,7 @@ use and extended I/O functionality</p>
 <span class='no'>in_mask</span> <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='no'>in_maskfile</span>)
 <span class='co'># setup the reclassification matrix</span>
 
- <span class='no'>rcl_mat</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/tribble'>tribble</a></span>(
+ <span class='no'>reclass_matrix</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/tribble'>tribble</a></span>(
                 ~<span class='no'>start</span>, ~<span class='no'>end</span>, ~<span class='no'>new</span>,
                      <span class='fl'>0</span>,   <span class='fl'>0</span>,   <span class='fl'>NA</span>,
                      <span class='fl'>1</span>,   <span class='fl'>5</span>,   <span class='fl'>0</span>,
@@ -199,7 +185,7 @@ use and extended I/O functionality</p>
 
 <span class='no'>reclass_file</span> <span class='kw'>=</span> <span class='st'>"/home/lb/Temp/buttami/pippo_reclass.tif"</span>
 <span class='no'>outmask</span> <span class='kw'>=</span> <span class='fu'>reclass_rast</span>(<span class='no'>in_rast</span>,
-                       <span class='no'>rcl_mat</span>,
+                       <span class='no'>reclass_matrix</span>,
                        <span class='kw'>r_out</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>plot</span>(<span class='no'>outmask</span>)
 <span class='co'># }</span></pre>

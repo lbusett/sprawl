@@ -1,10 +1,10 @@
 title: sprawl
 template:
   params:
-    bootswatch: cerulean
+    bootswatch: united
 reference:
   - title: Reading/writing spatial data
-    desc: chissacose non lo so vediamo....
+    desc: ~
     contents:
       - '`read_shape`'
       - '`write_shape`'
@@ -15,12 +15,17 @@ reference:
       - '`reclass_rast`'
       - '`aggregate_rast`'
       - '`mask_rast`'
+      - '`cuttails_rast`'
   - title: Vector processing
     desc: ~
     contents:
       - '`dissolve_shape`'
       - '`create_fishnet`'
       - '`crop_vect`'
+  - title: Visualization and plotting
+    desc: ~
+    contents:
+      - '`plot_rast`'
   - title: Data fetching from public repositories
     desc: ~
     contents:
@@ -37,35 +42,20 @@ reference:
     params:
      - highlight: tango
 navbar:
-  type: default
+  type: inverse
   left:
     - text: "Home"
       href: index.html
+    - text: "Getting Started"
+      href: articles/sprawl.html
     - text: "Function Reference"
       href: reference/index.html
     - text: "Examples of Use"
-      menu:
-        - text: "Raster Processing"
-        - text: "Article A"
-          href: articles/tet_1.html
-        - text: "Article B"
-          href: articles/tet_1.html
-        - text: "---------"
-        - text: "Vector Processing"
-        - text: "Article C"
-          href: articles/tet_1.html
-        - text: "---------"
-        - text: "Visualization"
-        - text: "Article C"
-          href: articles/tet_1.html
-        - text: "---------"
-        - text: "Other"
-        - text: "Article C"
-          href: articles/tet_1.html
+      href: articles/examples.html
     - text: "FAQ"
       href: articles/faq.html
     - text: "Contributing"
-      href: articles/tet_1.html
+      href: articles/contributing.html
   right:
     - icon: fa-github fa-lg
       href: https://github.com/IREA-CNR-MI/sprawl/

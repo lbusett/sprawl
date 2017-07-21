@@ -8,7 +8,7 @@
     -   [Citation](#citation)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Travis-CI Build Status](https://travis-ci.org/IREA-CNR-MI/sprawl.svg?branch=master)](https://travis-ci.org/IREA-CNR-MI/sprawl) [![codecov](https://codecov.io/gh/IREA-CNR-MI/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/IREA-CNR-MI/sprawl) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![Travis-CI Build Status](https://travis-ci.org/IREA-CNR-MI/sprawl.svg?branch=master)](https://travis-ci.org/IREA-CNR-MI/sprawl) [![codecov](https://codecov.io/gh/IREA-CNR-MI/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/IREA-CNR-MI/sprawl)
 
 sprawl - Spatial Processing (in) R: Amorphous Wrapper Library
 =============================================================
@@ -29,7 +29,7 @@ The aforementioned objectives are accomplished in `sprawl` by:
 
 1.  Providing simple **wrappers to common-use functions** for reading/writing spatial data (e.g., `readvec` and `writevec` to read/write vector files from/to disk);
 2.  Providing **optimized functions for performing some common-use processing tasks**, often exploiting functions provided by less-known packages (e.g., `maskraster`);
-3.  Providing custom functions for performing more complex processing tasks (e.g., `comp_zonal`) involving the use of different functions and/or packages;
+3.  Providing custom functions for performing more complex processing tasks (e.g., `extract_rast`) involving the use of different functions and/or packages;
 4.  Optimizing code execution speed by providing under-the-hood support for multi-core processing using for example `foreach` looping and `raster::MakeCluster` functionality;
 5.  Simplifying access/further analysis of results, by carefully formatting processing outputs to easy to understand and use `R` objects.
 
@@ -65,3 +65,7 @@ Citation
 To cite package `sprawl` in publications use:
 
 Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amorphous Wrapper Library. R package version 0.1.0.9000.
+
+### Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.

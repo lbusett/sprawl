@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>sprawl: Spatial Processing (in) R: Advanced Workflows Library • sprawl</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="container template-vignette">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -33,44 +33,19 @@
   <a href="../index.html">Home</a>
 </li>
 <li>
+  <a href="../articles/sprawl.html">Getting Started</a>
+</li>
+<li>
   <a href="../reference/index.html">Function Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Examples of Use
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li class="dropdown-header">Raster Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article A</a>
-    </li>
-    <li>
-      <a href="../articles/tet_1.html">Article B</a>
-    </li>
-    <li class="divider">
-    <li class="dropdown-header">Vector Processing</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider">
-    <li class="dropdown-header">Visualization</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-    <li class="divider">
-    <li class="dropdown-header">Other</li>
-    <li>
-      <a href="../articles/tet_1.html">Article C</a>
-    </li>
-  </ul>
+<li>
+  <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
   <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
-  <a href="../articles/tet_1.html">Contributing</a>
+  <a href="../articles/contributing.html">Contributing</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -95,17 +70,14 @@
       <h1>sprawl: Spatial Processing (in) R: Advanced Workflows Library</h1>
                         <h4 class="author">Lorenzo Busetto</h4>
             
-            <h4 class="date">2017-07-16</h4>
+            <h4 class="date">2017-07-21</h4>
           </div>
 
     
     
 <div class="contents">
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<p><a href="https://travis-ci.org/IREA-CNR-MI/sprawl"><img src="https://travis-ci.org/IREA-CNR-MI/sprawl.svg?branch=master" alt="Travis-CI Build Status"></a> <a href="https://codecov.io/gh/IREA-CNR-MI/sprawl"><img src="https://codecov.io/gh/IREA-CNR-MI/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7" alt="codecov"></a> <a href="http://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3"></a></p>
-<div id="sprawl---spatial-processing-in-r-amorphous-wrapper-library" class="section level1">
-<h1 class="hasAnchor">
-<a href="#sprawl---spatial-processing-in-r-amorphous-wrapper-library" class="anchor"></a>sprawl - Spatial Processing (in) R: Amorphous Wrapper Library</h1>
+<p><a href="https://travis-ci.org/lbusett/sprawl"><img src="https://travis-ci.org/lbusett/sprawl.svg?branch=master" alt="Travis-CI Build Status"></a> <a href="https://codecov.io/gh/lbusett/sprawl"><img src="https://codecov.io/gh/lbusett/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7" alt="codecov"></a></p>
 <div id="intro-and-rationale" class="section level2">
 <h2 class="hasAnchor">
 <a href="#intro-and-rationale" class="anchor"></a>Intro and rationale</h2>
@@ -132,23 +104,23 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install sprawl from git-hub with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/sprawl"</span>)</code></pre></div>
+devtools::<span class="kw">install_github</span>(<span class="st">"lbusett/sprawl"</span>)</code></pre></div>
 <p>Note that, given its scope, <code>sprawl</code> imports functions from several other packages, which need to be installed in your system. Since some of those have quite specific System Requirements, it’s possible that you’ll struggle a bit in installation due to unresolved dependencies. In that case, please have a look at the installation error messages to see which package has problems in installation and try to install it beforehand (consulting its specific CRAN pages or doing a stackoverflow search may help !).</p>
 </div>
 <div id="function-documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#function-documentation" class="anchor"></a>Function Documentation</h2>
-<p>The main functions available in <code>sprawl</code> are documented <a href="https://irea-cnr-mi.github.io/sprawl/reference/index.html">here</a>, along with simple usage examples.</p>
+<p>The main functions available in <code>sprawl</code> are documented <a href="https://lbusett.github.io/sprawl/reference/index.html">here</a>, along with simple usage examples.</p>
 </div>
 <div id="examples-of-use" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples-of-use" class="anchor"></a>Examples of use</h2>
-<p>Worked-out examples of the more comlex <code>sprawl</code> functions and workflows can be found <a href="https://irea-cnr-mi.github.io/sprawl/Examples/index.html">here</a></p>
+<p>Worked-out examples of the more comlex <code>sprawl</code> functions and workflows can be found <a href="https://lbusett.github.io/sprawl/Examples/index.html">here</a></p>
 </div>
 <div id="contributing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contributing" class="anchor"></a>Contributing</h2>
-<p>We are open for contributions/help in improving <code>sprawl</code> and extend its functionalities. If you have a suggestion, you can report it in our <a href="https://github.com/IREA-CNR-MI/sprawl/issues">issues</a> page, or fork the repository and then make a pull request. (note that we plan to provide some “good-practices” instructions for contributing new functions in the future.)</p>
+<p>We are open for contributions/help in improving <code>sprawl</code> and extend its functionalities. If you have a suggestion, you can report it in our <a href="https://github.com/lbusett/sprawl/issues">issues</a> page, or fork the repository and then make a pull request. (note that we plan to provide some “good-practices” instructions for contributing new functions in the future.)</p>
 </div>
 <div id="authors" class="section level2">
 <h2 class="hasAnchor">
@@ -162,7 +134,6 @@ devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/s
 <p>Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amorphous Wrapper Library. R package version 0.1.0.9000.</p>
 </div>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -170,8 +141,6 @@ devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/s
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li>
-<a href="#sprawl---spatial-processing-in-r-amorphous-wrapper-library">sprawl - Spatial Processing (in) R: Amorphous Wrapper Library</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#intro-and-rationale">Intro and rationale</a></li>
       <li><a href="#package-philosophy">Package philosophy</a></li>
       <li><a href="#installation">Installation</a></li>
@@ -180,8 +149,6 @@ devtools::<span class="kw">install_github</span>(<span class="st">"IREA-CNR-MI/s
       <li><a href="#contributing">Contributing</a></li>
       <li><a href="#authors">Authors</a></li>
       <li><a href="#citation">Citation</a></li>
-      </ul>
-</li>
       </ul>
 </div>
       </div>
