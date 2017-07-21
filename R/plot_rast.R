@@ -1,20 +1,29 @@
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
-#' @param in_rast PARAM_DESCRIPTION
+#' @param in_rast Input raster object or file
 #' @param band PARAM_DESCRIPTION, Default: 1
-#' @param in_poly PARAM_DESCRIPTION, Default: NULL
-#' @param in_points PARAM_DESCRIPTION, Default: NULL
-#' @param background PARAM_DESCRIPTION, Default: FALSE
-#' @param limits PARAM_DESCRIPTION, Default: NULL
-#' @param tails PARAM_DESCRIPTION, Default: c(0.01, 0.99)
-#' @param palette PARAM_DESCRIPTION, Default: 'RdYlGn'
-#' @param legend_type PARAM_DESCRIPTION, Default: 'standard'
-#' @param col_outlow PARAM_DESCRIPTION, Default: 'gray10'
-#' @param col_outhigh PARAM_DESCRIPTION, Default: 'gray90'
-#' @param maxpixels PARAM_DESCRIPTION, Default: 1e+05
-#' @param title PARAM_DESCRIPTION, Default: 'Raster Plot'
-#' @param plot_now PARAM_DESCRIPTION, Default: TRUE
-#' @param ... PARAM_DESCRIPTION
+#' @param in_poly optional input polygon vector object or file to be overlayed on the
+#'   plot, Default: NULL
+#' @param in_points optional input points vector object or file to be overlayed on the
+#'   plot, Default: NULL
+#' @param background not used, Default: FALSE
+#' @param limits `numeric array [2]` optional limits governing the range of values to be plotted
+#'   (e.g., c(0.2,0.4)), Default: NULL
+#' @param tails `numeric array [2]` percentiles used to "cut" the values to be plotted to allow
+#'   a "good" representation. Values outside the specified percentiles will be plotted as NoData,
+#'   or using the colors specified in `col_outlow` and `col_outhigh`, Default: c(0.02, 0.98) (meaning)
+#'   cutting the values at the 2nd and 98th percentile)
+#' @param palette Palette to be used for colors (see [`RColorBrewer::brewer.pal`]), Default: 'RdYlGn'
+#' @param legend_type "standard" or "custom" (see ecamples), Default: 'standard'
+#' @param col_outlow Color used to plot the values below the lower limit/tail. Can be a string
+#'   corresponding to a valid "R" color or HEX representation, Default: 'gray10'
+#' @param col_outhigh Color used to plot the values below the lower limit/tail. Can be a string
+#'   corresponding to a valid "R" color or HEX representation, Default: 'gray90'
+#' @param maxpixels `numeric` Maximum number of pixels to be plotted, Default: 5e+05
+#' @param title `character` Title for the plot, Default: 'Raster Plot'
+#' @param plot_now `logic` If TRUE, the plot is immediately printed to screen. Otherwise, an object
+#'   allowing later plotting/modifications is returned, Default: TRUE
+#' @param ... Any other arguments (?)
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -23,19 +32,23 @@
 #'  library(sprawl)
 #'
 #'  in_rast <- system.file("extdata", "gNDVI.tif", package = "sprawl.data")
-#'  in_poly <- create_fishnet(in_rast, pix_for_cell = 150)
+#'  in_vect <- create_fishnet(in_rast, pix_for_cell = 150)
 
-#'  #'  # plot only the raster
-#'  plot_rast(in_rast, in_poly = in_poly)
+#'  # plot only the raster
+#'  plot_rast(in_rast)
 #'
-#'  # add a polygon and change the legend
+#'  # plot only the raster with custom legend
+#'  plot_rast(in_rast, legend = "custom")
+#'
+#'  # add a polygon and change the legend, palette and maxpixels
 
 #'  plot_rast(in_rast,
 #'            in_poly   = in_vect,
 #'            tails     = c(0.1, 0.99),
-#'            legend    = "standard",
+#'            legend    = "custom",
 #'            palette   = "RdYlBu" ,
-#'            maxpixels = 1e5)
+#'            title     = "RapidEye - GNDVI",
+#'            maxpixels = 10e5)
 #'  }
 #' }
 #' @seealso
@@ -46,6 +59,7 @@
 #'  \code{\link[rasterVis]{levelplot}}
 
 #'  \code{\link[RColorBrewer]{brewer.pal}}
+#' @author Lorenzo Busetto, PhD (2017), email: <lbusett@gmail.com>
 #' @rdname plot_rast
 #' @export
 #' @importFrom latticeExtra layer
@@ -64,7 +78,7 @@ plot_rast <- function(in_rast,
                       legend_type = "standard",
                       col_outlow  = "gray10",
                       col_outhigh = "gray90",
-                      maxpixels   = 1E5,
+                      maxpixels   = 5e5,
                       title       = "Raster Plot",
                       plot_now    = TRUE,
                       ...) {
@@ -111,14 +125,16 @@ plot_rast <- function(in_rast,
   case_identifier <- 0
   if (!is.null(in_poly)) {
     # invisible(in_poly)
-    polyplot  <- latticeExtra::layer(sp::sp.polygons(as(in_poly, "Spatial")))
+    polys <- as(in_poly, "Spatial")
+    polyplot  <- latticeExtra::layer(sp::sp.polygons(x), data = list(x = polys))
     case_identifier <- case_identifier + 10
   } else {
     polyplot <- NULL
   }
 
   if (!is.null(in_points)) {
-    pointplot <- latticeExtra::layer(sp::sp.points(as(in_points, "Spatial")))
+    polys <- as(in_points, "Spatial")
+    pointplot <- latticeExtra::layer(sp::sp.points(x), data = list(x = polys))
     case_identifier <- case_identifier + 100
   } else {
     pointplot <- NULL

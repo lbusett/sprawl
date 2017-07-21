@@ -7,39 +7,48 @@
 plot_rast(in_rast, band = 1, in_poly = NULL, in_points = NULL,
   background = FALSE, limits = NULL, tails = c(0.02, 0.98),
   palette = "RdYlGn", legend_type = "standard", col_outlow = "gray10",
-  col_outhigh = "gray90", maxpixels = 1e+05, title = "Raster Plot",
+  col_outhigh = "gray90", maxpixels = 5e+05, title = "Raster Plot",
   plot_now = TRUE, ...)
 }
 \arguments{
-\item{in_rast}{PARAM_DESCRIPTION}
+\item{in_rast}{Input raster object or file}
 
 \item{band}{PARAM_DESCRIPTION, Default: 1}
 
-\item{in_poly}{PARAM_DESCRIPTION, Default: NULL}
+\item{in_poly}{optional input polygon vector object or file to be overlayed on the
+plot, Default: NULL}
 
-\item{in_points}{PARAM_DESCRIPTION, Default: NULL}
+\item{in_points}{optional input points vector object or file to be overlayed on the
+plot, Default: NULL}
 
-\item{background}{PARAM_DESCRIPTION, Default: FALSE}
+\item{background}{not used, Default: FALSE}
 
-\item{limits}{PARAM_DESCRIPTION, Default: NULL}
+\item{limits}{\code{numeric array [2]} optional limits governing the range of values to be plotted
+(e.g., c(0.2,0.4)), Default: NULL}
 
-\item{tails}{PARAM_DESCRIPTION, Default: c(0.01, 0.99)}
+\item{tails}{\code{numeric array [2]} percentiles used to "cut" the values to be plotted to allow
+a "good" representation. Values outside the specified percentiles will be plotted as NoData,
+or using the colors specified in \code{col_outlow} and \code{col_outhigh}, Default: c(0.02, 0.98) (meaning)
+cutting the values at the 2nd and 98th percentile)}
 
-\item{palette}{PARAM_DESCRIPTION, Default: 'RdYlGn'}
+\item{palette}{Palette to be used for colors (see \code{\link[RColorBrewer:brewer.pal]{RColorBrewer::brewer.pal}}), Default: 'RdYlGn'}
 
-\item{legend_type}{PARAM_DESCRIPTION, Default: 'standard'}
+\item{legend_type}{"standard" or "custom" (see ecamples), Default: 'standard'}
 
-\item{col_outlow}{PARAM_DESCRIPTION, Default: 'gray10'}
+\item{col_outlow}{Color used to plot the values below the lower limit/tail. Can be a string
+corresponding to a valid "R" color or HEX representation, Default: 'gray10'}
 
-\item{col_outhigh}{PARAM_DESCRIPTION, Default: 'gray90'}
+\item{col_outhigh}{Color used to plot the values below the lower limit/tail. Can be a string
+corresponding to a valid "R" color or HEX representation, Default: 'gray90'}
 
-\item{maxpixels}{PARAM_DESCRIPTION, Default: 1e+05}
+\item{maxpixels}{\code{numeric} Maximum number of pixels to be plotted, Default: 5e+05}
 
-\item{title}{PARAM_DESCRIPTION, Default: 'Raster Plot'}
+\item{title}{\code{character} Title for the plot, Default: 'Raster Plot'}
 
-\item{plot_now}{PARAM_DESCRIPTION, Default: TRUE}
+\item{plot_now}{\code{logic} If TRUE, the plot is immediately printed to screen. Otherwise, an object
+allowing later plotting/modifications is returned, Default: TRUE}
 
-\item{...}{PARAM_DESCRIPTION}
+\item{...}{Any other arguments (?)}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -56,17 +65,21 @@ if(interactive()){
  library(sprawl)
 
  in_rast <- system.file("extdata", "gNDVI.tif", package = "sprawl.data")
- in_poly <- create_fishnet(in_rast, pix_for_cell = 150)
- #'  # plot only the raster
- plot_rast(in_rast, in_poly = in_poly)
+ in_vect <- create_fishnet(in_rast, pix_for_cell = 150)
+ # plot only the raster
+ plot_rast(in_rast)
 
- # add a polygon and change the legend
+ # plot only the raster with custom legend
+ plot_rast(in_rast, legend = "custom")
+
+ # add a polygon and change the legend, palette and maxpixels
  plot_rast(in_rast,
            in_poly   = in_vect,
            tails     = c(0.1, 0.99),
-           legend    = "standard",
+           legend    = "custom",
            palette   = "RdYlBu" ,
-           maxpixels = 1e5)
+           title     = "RapidEye - GNDVI",
+           maxpixels = 10e5)
  }
 }
 }
@@ -75,4 +88,7 @@ if(interactive()){
 \code{\link[raster]{stack}},\code{\link[raster]{quantile}}
 \code{\link[rasterVis]{levelplot}}
 \code{\link[RColorBrewer]{brewer.pal}}
+}
+\author{
+Lorenzo Busetto, PhD (2017), email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }
