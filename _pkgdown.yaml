@@ -56,6 +56,8 @@ navbar:
       href: articles/faq.html
     - text: "Contributing"
       href: articles/contributing.html
+    - text: "NEWS"
+      href: news/index.html
   right:
     - icon: fa-github fa-lg
       href: https://github.com/IREA-CNR-MI/sprawl/
