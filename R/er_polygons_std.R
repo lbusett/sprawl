@@ -182,8 +182,8 @@ er_polygons_std <- function(in_vect_zones,
   er_opts$ncores <- min(c(er_opts$ncores, (parallel::detectCores() - 2)), 8)
   if (n_selbands < er_opts$ncores) (er_opts$ncores <- n_selbands)
 
-  cl      <- parallel::makeCluster(er_opts$ncores, outfile = "")
-  # cl <- parallel::makeCluster(er_opts$ncores)
+  # cl      <- parallel::makeCluster(er_opts$ncores, outfile = "")
+  cl <- parallel::makeCluster(er_opts$ncores)
   doSNOW::registerDoSNOW(cl)
 
   # Initialize other variables and progress bar

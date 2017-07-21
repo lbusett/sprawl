@@ -4,7 +4,7 @@ testthat::test_that("check_spatype",{
   skip_on_travis()
   library(sprawl.data)
   # input is a raster file
-  testthat::expect_equal(check_spatype(system.file("extdata","testrast.tif", package = "sprawl.data")),
+  testthat::expect_equal(check_spatype(system.file("extdata","sprawl_EVItest.tif", package = "sprawl.data")),
                          "rastfile")
 
   # input is a shapefile
