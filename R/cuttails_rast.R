@@ -52,7 +52,7 @@ cuttails_rast <- function(in_rast,
     in_rast     <- raster::setValues(in_rast, band_values[,V1])
   }
   names(in_rast) <- names_or
-  return(raster::brick(in_rast))
+  return(raster::raster(in_rast))
 }
 
 

@@ -2,9 +2,6 @@ context("Raster aggregation")
 testthat::test_that("Test On raster aggregation", {
   # skip_on_cran()
   skip_on_travis()
-
-  library(raster)
-  library(dplyr)
   library(sprawl.data)
 
   in_rast_values <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))[[20]]

@@ -10,7 +10,7 @@ testthat::test_that("Test On raster masking", {
   # test both with same projection and differenrt projections between in_rast and mask_vect
   masked      <- mask_rast(in_rast, mask_vect, verbose = FALSE, crop = FALSE)
   expect_is(masked, "RasterLayer")
-  mask_vect   <- sf::st_transform(mask_vect, proj4string(in_rast))
+  mask_vect   <- sf::st_transform(mask_vect, sp::proj4string(in_rast))
   out         <- mask_rast(in_rast, mask_vect, verbose = FALSE)
   expect_is(out, "RasterLayer")
   expect_equal(masked, out)
@@ -23,17 +23,17 @@ testthat::test_that("Test On raster masking", {
   # Check for all zero on the difference of the two since sprawl::mask
   # keeps a bit more pixels
   sp_polys    <- mask_vect %>%
-    sf::st_transform(as.character(proj4string(in_rast))) %>%
+    sf::st_transform(as.character(sp::proj4string(in_rast))) %>%
     as("Spatial")
   out2        <- raster::mask(in_rast, sp_polys)
-  expect_equal(unique(getValues(out - out2)), c(NA, 0))
+  expect_equal(unique(raster::getValues(out - out2)), c(NA, 0))
 
   # both raster and mask are filenames - check if it works ----
-  mask_vect    <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
-  in_rast     <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
+  mask_vect <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+  in_rast   <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
   # check errors in input selbands
-  masked2      <- mask_rast(in_rast, mask_vect, verbose = FALSE)
+  masked2   <- mask_rast(in_rast, mask_vect, verbose = FALSE)
   expect_is(masked, "RasterLayer")
-  expect_equal(unique(getValues(masked - masked2)), c(NA, 0))
+  expect_equal(unique(raster::getValues(masked - masked2)), c(NA, 0))
 
 })

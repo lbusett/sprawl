@@ -24,15 +24,15 @@ library(sprawl.data)
 check_spatype(system.file("extdata","testrast.tif", package = "sprawl.data"))
 
 # input is a shapefile
-shp_file <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+shp_file             <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
 check_spatype(shp_file)
 
 # input is a `sp` object
-obj <- read_shape(shp_file, as_sp = TRUE)
+obj                  <- read_shape(shp_file, as_sp = TRUE)
 check_spatype(obj)
 
 # input is a `sf` object
-obj <- read_shape(shp_file)
+obj                  <- read_shape(shp_file)
 check_spatype(obj)
 }
 

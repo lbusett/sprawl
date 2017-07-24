@@ -41,7 +41,7 @@
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 #' @importFrom dplyr case_when
 #' @importFrom gdalUtils gdalsrsinfo
-#' @importFrom raster raster extent
+#' @importFrom raster raster extent writeRaster
 #' @importFrom sf st_buffer st_crs st_transform st_as_sf st_combine st_sf
 
 mask_rast <- function(in_rast,
@@ -66,7 +66,7 @@ mask_rast <- function(in_rast,
   if (ras_type != "rastobject") {
     stop("mask_rast --> `in_rast` must be a `*Raster` object or raster file name. Aborting !")
   }
-  rast_proj <- proj4string(in_rast)
+  rast_proj <- sp::proj4string(in_rast)
 
   # checks on mask_vect
   shp_type <- check_spatype(mask_vect)
@@ -84,7 +84,7 @@ mask_rast <- function(in_rast,
   if (shp_type == "vectfile") {
 
     if (is.null(buffer)) {
-# browser()
+      # browser()
       # If no buffer, fInd the projection info using `gdalsrsinfo`. Read and reproj if needed,
       # otherwise do nothing
       mask_proj <- gdalUtils::gdalsrsinfo(mask_vect, as.CRS = T)@projargs
@@ -166,11 +166,11 @@ mask_rast <- function(in_rast,
 
     if (in_rast[[1]]@file@name == "") {
       temprastfile <- tempfile(fileext = ".tif")
-      writeRaster(in_rast,
-                  filename  = temprastfile,
-                  options   = c("COMPRESS=DEFLATE"),
-                  overwrite = TRUE)
-      in_rast <- raster(temprastfile)
+      raster::writeRaster(in_rast,
+                          filename  = temprastfile,
+                          options   = c("COMPRESS=DEFLATE"),
+                          overwrite = TRUE)
+      in_rast <- raster::raster(temprastfile)
     }
 
     # find which bands of the original raster were "passed"
@@ -180,14 +180,13 @@ mask_rast <- function(in_rast,
     }
     bands = unlist(bands)
 
-    buildvrt_path   <- find_command("gdalbuildvrt")
     temp_vrt        <- tempfile(fileext = ".vrt")
     buildvrt_string <- paste("-te ", paste(te, collapse = " "),
                              paste(paste("-b ", bands), collapse = " "),
                              temp_vrt,
                              in_rast[[1]]@file@name)
 
-    system2(buildvrt_path, args = buildvrt_string, stdout = NULL)
+    system2(file.path(find_gdal(), "gdalbuildvrt"), args = buildvrt_string, stdout = NULL)
 
   } else {
     te <- raster::extent(in_rast)[c(1, 3, 2, 4)][] #- c(0, -res(in_rast)[1], res(in_rast)[1], 0)
@@ -195,25 +194,25 @@ mask_rast <- function(in_rast,
   #   ____________________________________________________________________________
   #   correct the extent for gdal_rasterize to get                            ####
   #   an identically sized output
-  te <- te - c(0, -res(in_rast)[1], res(in_rast)[1], 0)
+  te <- te - c(0, -raster::res(in_rast)[1], raster::res(in_rast)[1], 0)
   # te <- raster::extent(in_rast)[c(1, 3, 2, 4)][] - c(0, -res(in_rast)[1], res(in_rast)[1], 0)
 
   #   ____________________________________________________________________________
   #   Rasterize the mask shapefile                                            ####
 
-  rasterize_path   <- find_command("gdal_rasterize")
   temp_rastermask  <- tempfile(tmpdir = tempdir(), fileext = ".tif")
   rasterize_string <- paste("-at",
                             "-burn 1",
                             "-a_nodata", out_nodata,
                             "-te", paste(te, collapse = " "),
-                            "-tr", paste(res(in_rast), collapse = " "),
+                            "-tr", paste(raster::res(in_rast), collapse = " "),
                             "-ot Byte",
                             "-tap",
                             temp_shapefile,
                             temp_rastermask)
 
-  system2(rasterize_path, args = rasterize_string, stdout = NULL)
+  system2(file.path(find_gdal(), "gdal_rasterize"),
+          args = rasterize_string, stdout = NULL)
 
   #   ____________________________________________________________________________
   #   apply the mask by multiplying the input raster by the mask, for each    ####
@@ -229,7 +228,7 @@ mask_rast <- function(in_rast,
     if (is.null(out_rast)) {
       out_rast = tempfile(fileext = ".tif")
     }
-    writeRaster(masked_rast, out_rast,
+    raster::writeRaster(masked_rast, out_rast,
                 options = c("COMPRESS=DEFLATE"),
                 datatype = out_dt)
     masked_rast <- out_rast
