@@ -30,9 +30,11 @@ reference:
     desc: ~
     contents:
       - '`get_boundaries`'
-  - title: Miscellaneous
+  - title: Miscellaneous Helpers
     desc: ~
     contents:
+      - '`check_spatype`'
+      - '`get_projstring`'
       - '`doytodate`'
       - '`datetodoy`'
       - '`build_testraster`'

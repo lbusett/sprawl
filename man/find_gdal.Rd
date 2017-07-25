@@ -2,7 +2,7 @@
 % Please edit documentation in R/find_gdal.R
 \name{find_gdal}
 \alias{find_gdal}
-\title{FUNCTION_TITLE}
+\title{find gdal main folder}
 \usage{
 find_gdal()
 }

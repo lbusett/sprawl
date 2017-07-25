@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dissolve_shape — dissolve_shape • sprawl</title>
+<title>dissolve attributes of a vector — dissolve_shape • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,7 +92,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>dissolve_shape</h1>
+    <h1>dissolve attributes of a vector</h1>
     </div>
 
     
@@ -132,16 +132,19 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
  <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
  <span class='no'>indata</span>    <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
  <span class='no'>byvar</span>     <span class='kw'>&lt;-</span> <span class='st'>"category"</span>
  <span class='no'>out_shape</span> <span class='kw'>&lt;-</span> <span class='fu'>dissolve_shape</span>(<span class='no'>indata</span>, <span class='no'>byvar</span>)
  <span class='no'>out_shape</span>
- }
-<span class='co'># }</span></pre>
+ }</div><div class='output co'>#&gt; # A tibble: 3 x 5
+#&gt;   category       id  lc_type sup_catego       geometry
+#&gt;     &lt;fctr&gt;    &lt;chr&gt;    &lt;chr&gt;     &lt;fctr&gt;         &lt;list&gt;
+#&gt; 1 Cropland variable variable Vegetation &lt;dbl [18 x 2]&gt;
+#&gt; 2   Forest variable variable Vegetation &lt;dbl [12 x 2]&gt;
+#&gt; 3    Other variable variable      Other &lt;dbl [25 x 2]&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

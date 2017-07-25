@@ -2,9 +2,27 @@
 % Please edit documentation in R/check_spatype.R
 \name{check_spatype}
 \alias{check_spatype}
-\title{check_spatype}
+\alias{check_spatype.default}
+\alias{check_spatype.character}
+\alias{check_spatype.Raster}
+\alias{check_spatype.sf}
+\alias{check_spatype.sfc}
+\alias{check_spatype.Spatial}
+\title{check the "spatial type" of an object or file}
 \usage{
 check_spatype(object)
+
+\method{check_spatype}{default}(object)
+
+\method{check_spatype}{Spatial}(object)
+
+\method{check_spatype}{Raster}(object)
+
+\method{check_spatype}{sf}(object)
+
+\method{check_spatype}{sfc}(object)
+
+\method{check_spatype}{Spatial}(object)
 }
 \arguments{
 \item{object}{either a \code{R} object or a \code{character} string pointing to a vector or raster layer}

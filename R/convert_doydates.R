@@ -1,4 +1,4 @@
-#' @title FUNCTION_TITLE
+#' @title convert DOYs to dates
 #' @description Converts a doy (or array of doys) to date format. Year of origin has to be specified, to allow proper handling of leap years
 #' @param doys 'numeric array' DOYs to be converted.
 #' @param year 'numeric year to be used as basis.
@@ -41,7 +41,7 @@ doytodate = function(doys, year, verbose = TRUE){
   return(dates)
 }
 
-#' @title Convert dates to Day Of the Year
+#' @title Convert dates to DOYs
 #' @description Converts an array of `Date` (or cohercible to `Date`) values to DOY (Day Of the Year) values.
 #' @param dates array of dates to be converted. Class must be `Date` or character parsable to `Date`
 #' using [`as.Date`] (format "yyyy-mm-dd").

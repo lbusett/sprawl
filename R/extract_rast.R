@@ -1,4 +1,4 @@
-#' @title extract_rast
+#' @title extract raster values on features of a vector
 #' @description Function used to extract values of a single- or multi- band raster for pixels
 #' corresponding to the features of a vector (Polygon, Point or Line)
 #' @param in_rast input raster. Can be wither:

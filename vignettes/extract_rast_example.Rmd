@@ -30,13 +30,13 @@ input vector file containing the polygons (i.e., the ROIs) for which you want th
 
 ```{r extract_rast, echo=TRUE, message=FALSE, warning=FALSE}
 # Here I'm using test datasets accessed on the filesystem, but on common usage it would as 
-# simple as `in_polys <- read_shape("D:/mypath/myfolder/lc_polys.shp"")
+# simple as `in_polys <- read_vect("D:/mypath/myfolder/lc_polys.shp"")
 
 library(raster)
 library(sprawl)
 
 
-in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
+in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
 in_rast  <- stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
 
 ```
@@ -74,13 +74,13 @@ extracted_values <- extract_rast(in_rast, in_polys, id_field = "lc_type")
 - `extracted_values$alldata` contains the values for each extracted pixel, along with information extracted from the vector file. Additionally, the number of pixels extracted from each polygon is shown in the `N_PIX` column, and an identifier to each pixel in the `N` column 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-extracted_values$alldata
+head(extracted_values$alldata)
 ```
 
 -  `extracted_values$statdata` contains instead the statistics for each polygon and band. By default, average, standard deviation, minimum, maximum and median are computed (see the help of the function) 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-extracted_values$stats
+head(extracted_values$stats)
 ```
 
 These results can be easily used for performing further analysis or plotting (**coming soon !**)

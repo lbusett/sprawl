@@ -1,4 +1,4 @@
-#' @title crop_vect
+#' @title crop a vector on the extent of a different spatial file
 #' @description Function allowing to crop an input vector object or shapefile on the extent of a
 #' different spatial object. in_vect must be an *sp, *sf object or vector file, while in_obj should
 #' be a valid spatial object (sp, sf, vector file, raster or rasterfile)

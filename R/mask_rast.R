@@ -1,4 +1,4 @@
-#' @title Mask a raster file (or object) based on a vector file (or object)
+#' @title Mask a raster based on a vector
 #' @description Masks a raster file or object on the basis of a vector file or object. Pixels not
 #'   covered by the vector features are set to NoData. If the input raster is multi-band, the
 #'   mask is automatically applied to all bands. An optional buffer can be applied to the input

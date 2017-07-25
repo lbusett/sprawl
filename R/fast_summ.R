@@ -1,4 +1,4 @@
-#' @title fast_summ
+#' @title extract useful statistics from a data.table
 #' @description FUNCTION_DESCRIPTION
 #' @param in_data PARAM_DESCRIPTION
 #' @param var PARAM_DESCRIPTION

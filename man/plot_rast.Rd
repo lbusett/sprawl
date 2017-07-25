@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_rast.R
 \name{plot_rast}
 \alias{plot_rast}
-\title{FUNCTION_TITLE}
+\title{quick plot for a raster based on level_plot}
 \usage{
 plot_rast(in_rast, band = 1, in_poly = NULL, in_points = NULL,
   background = FALSE, limits = NULL, tails = c(0.02, 0.98),

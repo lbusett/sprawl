@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>download vecor of administrative boundaries — get_boundaries • sprawl</title>
+<title>return the proj4string of a spatial object or file — get_projstring • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,57 +92,67 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>download vecor of administrative boundaries</h1>
+    <h1>return the proj4string of a spatial object or file</h1>
     </div>
 
     
-    <p>function to download administrative boundaries data from the gadm archive, starting
-from a country name or ISO code, and the level of desired administrtive units</p>
+    <p>helper function used to extract the proj4string of "R" spatial objects
+or of raster or vector files</p>
     
 
-    <pre class="usage"><span class='fu'>get_boundaries</span>(<span class='no'>iso</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>makefold</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>get_projstring</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for character</span>
+<span class='fu'>get_projstring</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for Raster</span>
+<span class='fu'>get_projstring</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for sf</span>
+<span class='fu'>get_projstring</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for sfc</span>
+<span class='fu'>get_projstring</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for Spatial</span>
+<span class='fu'>get_projstring</span>(<span class='no'>object</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>iso</th>
-      <td><p><code>character</code> iso name or 2/3 digits code of the country</p></td>
-    </tr>
-    <tr>
-      <th>level</th>
-      <td><p><code>numeric</code> level of administrative units returned, default: 0 (Country Level)</p></td>
-    </tr>
-    <tr>
-      <th>path</th>
-      <td><p><code>character</code></p></td>
-    </tr>
-    <tr>
-      <th>makefold</th>
-      <td><p><code>character</code></p></td>
+      <th>object</th>
+      <td><p><code>character</code> corresponding to the name of a R object, or a filename
+(full path)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>SpatialPolygonsDataFrame containing the desired data</p>
+    <p><code>character</code> proj4string of the object or file</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>the function is a simple wrapper to the raster::getData function, with a-priori checks
-on country name or ISO code</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <p><code><a href='http://www.rdocumentation.org/packages/raster/topics/getData'>getData</a></code></p>
+    <p>DETAILS</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl</span>)
- <span class='fu'>library</span>(<span class='no'>sp</span>)
- <span class='no'>ita_boundaries</span> <span class='kw'>&lt;-</span> <span class='fu'>get_boundaries</span>(<span class='st'>"Italy"</span>, <span class='fl'>0</span>)
- <span class='no'>ita_region_boundaries</span> <span class='kw'>&lt;-</span> <span class='fu'>get_boundaries</span>(<span class='st'>"ITA"</span>, <span class='fl'>1</span>)
- <span class='fu'>plot</span>(<span class='no'>ita_region_boundaries</span>)</div><div class='img'><img src='get_boundaries-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='fu'>library</span>(<span class='no'>raster</span>)
+
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+ <span class='fu'>get_projstring</span>(<span class='no'>in_rast</span>)
+
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>in_rast</span>)
+ <span class='fu'>get_projstring</span>(<span class='no'>in_rast</span>)
+
+ <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+ <span class='fu'>get_projstring</span>(<span class='no'>in_vect</span>)
+
+ <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>)
+ <span class='fu'>get_projstring</span>(<span class='no'>in_vect</span>)
+
+ }</div><div class='output co'>#&gt; [1] "+proj=longlat +datum=WGS84 +no_defs"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -152,11 +162,13 @@ on country name or ISO code</p>
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
+
+    <h2>Author</h2>
+    
+Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

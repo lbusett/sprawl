@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_rast.R
 \name{extract_rast}
 \alias{extract_rast}
-\title{extract_rast}
+\title{extract raster values on features of a vector}
 \usage{
 extract_rast(in_rast, in_vect_zones, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,

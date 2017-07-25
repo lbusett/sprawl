@@ -1,6 +1,5 @@
-#' @title FUNCTION_TITLE
+#' @title find gdal main folder
 #' @description FUNCTION_DESCRIPTION
-
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples

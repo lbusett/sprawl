@@ -2,7 +2,7 @@
 % Please edit documentation in R/crop_vect.R
 \name{crop_vect}
 \alias{crop_vect}
-\title{crop_vect}
+\title{crop a vector on the extent of a different spatial file}
 \usage{
 crop_vect(in_vect, in_obj, to_file = FALSE, as_sp = FALSE)
 }

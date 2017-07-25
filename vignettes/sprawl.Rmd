@@ -41,7 +41,7 @@ In this context, **`sprawl` aims to simplify the execution of some "common" spat
 
 The aforementioned objectives are accomplished in `sprawl` by: 
 
-1. Providing simple **wrappers to common-use functions** for reading/writing spatial data and performing common-use operations (e.g., `read_shape` and `write_shape` to read/write vector files from/to disk); 
+1. Providing simple **wrappers to common-use functions** for reading/writing spatial data and performing common-use operations (e.g., `read_vect` and `write_shape` to read/write vector files from/to disk); 
 2. Providing **optimized functions for performing some frequently used processing tasks**, by using custom `sprawl` functions or exploiting functions provided by less-known packages (e.g., `mask_rast`, `extract_rast`));
 3. Optimizing **code execution speed** by providing under-the-hood support for multi-core processing using for example `foreach` looping along raster bands or `raster::MakeCluster` functionality;
 4. Providing **custom functions or workflows for performing more complex processing tasks**,involving the sequential application of different processing steps (e.g., `aggregate_rast`); 

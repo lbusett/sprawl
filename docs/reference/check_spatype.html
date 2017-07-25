@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>check_spatype — check_spatype • sprawl</title>
+<title>check the "spatial type" of an object or file — check_spatype • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,7 +92,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>check_spatype</h1>
+    <h1>check the "spatial type" of an object or file</h1>
     </div>
 
     
@@ -101,7 +101,25 @@ a <code>*Spatial</code> Object, a <code>sf</code> object, a R <code>raster</code
 or a file corresponding to a raster</p>
     
 
-    <pre class="usage"><span class='fu'>check_spatype</span>(<span class='no'>object</span>)</pre>
+    <pre class="usage"><span class='fu'>check_spatype</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>check_spatype</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for Spatial</span>
+<span class='fu'>check_spatype</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for Raster</span>
+<span class='fu'>check_spatype</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for sf</span>
+<span class='fu'>check_spatype</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for sfc</span>
+<span class='fu'>check_spatype</span>(<span class='no'>object</span>)
+
+<span class='co'># S3 method for Spatial</span>
+<span class='fu'>check_spatype</span>(<span class='no'>object</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -118,23 +136,18 @@ or a file corresponding to a raster</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
+    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 <span class='co'># input is a raster file</span>
-<span class='fu'>check_spatype</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"testrast.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
-
+<span class='fu'>check_spatype</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"testrast.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in check_spatype.character(system.file("extdata", "testrast.tif",     package = "sprawl.data")): check_spatype --&gt; `` is not a valid filename. Aborting !</span></div><div class='input'>
 <span class='co'># input is a shapefile</span>
 <span class='no'>shp_file</span>             <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-<span class='fu'>check_spatype</span>(<span class='no'>shp_file</span>)
-
+<span class='fu'>check_spatype</span>(<span class='no'>shp_file</span>)</div><div class='output co'>#&gt; [1] "vectfile"</div><div class='input'>
 <span class='co'># input is a `sp` object</span>
 <span class='no'>obj</span>                  <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>check_spatype</span>(<span class='no'>obj</span>)
-
+<span class='fu'>check_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "spobject"</div><div class='input'>
 <span class='co'># input is a `sf` object</span>
 <span class='no'>obj</span>                  <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>shp_file</span>)
-<span class='fu'>check_spatype</span>(<span class='no'>obj</span>)
-<span class='co'># }</span><div class='input'>
+<span class='fu'>check_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "sfobject"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dissolve_shape.R
 \name{dissolve_shape}
 \alias{dissolve_shape}
-\title{dissolve_shape}
+\title{dissolve attributes of a vector}
 \usage{
 dissolve_shape(in_object, byvar, var_as_NA = FALSE)
 }

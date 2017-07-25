@@ -19,9 +19,13 @@ testthat::test_that("check_spatype",{
   obj <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
   testthat::expect_equal(check_spatype(obj),"sfobject")
 
-  # input is not a spatial object
-  obj <- "pippo"
+  # input is character but not a valid filename
+  obj <- "xyzptr"
   testthat::expect_error(check_spatype(obj))
+  # input a valid filename but not a spatial file
+  obj <- system.file("extdata", "sprawl_EVItest.RData", package = "sprawl.data")
+  out <- check_spatype(obj)
+  testthat::expect_equal(out,"none")
 
 })
 

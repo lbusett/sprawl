@@ -2,7 +2,7 @@
 % Please edit documentation in R/fast_summ.R
 \name{fast_summ}
 \alias{fast_summ}
-\title{fast_summ}
+\title{extract useful statistics from a data.table}
 \usage{
 fast_summ(in_data, var, comp_quant, FUN, band_n, selband)
 }

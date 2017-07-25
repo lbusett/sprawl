@@ -1,4 +1,4 @@
-#' @title FUNCTION_TITLE
+#' @title quick plot for a raster based on level_plot
 #' @description FUNCTION_DESCRIPTION
 #' @param in_rast Input raster object or file
 #' @param band PARAM_DESCRIPTION, Default: 1

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mask_rast.R
 \name{mask_rast}
 \alias{mask_rast}
-\title{Mask a raster file (or object) based on a vector file (or object)}
+\title{Mask a raster based on a vector}
 \usage{
 mask_rast(in_rast, mask_vect, crop = FALSE, buffer = NULL,
   out_nodata = "NoData", to_file = FALSE, out_rast = NULL,

@@ -39,8 +39,6 @@ reclassification matrix which specifies which value in the output should be take
 raster::reclassify function, providing a (somehow) easier and extended I/O functionality)
 }
 \details{
-reclass_rast
-
 \code{reclass_matrix} must be a 3-columns \code{data.frame} (or similar), including the \code{start}, \code{end} and
 \code{new} columns. It can be easily created by, for example:\preformatted{reclass_matrix <- tribble(~start, ~end, ~new,
                                0,    1,   NA, # values >=0 and < 1 will be set to NA

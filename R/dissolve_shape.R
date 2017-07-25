@@ -1,4 +1,4 @@
-#' @title dissolve_shape
+#' @title dissolve attributes of a vector
 #' @description FUNCTION_DESCRIPTION
 #' @param in_object PARAM_DESCRIPTION
 #' @param byvar PARAM_DESCRIPTION

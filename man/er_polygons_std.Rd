@@ -2,7 +2,7 @@
 % Please edit documentation in R/er_polygons_std.R
 \name{er_polygons_std}
 \alias{er_polygons_std}
-\title{er_polygons_std}
+\title{extract raster data on polygons (helper for extract_rast)}
 \usage{
 er_polygons_std(in_vect_zones, in_rast, seldates, selbands, n_selbands,
   date_check, er_opts, verb_foreach = FALSE)

@@ -1,5 +1,3 @@
-#' reclass_rast
-#'
 #' @title reclassify values of a raster
 #' @description function to reclassify values of a raster object or raster file based on a
 #'   reclassification matrix which specifies which value in the output should be taken by different

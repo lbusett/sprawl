@@ -1,4 +1,4 @@
-#' @title check_spatype
+#' @title check the "spatial type" of an object or file
 #' @description accessory function to check if an object passed to the function corresponds to
 #' a `*Spatial` Object, a `sf` object, a R `raster` object, a file corresponding to a vector,
 #' or a file corresponding to a raster
@@ -40,24 +40,32 @@ check_spatype  <- function(object) {
 }
 
 #   ____________________________________________________________________________
-#   Fallback method                                                         ####
+#   Fallback method: class of object is none of the specified ones: issue   ####
+#   an error
 
+#' @rdname check_spatype
+#' @method check_spatype default
+#' @export
 check_spatype.default   <- function(object) {
-  "none"
+   stop("check_spatype --> `", object, "` is not a valid filename. Aborting !")
 }
 
 #   ____________________________________________________________________________
 #   Method for "character" - find if file exists and is "spatial"           ####
 
+#' @rdname check_spatype
+#' @method check_spatype Spatial
+#' @export
 check_spatype.character <- function(object) {
+   # browser()
   if (!file.exists(object)) {
-    stop("check_spatype --> ", object, "is not a valid filename. Aborting !")
+    stop("check_spatype --> `", object, "` is not a valid filename. Aborting !")
   } else {
 
     # First, try checking if file is a vector if it has a common extension ----
     #@TODO update this list !
     vect_extensions <- c("shp", "kml", "gml", "dxf", "vpf")
-    rast_extensions <- append(vect_extensions, toupper(vect_extensions))
+    vect_extensions <- append(vect_extensions, toupper(vect_extensions))
     if (tools::file_ext(object) %in% vect_extensions) {
       vecttry <- suppressWarnings(try(gdalUtils::ogrinfo(object, al = TRUE, so = TRUE), silent = TRUE))
       if (is.null(attr(vecttry, "status"))) {
@@ -81,6 +89,7 @@ check_spatype.character <- function(object) {
       }
     }
     else {
+
       # if unrecognized extension, try first to see if the file is a vector, if ----
       # it fails, try to see if it is a raster. If nothing "works", return "none"
       vecttry <- suppressWarnings(try(gdalUtils::ogrinfo(object, al = TRUE, so = TRUE), silent = TRUE))
@@ -101,6 +110,9 @@ check_spatype.character <- function(object) {
 #   ____________________________________________________________________________
 #   Method for "Raster"                                                     ####
 
+#' @rdname check_spatype
+#' @method check_spatype Raster
+#' @export
 check_spatype.Raster    <- function(object) {
   "rastobject"
 }
@@ -108,6 +120,9 @@ check_spatype.Raster    <- function(object) {
 #   ____________________________________________________________________________
 #   Method for "sf"                                                         ####
 
+#' @rdname check_spatype
+#' @method check_spatype sf
+#' @export
 check_spatype.sf        <- function(object) {
   "sfobject"
 }
@@ -115,6 +130,9 @@ check_spatype.sf        <- function(object) {
 #   ____________________________________________________________________________
 #   Method for "sfc"                                                         ####
 
+#' @rdname check_spatype
+#' @method check_spatype sfc
+#' @export
 check_spatype.sfc        <- function(object) {
   "sfobject"
 }
@@ -123,7 +141,9 @@ check_spatype.sfc        <- function(object) {
 #   ____________________________________________________________________________
 #   Method for "Spatial"                                                    ####
 
+#' @rdname check_spatype
+#' @method check_spatype Spatial
+#' @export
 check_spatype.Spatial   <- function(object) {
   "spobject"
 }
-

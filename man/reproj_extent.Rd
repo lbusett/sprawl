@@ -2,7 +2,7 @@
 % Please edit documentation in R/reproj_extent.R
 \name{reproj_extent}
 \alias{reproj_extent}
-\title{extent_reproj}
+\title{reproject the extent of a spatial object}
 \usage{
 reproj_extent(ext_in, in_proj = NULL, out_proj = NULL)
 }

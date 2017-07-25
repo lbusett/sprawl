@@ -1,6 +1,6 @@
 #' @title write_shape
-#' @description Wrapper to ~st_read~ for writing an `sf` or `sp` object to disk in ESRI shapefile
-#' format
+#' @description Wrapper on  `sf::st_write` for writing an `sf` or `sp` object to disk as
+#'   an ESRI shapefile
 #' @param out_obj `character` object to be written to the shapefile. Must be a valid `*sp` or `sf`
 #' object
 #' @param out_file  `character` output file name

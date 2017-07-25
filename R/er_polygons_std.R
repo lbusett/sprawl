@@ -1,4 +1,4 @@
-#' @title er_polygons_std
+#' @title extract raster data on polygons (helper for extract_rast)
 #' @description FUNCTION_DESCRIPTION
 #' @param in_vect_zones PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
@@ -512,21 +512,21 @@ er_polygons_std <- function(in_vect_zones,
 
     if (!is.null(er_opts$FUN)) {
       keep_cols <- c("mdxtnq", "band_n", "date",
-                     names_shp,
                      "N_PIX", "myfun",
+                      names_shp,
                      "geometry")
     } else {
 
       if (!er_opts$comp_quant) {
         keep_cols <- c("mdxtnq", "band_n", "date",
-                       names_shp,
                        "N_PIX", "avg", "med", "sd", "min", "max",
+                       names_shp,
                        "geometry")
       } else {
         keep_cols <- c("mdxtnq", "band_n", "date",
-                       names_shp,
                        "N_PIX", "avg", "med", "sd", "min", "max",
                        "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65", "q75", "q85", "q95", "q99",
+                       names_shp,
                        "geometry")
       }
 
@@ -566,8 +566,8 @@ er_polygons_std <- function(in_vect_zones,
       stat_data <- data.table::melt(stat_data, idcols)
       keep_cols <- c("id_feat",
                      "band_n", "date",
-                     names_shp,
                      "variable", "value",
+                     names_shp,
                      "geometry")
       if (!er_opts$addfeat) keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
       if (!er_opts$addgeom) keep_cols <- keep_cols[-length(keep_cols)]
@@ -610,8 +610,8 @@ er_polygons_std <- function(in_vect_zones,
 
     # define the order of the output columns
     keep_cols <- c("mdxtnq", "band_n", "date", "N_PIX", "N",
-                   names_shp,
                    "value",
+                   names_shp,
                    "x_coord", "y_coord")
     if (!er_opts$addfeat) {
       if (is.null(er_opts$id_field)) {
