@@ -29,11 +29,11 @@ automatic re-casting to \code{*sp} objects
 \dontrun{
 library(sprawl.data)
 # open a shapefile as a `sf` object
- shp_file = system.file("extdata","clip_shape.shp", package = "sprawl.data")
+ shp_file = system.file("extdata","lc_polys.shp", package = "sprawl.data")
  read_vect(shp_file)
 
 # open a shapefile as a `sp` object
- shp_file = system.file("extdata","clip_shape.shp", package = "sprawl.data")
+ shp_file = system.file("extdata","lc_polys.shp", package = "sprawl.data")
  read_vect(shp_file, as_sp = TRUE)
 }
 }

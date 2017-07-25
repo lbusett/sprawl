@@ -56,7 +56,7 @@ mask_rast <- function(in_rast,
 
   #   ____________________________________________________________________________
   #   Check the arguments                                                     ####
-
+  browser()
   # checks on in_rast
   ras_type <- check_spatype(in_rast)
   if (check_spatype(in_rast) == "rastfile") {
@@ -66,7 +66,7 @@ mask_rast <- function(in_rast,
   if (ras_type != "rastobject") {
     stop("mask_rast --> `in_rast` must be a `*Raster` object or raster file name. Aborting !")
   }
-  rast_proj <- sp::proj4string(in_rast)
+  rast_proj <- get_projstring(in_rast)
 
   # checks on mask_vect
   shp_type <- check_spatype(mask_vect)
@@ -125,7 +125,7 @@ mask_rast <- function(in_rast,
       mask_vect <- read_vect(mask_vect) %>%
         sf::st_buffer(buffer)
     }
-    mask_proj <- sf::st_crs(mask_vect)$proj4string
+    mask_proj <- get_projstring(mask_vect)
     if (mask_proj != rast_proj) {
       mask_vect <- sf::st_transform(mask_vect, rast_proj)
     }
@@ -174,17 +174,38 @@ mask_rast <- function(in_rast,
     }
 
     # find which bands of the original raster were "passed"
-    bands = list()
+    bands <- list()
+    files <- list()
     for (bb in seq_len(raster::nlayers(in_rast))) {
       bands[[bb]] <- in_rast[[bb]]@data@band
+      files[[bb]] <- in_rast[[bb]]@file@name
     }
-    bands = unlist(bands)
+    bands <- unlist(bands)
+    files <- unlist(files)
 
+
+    #   ____________________________________________________________________________
+    #   If the bands in the original stack are not all coming                   ####
+    #   from the same on-disk raster, build a txt file to tell gdalbuildvrt
+    #   which band comes from where !
+    #
     temp_vrt        <- tempfile(fileext = ".vrt")
-    buildvrt_string <- paste("-te ", paste(te, collapse = " "),
-                             paste(paste("-b ", bands), collapse = " "),
-                             temp_vrt,
-                             in_rast[[1]]@file@name)
+    if (length(unique(files)) > 1) {
+
+      tmp_txt <- tempfile(fileext = ".txt")
+      writeLines(files, tmp_txt)
+      buildvrt_string <- paste("-te ", paste(te, collapse = " "),
+                                     paste(paste("-b ", bands), collapse = " "),
+                                     temp_vrt,
+                                     in_rast[[1]]@file@name)
+    } else {
+      buildvrt_string <- paste("-te ", paste(te, collapse = " "),
+                               paste(paste("-b ", bands), collapse = " "),
+                               temp_vrt,
+                               in_rast[[1]]@file@name)
+    }
+
+
 
     system2(file.path(find_gdal(), "gdalbuildvrt"), args = buildvrt_string, stdout = NULL)
 
@@ -223,14 +244,14 @@ mask_rast <- function(in_rast,
   } else {
     masked_rast <- raster::stack(temp_vrt) * raster::raster(temp_rastermask)
   }
-
+  browser()
   if (to_file) {
     if (is.null(out_rast)) {
       out_rast = tempfile(fileext = ".tif")
     }
     raster::writeRaster(masked_rast, out_rast,
-                options = c("COMPRESS=DEFLATE"),
-                datatype = out_dt)
+                        options = c("COMPRESS=DEFLATE"),
+                        datatype = out_dt)
     masked_rast <- out_rast
   }
 
