@@ -50,23 +50,53 @@ check_spatype.default   <- function(object) {
 #   Method for "character" - find if file exists and is "spatial"           ####
 
 check_spatype.character <- function(object) {
-  if (file.exists(object)) {
-    vecttry             <- suppressWarnings(try(gdalUtils::ogrinfo(object, al = TRUE, so = TRUE), silent = TRUE))
-    if (is.null(attr(vecttry, "status"))) {
-      "vectfile"
-    } else {
-      rastry  <- suppressWarnings(try(gdalUtils::gdalinfo(object), silent = TRUE))
-      if (is.null(attr(rastry, "status"))) {
-        "rastfile"
+  if (!file.exists(object)) {
+    stop("check_spatype --> ", object, "is not a valid filename. Aborting !")
+  } else {
+
+    # First, try checking if file is a vector if it has a common extension ----
+    #@TODO update this list !
+    vect_extensions <- c("shp", "kml", "gml", "dxf", "vpf")
+    rast_extensions <- append(vect_extensions, toupper(vect_extensions))
+    if (tools::file_ext(object) %in% vect_extensions) {
+      vecttry <- suppressWarnings(try(gdalUtils::ogrinfo(object, al = TRUE, so = TRUE), silent = TRUE))
+      if (is.null(attr(vecttry, "status"))) {
+        return("vectfile")
       } else {
-        "none"
+        return("none")
       }
     }
-  } else {
-    "none"
+
+    # Tehen, try checking if file is a raster if it has a common extension ----
+    #@TODO update this list !
+    rast_extensions <- c("tif", "tiff", "ecw", "hdf", "hdf4", "hdf5", "jp2",
+                         "hdf4", "envi")
+    rast_extensions <- append(rast_extensions, toupper(rast_extensions))
+    if (tools::file_ext(object) %in% rast_extensions) {
+      rastry  <- suppressWarnings(try(gdalUtils::gdalinfo(object), silent = TRUE))
+      if (is.null(attr(rastry, "status"))) {
+        return("rastfile")
+      } else {
+        return("none")
+      }
+    }
+    else {
+      # if unrecognized extension, try first to see if the file is a vector, if ----
+      # it fails, try to see if it is a raster. If nothing "works", return "none"
+      vecttry <- suppressWarnings(try(gdalUtils::ogrinfo(object, al = TRUE, so = TRUE), silent = TRUE))
+      if (is.null(attr(vecttry, "status"))) {
+        return("vectfile")
+      } else {
+        rastry  <- suppressWarnings(try(gdalUtils::gdalinfo(object), silent = TRUE))
+        if (is.null(attr(rastry, "status"))) {
+          return("rastfile")
+        } else {
+          return("none")
+        }
+      }
+    }
   }
 }
-
 
 #   ____________________________________________________________________________
 #   Method for "Raster"                                                     ####

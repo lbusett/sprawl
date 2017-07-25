@@ -21,7 +21,7 @@ testthat::test_that("check_spatype",{
 
   # input is not a spatial object
   obj <- "pippo"
-  testthat::expect_equal(check_spatype(obj),"none")
+  testthat::expect_error(check_spatype(obj))
 
 })
 
