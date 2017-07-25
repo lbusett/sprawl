@@ -1,0 +1,11 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Frequently Asked Questions
+
+Frequent/interesting questions about `sprawl` will be documented here.

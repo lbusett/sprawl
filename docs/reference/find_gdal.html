@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>gdal_polygonizeR — gdal_polygonizeR • sprawl</title>
+<title>FUNCTION_TITLE — find_gdal • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,73 +92,45 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>gdal_polygonizeR</h1>
+    <h1>FUNCTION_TITLE</h1>
     </div>
 
     
-    <p>R Wrapper for the gdal_polygonize.py python script (http://www.gdal.org/gdal_polygonize.html)
-This utility creates vector polygons for all connected regions of pixels in the raster sharing
-a common pixel value. Each polygon is created with an attribute indicating the pixel value of
-that polygon. Can be userful for example to create fishnet polygons (see "create_fishnet")</p>
+    <p>FUNCTION_DESCRIPTION</p>
     
 
-    <pre class="usage"><span class='fu'>gdal_polygonizeR</span>(<span class='no'>x</span>, <span class='kw'>outshape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>gdalformat</span> <span class='kw'>=</span> <span class='st'>"ESRI Shapefile"</span>,
-  <span class='kw'>pypath</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>readpoly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p><code>character</code>filename of a raster file, or "R" raster object</p></td>
-    </tr>
-    <tr>
-      <th>outshape</th>
-      <td><p><code>character</code>filename of the desired output polygon shapefile</p></td>
-    </tr>
-    <tr>
-      <th>gdalformat</th>
-      <td><p>defaults to ESRI - don't change</p></td>
-    </tr>
-    <tr>
-      <th>pypath</th>
-      <td><p><code>character</code> path of python  - if <code>NULL</code> (the default) the script tries to
-automatically retrieve it</p></td>
-    </tr>
-    <tr>
-      <th>readpoly</th>
-      <td><p><code>logical</code> If TRUE sends back the shapefile as a SpataialPolygonsDataFrame to R
-(defaults to FALSE)</p></td>
-    </tr>
-    <tr>
-      <th>quiet</th>
-      <td><p><code>logical</code> if TRUE, limit the messages (defaults to TRUE)</p></td>
-    </tr>
-    <tr>
-      <th>overwrite</th>
-      <td><p><code>logical</code> If TRUE overwrite shapefile if already existing (defaults to FALSE)</p></td>
-    </tr>
-    </table>
-    
+    <pre class="usage"><span class='fu'>find_gdal</span>()</pre>
+        
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>NULL, or a SpataialPolygonsDataFrame (if readpoly = TRUE)</p>
+    <p>OUTPUT_DESCRIPTION</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>DETAILS</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
+ <span class='co'>#EXAMPLE1</span>
+ }
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#details">Details</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     
-Original code by Jonh Baumgartner
-<a href='https://johnbaumgartner.wordpress.com/2012/07/26/getting-rasters-into-shape-from-r/'>https://johnbaumgartner.wordpress.com/2012/07/26/getting-rasters-into-shape-from-r/</a>, with
-slight modifications by L.Busetto
+Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

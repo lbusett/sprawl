@@ -124,15 +124,15 @@ or a file corresponding to a raster</p>
 <span class='fu'>check_spatype</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"testrast.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 
 <span class='co'># input is a shapefile</span>
-<span class='no'>shp_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+<span class='no'>shp_file</span>             <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
 <span class='fu'>check_spatype</span>(<span class='no'>shp_file</span>)
 
 <span class='co'># input is a `sp` object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>obj</span>                  <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>check_spatype</span>(<span class='no'>obj</span>)
 
 <span class='co'># input is a `sf` object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='no'>shp_file</span>)
+<span class='no'>obj</span>                  <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>shp_file</span>)
 <span class='fu'>check_spatype</span>(<span class='no'>obj</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>

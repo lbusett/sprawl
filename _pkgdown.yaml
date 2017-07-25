@@ -6,7 +6,7 @@ reference:
   - title: Reading/writing spatial data
     desc: ~
     contents:
-      - '`read_shape`'
+      - '`read_vect`'
       - '`write_shape`'
   - title: Raster processing
     desc: ~

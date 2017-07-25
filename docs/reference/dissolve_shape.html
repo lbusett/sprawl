@@ -136,7 +136,7 @@
 <span class='kw'>if</span>(<span class='fu'>interactive</span>()){
  <span class='fu'>library</span>(<span class='no'>sprawl</span>)
  <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
- <span class='no'>indata</span>    <span class='kw'>&lt;-</span> <span class='fu'><a href='read_shape.html'>read_shape</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
+ <span class='no'>indata</span>    <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
  <span class='no'>byvar</span>     <span class='kw'>&lt;-</span> <span class='st'>"category"</span>
  <span class='no'>out_shape</span> <span class='kw'>&lt;-</span> <span class='fu'>dissolve_shape</span>(<span class='no'>indata</span>, <span class='no'>byvar</span>)
  <span class='no'>out_shape</span>
