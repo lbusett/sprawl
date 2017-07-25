@@ -10,7 +10,7 @@
 #' if(interactive()){
 #'  library(sprawl)
 #'  library(sprawl.data)
-#'  indata    <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
+#'  indata    <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
 #'  byvar     <- "category"
 #'  out_shape <- dissolve_shape(indata, byvar)
 #'  out_shape
@@ -31,7 +31,7 @@ dissolve_shape <- function(in_object, byvar, var_as_NA = FALSE) {
 
   type <- check_spatype(in_object)
   if (type == "spobject") in_object <- as(in_object, "Spatial")
-  if (type == "vectfile") in_object <- read_shape(in_object, strigsAsFactors = TRUE)
+  if (type == "vectfile") in_object <- read_vect(in_object, strigsAsFactors = TRUE)
   if (type == "none") stop("Input object is not a valid `*sp` or *`sf` object. Aborting !")
   if (!(byvar %in% names(in_object))) stop("select grouping variable is not present in the columns of the
                                   input object. Aborting !")

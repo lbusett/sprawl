@@ -3,7 +3,7 @@ testthat::test_that("Test On points extraction", {
   skip_on_cran()
   skip_on_travis()
   library(sprawl.data)
-  in_pts   <- read_shape(system.file("extdata","randpoints.shp", package = "sprawl.data"))
+  in_pts   <- read_vect(system.file("extdata","randpoints.shp", package = "sprawl.data"))
   in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
   out      <- extract_rast(in_rast, in_pts, id_field = "id", verbose = FALSE, long = F, keep_null = T)  %>%

@@ -28,11 +28,11 @@ shp_file             <- system.file("extdata","lc_polys.shp", package = "sprawl.
 check_spatype(shp_file)
 
 # input is a `sp` object
-obj                  <- read_shape(shp_file, as_sp = TRUE)
+obj                  <- read_vect(shp_file, as_sp = TRUE)
 check_spatype(obj)
 
 # input is a `sf` object
-obj                  <- read_shape(shp_file)
+obj                  <- read_vect(shp_file)
 check_spatype(obj)
 }
 

@@ -12,11 +12,11 @@ testthat::test_that("check_spatype",{
                          "vectfile")
 
   # input is a `sp` object
-  obj <- read_shape(system.file("extdata", "lc_polys.shp", package = "sprawl.data"), as_sp = TRUE)
+  obj <- read_vect(system.file("extdata", "lc_polys.shp", package = "sprawl.data"), as_sp = TRUE)
   testthat::expect_equal(check_spatype(obj), "spobject")
 
   # input is a `sf` object
-  obj <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
+  obj <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
   testthat::expect_equal(check_spatype(obj),"sfobject")
 
   # input is not a spatial object

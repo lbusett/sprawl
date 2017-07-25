@@ -1,4 +1,4 @@
-#' @title read_shape -> Read an ESRI shapefile into `R`
+#' @title read_vect -> Read an ESRI shapefile into `R`
 #' @description function for easily opening a ESRI shapefile (or other OGR compatible vector file)
 #' by simply specifying its filename
 #'
@@ -16,21 +16,21 @@
 #' library(sprawl.data)
 #' # open a shapefile as a `sf` object
 #'  shp_file = system.file("extdata","clip_shape.shp", package = "sprawl.data")
-#'  read_shape(shp_file)
+#'  read_vect(shp_file)
 #'
 #' # open a shapefile as a `sp` object
 #'  shp_file = system.file("extdata","clip_shape.shp", package = "sprawl.data")
-#'  read_shape(shp_file, as_sp = TRUE)
+#'  read_vect(shp_file, as_sp = TRUE)
 #'}
 #'@seealso
 #'  \code{\link[sf]{read_sf}}
-#' @rdname read_shape
+#' @rdname read_vect
 #' @export
 #' @importFrom sf read_sf
 #'
-read_shape = function(shp_file, as_sp = FALSE, ...){
+read_vect = function(shp_file, as_sp = FALSE, ...){
   if (!file.exists(shp_file)) {
-    stop("read_shape --> Input file doesn't exist on your system ! Aborting !")
+    stop("read_vect --> Input file doesn't exist on your system ! Aborting !")
   }
   chk <- check_spatype(shp_file)
   if (chk == "vectfile") {

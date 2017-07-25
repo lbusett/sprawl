@@ -27,7 +27,7 @@
 #' libray(sprawl)
 #' libray(sprawl.data)
 #' library(raster)
-#' in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
+#' in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
 #'                        stringsAsFactors = T)
 #' in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl.data"))[[1]]
 #' in_polys <- sf::st_transform(in_polys, proj4string(in_rast))
@@ -89,7 +89,7 @@ mask_rast <- function(in_rast,
       # otherwise do nothing
       mask_proj <- gdalUtils::gdalsrsinfo(mask_vect, as.CRS = T)@projargs
       if (mask_proj != rast_proj) {
-        mask_vect <- read_shape(mask_vect) %>%
+        mask_vect <- read_vect(mask_vect) %>%
           sf::st_transform(rast_proj) %>%
           sf::st_combine() %>%
           # sf::st_sf(id = 1, .) %>%
@@ -101,7 +101,7 @@ mask_rast <- function(in_rast,
     } else {
       # If  buffer, Read, apply buffer and reproj if needed,
       # otherwise do nothing
-      mask_vect <- read_shape(mask_vect) %>%
+      mask_vect <- read_vect(mask_vect) %>%
         sf::st_buffer(., buffer) %>%
         sf::st_combine() %>%
         sf::st_sf(id = 1, .)
@@ -122,7 +122,7 @@ mask_rast <- function(in_rast,
 
     if (!is.null(buffer)) {
       # apply buffer if needed
-      mask_vect <- read_shape(mask_vect) %>%
+      mask_vect <- read_vect(mask_vect) %>%
         sf::st_buffer(buffer)
     }
     mask_proj <- sf::st_crs(mask_vect)$proj4string

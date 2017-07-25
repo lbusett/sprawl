@@ -17,11 +17,11 @@
 #' #' check_spatype(shp_file)
 #' #'
 #' #' # input is a `sp` object
-#' #' obj <- read_shape(shp_file, as_sp = TRUE)
+#' #' obj <- read_vect(shp_file, as_sp = TRUE)
 #' #' check_spatype(obj)
 #' #'
 #' #' # input is a `sf` object
-#' #' obj <- read_shape(shp_file)
+#' #' obj <- read_vect(shp_file)
 #' #' check_spatype(obj)
 #' #' }
 #' #'
@@ -45,7 +45,7 @@
 #'     } else {
 #'       if (vec_type != cast_to) {
 #'         if (vec_type == "vectfile") {
-#'           in_vect <- read_shape(in_vect)
+#'           in_vect <- read_vect(in_vect)
 #'           if (cast_to == "spobject") {
 #'             in_vect <- as(in_vect, "Spatial")
 #'           }
