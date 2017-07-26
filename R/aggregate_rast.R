@@ -30,7 +30,7 @@
 #' @export
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 #' @importFrom data.table data.table
-#' @importFrom raster raster writeRaster rasterize
+#' @importFrom raster raster writeRaster rasterize res
 #' @importFrom sf st_crs st_transform st_bbox st_coordinates st_centroid st_as_sf st_set_crs
 #' @importFrom sp proj4string
 
@@ -55,7 +55,7 @@ aggregate_rast <- function(in_rast_values,
   if (verbose) message("aggregate_raster --> Creating Fishnet on zones_rast")
 
   in_fish <- create_fishnet(zones_rast,
-                                 cellsize = res(zones_rast)[1])
+                            cellsize = raster::res(zones_rast)[1])
   if (verbose) message("aggregate_raster --> Aggregating values of in_rast_values on
                       cells of zones_rast")
 
@@ -63,15 +63,14 @@ aggregate_rast <- function(in_rast_values,
                                in_fish,
                                full_data = FALSE,
                                verbose   = verbose,
-                               mode      = "std",
                                maxchunk  = maxchunk,
                                FUN       = FUN,
                                id_field  = "cell_id")$stats
   # if (!is.na(nodata_out)) {
-    where_na <- which(is.na(agg_values$myfun))
-    agg_values$myfun[where_na] <- nodata_out
+  where_na <- which(is.na(agg_values$myfun))
+  agg_values$myfun[where_na] <- nodata_out
   # } else {
-    # agg_values$myfun[where_na] <- NA
+  # agg_values$myfun[where_na] <- NA
   # }
 
   if (sf::st_crs(agg_values) != sf::st_crs(in_fish)) {
@@ -104,7 +103,7 @@ aggregate_rast <- function(in_rast_values,
 
     write_shape(agg_values,tempvecfile, overwrite = T)
     rasterize_string <- paste("-a myfun",
-                              "-tr ", paste(res(zones_rast), collapse = " "),
+                              "-tr ", paste(raster::res(zones_rast), collapse = " "),
                               "-te ", paste(sf::st_bbox(in_fish), collapse = " "),
                               "-co COMPRESS=DEFLATE",
                               ifelse(!is.na(nodata_out), paste0("-a_nodata ", nodata_out),
@@ -114,7 +113,7 @@ aggregate_rast <- function(in_rast_values,
     system2(file.path(find_gdal(),"gdal_rasterize"), args = rasterize_string, stdout = NULL)
 
     if (!to_file) {
-      out_rast <- raster(teamprastfile)
+      out_rast <- raster::raster(teamprastfile)
     }
   } else {
     agg_values <- data.table::data.table(agg_values)

@@ -29,7 +29,7 @@
 #'  \code{\link[velox]{velox}}
 
 #'  \code{\link[utils]{setTxtProgressBar}},\code{\link[utils]{txtProgressBar}}
-#' @rdname er_polygons_std
+#' @rdname er_polygons
 #' @export
 #' @importFrom data.table data.table rbindlist setkey as.data.table setcolorder melt
 #' @importFrom doSNOW registerDoSNOW
@@ -45,7 +45,7 @@
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom magrittr %>%
 
-er_polygons_std <- function(in_vect_zones,
+er_polygons <- function(in_vect_zones,
                             in_rast,
                             seldates,
                             selbands,
@@ -557,27 +557,6 @@ er_polygons_std <- function(in_vect_zones,
 
     if (is.null(er_opts$id_field)) names(stat_data)[1] = "id_feat"
 
-    # If `er_opts$long`, reshape the stats output to a er_opts$long table format
-    # (Consider removing)
-    if (er_opts$long) {
-      skip_cols <- ifelse(er_opts$comp_quant,18, 6)
-      n_adds    <- length(names_shp)
-      idcols    <- c(seq(1,length(stat_data) - skip_cols - 1), length(stat_data))
-      stat_data <- data.table::melt(stat_data, idcols)
-      keep_cols <- c("id_feat",
-                     "band_n", "date",
-                     "variable", "value",
-                     names_shp,
-                     "geometry")
-      if (!er_opts$addfeat) keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
-      if (!er_opts$addgeom) keep_cols <- keep_cols[-length(keep_cols)]
-      if (!is.null(er_opts$id_field)) {
-        keep_cols    <- keep_cols[which(keep_cols != er_opts$id_field)]
-        keep_cols[1] <- eval(er_opts$id_field)
-      }
-      stat_data <- data.table::setcolorder(stat_data, keep_cols) %>%
-        tibble::as_tibble()
-    }
     # If er_opts$addgeom, convert to a sf object
     if (er_opts$addgeom) {
       stat_data <- sf::st_as_sf(stat_data)

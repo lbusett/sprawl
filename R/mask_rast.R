@@ -56,7 +56,7 @@ mask_rast <- function(in_rast,
 
   #   ____________________________________________________________________________
   #   Check the arguments                                                     ####
-  browser()
+
   # checks on in_rast
   ras_type <- check_spatype(in_rast)
   if (check_spatype(in_rast) == "rastfile") {
@@ -244,7 +244,7 @@ mask_rast <- function(in_rast,
   } else {
     masked_rast <- raster::stack(temp_vrt) * raster::raster(temp_rastermask)
   }
-  browser()
+
   if (to_file) {
     if (is.null(out_rast)) {
       out_rast = tempfile(fileext = ".tif")

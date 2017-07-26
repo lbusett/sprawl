@@ -6,9 +6,9 @@
 \usage{
 extract_rast(in_rast, in_vect_zones, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, FUN = NULL, small = TRUE, na.rm = TRUE,
-  maxchunk = 5e+07, long = FALSE, addfeat = TRUE, addgeom = TRUE,
-  keep_null = FALSE, verbose = TRUE, ncores = NULL, mode = "std")
+  comp_quant = FALSE, long = FALSE, FUN = NULL, small = TRUE,
+  na.rm = TRUE, maxchunk = 5e+07, addfeat = TRUE, addgeom = TRUE,
+  keep_null = FALSE, verbose = TRUE, ncores = NULL)
 }
 \arguments{
 \item{in_rast}{input raster. Can be wither:
@@ -46,6 +46,8 @@ in `out$alldata' (Setting this to FALSE can be a good idea for large datasets...
 \item{comp_quant}{\code{logical} if TRUE, also quantiles of the distributions of values are computed for each zone
 and returned in  \code{out$ts_summ}, Default: FALSE}
 
+\item{long}{\code{logical} if TRUE, extraction \strong{on points} provides data in long formar}
+
 \item{FUN}{\code{character} or function name, Default: NULL}
 
 \item{small}{\code{logical} if TRUE, values are returned also for small polygons not including any
@@ -54,8 +56,6 @@ pixel centroids. Values are taken from all cells "touched" by the small polygon,
 \item{na.rm}{\code{logical} If TRUE, NA values are removed while computing statistics, Default: TRUE}
 
 \item{maxchunk}{Maximum chunk size (provisional), Default: 5e+06}
-
-\item{long}{\code{logical} If TRUE, \code{out$summ_data} is returned in long format, Default: FALSE}
 
 \item{addfeat}{\code{logical} If TRUE, columns of the attribute table of the \code{in_vect_zones} layer are
 joined to results of the computation, Default: TRUE}
@@ -73,8 +73,6 @@ console, Default: TRUE}
 \item{ncores}{\code{numeric} maximum number of cores to be used in the processin. If NULL, defaults to
 available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
 or greater than 8, ncores is re-set to the minimum between those two.}
-
-\item{mode}{\code{character} "std" or "velox", Default: "std"}
 }
 \value{
 out_list \code{list} containing two tibbles: \code{out_list$summ_data} contains summary statitstics,
@@ -94,7 +92,7 @@ in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.da
                        stringsAsFactors = T)
 in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
 in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
-out      <- extract_rast(in_rast, in_polys, long = FALSE, verbose = FALSE)
+out      <- extract_rast(in_rast, in_polys, verbose = FALSE)
 head(out$stats)
 head(out$alldata)
 }
