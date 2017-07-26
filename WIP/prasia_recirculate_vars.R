@@ -40,8 +40,8 @@ boundaries <- st_as_sf(boundaries)
 dir.create("/home/lb/my_data/prasia/PHL")
 
 t1 <- Sys.time()
-test <- mask_rast(in_rast_sos, boundaries, crop = TRUE, to_file = TRUE,
-                  out_rast = "/home/lb/my_data/prasia/PHL/sos_phl.tif")
+test <- mask_rast(in_rast_sos[[1:5]], boundaries, crop = TRUE, to_file = TRUE,
+                  out_rast = "/home/lb/my_data/prasia/PHL/sos_phlpipo.tif")
 Sys.time() - t1
 #   ____________________________________________________________________________
 #   Decircularize dates rasters                                             ####

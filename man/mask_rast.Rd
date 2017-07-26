@@ -6,7 +6,7 @@
 \usage{
 mask_rast(in_rast, mask_vect, crop = FALSE, buffer = NULL,
   out_nodata = "NoData", to_file = FALSE, out_rast = NULL,
-  out_dt = "FLT4S", verbose = TRUE)
+  out_dt = "FLT4S", verbose = TRUE, verb_foreach = FALSE)
 }
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
