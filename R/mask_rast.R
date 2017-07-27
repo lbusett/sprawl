@@ -48,7 +48,7 @@ mask_rast <- function(in_rast,
                       mask_vect,
                       crop       = FALSE,
                       buffer     = NULL,
-                      out_nodata = "NoData",
+                      out_nodata = NULL,
                       to_file    = FALSE,
                       out_rast   = NULL,
                       out_dt     = "FLT4S",
@@ -80,7 +80,6 @@ mask_rast <- function(in_rast,
   }
 
   temp_shapefile <- tempfile(fileext = ".shp")
-
   #   ____________________________________________________________________________
   #   read the vector file and apply buffer if necessary                      ####
 
@@ -93,11 +92,14 @@ mask_rast <- function(in_rast,
       # otherwise do nothing
       mask_proj <- get_projstring(mask_vect)
       if (mask_proj != rast_proj) {
+
         mask_vect <- read_vect(mask_vect) %>%
           sf::st_transform(rast_proj) %>%
           sf::st_combine() %>%
-          # sf::st_sf(id = 1, .) %>%
-          write_shape(temp_shapefile, overwrite = TRUE)
+          as("Spatial")
+        #   # sf::st_sf(id = 1, .) %>%
+        #   write_shape(temp_shapefile, overwrite = TRUE)
+        # mask_vect <- temp_shapefile
       } else {
         temp_shapefile <- mask_vect
       }
@@ -114,6 +116,8 @@ mask_rast <- function(in_rast,
         mask_vect <- sf::st_transform(mask_vect, rast_proj)
       }
       write_shape(mask_vect, temp_shapefile, overwrite = TRUE)
+      mask_vect <- read_vect(temp_shapefile) %>%
+        as("Spatial")
     }
   } else {
     # input is a "*sp" or "sf" object
@@ -133,24 +137,19 @@ mask_rast <- function(in_rast,
     if (mask_proj != rast_proj) {
       mask_vect <- sf::st_transform(mask_vect, rast_proj)
     }
-    write_shape(mask_vect, temp_shapefile, overwrite = TRUE)
+
+    mask_vect <- mask_vect %>%
+      as("Spatial")
   }
 
-  #   ____________________________________________________________________________
-  #   rasterize mask_vect - we can always use a BYte representation since the
-  #   features of the input were combined                                     ####
-
-  if (verbose) {(message("mask_rast --> Writing temporary rasterized shapefile"))}
-  temp_rastermask <- tempfile(tmpdir = tempdir(), fileext = ".tiff")
-
-  if (crop) {
+  if (crop == TRUE) {
 
     #   ____________________________________________________________________________
     #   find a correct cropping bounding box which allows to not "move" the corn####
     #    the corners while creating a vrt file (TODO --> Move to dedicated function !)
 
     rast_bbox <- raster::extent(in_rast)[c(1,3,2,4)]
-    vect_bbox <- sf::st_bbox(mask_vect)
+    vect_bbox <- raster::extent(mask_vect)[c(1,3,2,4)]
 
     col_coords <- rast_bbox[1] + raster::res(in_rast)[1] * seq_len(dim(in_rast)[2])
     row_coords <- rast_bbox[2] + raster::res(in_rast)[2] * seq_len(dim(in_rast)[1])
@@ -174,29 +173,30 @@ mask_rast <- function(in_rast,
                           filename  = temprastfile,
                           options   = c("COMPRESS=DEFLATE"),
                           overwrite = TRUE)
-      in_rast <- raster::raster(temprastfile)
+      in_rast <- raster::stack(temprastfile)
     }
 
-    # find which bands of the original raster were "passed"
+    # ____________________________________________________________________________
+    # find which bands of the original raster were "passed" and from which files they ###
+    # originate - useful to be able to mask a stack with layers derived from multiple
+    # files
     bands <- list()
     files <- list()
     for (bb in seq_len(raster::nlayers(in_rast))) {
       bands[[bb]] <- in_rast[[bb]]@data@band
       files[[bb]] <- in_rast[[bb]]@file@name
     }
-    bands <- unlist(bands)
-    files <- unlist(files)
-
+    bands <- unlist(bands, use.names = FALSE)
+    files <- unlist(files, use.names = FALSE)
 
     #   ____________________________________________________________________________
     #   If the bands in the original stack are not all coming                   ####
     #   from the same on-disk raster, build a txt file to tell gdalbuildvrt
     #   which band comes from where !
     #
-    temp_vrt        <- tempfile(fileext = ".vrt")
-    # browser()
-    if (length(unique(files)) > 1) {
+    temp_vrt  <- tempfile(fileext = ".vrt")
 
+    if (length(unique(files)) > 1) {
       tmp_txt <- tempfile(fileext = ".txt")
       writeLines(files, tmp_txt)
       buildvrt_string <- paste("-te ", paste(te, collapse = " "),
@@ -210,181 +210,81 @@ mask_rast <- function(in_rast,
                                in_rast[[1]]@file@name)
     }
 
+    # Now create the cropped virtual file ----
     system2(file.path(find_gdal(), "gdalbuildvrt"), args = buildvrt_string, stdout = NULL)
     in_rast <- raster::brick(temp_vrt)
-    te <- raster::extent(in_rast)[c(1, 3, 2, 4)][] - c(0, 0,0,0 )
-  } else {
-    te <- raster::extent(in_rast)[c(1, 3, 2, 4)][] #- c(0, -res(in_rast)[1], res(in_rast)[1], 0)
   }
-  #   ____________________________________________________________________________
-  #   correct the extent for gdal_rasterize to get                            ####
-  #   an identically sized output
-  # te <- te - c(-raster::res(in_rast)[1], -raster::res(in_rast)[1], 0,  0)
-  # te <- raster::extent(in_rast)[c(1, 3, 2, 4)][] - c(0, -res(in_rast)[1], res(in_rast)[1], 0)
+
 
   #   ____________________________________________________________________________
-  #   Rasterize the mask shapefile                                            ####
+  #   Compute the mask by band - this allows to use parallelized execution !  ####
+  #   + save each band as a compressed tiff: this allows not wasting space
+  #   and successively create small compressed multiband files
 
-  temp_rastermask  <- tempfile(tmpdir = tempdir(), fileext = ".tif")
-  rasterize_string <- paste("-at",
-                            "-burn 1",
-                            "-a_nodata", out_nodata,
-                            "-te", paste(te, collapse = " "),
-                            "-tr", paste(raster::res(in_rast), collapse = " "),
-                            "-ot Byte",
-                            temp_shapefile,
-                            temp_rastermask)
+  clust = sprawl_initcluster(in_rast)
+  tempfold <- file.path(tempdir(), "tests","sprawlmask",sample(1:1000)[1])
+  dir.create(tempfold, showWarnings = FALSE, recursive = TRUE)
+  temp_tiffs <- foreach::foreach(band = clust$opts$bands,
+                                 # temp_tiffs <- foreach::foreach(band = 1:2,
+                                 .combine  = "c",
+                                 .verbose  = FALSE,
+                                 .packages = c("raster")) %dopar% {
+                                   tempout  <- file.path(tempfold,
+                                                         paste0("sprawlmask_b",
+                                                                sprintf("%03i", band), ".tif"))
 
-  system2(file.path(find_gdal(), "gdal_rasterize"),
-          args = rasterize_string, stdout = NULL)
-  # raster(temp_rastermask)
-  # raster(in_rast)
-  #   ____________________________________________________________________________
-  #   apply the mask by multiplying the input raster by the mask, for each    ####
-  #   band of the input
-# browser()
-#   if (!crop) {
-#     masked_rast <- in_rast * raster::raster(temp_rastermask)
-#   } else {
-#     t1 = Sys.time()
-#     masked_rast <- raster::stack(temp_vrt) * raster::raster(temp_rastermask)
-#     print(Sys.time() - t1)
-#   }
-  multiply = function(x,y){
-    x * y
-  }
-#
-#   in_stack = stack(temp_vrt)
-#   t1 = Sys.time()
+                                   if (is.null(out_nodata)) {
 
-  beginCluster(6)
-  temp_tiffs <- list()
-  for (band in 1:raster::nlayers(in_rast)) {
-    in_band  <- in_rast[[band]]
-    maskband <- raster::brick(temp_rastermask)
-# browser()
-    out_temptif <- tempfile(fileext = ".tif")
-    temp_tiffs[[band]] <- out_temptif
-    if (!((max(origin(in_rast) - origin(maskband)) <= 1) |
-          ncol(in_band) == ncol(maskband) |
-          nrow(in_band) == nrow(maskband))) {
-      stop("something wrong on extents !!!!")
-    }
-    cumstack <- stack(in_band, maskband, quick = TRUE)
+                                     raster::mask(in_rast[[band]],
+                                                  mask_vect,
+                                                  filename  = tempout,
+                                                  options   = c("COMPRESS=DEFLATE"),
+                                                  overwrite = TRUE)
 
-    clusterR(cumstack, overlay,
-             args = list(fun = multiply),
-             filename = out_temptif,
-             options = c("COMPRESS=DEFLATE"),
-             overwrite = T )
-  }
-  endCluster()
+                                   } else {
+                                     raster::mask(in_rast[[band]],
+                                                  mask_vect,
+                                                  filename  = tempout,
+                                                  options   = c("COMPRESS=DEFLATE"),
+                                                  overwrite = TRUE,
+                                                  NAflag    = out_nodata)
+                                   }
+                                   return(tempout)
+                                 }
 
+  parallel::stopCluster(clust$clust)
 
-  temp_tiffs <- unlist(temp_tiffs, use.names = FALSE)
-  # print(Sys.time() - t1)
-
-  # t1 = Sys.time()
-  # in_stack      <- raster::stack(temp_vrt)
-  # masked_rast   <- raster::stack(in_stack)
-  # inmaskvalues  <- raster::getValues(raster::raster(temp_rastermask))
-  # n_bands       <- raster::nlayers(in_stack)
-  # # for (band in seq_len(n_bands)) {
-  # #   if (verbose) message("mask_rast --> Masking band ", band, " of: ", n_bands)
-  # #   invalues            <- raster::getValues(in_stack[[band]] )
-  # #   masked_rast[[band]] <- invalues * inmaskvalues
-  # # }
-  # # print(Sys.time() - t1)
-  #
-  # gdal_calc <- Sys.which('gdal_calc.py')
-  # if(gdal_calc=='') stop('gdal_calc.py not found on system.')
-  # out
-  #
-  # system2('python',
-  #         args =c(gdal_calc,
-  #                 sprintf("-A %s", temp_vrt),
-  #                 sprintf("--A_band=1"),
-  #                 sprintf("-B %s", temp_rastermask),
-  #                 sprintf("--outfile=%s", temp_raster),
-  #                 sprintf('--calc=A*B'),
-  #                 # sprintf('--type="%s"', type),
-  #                 '--co="COMPRESS=LZW"')#,
-  #         # sprintf('--format="%s"', format),
-  #         # sprintf('--NoDataValue=%s', out_nodata)),
-  #         # stdout=tempfile()
-  # )
-  #
-  # browser()
-  # t1 = Sys.time()
-  # clust         <- sprawl_initcluster(in_stack, bands = c(1,n_bands), maxchunk = 50E5)
-  # inmaskvalues  <- rgdal::readGDAL(temp_rastermask)
-  # # raster::getValues(raster::raster(temp_rastermask))
-  #
-  # pb       <- utils::txtProgressBar(max = n_bands, style = 3)
-  # progress <- function(n) utils::setTxtProgressBar(pb, n)
-  # opts     <- list(progress = progress)
-  #
-  # writeStart ()
-  #
-  # results <- foreach::foreach(band = 1:n_bands, .packages = c("raster"),
-  #                             .verbose = verb_foreach,
-  #                             # .export  = c("in_stack", "masked_rast"),
-  #                             .options.snow = opts) %dopar% {
-  #                               if (verbose) {
-  #                                 Sys.sleep(0.001)
-  #                                 utils::setTxtProgressBar(pb, band)
-  #                               }
-  #
-  #                               maskedvalues <- rgdal::readGDAL(temp_vrt, band = 1)
-  #                               # maskedvalues@data <- maskedvalues@data * inmaskvalues
-  #                               rgdal::writeGDAL(maskedvalues@data * inmaskvalues@data)
-  #                               # maskedvalues = list()
-  #                               start_cell = 1
-  #                               # for (chunk in seq_len(clust$opts$n_chunks)) {
-  #                               #   message(chunk)
-  #                               startrow  <- ifelse(chunk == 1, 1, 1 + (chunk - 1) *
-  #                                                     ceiling(clust$opts$nrows / clust$opts$n_chunks))
-  #                               chunkrows <- ifelse(chunk != clust$opts$n_chunks,
-  #                                                   ceiling(clust$opts$nrows / clust$opts$n_chunks),
-  #                                                   (1 + clust$opts$nrows - startrow))
-  #                               ncells      <- clust$opts$ncols * chunkrows
-  #                               end_cell    <- start_cell + ncells - 1
-  #                               # endrow    <- startrow + chunkrows - 1
-  #
-  #                               maskedvalues <- rgdal::readGDAL(temp_vrt,
-  #                                                               band = band,
-  #                                                               region.dim = c(chunkrows, clust$opts$ncols))@data *
-  #                                 rgdal::readGDAL(temp_rastermask,
-  #                                                 band = band,
-  #                                                 region.dim = c(chunkrows, clust$opts$ncols))@data
-  #                               writeLines()
-  #
-  #                               #   invalues  <- rgdal::readGDAL(in_stack[[band]], startrow, chunkrows)
-  #                               #   maskedvalues[[chunk]]  <- invalues * inmaskvalues[start_cell:end_cell]
-  #                               #   start_cell  <- end_cell + 1
-  #                               # }
-  #                               # # rbindlist the matrix at the end
-  #                               # masked_rast[[band]] <- unlist(maskedvalues, use.names = FALSE)
-  #                             }
-  # parallel::stopCluster(clust$clust)
-  # print(Sys.time() - t1)
+  masked_out <- raster::stack(temp_tiffs)
 
   if (to_file) {
+
+    tempvrt <- tempfile(fileext = ".vrt")
+    gdalUtils::gdalbuildvrt(gdalfile = temp_tiffs, output.vrt = tempvrt,
+                            separate = T)
+
     if (is.null(out_rast)) {
-      out_rast = out_temptif
+
+      masked_out <- tempvrt
+
     } else {
-      file.rename(out_temptif, out_rast)
+      if (is.null(out_nodata)) {
+        gdalUtils::gdal_translate(tempvrt,
+                                  out_rast,
+                                  options   = c("COMPRESS=DEFLATE"))
+
+      } else {
+        gdalUtils::gdal_translate(tempvrt,
+                                  out_rast,
+                                  options   = c("COMPRESS=DEFLATE"),
+                                  NAflag    = out_nodata)
+      }
+      masked_out <- out_rast
     }
-    masked_rast <- out_rast
-  } else {
-    masked_rast <- raster::stack(temp_tiffs)
   }
 
-  return(masked_rast)
   #   ____________________________________________________________________________
   #   define clean-up                                                         ####
-
   on.exit(unlink(temp_shapefile))
-  on.exit(unlink(temp_rastermask))
+  return(masked_out)
 
 }

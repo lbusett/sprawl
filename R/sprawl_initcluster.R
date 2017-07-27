@@ -25,19 +25,21 @@ sprawl_initcluster <- function(in_rast,
                                bands          = NULL,
                                maxchunk       = 50E5,
                                out_on_console = FALSE) {
-  if (is.null(ncores)) {
+
+   if (is.null(ncores)) {
     ncores <- parallel::detectCores() - 2
   }
   ncores <- min(c(ncores, (parallel::detectCores() - 2)), 8)
   if (is.null(bands)) {
     bands   <- seq(1, raster::nlayers(in_rast))
     if (length(bands) > 1) {
-    n_bands <- length(seq(bands[1], bands[2]))
+      n_bands <- length(bands)
     } else {
       n_bands = 1
     }
   } else {
-    n_bands <- length(seq(bands[1], bands[2]))
+    bands   <- seq(bands[1], bands[2])
+    n_bands <- length(bands)
   }
 
   if (n_bands < ncores) {
@@ -52,13 +54,19 @@ sprawl_initcluster <- function(in_rast,
 
   doSNOW::registerDoSNOW(clust)
 
+  nrows <- raster::nrow(in_rast)
+  ncols <- raster::ncol(in_rast)
+  n_cells <- nrows * ncols
+  n_chunks <- floor(n_cells / maxchunk) + 1
   # Initialize other variables and progress bar
-  opts  <- data.frame(ncores <- ncores,
-                            maxchunk  <- maxchunk/ncores,
-                            nrows     <- raster::nrow(in_rast),
-                            ncols     <- raster::ncol(in_rast),
-                            n_cells   <- nrows * ncols,
-                            n_chunks  <- floor(n_cells / maxchunk) + 1)
+  opts  <- list("ncores"  = ncores,
+                "n_bands" = n_bands,
+                "bands"   = bands,
+                "maxchunk"  = maxchunk/ncores,
+                "nrows"     = nrows,
+                "ncols"     = ncols,
+                "n_cells"   = n_cells,
+                "n_chunks"  = n_chunks)
 
   return(list(clust = clust, opts = opts))
 }
