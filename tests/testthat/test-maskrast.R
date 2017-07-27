@@ -26,7 +26,7 @@ testthat::test_that("Test On raster masking", {
   sp_polys    <- mask_vect %>%
     sf::st_transform(as.character(sp::proj4string(in_rast))) %>%
     as("Spatial")
-  out_mask_raster        <- raster::mask(in_rast, sp_polys)
+  out_mask_raster  <- raster::mask(in_rast, sp_polys)
   diff <- unique(raster::getValues(out_masked) - raster::getValues(out_mask_raster))
   expect_equal(as.numeric(diff), c(NA, 0))
 
@@ -37,6 +37,6 @@ testthat::test_that("Test On raster masking", {
   # check errors in input selbands
   masked_fromfiles   <- mask_rast(in_rast, mask_vect, verbose = FALSE)
   expect_is(masked_fromfiles, "Raster")
-  expect_equal(unique(raster::getValues(out_masked - masked_fromfiles)), c(NA, 0))
+  expect_equal(unique(raster::getValues(out_masked - masked_fromfiles)), c(0))
 
 })

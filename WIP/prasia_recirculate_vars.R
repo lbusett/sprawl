@@ -17,6 +17,7 @@ in_rast_totlgt <- raster::stack(list.files(in_folder, pattern = glob2rx("tot*"),
 in_rast_cumevi <- raster::stack(list.files(in_folder, pattern = glob2rx("cum*"), full.names = T))
 
 
+
 years = seq(2003,2016)
 for (y_ind in seq_along(years)) {
   yy = years[y_ind]
@@ -29,6 +30,30 @@ for (y_ind in seq_along(years)) {
   names(in_rast_nseas)  <- gsub(paste0("_all.",y_ind, "$"), paste0("_", yy), names(in_rast_nseas ))
 }
 
+
+#   ____________________________________________________________________________
+#   get correspondence between names, var, seas, and year. Create a data frame ####
+#   with an associated column that will tell us in which order to pick the
+#   bands form the original stack
+
+names <- tibble::tibble(name = names(in_rast_sos))
+split_names <- stringr::str_split_fixed(names$name, "_", 3)
+names <- cbind(names, split_names, or_order = seq(1:length(names$name))) %>%
+  `colnames<-`(c("name", "var", "season", "year", "order")) %>%
+ dplyr::arrange(Year, Season)
+
+r <- raster::stack(in_rast_sos)
+
+for (band in 1:raster::nlayers(in_rast_sos)) {
+
+  pippo[[band]] <- in_rast_sos[[names$order[band]]]
+
+}
+
+#   ____________________________________________________________________________
+#   order in which we have to pick the bands from the stack is in "names$order"   ####
+
+
 #   ____________________________________________________________________________
 #   Crop on an area of interest                                             ####
 #
@@ -40,8 +65,9 @@ boundaries <- st_as_sf(boundaries)
 dir.create("/home/lb/my_data/prasia/PHL")
 
 t1 <- Sys.time()
-test <- mask_rast(in_rast_sos[[1:5]], boundaries, crop = TRUE, to_file = TRUE,
-                  out_rast = "/home/lb/my_data/prasia/PHL/sos_phlpipo.tif")
+sos <- mask_rast(in_rast_sos, boundaries, crop = TRUE, to_file = TRUE,
+                  out_rast = "/home/lb/my_data/prasia/PHL/SOS_PHL.tif")
+names(sos) <-
 Sys.time() - t1
 #   ____________________________________________________________________________
 #   Decircularize dates rasters                                             ####
