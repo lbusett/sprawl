@@ -9,17 +9,17 @@
 \alias{get_projstring.Spatial}
 \title{return the proj4string of a spatial object or file}
 \usage{
-get_projstring(object)
+get_projstring(object, abort = FALSE)
 
-\method{get_projstring}{character}(object)
+\method{get_projstring}{character}(object, abort = FALSE)
 
-\method{get_projstring}{Raster}(object)
+\method{get_projstring}{Raster}(object, abort = FALSE)
 
-\method{get_projstring}{sf}(object)
+\method{get_projstring}{sf}(object, abort = FALSE)
 
-\method{get_projstring}{sfc}(object)
+\method{get_projstring}{sfc}(object, abort = FALSE)
 
-\method{get_projstring}{Spatial}(object)
+\method{get_projstring}{Spatial}(object, abort = FALSE)
 }
 \arguments{
 \item{object}{\code{character} corresponding to the name of a R object, or a filename

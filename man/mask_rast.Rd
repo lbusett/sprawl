@@ -4,20 +4,20 @@
 \alias{mask_rast}
 \title{Mask a raster based on a vector}
 \usage{
-mask_rast(in_rast, mask_vect, crop = FALSE, buffer = NULL,
-  out_nodata = NULL, to_file = FALSE, out_rast = NULL, out_dt = "FLT4S",
-  verbose = TRUE, verb_foreach = FALSE)
+mask_rast(in_rast, mask, crop = FALSE, buffer = NULL, out_nodata = NULL,
+  to_file = FALSE, out_rast = NULL, out_dt = "FLT4S", verbose = TRUE,
+  verb_foreach = FALSE)
 }
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
 
-\item{mask_vect}{Vector file or object of class \code{*sf} or \code{sp} to be used as a mask}
+\item{mask}{Vector file or object of class \code{*sf} or \code{sp} to be used as a mask}
 
-\item{crop}{\code{logical} if TRUE, \code{in_rast} is also cropped on the extent of \code{mask_vect},
+\item{crop}{\code{logical} if TRUE, \code{in_rast} is also cropped on the extent of \code{mask},
 Default: FALSE}
 
-\item{buffer}{\code{numeric} if not NULL, width of a buffer to be applied to \code{mask_vect} before
-masking \code{in_rast}. If negative, mask_vect is "reduced" prior to masking (see examples),
+\item{buffer}{\code{numeric} if not NULL, width of a buffer to be applied to \code{mask} before
+masking \code{in_rast}. If negative, mask is "reduced" prior to masking (see examples),
 Default: NULL}
 
 \item{out_nodata}{\code{numeric} value to be assigned to areas outside the mask, Default: 'NoData'}

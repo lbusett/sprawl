@@ -10,22 +10,25 @@
 \alias{check_spatype.Spatial}
 \title{check the "spatial type" of an object or file}
 \usage{
-check_spatype(object)
+check_spatype(object, abort = FALSE)
 
-\method{check_spatype}{default}(object)
+\method{check_spatype}{default}(object, abort = FALSE)
 
-\method{check_spatype}{Spatial}(object)
+\method{check_spatype}{character}(object, abort = FALSE)
 
-\method{check_spatype}{Raster}(object)
+\method{check_spatype}{Raster}(object, abort = FALSE)
 
-\method{check_spatype}{sf}(object)
+\method{check_spatype}{sf}(object, abort = FALSE)
 
-\method{check_spatype}{sfc}(object)
+\method{check_spatype}{sfc}(object, abort = FALSE)
 
-\method{check_spatype}{Spatial}(object)
+\method{check_spatype}{Spatial}(object, abort = FALSE)
 }
 \arguments{
 \item{object}{either a \code{R} object or a \code{character} string pointing to a vector or raster layer}
+
+\item{abort}{\code{logical} if TRUE the function aborts if \code{object} is not recognized as an
+R spatial file or valid vector or raster file}
 }
 \value{
 character vector equal to \emph{spobject}, \emph{sfobject}, \emph{rastobject}, \emph{vectfile} or \emph{rastfile}

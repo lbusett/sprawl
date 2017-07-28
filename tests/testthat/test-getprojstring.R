@@ -1,10 +1,10 @@
-context("Checking reprojection of extent")
-testthat::test_that("Test reproj_extent",{
+context("Checking extraction of projection string")
+testthat::test_that("Test projection string",{
   # skip_on_cran()
   skip_on_travis()
   # no proj set
   library(sprawl.data)
-  testthat::expect_error(reproj_extent(in_pts))
+  testthat::expect_error(get_projstring(in_pts))
 
   # extraction of projstring from raster ----
   in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
@@ -27,15 +27,18 @@ testthat::test_that("Test reproj_extent",{
                "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 
 
-  # abort on wrong projstring ----
+  # warning/abort on wrong projstring ----
   rastobj <- raster::raster(in_rast)
   raster::crs(rastobj) <- "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4"
 
-  expect_warning(get_projstring(rastobj))
+  expect_warning(out <- get_projstring(rastobj))
+  expect_equal(out, "invalid")
   expect_error(get_projstring(rastobj, abort = TRUE))
 
-  expect_error(get_projstring("pippo.shp"))
-  expect_error(get_projstring(123))
+  # warning/abort on invalid filename or object ----
+  expect_warning(out <- get_projstring("pippo.shp"))
+  expect_equal(out, "none")
+  expect_error(get_projstring(123, abort = TRUE))
 
 }
 )

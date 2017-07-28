@@ -1,8 +1,10 @@
 #' @title check the "spatial type" of an object or file
 #' @description accessory function to check if an object passed to the function corresponds to
-#' a `*Spatial` Object, a `sf` object, a R `raster` object, a file corresponding to a vector,
-#' or a file corresponding to a raster
+#'   a `*Spatial` Object, a `sf` object, a R `raster` object, a file corresponding to a vector,
+#'   or a file corresponding to a raster
 #' @param object either a `R` object or a `character` string pointing to a vector or raster layer
+#' @param abort `logical` if TRUE the function aborts if `object` is not recognized as an
+#'   R spatial file or valid vector or raster file
 #' @return character vector equal to *spobject*, *sfobject*, *rastobject*, *vectfile* or *rastfile*
 #' @rdname check_spatype
 #' @export
@@ -62,7 +64,7 @@ check_spatype.default   <- function(object,
 #   Method for "character" - find if file exists and is "spatial"           ####
 
 #' @rdname check_spatype
-#' @method check_spatype Spatial
+#' @method check_spatype character
 #' @export
 check_spatype.character <- function(object,
                                     abort = FALSE) {
@@ -142,7 +144,8 @@ check_spatype.character <- function(object,
 #' @rdname check_spatype
 #' @method check_spatype Raster
 #' @export
-check_spatype.Raster    <- function(object) {
+check_spatype.Raster    <- function(object,
+                                    abort = FALSE) {
   "rastobject"
 }
 
@@ -152,7 +155,8 @@ check_spatype.Raster    <- function(object) {
 #' @rdname check_spatype
 #' @method check_spatype sf
 #' @export
-check_spatype.sf        <- function(object) {
+check_spatype.sf        <- function(object,
+                                    abort = FALSE) {
   "sfobject"
 }
 
@@ -162,7 +166,8 @@ check_spatype.sf        <- function(object) {
 #' @rdname check_spatype
 #' @method check_spatype sfc
 #' @export
-check_spatype.sfc        <- function(object) {
+check_spatype.sfc        <- function(object,
+                                    abort = FALSE) {
   "sfobject"
 }
 
@@ -173,6 +178,7 @@ check_spatype.sfc        <- function(object) {
 #' @rdname check_spatype
 #' @method check_spatype Spatial
 #' @export
-check_spatype.Spatial   <- function(object) {
+check_spatype.Spatial   <- function(object,
+                                    abort = FALSE) {
   "spobject"
 }

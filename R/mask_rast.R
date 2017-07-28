@@ -4,11 +4,11 @@
 #'   mask is automatically applied to all bands. An optional buffer can be applied to the input
 #'   vector to allow a more "lenient" masking, or to remove also the borders of the vector.
 #' @param in_rast Raster file or object inheriting class `raster` to be masked
-#' @param mask_vect Vector file or object of class `*sf` or `sp` to be used as a mask
-#' @param crop `logical` if TRUE, `in_rast` is also cropped on the extent of `mask_vect`,
+#' @param mask Vector file or object of class `*sf` or `sp` to be used as a mask
+#' @param crop `logical` if TRUE, `in_rast` is also cropped on the extent of `mask`,
 #'   Default: FALSE
-#' @param buffer `numeric` if not NULL, width of a buffer to be applied to `mask_vect` before
-#'   masking `in_rast`. If negative, mask_vect is "reduced" prior to masking (see examples),
+#' @param buffer `numeric` if not NULL, width of a buffer to be applied to `mask` before
+#'   masking `in_rast`. If negative, mask is "reduced" prior to masking (see examples),
 #'   Default: NULL
 #' @param out_nodata `numeric` value to be assigned to areas outside the mask, Default: 'NoData'
 #' @param to_file `logical` If TRUE, the output masked raster is save to file instead than sent back
@@ -40,13 +40,14 @@
 #' @export
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 #' @importFrom dplyr case_when
+#' @importFrom rgdal ogrInfo
 #' @importFrom foreach foreach %dopar%
 #' @importFrom gdalUtils gdalsrsinfo
 #' @importFrom raster raster extent writeRaster
 #' @importFrom sf st_buffer st_crs st_transform st_as_sf st_combine st_sf
 
 mask_rast <- function(in_rast,
-                      mask_vect,
+                      mask,
                       crop       = FALSE,
                       buffer     = NULL,
                       out_nodata = NULL,
@@ -55,26 +56,22 @@ mask_rast <- function(in_rast,
                       out_dt     = "FLT4S",
                       verbose    = TRUE,
                       verb_foreach = FALSE) {
-  # browser()
+
   #   ____________________________________________________________________________
   #   Check the arguments                                                     ####
-  ras_type  <- check_spatype(in_rast)
-  mask_type <- check_spatype(mask_vect)
 
-  rast_proj <- get_projstring(in_rast)
-  mask_proj <- get_projstring(mask_vect)
 
-  # checks on in_rast
-  #
-  # in_rast <- cast_rast(in_rast, "rastobject", abort_on_none = TRUE)
-
+  # checks on in_rast ----
+  ras_type  <- check_spatype(in_rast,   abort = TRUE)
   if (check_spatype(in_rast) == "rastfile") {
-    in_rast  <- raster::raster(in_rast)
-    ras_type <- "rastobject"
+    in_rast  <- raster::brick(in_rast)
+    ras_type = "rastobject"
   }
   if (ras_type != "rastobject") {
     stop("mask_rast --> `in_rast` must be a `*Raster` object or raster file name. Aborting !")
   }
+  rast_proj <- get_projstring(in_rast, abort = TRUE)
+  rast_bbox <- raster::extent(in_rast)[c(1,3,2,4)]
 
   # check if the input raster is associated to a physical file (i.e., not "in memory)
   # If not, create a temporary physical file by saving in tempdir()
@@ -88,89 +85,63 @@ mask_rast <- function(in_rast,
     in_rast <- raster::stack(temprastfile)
   }
 
-  # checks on mask_vect
+  # checks on mask ----
+  mask_type      <- check_spatype(mask, abort = TRUE)
+  mask_proj      <- get_projstring(mask)
 
-  if (mask_type == "none") {
-    stop("mask_rast --> ", basename(mask_vect), "is not a vector file or object. Aborting !" )
-  }
 
-  if (ras_type == "rastfile") {
-    rastname = in_rast
-  } else {
-    rastname = in_rast[[1]]
-    rastname = rastname@file@name
-  }
+  #   ____________________________________________________________________________
+  #   All checks passed - Issue processing message and start working          ####
 
-  temp_shapefile <- tempfile(fileext = ".shp")
+  call <- as.list(match.call())
+  message("mask_rast --> Masking: ", call[[1]], " on: ", call[[2]])
+
   #   ____________________________________________________________________________
   #   read the vector file and apply buffer if necessary                      ####
+  temp_shapefile <- tempfile(fileext = ".shp")
 
-  if (mask_type == "vectfile") {
-
-    if (is.null(buffer)) {
-
-      # If no buffer, fInd the projection info using `gdalsrsinfo`. Read and reproj if needed,
-      # otherwise do nothing
-
-      if (mask_proj != rast_proj) {
-
-        mask_vect <- read_vect(mask_vect) %>%
-          sf::st_transform(rast_proj) %>%
-          sf::st_combine() %>%
-          sf::st_sf(id = 1, .) %>%
-          write_shape(temp_shapefile, overwrite = TRUE)
-
-      } else {
-        temp_shapefile <- mask_vect
-      }
-
-    } else {
-      # If  buffer, Read, apply buffer and reproj if needed,
-      # otherwise do nothing
-      mask_vect <- read_vect(mask_vect) %>%
-        sf::st_buffer(., buffer) %>%
-        sf::st_combine() %>%
-        sf::st_sf(id = 1, .)
-      # mask_proj <- sf::st_crs(mask_vect)$proj4string
-      if (mask_proj != rast_proj) {
-        mask_vect <- sf::st_transform(mask_vect, rast_proj)
-      }
-      write_shape(mask_vect, temp_shapefile, overwrite = TRUE)
-      # mask_vect <- read_vect(temp_shapefile) %>%
-      #   as("Spatial")
-    }
-  } else {
-    # input is a "*sp" or "sf" object
-    if (mask_type == "spobject") {
-      mask_vect <- sf::st_as_sf(mask_vect)
-    }
-    mask_vect <- mask_vect %>%
-      sf::st_combine() %>%
-      sf::st_sf(id = 1, .)
-
-    if (!is.null(buffer)) {
-      # apply buffer if needed
-      mask_vect <- read_vect(mask_vect) %>%
-        sf::st_buffer(buffer)
-    }
-    # mask_proj <- get_projstring(mask_vect)
-    if (mask_proj != rast_proj) {
-      mask_vect <- sf::st_transform(mask_vect, rast_proj)
-    }
-    write_shape(mask_vect, temp_shapefile, overwrite = TRUE)
-    # mask_vect <- mask_vect %>%
-    #   as("Spatial")
+  # if *spobject in input, convert immediately to *sf
+  if (mask_type == "spobject") {
+    mask <- sf::st_as_sf(mask)
+    mask_type = "sfobject"
   }
 
+  # if we have an sfobject now, reproject and buffer if necessary, then save as
+  # shapefile
+
+  if (mask_type == "vectfile") {
+    # if input is a vector file: if no buffer and no reproj, do nothing, otherwise
+    # read the vector file and reset "mask_type" to "sfobject"
+    if (is.null(buffer) & (rast_proj == mask_proj)) {
+      vect_bbox <- rgdal::ogrInfo(mask, rgdal::ogrInfo(mask)$layer)$extent
+      temp_shapefile <- mask
+    } else {
+      mask <- read_vect(mask)
+      mask_type <- "sfobject"
+    }
+  }
+  # if now we still have an sf object, buffer and reproject if necessary, then save
+  # the mask to temp_shapefile
+  if (mask_type == "sfobject") {
+    if (rast_proj != mask_proj) {
+      mask <- mask %>%
+        sf::st_transform(rast_proj)
+    }
+    if (!is.null(buffer)) {
+      mask <- mask %>%
+        sf::st_buffer(buffer)
+    }
+    mask %>%
+      sf::st_combine() %>%
+      sf::st_sf(id = 1, .) %>%
+      write_shape(temp_shapefile, overwrite = TRUE)
+    vect_bbox <- sf::st_bbox(mask)
+  }
+  #   ____________________________________________________________________________
+  #   If crop ==TREU find a correct cropping bounding box which allows to not "move"
+  #   the  corners while creating vrt files
   if (crop == TRUE) {
 
-    #   ____________________________________________________________________________
-    #   find a correct cropping bounding box which allows to not "move" the corn####
-    #    the corners while creating a vrt file (TODO --> Move to dedicated function !)
-
-    rast_bbox <- raster::extent(in_rast)[c(1,3,2,4)]
-    vect_bbox <- sf::st_bbox(mask_vect)
-    # vect_bbox <- raster::extent(mask_vect)[c(1,3,2,4)]
 
     col_coords <- rast_bbox[1] + raster::res(in_rast)[1] * seq_len(dim(in_rast)[2])
     row_coords <- rast_bbox[2] + raster::res(in_rast)[2] * seq_len(dim(in_rast)[1])
@@ -200,7 +171,7 @@ mask_rast <- function(in_rast,
   # te <- raster::extent(in_rast)[c(1, 3, 2, 4)][] - c(0, -res(in_rast)[1], res(in_rast)[1], 0)
   #
 
-  # write_shape(mask_vect, temp_shapefile, overwrite = TRUE)
+  # write_shape(mask, temp_shapefile, overwrite = TRUE)
   #
   if (verbose) {
     message("mask_rast --> Rasterizing the vector map to a temporary TIFF file")

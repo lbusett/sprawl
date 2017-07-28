@@ -74,6 +74,7 @@ get_projstring.character <- function(object, abort = FALSE) {
         stop("get_projstring --> Invalid proj4string detected ! Aborting !")
       } else {
         warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+        return("invalid")
       }
     } else {
       return(projstring)
@@ -83,6 +84,7 @@ get_projstring.character <- function(object, abort = FALSE) {
       stop("get_projstring --> `object` is not a valid raster or vector file, Aborting !")
     } else {
       warning("get_projstring --> `object` is not a valid raster or vector file, Aborting !")
+      return("none")
     }
   }
 }
@@ -103,6 +105,7 @@ get_projstring.Raster <- function(object, abort = FALSE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
       warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      return("invalid")
     }
   } else {
     return(projstring)
@@ -125,6 +128,7 @@ get_projstring.sf <- function(object, abort = FALSE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
       warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      return("invalid")
     }
   } else {
     return(projstring)
@@ -147,6 +151,7 @@ get_projstring.sfc <- function(object, abort = FALSE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
       warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      return("invalid")
     }
   } else {
     return(projstring)
@@ -170,6 +175,7 @@ get_projstring.Spatial <- function(object, abort = FALSE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
       warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      return("invalid")
     }
   } else {
     return(projstring)
