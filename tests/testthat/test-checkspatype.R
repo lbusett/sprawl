@@ -21,11 +21,12 @@ testthat::test_that("check_spatype",{
 
   # input is character but not a valid filename
   obj <- "xyzptr"
-  testthat::expect_error(check_spatype(obj))
-  # input a valid filename but not a spatial file
-  obj <- system.file("extdata", "sprawl_EVItest.RData", package = "sprawl.data")
-  out <- check_spatype(obj)
-  testthat::expect_equal(out,"none")
+  testthat::expect_error(check_spatype(obj, abort = TRUE))
+  testthat::expect_warning(check_spatype(obj, abort = FALSE))
 
+  # input is a valid filename but not a spatial file
+  obj <- system.file("extdata", "sprawl_EVItest.RData", package = "sprawl.data")
+  expect_warning(out <- check_spatype(obj))
+  testthat::expect_equal(out,"none")
 })
 

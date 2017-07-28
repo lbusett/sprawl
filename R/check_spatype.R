@@ -35,7 +35,8 @@
 #
 #
 
-check_spatype  <- function(object) {
+check_spatype  <- function(object,
+                           abort = FALSE) {
   UseMethod("check_spatype")
 }
 
@@ -46,8 +47,15 @@ check_spatype  <- function(object) {
 #' @rdname check_spatype
 #' @method check_spatype default
 #' @export
-check_spatype.default   <- function(object) {
-   stop("check_spatype --> `", object, "` is not a valid filename. Aborting !")
+check_spatype.default   <- function(object,
+                                    abort = FALSE) {
+
+  if (abort == TRUE) {
+    stop("check_spatype --> `object` is not a valid R object or string. Aborting !")
+  } else {
+    warning("check_spatype --> `object` is not a valid R object or string.")
+    return("none")
+  }
 }
 
 #   ____________________________________________________________________________
@@ -56,10 +64,16 @@ check_spatype.default   <- function(object) {
 #' @rdname check_spatype
 #' @method check_spatype Spatial
 #' @export
-check_spatype.character <- function(object) {
-   # browser()
+check_spatype.character <- function(object,
+                                    abort = FALSE) {
+
   if (!file.exists(object)) {
-    stop("check_spatype --> `", object, "` is not a valid filename. Aborting !")
+    if (abort == TRUE) {
+      stop("check_spatype --> `object` is not a valid filename. Aborting !")
+    } else {
+      warning("check_spatype --> `object` is not a valid filename.")
+      return("none")
+    }
   } else {
 
     # First, try checking if file is a vector if it has a common extension ----
@@ -71,7 +85,12 @@ check_spatype.character <- function(object) {
       if (is.null(attr(vecttry, "status"))) {
         return("vectfile")
       } else {
-        return("none")
+        if (abort == TRUE) {
+          stop("check_spatype --> `object` is not a valid vector file. Aborting !")
+        } else {
+          warning("check_spatype --> `object` is not a valid vector file. Aborting !")
+          return("none")
+        }
       }
     }
 
@@ -85,7 +104,12 @@ check_spatype.character <- function(object) {
       if (is.null(attr(rastry, "status"))) {
         return("rastfile")
       } else {
-        return("none")
+        if (abort == TRUE) {
+          stop("check_spatype --> `object` is not a valid raster file. Aborting !")
+        } else {
+          warning("check_spatype --> `object` is not a valid raster file. Aborting !")
+          return("none")
+        }
       }
     }
     else {
@@ -100,7 +124,12 @@ check_spatype.character <- function(object) {
         if (is.null(attr(rastry, "status"))) {
           return("rastfile")
         } else {
-          return("none")
+          if (abort == TRUE) {
+            stop("check_spatype --> `object` is not a valid raster or vector file. Aborting !")
+          } else {
+            warning("check_spatype --> `object` is not a valid raster or vector file. Aborting !")
+            return("none")
+          }
         }
       }
     }
