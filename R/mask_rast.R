@@ -55,7 +55,7 @@ mask_rast <- function(in_rast,
                       out_dt     = "FLT4S",
                       verbose    = TRUE,
                       verb_foreach = FALSE) {
-# browser()
+  # browser()
   #   ____________________________________________________________________________
   #   Check the arguments                                                     ####
   ras_type  <- check_spatype(in_rast)
@@ -74,6 +74,18 @@ mask_rast <- function(in_rast,
   }
   if (ras_type != "rastobject") {
     stop("mask_rast --> `in_rast` must be a `*Raster` object or raster file name. Aborting !")
+  }
+
+  # check if the input raster is associated to a physical file (i.e., not "in memory)
+  # If not, create a temporary physical file by saving in tempdir()
+
+  if (in_rast[[1]]@file@name == "") {
+    temprastfile <- tempfile(fileext = ".tif")
+    raster::writeRaster(in_rast,
+                        filename  = temprastfile,
+                        options   = c("COMPRESS=DEFLATE"),
+                        overwrite = TRUE)
+    in_rast <- raster::stack(temprastfile)
   }
 
   # checks on mask_vect
@@ -176,57 +188,9 @@ mask_rast <- function(in_rast,
                          rast_bbox[4])
     te         <- c(start_x, start_y, end_x, end_y)
 
-    if (in_rast[[1]]@file@name == "") {
-      temprastfile <- tempfile(fileext = ".tif")
-      raster::writeRaster(in_rast,
-                          filename  = temprastfile,
-                          options   = c("COMPRESS=DEFLATE"),
-                          overwrite = TRUE)
-      in_rast <- raster::stack(temprastfile)
-    }
-
-    # ____________________________________________________________________________
-    # find which bands of the original raster were "passed" and from which files they ###
-    # originate - useful to be able to mask a stack with layers derived from multiple
-    # files
-    bands <- list()
-    files <- list()
-    for (bb in seq_len(raster::nlayers(in_rast))) {
-      bands[[bb]] <- in_rast[[bb]]@data@band
-      files[[bb]] <- in_rast[[bb]]@file@name
-    }
-    bands <- unlist(bands, use.names = FALSE)
-    files <- unlist(files, use.names = FALSE)
-
-    #   ____________________________________________________________________________
-    #   If the bands in the original stack are not all coming                   ####
-    #   from the same on-disk raster, build a txt file to tell gdalbuildvrt
-    #   which band comes from where !
-    #
-    temp_vrt  <- tempfile(fileext = ".vrt")
-
-    if (length(unique(files)) > 1) {
-      tmp_txt <- tempfile(fileext = ".txt")
-      writeLines(files, tmp_txt)
-      buildvrt_string <- paste("-te ", paste(te, collapse = " "),
-                               "-input_file_list",
-                               tmp_txt,
-                               temp_vrt)
-    } else {
-      buildvrt_string <- paste("-te ", paste(te, collapse = " "),
-                               paste(paste("-b ", bands), collapse = " "),
-                               temp_vrt,
-                               in_rast[[1]]@file@name)
-    }
-
-    # Now create the cropped virtual file ----
-    system2(file.path(find_gdal(), "gdalbuildvrt"), args = buildvrt_string, stdout = NULL)
-    in_rast <- raster::brick(temp_vrt)
   } else {
     te <- raster::extent(in_rast)[c(1,3,2,4)]
   }
-
-
   #   ____________________________________________________________________________
   #   Rasterize the mask shapefile: allows great improvements in speed        ####
   #   on large raster. Use gdal_rasterize instaad than raster::rasterize to
@@ -279,11 +243,28 @@ mask_rast <- function(in_rast,
                                  # temp_tiffs <- foreach::foreach(band = 1:2,
                                  .combine      = "c",
                                  .verbose      = FALSE,
-                                 .packages     = c("raster"),
+                                 .packages     = c("raster", "sprawl"),
                                  .options.snow = opts) %dopar% {
                                    tempout  <- file.path(tempfold,
                                                          paste0("sprawlmask_b",
                                                                 sprintf("%03i", band), ".tif"))
+
+                                   #   ____________________________________________________________________________
+                                   #   create a temporary vrt file corresponding to the band to be preocesse                           ####
+                                   #   This allows flexibility in the case that a stack is passed containing
+                                   #   coming from different files
+
+                                   infile    <- in_rast[[band]]@file@name
+                                   temp_vrt  <- tempfile(fileext = ".vrt")
+                                   buildvrt_string <- paste("-te ", paste(te, collapse = " "),
+                                                            temp_vrt,
+                                                            infile)
+                                   system2(file.path(find_gdal(), "gdalbuildvrt"), args = buildvrt_string, stdout = NULL)
+                                   in_rast <- raster::brick(temp_vrt)
+
+
+                                   # Now launch the masking between the raster vrt and the
+                                   # temporary rasterized mask
 
                                    if (is.null(out_nodata)) {
 
@@ -301,10 +282,7 @@ mask_rast <- function(in_rast,
                                                            overwrite = TRUE,
                                                            NAflag    = out_nodata)
                                    }
-                                   # if (verbose) {
-                                     # Sys.sleep(0.001)
-                                     # utils::setTxtProgressBar(pb, band)
-                                   # }
+
                                    return(tempout)
                                  }
 

@@ -26,6 +26,14 @@ testthat::test_that("Test reproj_extent",{
   expect_equal(get_projstring(read_vect(in_vect, as_sp = TRUE)),
                "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 
+
+  # abort on wrong projstring ----
+  rastobj <- raster::raster(in_rast)
+  raster::crs(rastobj) <- "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4"
+
+  expect_warning(get_projstring(rastobj))
+  expect_error(get_projstring(rastobj, abort = TRUE))
+
   expect_error(get_projstring("pippo.shp"))
   expect_error(get_projstring(123))
 

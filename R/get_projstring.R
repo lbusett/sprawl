@@ -3,6 +3,8 @@
 #'   or of raster or vector files
 #' @param object `character` corresponding to the name of a R object, or a filename
 #' (full path)
+#' @oaram abort `logical` if TRUE, the function aborts in case no proj4string or
+#' invalid projstring is found, Default: FALSE
 #' @return `character` proj4string of the object or file
 #' @details DETAILS
 #' @examples
@@ -32,7 +34,8 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #'
-get_projstring <- function(object) {
+get_projstring <- function(object,
+                           abort = FALSE) {
   UseMethod("get_projstring")
 }
 
@@ -42,9 +45,14 @@ get_projstring <- function(object) {
 #' @rdname
 #' @method get_projstring default
 #' @export
-get_projstring.default  <- function(object) {
-  stop("get_projstring --> ", object, " is not a valid vector or raster `R` object or
+get_projstring.default  <- function(object, abort = FALSE) {
+  if (abort == TRUE) {
+    stop("get_projstring --> `object` is not a valid vector or raster `R` object or
    filename. Aborting !")
+  } else {
+    warning("get_projstring --> `object` is not a valid vector or raster `R` object or
+   filename. Aborting !")
+  }
 }
 
 #   ____________________________________________________________________________
@@ -52,30 +60,53 @@ get_projstring.default  <- function(object) {
 
 #' @rdname get_projstring
 #' @method get_projstring character
+#' @importFrom rgdal checkCRSArgs
 #' @export
-get_projstring.character <- function(object) {
+get_projstring.character <- function(object, abort = FALSE) {
 
   obj_type <- check_spatype(object)
-  dplyr::case_when(
-    obj_type %in% c("rastfile", "vectfile") ~
-      return(as.character(gdalUtils::gdalsrsinfo(object, as.CRS = TRUE))),
 
-    obj_type == "none" ~
-      stop("get_projstring --> ", object, "is not a recognized vector or raster file.
-           Aborting !")
-  )
+  if (obj_type %in% c("rastfile", "vectfile")) {
+
+    projstring  <- as.character(gdalUtils::gdalsrsinfo(object, as.CRS = TRUE))
+    if (rgdal::checkCRSArgs(projstring)[[1]] == FALSE) {
+      if (abort == TRUE) {
+        stop("get_projstring --> Invalid proj4string detected ! Aborting !")
+      } else {
+        warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      }
+    } else {
+      return(projstring)
+    }
+  } else {
+    if (abort == TRUE) {
+      stop("get_projstring --> `object` is not a valid raster or vector file, Aborting !")
+    } else {
+      warning("get_projstring --> `object` is not a valid raster or vector file, Aborting !")
+    }
+  }
 }
+
 
 #   ____________________________________________________________________________
 #   Method for "rastobj" - use sp::proj4string                              ####
 
 #' @rdname get_projstring
 #' @method get_projstring Raster
+#' @importFrom rgdal checkCRSArgs
 #' @export
-get_projstring.Raster <- function(object) {
+get_projstring.Raster <- function(object, abort = FALSE) {
 
-  return(sp::proj4string(object))
-
+  projstring  <- sp::proj4string(object)
+  if (rgdal::checkCRSArgs(projstring)[[1]] == FALSE) {
+    if (abort == TRUE) {
+      stop("get_projstring --> Invalid proj4string detected ! Aborting !")
+    } else {
+      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+    }
+  } else {
+    return(projstring)
+  }
 }
 
 #   ____________________________________________________________________________
@@ -84,10 +115,20 @@ get_projstring.Raster <- function(object) {
 
 #' @rdname get_projstring
 #' @method get_projstring sf
+#' @importFrom rgdal checkCRSArgs
 #' @export
-get_projstring.sf <- function(object) {
+get_projstring.sf <- function(object, abort = FALSE) {
 
-  return(sf::st_crs(object)$proj4string)
+  projstring  <- sf::st_crs(object)$proj4string
+  if (rgdal::checkCRSArgs(projstring)[[1]] == FALSE) {
+    if (abort == TRUE) {
+      stop("get_projstring --> Invalid proj4string detected ! Aborting !")
+    } else {
+      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+    }
+  } else {
+    return(projstring)
+  }
 
 }
 
@@ -96,10 +137,20 @@ get_projstring.sf <- function(object) {
 
 #' @rdname get_projstring
 #' @method get_projstring sfc
+#' @importFrom rgdal checkCRSArgs
 #' @export
-get_projstring.sfc <- function(object) {
+get_projstring.sfc <- function(object, abort = FALSE) {
 
-  return(sf::st_crs(object)$proj4string)
+  projstring  <- sf::st_crs(object)$proj4string
+  if (rgdal::checkCRSArgs(projstring)[[1]] == FALSE) {
+    if (abort == TRUE) {
+      stop("get_projstring --> Invalid proj4string detected ! Aborting !")
+    } else {
+      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+    }
+  } else {
+    return(projstring)
+  }
 
 }
 
@@ -111,8 +162,17 @@ get_projstring.sfc <- function(object) {
 #' @rdname get_projstring
 #' @method get_projstring Spatial
 #' @export
-get_projstring.Spatial <- function(object) {
+get_projstring.Spatial <- function(object, abort = FALSE) {
 
-  return(sp::proj4string(object))
+  projstring  <- sp::proj4string(object)
+  if (rgdal::checkCRSArgs(projstring)[[1]] == FALSE) {
+    if (abort == TRUE) {
+      stop("get_projstring --> Invalid proj4string detected ! Aborting !")
+    } else {
+      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+    }
+  } else {
+    return(projstring)
+  }
 
 }
