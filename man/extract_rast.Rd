@@ -46,7 +46,7 @@ in `out$alldata' (Setting this to FALSE can be a good idea for large datasets...
 \item{comp_quant}{\code{logical} if TRUE, also quantiles of the distributions of values are computed for each zone
 and returned in  \code{out$ts_summ}, Default: FALSE}
 
-\item{long}{\code{logical} if TRUE, extraction \strong{on points} provides data in long formar}
+\item{long}{\code{logical} if TRUE, extraction \strong{on points} provides data in long form}
 
 \item{FUN}{\code{character} or function name, Default: NULL}
 
@@ -61,7 +61,7 @@ pixel centroids. Values are taken from all cells "touched" by the small polygon,
 joined to results of the computation, Default: TRUE}
 
 \item{addgeom}{\code{logical}, If TRUE, the output sent out as an \code{sf} object, preserving the geometry
-of \code{in_vect_zones}. Note that this leads to dyuplication of geometries, and may be very slow for
+of \code{in_vect_zones}. Note that this leads to duplication of geometries, and may be very slow for
 large datasets. Default: FALSE}
 
 \item{keep_null}{\code{logical} If TRUE, the output preserves features of \code{in_vect_zones} falling outside
@@ -71,7 +71,7 @@ the extent of \code{in_rast}. Values for these features are set to NA, Default: 
 console, Default: TRUE}
 
 \item{ncores}{\code{numeric} maximum number of cores to be used in the processin. If NULL, defaults to
-available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
+available cores - 2, but up to a maximum of 8. If user-provided is greater than available cores - 2
 or greater than 8, ncores is re-set to the minimum between those two.}
 }
 \value{

@@ -1,5 +1,5 @@
 #' @title initialize clustered processing on multiband raster
-#' @description heloer for initializing clustered processing on multiband raster
+#' @description helper for initializing clustered processing on multiband raster
 #' @param in_rast PARAM_DESCRIPTION
 #' @param ncores PARAM_DESCRIPTION, Default: NULL
 #' @param bands PARAM_DESCRIPTION, Default: NULL

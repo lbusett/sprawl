@@ -1,5 +1,5 @@
 #' @title create a "fishnet" vector based on cells of a raster
-#' @description funtion to create a raster and/or polygon fishnet of specified resolution over a
+#' @description function to create a raster and/or polygon fishnet of specified resolution over a
 #' raster dataset. By default, the fishnet is built so that each cell corresponds to a raster cell.
 #' If the `pix_for_cell` argument is set, then the polygons of the fishnet are built so to include
 #' the specified number of cells in each direction. If the `cellsize` option is set, a fishnet of the
@@ -10,7 +10,7 @@
 #' @param to_file PARAM_DESCRIPTION, Default: NULL
 #' @param out_shape PARAM_DESCRIPTION, Default: NULL
 #' @param overwrite PARAM_DESCRIPTION, Default: TRUE
-#' @param crop_layer (optional) object of clss `Extent`. If not null, the fishnet iscropped on #' this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on #' the basis of a different raster coordinates on top of a different raster, Default: NULL
+#' @param crop_layer (optional) object of class `Extent`. If not null, the fishnet iscropped on #' this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on #' the basis of a different raster coordinates on top of a different raster, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples

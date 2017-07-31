@@ -2,6 +2,7 @@
 % Please edit documentation in R/get_projstring.R
 \name{get_projstring}
 \alias{get_projstring}
+\alias{get_projstring.default}
 \alias{get_projstring.character}
 \alias{get_projstring.Raster}
 \alias{get_projstring.sf}
@@ -10,6 +11,8 @@
 \title{return the proj4string of a spatial object or file}
 \usage{
 get_projstring(object, abort = FALSE)
+
+\method{get_projstring}{default}(object, abort = FALSE)
 
 \method{get_projstring}{character}(object, abort = FALSE)
 
@@ -24,6 +27,9 @@ get_projstring(object, abort = FALSE)
 \arguments{
 \item{object}{\code{character} corresponding to the name of a R object, or a filename
 (full path)}
+
+\item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
+invalid projstring is found, Default: FALSE}
 }
 \value{
 \code{character} proj4string of the object or file

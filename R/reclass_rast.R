@@ -16,7 +16,7 @@
 #' @param overwrite `logical` If TRUE and `out_rast`` already exists, the file is overwritten,
 #' Default: FALSE
 #' @return * if to_file == FALSE:  `*raster` corresponding to the reclassified raster
-#'* if to_file == TRUE: name of the file where it was saved (either corresponfing to `out_rast`
+#'* if to_file == TRUE: name of the file where it was saved (either corresponding to `out_rast`
 #'   or to the name of the temporary file created (if `out_rast == NULL`))
 #' @details `reclass_matrix` must be a 3-columns `data.frame` (or similar), including the `start`, `end` and
 #'`new` columns. It can be easily created by, for example:

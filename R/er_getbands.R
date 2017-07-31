@@ -48,7 +48,7 @@ er_getbands <- function(in_rast,
     selbands_out <- selbands
     seldates = NA
   } else {
-    # Check if selbands is a 2-element character array cohercible to date -----
+    # Check if selbands is a 2-element character array coercible to date -----
     if (is.character(selbands)) {
       seldates <- try(as.Date(selbands), silent = TRUE)
       if (class(seldates) == "try-error") stop(banderr_msg)

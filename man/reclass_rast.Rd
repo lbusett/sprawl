@@ -28,7 +28,7 @@ Default: FALSE}
 \value{
 \itemize{
 \item if to_file == FALSE:  \code{*raster} corresponding to the reclassified raster
-\item if to_file == TRUE: name of the file where it was saved (either corresponfing to \code{out_rast}
+\item if to_file == TRUE: name of the file where it was saved (either corresponding to \code{out_rast}
 or to the name of the temporary file created (if \code{out_rast == NULL}))
 }
 }

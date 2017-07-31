@@ -17,7 +17,7 @@ fast_summ <- function(in_data, var, comp_quant, FUN, band_n, selband) {
 
   if (!is.null(FUN)) {
     if (!inherits(FUN, "function")) {
-      stop("fast_summ --> FUN must be the name of a funtion to be applied to summarize your data !
+      stop("fast_summ --> FUN must be the name of a function to be applied to summarize your data !
            Aborting !")
     }
 

@@ -11,7 +11,7 @@ datetodoy(dates = dates)
 using \code{\link{as.Date}} (format "yyyy-mm-dd").}
 }
 \description{
-Converts an array of \code{Date} (or cohercible to \code{Date}) values to DOY (Day Of the Year) values.
+Converts an array of \code{Date} (or coercible to \code{Date}) values to DOY (Day Of the Year) values.
 }
 \details{
 DETAILS

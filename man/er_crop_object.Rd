@@ -19,8 +19,8 @@ er_crop_object(in_vect_zones, in_rast, id_field, verbose)
 \code{list} with the following fields:
 \itemize{
 \item in_vect_zones_crop = cropped \code{sf} object
-\item outside_feat = data frame containg info on the "removed" features (sequential id and corresponding
-value ofthe "id" field (if provided)
+\item outside_feat = data frame containing info on the "removed" features (sequential id and
+corresponding value ofthe "id" field (if provided)
 }
 }
 \description{

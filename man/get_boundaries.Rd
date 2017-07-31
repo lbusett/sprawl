@@ -20,7 +20,7 @@ SpatialPolygonsDataFrame containing the desired data
 }
 \description{
 function to download administrative boundaries data from the gadm archive, starting
-from a country name or ISO code, and the level of desired administrtive units
+from a country name or ISO code, and the level of desired administrative units
 }
 \details{
 the function is a simple wrapper to the raster::getData function, with a-priori checks

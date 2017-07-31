@@ -24,7 +24,7 @@
 #' in `out$alldata' (Setting this to FALSE can be a good idea for large datasets....), Default: TRUE
 #' @param comp_quant `logical` if TRUE, also quantiles of the distributions of values are computed for each zone
 #' and returned in  `out$ts_summ`, Default: FALSE
-#' @param long `logical` if TRUE, extraction **on points** provides data in long formar
+#' @param long `logical` if TRUE, extraction **on points** provides data in long form
 #' @param FUN `character` or function name, Default: NULL
 #' @param small `logical` if TRUE, values are returned also for small polygons not including any
 #' pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE
@@ -33,19 +33,18 @@
 #' @param addfeat `logical` If TRUE, columns of the attribute table of the `in_vect_zones` layer are
 #' joined to results of the computation, Default: TRUE
 #' @param addgeom `logical`, If TRUE, the output sent out as an `sf` object, preserving the geometry
-#' of `in_vect_zones`. Note that this leads to dyuplication of geometries, and may be very slow for
+#' of `in_vect_zones`. Note that this leads to duplication of geometries, and may be very slow for
 #' large datasets. Default: FALSE
 #' @param keep_null `logical` If TRUE, the output preserves features of `in_vect_zones` falling outside
 #' the extent of `in_rast`. Values for these features are set to NA, Default: FALSE
 #' @param verbose `logical` If TRUE, messages concerning the processing status are shown in the
 #' console, Default: TRUE
 #' @param ncores `numeric` maximum number of cores to be used in the processin. If NULL, defaults to
-#'  available cores - 2, but up to a maximum of 8. If user-provided is greter than available cores - 2
+#'  available cores - 2, but up to a maximum of 8. If user-provided is greater than available cores - 2
 #'  or greater than 8, ncores is re-set to the minimum between those two.
 #' @return out_list `list` containing two tibbles: `out_list$summ_data` contains summary statitstics,
 #' while `out_list$alldata` contains the data of all pixels extracted (see examples).
 #' @export
-#' @details
 #' @examples
 #' \dontrun{
 #' library(sprawl)

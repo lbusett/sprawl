@@ -14,7 +14,7 @@
 #'   or using the colors specified in `col_outlow` and `col_outhigh`, Default: c(0.02, 0.98) (meaning)
 #'   cutting the values at the 2nd and 98th percentile)
 #' @param palette Palette to be used for colors (see [`RColorBrewer::brewer.pal`]), Default: 'RdYlGn'
-#' @param legend_type "standard" or "custom" (see ecamples), Default: 'standard'
+#' @param legend_type "standard" or "custom" (see examples), Default: 'standard'
 #' @param col_outlow Color used to plot the values below the lower limit/tail. Can be a string
 #'   corresponding to a valid "R" color or HEX representation, Default: 'gray10'
 #' @param col_outhigh Color used to plot the values below the lower limit/tail. Can be a string
@@ -90,9 +90,11 @@ plot_rast <- function(in_rast,
     in_rastplot <- in_rast
   }
 
+
   if (!is.null(in_poly)) {
-    proj4_rast <- proj4string(in_rast)
-    proj4_vect <- sf::st_crs(in_poly)$proj4string
+    in_poly <- cast_vect(in_poly, "sfobject")
+    proj4_rast <- get_projstring(in_rast)
+    proj4_vect <- get_projstring(in_poly)
     if (proj4_vect != proj4_rast) {
       in_poly <- sf::st_transform(in_poly, proj4_rast)
     }

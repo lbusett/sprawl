@@ -1,6 +1,6 @@
 #' @title download vecor of administrative boundaries
 #' @description function to download administrative boundaries data from the gadm archive, starting
-#' from a country name or ISO code, and the level of desired administrtive units
+#' from a country name or ISO code, and the level of desired administrative units
 #' @param iso `character` iso name or 2/3 digits code of the country
 #' @param level `numeric` level of administrative units returned, default: 0 (Country Level)
 #' @param path `character`

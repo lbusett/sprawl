@@ -22,7 +22,7 @@ sprawl_initcluster(in_rast, ncores = NULL, bands = NULL, maxchunk = 5e+06,
 OUTPUT_DESCRIPTION
 }
 \description{
-heloer for initializing clustered processing on multiband raster
+helper for initializing clustered processing on multiband raster
 }
 \details{
 DETAILS

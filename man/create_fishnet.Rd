@@ -21,13 +21,13 @@ create_fishnet(in_rast, pix_for_cell = 1, cellsize = NULL,
 
 \item{overwrite}{PARAM_DESCRIPTION, Default: TRUE}
 
-\item{crop_layer}{(optional) object of clss \code{Extent}. If not null, the fishnet iscropped on #' this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on #' the basis of a different raster coordinates on top of a different raster, Default: NULL}
+\item{crop_layer}{(optional) object of class \code{Extent}. If not null, the fishnet iscropped on #' this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on #' the basis of a different raster coordinates on top of a different raster, Default: NULL}
 }
 \value{
 OUTPUT_DESCRIPTION
 }
 \description{
-funtion to create a raster and/or polygon fishnet of specified resolution over a
+function to create a raster and/or polygon fishnet of specified resolution over a
 raster dataset. By default, the fishnet is built so that each cell corresponds to a raster cell.
 If the \code{pix_for_cell} argument is set, then the polygons of the fishnet are built so to include
 the specified number of cells in each direction. If the \code{cellsize} option is set, a fishnet of the

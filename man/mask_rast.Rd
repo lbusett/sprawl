@@ -25,7 +25,7 @@ Default: NULL}
 \item{to_file}{\code{logical} If TRUE, the output masked raster is save to file instead than sent back
 to the caller. In this case, the path to the saved file is returned instead}
 
-\item{out_rast}{\code{character} filename where the masked raster should be saved (ignorted if
+\item{out_rast}{\code{character} filename where the masked raster should be saved (ignored if
 to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
 file in the \code{R} temporary folder. The file is saved in TIFF format, with \code{DAFLATE} compression.}
 

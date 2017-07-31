@@ -33,8 +33,6 @@
 #'                               ext = raster::extent(c(0, 200000, 0, 200000)))
 #'  test_rast
 #' }
-#' @seealso
-#'
 #' @rdname build_testraster
 #' @export
 #' @importFrom raster raster stack writeRaster

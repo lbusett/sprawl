@@ -33,7 +33,7 @@ cutting the values at the 2nd and 98th percentile)}
 
 \item{palette}{Palette to be used for colors (see \code{\link[RColorBrewer:brewer.pal]{RColorBrewer::brewer.pal}}), Default: 'RdYlGn'}
 
-\item{legend_type}{"standard" or "custom" (see ecamples), Default: 'standard'}
+\item{legend_type}{"standard" or "custom" (see examples), Default: 'standard'}
 
 \item{col_outlow}{Color used to plot the values below the lower limit/tail. Can be a string
 corresponding to a valid "R" color or HEX representation, Default: 'gray10'}

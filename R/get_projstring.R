@@ -3,8 +3,8 @@
 #'   or of raster or vector files
 #' @param object `character` corresponding to the name of a R object, or a filename
 #' (full path)
-#' @oaram abort `logical` if TRUE, the function aborts in case no proj4string or
-#' invalid projstring is found, Default: FALSE
+#' @param abort `logical` if TRUE, the function aborts in case no proj4string or
+#'   invalid projstring is found, Default: FALSE
 #' @return `character` proj4string of the object or file
 #' @details DETAILS
 #' @examples
@@ -42,7 +42,7 @@ get_projstring <- function(object,
 #   ____________________________________________________________________________
 #   Fallback method                                                         ####
 
-#' @rdname
+#' @rdname get_projstring
 #' @method get_projstring default
 #' @export
 get_projstring.default  <- function(object, abort = FALSE) {

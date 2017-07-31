@@ -8,8 +8,8 @@
 #' @param verbose PARAM_DESCRIPTION
 #' @return `list` with the following fields:
 #' - in_vect_zones_crop = cropped `sf` object
-#' - outside_feat = data frame containg info on the "removed" features (sequential id and corresponding
-#' value ofthe "id" field (if provided)
+#' - outside_feat = data frame containing info on the "removed" features (sequential id and
+#' corresponding value ofthe "id" field (if provided)
 
 #' @importFrom raster extent
 #' @importFrom sf st_intersection st_set_crs st_as_sf st_crs st_bbox

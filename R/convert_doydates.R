@@ -42,7 +42,7 @@ doytodate = function(doys, year, verbose = TRUE){
 }
 
 #' @title Convert dates to DOYs
-#' @description Converts an array of `Date` (or cohercible to `Date`) values to DOY (Day Of the Year) values.
+#' @description Converts an array of `Date` (or coercible to `Date`) values to DOY (Day Of the Year) values.
 #' @param dates array of dates to be converted. Class must be `Date` or character parsable to `Date`
 #' using [`as.Date`] (format "yyyy-mm-dd").
 #' @note  This function is a simple wrapper around \`strftime(date, format = "\%j")\`.
