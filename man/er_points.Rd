@@ -21,6 +21,8 @@ and summarized}
 
 \item{id_field}{PARAM_DESCRIPTION}
 
+\item{long}{PARAM_DESCRIPTION}
+
 \item{date_check}{PARAM_DESCRIPTION}
 
 \item{verbose}{PARAM_DESCRIPTION}
@@ -42,10 +44,8 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  #EXAMPLE1
  }
-}
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

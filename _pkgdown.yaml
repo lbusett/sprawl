@@ -16,12 +16,20 @@ reference:
       - '`aggregate_rast`'
       - '`mask_rast`'
       - '`cuttails_rast`'
+      - '`cast_rast`'
   - title: Vector processing
     desc: ~
     contents:
       - '`dissolve_shape`'
       - '`create_fishnet`'
       - '`crop_vect`'
+      - '`cast_vect`'
+  - title: Retrieve info from spatial files
+    desc: ~
+    contents:
+      - '`get_spatype`'
+      - '`get_projstring`'
+      - '`get_extent`'
   - title: Visualization and plotting
     desc: ~
     contents:
@@ -33,14 +41,14 @@ reference:
   - title: Miscellaneous Helpers
     desc: ~
     contents:
-      - '`check_spatype`'
-      - '`get_projstring`'
+      - '`summarize_data`'
       - '`doytodate`'
       - '`datetodoy`'
       - '`build_testraster`'
       - '`build_testshape`'
-      - '`check_spatype`'
       - '`find_command`'
+      - '`find_gdal`'
+      - '`sprawl_initcluster`'
     params:
      - highlight: tango
 navbar:

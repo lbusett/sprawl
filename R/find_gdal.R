@@ -4,10 +4,8 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  #EXAMPLE1
 #'  }
-#' }
 #' @rdname find_gdal
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

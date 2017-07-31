@@ -17,20 +17,20 @@ testthat::test_that("cast_vect",{
 #   a = cast_vect(in_vect, "vectfile")
 #   # input is a `sp` object
 #   obj <- read_vect(system.file("extdata", "lc_polys.shp", package = "sprawl.data"), as_sp = TRUE)
-#   testthat::expect_equal(check_spatype(obj), "spobject")
+#   testthat::expect_equal(get_spatype(obj), "spobject")
 #
 #   # input is a `sf` object
 #   obj <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
-#   testthat::expect_equal(check_spatype(obj),"sfobject")
+#   testthat::expect_equal(get_spatype(obj),"sfobject")
 #
 #   # input is character but not a valid filename
 #   obj <- "xyzptr"
-#   testthat::expect_error(check_spatype(obj, abort = TRUE))
-#   testthat::expect_warning(check_spatype(obj, abort = FALSE))
+#   testthat::expect_error(get_spatype(obj, abort = TRUE))
+#   testthat::expect_warning(get_spatype(obj, abort = FALSE))
 #
 #   # input is a valid filename but not a spatial file
 #   obj <- system.file("extdata", "sprawl_EVItest.RData", package = "sprawl.data")
-#   expect_warning(out <- check_spatype(obj))
+#   expect_warning(out <- get_spatype(obj))
 #   testthat::expect_equal(out,"none")
 })
 

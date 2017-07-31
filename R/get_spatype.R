@@ -6,56 +6,56 @@
 #' @param abort `logical` if TRUE the function aborts if `object` is not recognized as an
 #'   R spatial file or valid vector or raster file
 #' @return character vector equal to *spobject*, *sfobject*, *rastobject*, *vectfile* or *rastfile*
-#' @rdname check_spatype
+#' @rdname get_spatype
 #' @export
 #' @importFrom gdalUtils ogrinfo gdalinfo
 #' @examples \dontrun{
 #' library(sprawl.data)
 #' # input is a raster file
-#' check_spatype(system.file("extdata","testrast.tif", package = "sprawl.data"))
+#' get_spatype(system.file("extdata","sprawl_EVItest.tif", package = "sprawl.data"))
 #'
 #' # input is a shapefile
-#' shp_file             <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
-#' check_spatype(shp_file)
+#' shp_file <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+#' get_spatype(shp_file)
 #'
 #' # input is a `sp` object
-#' obj                  <- read_vect(shp_file, as_sp = TRUE)
-#' check_spatype(obj)
+#' obj <- read_vect(shp_file, as_sp = TRUE)
+#' get_spatype(obj)
 #'
 #' # input is a `sf` object
-#' obj                  <- read_vect(shp_file)
-#' check_spatype(obj)
+#' obj <- read_vect(shp_file)
+#' get_spatype(obj)
 #' }
 #'
-# check_spatype_met     <- function(object) {
-#   UseMethod("check_spatype", object)
+# get_spatype_met <- function(object) {
+#   UseMethod("get_spatype", object)
 # }
 #
-# check_spatype.default <- function(object) {
+# get_spatype.default <- function(object) {
 #   stop("none")
 # }
 #
 #
 
-check_spatype  <- function(object,
-                           abort = FALSE) {
-  UseMethod("check_spatype")
+get_spatype  <- function(object,
+                         abort = FALSE) {
+  UseMethod("get_spatype")
 }
 
 #   ____________________________________________________________________________
 #   Fallback method: class of object is none of the specified ones: issue   ####
 #   an error
 
-#' @rdname check_spatype
-#' @method check_spatype default
+#' @rdname get_spatype
+#' @method get_spatype default
 #' @export
-check_spatype.default   <- function(object,
-                                    abort = FALSE) {
+get_spatype.default <- function(object,
+                                abort = FALSE) {
 
   if (abort == TRUE) {
-    stop("check_spatype --> `object` is not a valid R object or string. Aborting !")
+    stop("get_spatype --> `object` is not a valid R object or string. Aborting !")
   } else {
-    warning("check_spatype --> `object` is not a valid R object or string.")
+    warning("get_spatype --> `object` is not a valid R object or string.")
     return("none")
   }
 }
@@ -63,17 +63,17 @@ check_spatype.default   <- function(object,
 #   ____________________________________________________________________________
 #   Method for "character" - find if file exists and is "spatial"           ####
 
-#' @rdname check_spatype
-#' @method check_spatype character
+#' @rdname get_spatype
+#' @method get_spatype character
 #' @export
-check_spatype.character <- function(object,
-                                    abort = FALSE) {
+get_spatype.character <- function(object,
+                                  abort = FALSE) {
 
   if (!file.exists(object)) {
     if (abort == TRUE) {
-      stop("check_spatype --> `object` is not a valid filename. Aborting !")
+      stop("get_spatype --> `object` is not a valid filename. Aborting !")
     } else {
-      warning("check_spatype --> `object` is not a valid filename.")
+      warning("get_spatype --> `object` is not a valid filename.")
       return("none")
     }
   } else {
@@ -88,9 +88,9 @@ check_spatype.character <- function(object,
         return("vectfile")
       } else {
         if (abort == TRUE) {
-          stop("check_spatype --> `object` is not a valid vector file. Aborting !")
+          stop("get_spatype --> `object` is not a valid vector file. Aborting !")
         } else {
-          warning("check_spatype --> `object` is not a valid vector file. Aborting !")
+          warning("get_spatype --> `object` is not a valid vector file. Aborting !")
           return("none")
         }
       }
@@ -107,9 +107,9 @@ check_spatype.character <- function(object,
         return("rastfile")
       } else {
         if (abort == TRUE) {
-          stop("check_spatype --> `object` is not a valid raster file. Aborting !")
+          stop("get_spatype --> `object` is not a valid raster file. Aborting !")
         } else {
-          warning("check_spatype --> `object` is not a valid raster file. Aborting !")
+          warning("get_spatype --> `object` is not a valid raster file. Aborting !")
           return("none")
         }
       }
@@ -127,9 +127,9 @@ check_spatype.character <- function(object,
           return("rastfile")
         } else {
           if (abort == TRUE) {
-            stop("check_spatype --> `object` is not a valid raster or vector file. Aborting !")
+            stop("get_spatype --> `object` is not a valid raster or vector file. Aborting !")
           } else {
-            warning("check_spatype --> `object` is not a valid raster or vector file. Aborting !")
+            warning("get_spatype --> `object` is not a valid raster or vector file. Aborting !")
             return("none")
           }
         }
@@ -141,33 +141,33 @@ check_spatype.character <- function(object,
 #   ____________________________________________________________________________
 #   Method for "Raster"                                                     ####
 
-#' @rdname check_spatype
-#' @method check_spatype Raster
+#' @rdname get_spatype
+#' @method get_spatype Raster
 #' @export
-check_spatype.Raster    <- function(object,
-                                    abort = FALSE) {
+get_spatype.Raster <- function(object,
+                               abort = FALSE) {
   "rastobject"
 }
 
 #   ____________________________________________________________________________
 #   Method for "sf"                                                         ####
 
-#' @rdname check_spatype
-#' @method check_spatype sf
+#' @rdname get_spatype
+#' @method get_spatype sf
 #' @export
-check_spatype.sf        <- function(object,
-                                    abort = FALSE) {
+get_spatype.sf <- function(object,
+                           abort = FALSE) {
   "sfobject"
 }
 
 #   ____________________________________________________________________________
 #   Method for "sfc"                                                         ####
 
-#' @rdname check_spatype
-#' @method check_spatype sfc
+#' @rdname get_spatype
+#' @method get_spatype sfc
 #' @export
-check_spatype.sfc        <- function(object,
-                                    abort = FALSE) {
+get_spatype.sfc  <- function(object,
+                             abort = FALSE) {
   "sfobject"
 }
 
@@ -175,10 +175,10 @@ check_spatype.sfc        <- function(object,
 #   ____________________________________________________________________________
 #   Method for "Spatial"                                                    ####
 
-#' @rdname check_spatype
-#' @method check_spatype Spatial
+#' @rdname get_spatype
+#' @method get_spatype Spatial
 #' @export
-check_spatype.Spatial   <- function(object,
-                                    abort = FALSE) {
+get_spatype.Spatial <- function(object,
+                                abort = FALSE) {
   "spobject"
 }

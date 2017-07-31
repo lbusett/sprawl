@@ -7,6 +7,7 @@
 #' @param selbands PARAM_DESCRIPTION
 #' @param seldates PARAM_DESCRIPTION
 #' @param id_field PARAM_DESCRIPTION
+#' @param long PARAM_DESCRIPTION
 #' @param date_check PARAM_DESCRIPTION
 #' @param verbose PARAM_DESCRIPTION
 #' @param addfeat PARAM_DESCRIPTION
@@ -16,10 +17,8 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  #EXAMPLE1
 #'  }
-#' }
 #' @rdname er_points
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

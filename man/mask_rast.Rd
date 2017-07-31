@@ -33,6 +33,8 @@ file in the \code{R} temporary folder. The file is saved in TIFF format, with \c
 
 \item{verbose}{\code{logical} if TRUE, extended processing information is sent to the console in the
 form of messages}
+
+\item{verb_foreach}{\code{logical} DESCRIPTION}
 }
 \value{
 object of class \code{raster} (if to_file == FALSE), or \code{character} string corresponding to

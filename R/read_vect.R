@@ -32,7 +32,7 @@ read_vect = function(shp_file, as_sp = FALSE, ...){
   if (!file.exists(shp_file)) {
     stop("read_vect --> Input file doesn't exist on your system ! Aborting !")
   }
-  chk <- check_spatype(shp_file)
+  chk <- get_spatype(shp_file)
   if (chk == "vectfile") {
     shp <- sf::read_sf(shp_file, ...)
     if (as_sp) {

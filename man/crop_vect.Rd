@@ -28,10 +28,8 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  #EXAMPLE1
  }
-}
 }
 \seealso{
 \code{\link[sp]{proj4string}}

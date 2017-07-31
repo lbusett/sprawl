@@ -24,7 +24,6 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  library(sprawl)
  library(sprawl.data)
  indata    <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
@@ -32,7 +31,6 @@ if(interactive()){
  out_shape <- dissolve_shape(indata, byvar)
  out_shape
  }
-}
 }
 \seealso{
 \code{\link[tibble]{as_data_frame}}

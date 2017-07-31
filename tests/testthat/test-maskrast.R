@@ -8,10 +8,10 @@ testthat::test_that("Test On raster masking", {
   mask_vect   <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"), stringsAsFactors = T)
   in_rast     <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))[[1]]
   # test both with same projection and differenrt projections between in_rast and mask_vect
-  out_masked      <- mask_rast(in_rast, mask_vect, verbose = FALSE, crop = FALSE)
+  out_masked   <- mask_rast(in_rast, mask_vect, verbose = FALSE, crop = FALSE)
   expect_is(out_masked, "Raster")
-  mask_vect       <- sf::st_transform(mask_vect, sp::proj4string(in_rast))
-  out_masked_2    <- mask_rast(in_rast, mask_vect, verbose = FALSE)
+  mask_vect    <- sf::st_transform(mask_vect, sp::proj4string(in_rast))
+  out_masked_2 <- mask_rast(in_rast, mask_vect, verbose = FALSE)
   expect_is(out_masked_2, "Raster")
   expect_equal(raster::getValues(out_masked),
                raster::getValues(out_masked_2))
@@ -32,7 +32,7 @@ testthat::test_that("Test On raster masking", {
 
 
   # both raster and mask are filenames - check if it works ----
-  mask_vect <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+  mask_vect <- system.file("extdata", "lc_polys.shp", package = "sprawl.data")
   in_rast   <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
   # check errors in input selbands
   masked_fromfiles   <- mask_rast(in_rast, mask_vect, verbose = FALSE)

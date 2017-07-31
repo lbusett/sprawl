@@ -29,7 +29,6 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  library(sprawl)
 #'
 #'  in_rast <- system.file("extdata", "gNDVI.tif", package = "sprawl.data")
@@ -51,7 +50,6 @@
 #'            title     = "RapidEye - GNDVI",
 #'            maxpixels = 10e5)
 #'  }
-#' }
 #' @seealso
 #'  \code{\link[latticeExtra]{layer}}
 
@@ -66,6 +64,7 @@
 #' @importFrom raster stack quantile
 #' @importFrom rasterVis levelplot
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom grDevices colorRampPalette
 #' @importFrom sp sp.polygons sp.points
 plot_rast <- function(in_rast,
                       band        = 1,
@@ -84,7 +83,7 @@ plot_rast <- function(in_rast,
                       ...) {
 
   #TODO Allow inputting a raster FILE
-  if (check_spatype(in_rast) == "rastfile") {
+  if (get_spatype(in_rast) == "rastfile") {
     in_rastplot <- raster::stack(in_rast)
   } else {
     in_rastplot <- in_rast
@@ -114,13 +113,13 @@ plot_rast <- function(in_rast,
   #   set up the color table                                                  ####
 
   if (legend_type == "standard") {
-    my.col <- c(colorRampPalette(RColorBrewer::brewer.pal(11, palette))(100))
+    my.col <- c(grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, palette))(100))
     at = c(seq(limits[2], limits[3], (limits[3] - limits[2])/100))
   }
 
   if (legend_type == "custom") {
     my.col <- c(col_outlow,   # color for values below lower limit
-                colorRampPalette(RColorBrewer::brewer.pal(11, palette))(98),
+                grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, palette))(98),
                 col_outhigh)   # color for values abvove lower limit
     at = c(limits[1], seq(limits[2], limits[3], (limits[3] - limits[2])/98), limits[4])
   }

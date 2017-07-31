@@ -107,7 +107,7 @@ cast_vect.Spatial <- function (object, to) {
 
 cast_vect.character <- function(object, to) {
   call <- as.list(match.call())
-  check_vec <- check_spatype(object, abort = FALSE)
+  check_vec <- get_spatype(object, abort = FALSE)
   if (check_vec == "vectfile") {
     if (to == "vectfile") return (object)
     if (to == "sfobject") return (read_vect(object))

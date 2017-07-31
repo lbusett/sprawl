@@ -55,7 +55,7 @@ create_fishnet <- function(in_rast,
   #   Check the arguments                                                     ####
   #
 
-  in_type <- check_spatype(in_rast)
+  in_type <- get_spatype(in_rast)
   if (!(in_type %in% c("rastobject", "rastfile"))) {
     stop("create_fishnet --> ", in_rast, "is not an *Raster object or raster file. Aborting !")
   }

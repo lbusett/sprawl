@@ -19,6 +19,7 @@
 #' @param out_dt TO BE CHECKED !!!!
 #' @param verbose `logical` if TRUE, extended processing information is sent to the console in the
 #'   form of messages
+#' @param verb_foreach `logical` DESCRIPTION
 #' @return object of class `raster` (if to_file == FALSE), or `character` string corresponding to
 #'   the filename of the created raster (if to_file == TRUE)
 #' @examples
@@ -44,6 +45,7 @@
 #' @importFrom gdalUtils gdalsrsinfo
 #' @importFrom raster raster extent writeRaster
 #' @importFrom sf st_buffer st_crs st_transform st_as_sf st_combine st_sf
+#' @importFrom parallel stopCluster
 
 mask_rast <- function(in_rast,
                       mask,
@@ -67,7 +69,7 @@ mask_rast <- function(in_rast,
 
   in_rast   <- cast_rast(in_rast, "rastobj")
   rast_proj <- get_projstring(in_rast, abort = TRUE)
-  rast_bbox <- raster::extent(in_rast)[c(1,3,2,4)]
+  rast_bbox <- get_extent(in_rast)
 
   # doubl check if the input raster is associated to a physical file (i.e., not "in memory")
   # If not, create a temporary physical file by saving in tempdir()
@@ -122,7 +124,7 @@ mask_rast <- function(in_rast,
     sf::st_sf(id = 1, .) %>%
     write_shape(temp_shapefile, overwrite = TRUE)
 
-  vect_bbox <- sf::st_bbox(mask)
+  vect_bbox <- get_extent(mask)@extent
   # }
   #   ____________________________________________________________________________
   #   If crop ==TREU find a correct cropping bounding box which allows to not "move"
@@ -132,24 +134,24 @@ mask_rast <- function(in_rast,
 
   if (crop == TRUE) {
 
-    col_coords <- rast_bbox[1] + raster::res(in_rast)[1] * seq_len(dim(in_rast)[2])
-    row_coords <- rast_bbox[2] + raster::res(in_rast)[2] * seq_len(dim(in_rast)[1])
+    col_coords <- rast_bbox@extent[1] + raster::res(in_rast)[1] * seq_len(dim(in_rast)[2])
+    row_coords <- rast_bbox@extent[2] + raster::res(in_rast)[2] * seq_len(dim(in_rast)[1])
 
     # xmin
-    if (rast_bbox[1] < vect_bbox[1]) {
-      rast_bbox[1] <- col_coords[data.table::last(which(col_coords <= vect_bbox[1])) - 1]
+    if (rast_bbox@extent[1] < vect_bbox[1]) {
+      rast_bbox@extent[1] <- col_coords[data.table::last(which(col_coords <= vect_bbox[1])) - 1]
     }
     # xmax
-    if (rast_bbox[3] > vect_bbox[3]) {
-      rast_bbox[3] <- col_coords[data.table::last(which(col_coords <= vect_bbox[3])) + 1]
+    if (rast_bbox@extent[3] > vect_bbox[3]) {
+      rast_bbox@extent[3] <- col_coords[data.table::last(which(col_coords <= vect_bbox[3])) + 1]
     }
     # ymin
-    if (rast_bbox[2] < vect_bbox[2]) {
-      rast_bbox[2] <- row_coords[data.table::last(which(row_coords <= vect_bbox[2])) - 1]
+    if (rast_bbox@extent[2] < vect_bbox[2]) {
+      rast_bbox@extent[2] <- row_coords[data.table::last(which(row_coords <= vect_bbox[2])) - 1]
     }
     # ymax
-    if (rast_bbox[4] > vect_bbox[4]) {
-      rast_bbox[4] <- row_coords[data.table::last(which(row_coords <= vect_bbox[4])) + 1]
+    if (rast_bbox@extent[4] > vect_bbox[4]) {
+      rast_bbox@extent[4] <- row_coords[data.table::last(which(row_coords <= vect_bbox[4])) + 1]
     }
   }
 
@@ -170,7 +172,7 @@ mask_rast <- function(in_rast,
   temp_rastermask  <- tempfile(tmpdir = tempdir(), fileext = ".tif")
   rasterize_string <- paste("-at",
                             "-burn 1",
-                            "-te", paste(rast_bbox, collapse = " "),
+                            "-te", paste(rast_bbox@extent, collapse = " "),
                             "-tr", paste(raster::res(in_rast), collapse = " "),
                             "-ot Byte",
                             temp_shapefile,
@@ -188,8 +190,8 @@ mask_rast <- function(in_rast,
   if (verbose) {
     message("mask_rast --> Masking bands")
   }
-  clust = sprawl_initcluster(in_rast)
-  tempfold <- file.path(tempdir(), "tests",paste0("sprawlmask_",sample(1:1000))[1])
+  clust    <- sprawl_initcluster(in_rast)
+  tempfold <- file.path(tempdir(), "tests", paste0("sprawlmask_",sample(1:1000))[1])
   dir.create(tempfold, showWarnings = FALSE, recursive = TRUE)
 
   if (verbose) {
@@ -210,7 +212,8 @@ mask_rast <- function(in_rast,
   ) %dopar% {
 
     tempout  <- file.path(tempfold,paste0("sprawlmask_b",
-                                          sprintf("%03i", band), ".tif"))
+                                          sprintf("%03i", band),
+                                          ".tif"))
 
     #   ____________________________________________________________________________
     #   create a temporary vrt file corresponding to the band to be preocesse   ####
@@ -219,8 +222,10 @@ mask_rast <- function(in_rast,
 
     infile    <- in_rast[[band]]@file@name
     temp_vrt  <- tempfile(fileext = ".vrt")
-    buildvrt_string <- paste("-te ", paste(rast_bbox, collapse = " "),temp_vrt, infile)
-    system2(file.path(find_gdal(), "gdalbuildvrt"), args = buildvrt_string, stdout = NULL)
+    buildvrt_string <- paste("-te ", paste(rast_bbox@extent, collapse = " "), temp_vrt, infile)
+    system2(file.path(find_gdal(), "gdalbuildvrt"),
+            args = buildvrt_string,
+            stdout = NULL)
     in_rast <- raster::brick(temp_vrt)
 
 
@@ -230,20 +235,20 @@ mask_rast <- function(in_rast,
     if (is.null(out_nodata)) {
 
       raster::mask(in_rast[[band]],
-                           maskvalue = 0,
-                           raster::brick(temp_rastermask),
-                           filename  = tempout,
-                           options   = c("COMPRESS=DEFLATE"),
-                           overwrite = TRUE)
+                   maskvalue = 0,
+                   raster::brick(temp_rastermask),
+                   filename  = tempout,
+                   options   = c("COMPRESS=DEFLATE"),
+                   overwrite = TRUE)
 
     } else {
       raster::mask(in_rast[[band]],
-                           maskvalue = 0,
-                           raster::brick(temp_rastermask),
-                           filename  = tempout,
-                           options   = c("COMPRESS=DEFLATE"),
-                           overwrite = TRUE,
-                           NAflag    = out_nodata)
+                   maskvalue = 0,
+                   raster::brick(temp_rastermask),
+                   filename  = tempout,
+                   options   = c("COMPRESS=DEFLATE"),
+                   overwrite = TRUE,
+                   NAflag    = out_nodata)
     }
 
     return(tempout)

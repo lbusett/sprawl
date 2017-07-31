@@ -74,7 +74,7 @@ cast_rast.Raster <- function(object, to) {
 cast_rast.character <- function(object, to) {
 
   call <- as.list(match.call())
-  check_rast <- check_spatype(object)
+  check_rast <- get_spatype(object)
   if (check_rast == "rastfile") {
     if (to == "rastfile") return(object)
     if (to == "rastobj") {

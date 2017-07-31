@@ -10,10 +10,8 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  #EXAMPLE1
 #'  }
-#' }
 #' @export
 #' @rdname sprawl_initcluster
 #' @importFrom doSNOW registerDoSNOW
@@ -26,7 +24,7 @@ sprawl_initcluster <- function(in_rast,
                                maxchunk       = 50E5,
                                out_on_console = FALSE) {
 
-   if (is.null(ncores)) {
+  if (is.null(ncores)) {
     ncores <- parallel::detectCores() - 2
   }
   ncores <- min(c(ncores, (parallel::detectCores() - 2)), 8)
@@ -54,14 +52,14 @@ sprawl_initcluster <- function(in_rast,
 
   doSNOW::registerDoSNOW(clust)
 
-  nrows <- raster::nrow(in_rast)
-  ncols <- raster::ncol(in_rast)
-  n_cells <- nrows * ncols
+  nrows    <- raster::nrow(in_rast)
+  ncols    <- raster::ncol(in_rast)
+  n_cells  <- nrows * ncols
   n_chunks <- floor(n_cells / maxchunk) + 1
   # Initialize other variables and progress bar
-  opts  <- list("ncores"  = ncores,
-                "n_bands" = n_bands,
-                "bands"   = bands,
+  opts  <- list("ncores"    = ncores,
+                "n_bands"   = n_bands,
+                "bands"     = bands,
                 "maxchunk"  = maxchunk/ncores,
                 "nrows"     = nrows,
                 "ncols"     = ncols,

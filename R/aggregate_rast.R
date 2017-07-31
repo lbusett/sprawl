@@ -14,10 +14,8 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  #EXAMPLE1
 #'  }
-#' }
 #' @seealso
 #'  \code{\link[data.table]{data.table}}
 

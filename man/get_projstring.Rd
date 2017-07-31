@@ -43,7 +43,6 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  library(raster)
 
  in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
@@ -59,7 +58,6 @@ if(interactive()){
  get_projstring(in_vect)
 
  }
-}
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

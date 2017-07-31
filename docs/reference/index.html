@@ -163,6 +163,12 @@
             <p><code><a href="cuttails_rast.html">cuttails_rast</a></code> </p>
           </td>
           <td><p>remove outliers from a raster image</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="cast_rast.html">cast_rast</a></code> </p>
+          </td>
+          <td><p>automatic recasting between Raster object and raster files on disk</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -189,6 +195,38 @@
             <p><code><a href="crop_vect.html">crop_vect</a></code> </p>
           </td>
           <td><p>crop a vector on the extent of a different spatial file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="cast_vect.html">cast_vect</a></code> </p>
+          </td>
+          <td><p>cast a vector object to a different <code>R</code> spatial class or to a shapefile</p></td>
+        </tr>
+      </tbody><tbody>
+        <tr>
+          <th colspan="2">
+            <h2 id="section-retrieve-info-from-spatial-files" class="hasAnchor"><a href="#section-retrieve-info-from-spatial-files" class="anchor"></a>Retrieve info from spatial files</h2>
+            <p class="section-desc"></p>
+          </th>
+        </tr>
+        <tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_spatype.html">get_spatype</a></code> </p>
+          </td>
+          <td><p>check the "spatial type" of an object or file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_projstring.html">get_projstring</a></code> </p>
+          </td>
+          <td><p>return the proj4string of a spatial object or file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_extent.html">get_extent</a></code> </p>
+          </td>
+          <td><p>return the exten of a spatial object or file (with projection)</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -228,15 +266,9 @@
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="check_spatype.html">check_spatype</a></code> </p>
+            <p><code><a href="summarize_data.html">summarize_data</a></code> </p>
           </td>
-          <td><p>check the "spatial type" of an object or file</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="get_projstring.html">get_projstring</a></code> </p>
-          </td>
-          <td><p>return the proj4string of a spatial object or file</p></td>
+          <td><p>extract useful statistics from a data.table (or data.frame or tibble)</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -267,6 +299,18 @@
             <p><code><a href="find_command.html">find_command</a></code> </p>
           </td>
           <td><p>find the path to a specified command</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="find_gdal.html">find_gdal</a></code> </p>
+          </td>
+          <td><p>find gdal main folder</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="sprawl_initcluster.html">sprawl_initcluster</a></code> </p>
+          </td>
+          <td><p>initialize clustered processing on multiband raster</p></td>
         </tr>
       </tbody>
       </table>
@@ -279,6 +323,7 @@
       <li><a href="#section-reading-writing-spatial-data">Reading/writing spatial data</a></li>
       <li><a href="#section-raster-processing">Raster processing</a></li>
       <li><a href="#section-vector-processing">Vector processing</a></li>
+      <li><a href="#section-retrieve-info-from-spatial-files">Retrieve info from spatial files</a></li>
       <li><a href="#section-visualization-and-plotting">Visualization and plotting</a></li>
       <li><a href="#section-data-fetching-from-public-repositories">Data fetching from public repositories</a></li>
       <li><a href="#section-miscellaneous-helpers">Miscellaneous Helpers</a></li>

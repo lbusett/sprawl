@@ -101,8 +101,8 @@ extract_rast <- function(in_rast,
   #   Check input types - send errors/warnings if not compliant + open the in_vect_zones if      ####
   #   or raster file if filenames were passed instead than a *sp/*sf object or *raster object  ####
 
-  ras_type   <-  check_spatype(in_rast)
-  zone_type  <-  check_spatype(in_vect_zones)
+  ras_type   <-  get_spatype(in_rast)
+  zone_type  <-  get_spatype(in_vect_zones)
   if (!ras_type %in% "rastobject") {
     stop("Input in_rast is not a RasterStack or RasterBrick object")
   }

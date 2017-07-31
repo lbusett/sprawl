@@ -35,7 +35,7 @@ get_boundaries <- function(iso,
   data(iso3166, package = "maps", envir = environment())
   match_name <- match(iso, iso3166$ISOname)
   if (!is.na(match_name)) {
-    iso_code <- maps::iso3166$a3[match_name]
+    iso_code <- iso3166$a3[match_name]
   } else {
     match_code_i3 <- match(iso, iso3166$a3)
     if (!is.na(match_code_i3)) {

@@ -13,10 +13,8 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  #EXAMPLE1
 #'  }
-#' }
 #' @seealso
 #'  \code{\link[doSNOW]{registerDoSNOW}}
 
@@ -46,13 +44,13 @@
 #' @importFrom magrittr %>%
 
 er_polygons <- function(in_vect_zones,
-                            in_rast,
-                            seldates,
-                            selbands,
-                            n_selbands,
-                            date_check,
-                            er_opts,
-                            verb_foreach = FALSE) {
+                        in_rast,
+                        seldates,
+                        selbands,
+                        n_selbands,
+                        date_check,
+                        er_opts,
+                        verb_foreach = FALSE) {
 
   #   ____________________________________________________________________________
   #   crop in_vect_zones to in_rast extent if necessary and identify "removed"   ####
@@ -363,13 +361,12 @@ er_polygons <- function(in_vect_zones,
                                         # browser()
                                         data_for_summary  <- subset(temp_outdata, mdxtnq %in% unique(complete_polys$mdxtnq)) %>%
                                           data.table::setkey("mdxtnq")
-
-                                        stat_data[[chunk_n_summ]] <- fast_summ(data_for_summary,
-                                                                               "mdxtnq",
-                                                                               er_opts$comp_quant,
-                                                                               er_opts$FUN,
-                                                                               selbands[band],
-                                                                               selband)
+                                        stat_data[[chunk_n_summ]] <- summarize_data(data_for_summary,
+                                                                                   "mdxtnq",
+                                                                                   er_opts$comp_quant,
+                                                                                   er_opts$FUN,
+                                                                                   selbands[band],
+                                                                                   selband)
 
                                         temp_outdata  <- temp_outdata[!(mdxtnq %in% unique(complete_polys$mdxtnq))]
                                         chunk_n_summ  <- chunk_n_summ + 1
@@ -427,12 +424,12 @@ er_polygons <- function(in_vect_zones,
                                     # compute the summary statistics for the current "er_opts$small feature"
                                     if (er_opts$summ_data) {
 
-                                      miss_feat_stats <- fast_summ(miss_feat_data,
-                                                                   "mdxtnq",
-                                                                   er_opts$comp_quant,
-                                                                   er_opts$FUN,
-                                                                   selbands[band],
-                                                                   selband)
+                                      miss_feat_stats <- summarize_data(miss_feat_data,
+                                                                        "mdxtnq",
+                                                                        er_opts$comp_quant,
+                                                                        er_opts$FUN,
+                                                                        selbands[band],
+                                                                        selband)
                                       stat_data       <- rbind(stat_data, miss_feat_stats)
                                     }
                                   }
@@ -513,7 +510,7 @@ er_polygons <- function(in_vect_zones,
     if (!is.null(er_opts$FUN)) {
       keep_cols <- c("mdxtnq", "band_n", "date",
                      "N_PIX", "myfun",
-                      names_shp,
+                     names_shp,
                      "geometry")
     } else {
 

@@ -10,10 +10,8 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  #EXAMPLE1
 #'  }
-#' }
 #' @seealso
 #'  \code{\link[sp]{proj4string}}
 #' @rdname crop_vect
@@ -29,8 +27,8 @@ crop_vect <- function(in_vect,
 
   #   ____________________________________________________________________________
   #   Check arguments                                                         ####
-  vectype <- check_spatype(in_vect)
-  objtype <- check_spatype(in_obj)
+  vectype <- get_spatype(in_vect)
+  objtype <- get_spatype(in_obj)
 
   if (!vectype %in% c("sfobject", "spobject", "vectfile")) {
     stop("crop_sf --> in_vect is not a valid vector object (sp, sf or vector file")

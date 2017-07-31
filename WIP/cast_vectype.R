@@ -10,19 +10,19 @@
 #' #' @examples \dontrun{
 #' #' library(sprawl.data)
 #' #' # input is a raster file
-#' #' check_spatype(system.file("extdata","testrast.tif", package = "sprawl.data"))
+#' #' get_spatype(system.file("extdata","testrast.tif", package = "sprawl.data"))
 #' #'
 #' #' # input is a shapefile
 #' #' shp_file <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
-#' #' check_spatype(shp_file)
+#' #' get_spatype(shp_file)
 #' #'
 #' #' # input is a `sp` object
 #' #' obj <- read_vect(shp_file, as_sp = TRUE)
-#' #' check_spatype(obj)
+#' #' get_spatype(obj)
 #' #'
 #' #' # input is a `sf` object
 #' #' obj <- read_vect(shp_file)
-#' #' check_spatype(obj)
+#' #' get_spatype(obj)
 #' #' }
 #' #'
 #' cast_vectype <- function(in_vect, to) {

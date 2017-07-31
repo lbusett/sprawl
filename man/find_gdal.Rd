@@ -17,10 +17,8 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  #EXAMPLE1
  }
-}
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

@@ -61,7 +61,6 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  library(sprawl)
 
  in_rast <- system.file("extdata", "gNDVI.tif", package = "sprawl.data")
@@ -81,7 +80,6 @@ if(interactive()){
            title     = "RapidEye - GNDVI",
            maxpixels = 10e5)
  }
-}
 }
 \seealso{
 \code{\link[latticeExtra]{layer}}

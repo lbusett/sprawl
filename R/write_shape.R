@@ -56,7 +56,7 @@ write_shape = function(out_obj,
     out_file <- paste0(tools::file_path_sans_ext(out_file), ".shp")
   }
 
-  intype <- check_spatype(out_obj)
+  intype <- get_spatype(out_obj)
   if (intype == "spobject") {
     out_obj <- methods::as(out_obj, "sf")
     intype  <- "sfobject"

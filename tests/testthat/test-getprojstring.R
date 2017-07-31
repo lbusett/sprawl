@@ -29,7 +29,7 @@ testthat::test_that("Test projection string",{
 
   # warning/abort on wrong projstring ----
   rastobj <- raster::raster(in_rast)
-  raster::crs(rastobj) <- "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4"
+  expect_warning(raster::crs(rastobj) <- "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4")
 
   expect_warning(out <- get_projstring(rastobj))
   expect_equal(out, "invalid")

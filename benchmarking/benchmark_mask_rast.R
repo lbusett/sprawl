@@ -15,5 +15,5 @@ sp_polys <- as(in_vect, "Spatial")
 bench <- microbenchmark::microbenchmark(
   "raster::mask" = {out_mask_raster  <- raster::mask(in_rast, sp_polys)},
   "sprawl::mask_rast" = {out_mask_raster  <- mask_rast(in_rast, in_vect, crop = FALSE)},
-  times = 1)
+  times = 5)
 boxplot(bench)

@@ -9,7 +9,6 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  library(raster)
 #'
 #'  in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
@@ -25,7 +24,6 @@
 #'  get_projstring(in_vect)
 #'
 #'  }
-#' }
 #' @importFrom dplyr case_when
 #' @importFrom gdalUtils gdalsrsinfo
 #' @importFrom sp proj4string
@@ -64,7 +62,7 @@ get_projstring.default  <- function(object, abort = FALSE) {
 #' @export
 get_projstring.character <- function(object, abort = FALSE) {
 
-  obj_type <- check_spatype(object)
+  obj_type <- get_spatype(object)
 
   if (obj_type %in% c("rastfile", "vectfile")) {
 
@@ -73,7 +71,7 @@ get_projstring.character <- function(object, abort = FALSE) {
       if (abort == TRUE) {
         stop("get_projstring --> Invalid proj4string detected ! Aborting !")
       } else {
-        warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+        warning("get_projstring --> Invalid proj4string detected !")
         return("invalid")
       }
     } else {
@@ -81,9 +79,11 @@ get_projstring.character <- function(object, abort = FALSE) {
     }
   } else {
     if (abort == TRUE) {
-      stop("get_projstring --> `object` is not a valid raster or vector file, Aborting !")
+      stop("get_projstring --> `object` is not a valid raster or vector
+           file, Aborting !")
     } else {
-      warning("get_projstring --> `object` is not a valid raster or vector file, Aborting !")
+      warning("get_projstring --> `object` is not a valid raster or vector
+              file !")
       return("none")
     }
   }
@@ -104,7 +104,7 @@ get_projstring.Raster <- function(object, abort = FALSE) {
     if (abort == TRUE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
-      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      warning("get_projstring --> Invalid proj4string detected !")
       return("invalid")
     }
   } else {
@@ -127,7 +127,7 @@ get_projstring.sf <- function(object, abort = FALSE) {
     if (abort == TRUE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
-      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      warning("get_projstring --> Invalid proj4string detected ! ")
       return("invalid")
     }
   } else {
@@ -150,7 +150,7 @@ get_projstring.sfc <- function(object, abort = FALSE) {
     if (abort == TRUE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
-      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      warning("get_projstring --> Invalid proj4string detected !")
       return("invalid")
     }
   } else {
@@ -158,7 +158,6 @@ get_projstring.sfc <- function(object, abort = FALSE) {
   }
 
 }
-
 
 #   ____________________________________________________________________________
 #   Method for "Spatial" object - use sp::proj4string(object)               ####
@@ -174,7 +173,7 @@ get_projstring.Spatial <- function(object, abort = FALSE) {
     if (abort == TRUE) {
       stop("get_projstring --> Invalid proj4string detected ! Aborting !")
     } else {
-      warning("get_projstring --> Invalid proj4string detected ! Aborting !")
+      warning("get_projstring --> Invalid proj4string detected !")
       return("invalid")
     }
   } else {
