@@ -49,6 +49,10 @@
 #'            palette   = "RdYlBu" ,
 #'            title     = "RapidEye - GNDVI",
 #'            maxpixels = 10e5)
+#'
+#'  in_rast <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
+#'                                       package = "sprawl.data"))[[1:4]]
+#'  plot_rast(in_rast)
 #'  }
 #' @seealso
 #'  \code{\link[latticeExtra]{layer}}
@@ -102,13 +106,21 @@ plot_rast <- function(in_rast,
   #   ____________________________________________________________________________
   #   If limits not passed, compute limits for the plot on the basis of       ####
   #   the values of "cut_tails" and of the distribution of values in in_rast
-
-  if (is.null(limits)) {
-    limits <- raster::quantile(in_rastplot, probs = c(0, tails, 1), ncells = 5000000000)
+  if (raster::nlayers(in_rast) == 1) {
+    if (is.null(limits)) {
+      limits <- raster::quantile(in_rastplot, probs = c(0, tails, 1), ncells = 5000000000)
+    } else {
+      limits <- c(limits[1], limits[1], limits[2], limits[2])
+    }
   } else {
-    limits <- c(limits[1], limits[1], limits[2], limits[2])
+    if (is.null(limits)) {
+      quantiles <- raster::quantile(in_rastplot, probs = c(0, tails, 1), ncells = 5000000000)
+      limits <- c(min(quantiles[,1]), min(quantiles[,2]),
+                  max(quantiles[,3]), max(quantiles[,4]))
+    } else {
+      limits <- c(limits[1], limits[1], limits[2], limits[2])
+    }
   }
-
   #   ____________________________________________________________________________
   #   set up the color table                                                  ####
 
@@ -129,11 +141,14 @@ plot_rast <- function(in_rast,
                                    col.regions = my.col,
                                    at          = at,
                                    maxpixels   = maxpixels,
-                                   main        = title)
+                                   main        = title,
+                                   xlab        = NULL,
+                                   ylab        = NULL,
+                                   scales      = list(draw = FALSE))
 
   case_identifier <- 0
   if (!is.null(in_poly)) {
-    # invisible(in_poly)
+
     polys <- as(in_poly, "Spatial")
     polyplot  <- latticeExtra::layer(sp::sp.polygons(x), data = list(x = polys))
     case_identifier <- case_identifier + 10
@@ -148,7 +163,7 @@ plot_rast <- function(in_rast,
   } else {
     pointplot <- NULL
   }
- # browser()
+
   if (plot_now) {
     if (case_identifier == 0)   print(rastplot)
     if (case_identifier == 10)  print(rastplot + polyplot)
