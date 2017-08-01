@@ -47,7 +47,7 @@ cast_vect.default <- function (object, to) {
 cast_vect.sf <- function (object, to) {
   call <- as.list(match.call())
   if (to == "sfobject") return(object)
-  if (to == "sfobject") return(sf::st_as_sf(object))
+  if (to == "spobject") return(as(object, "Spatial"))
   if (to == "vectfile") {
     temp_shape <- tempfile(fileext = ".shp")
     write_shape(object, temp_shape)
@@ -64,10 +64,10 @@ cast_vect.sf <- function (object, to) {
 #'@method cast_vect sfc
 #'@rdname cast_vect
 
-cast_vect.sfc <- function (object, to) {
+cast_vect.sfc <- function(object, to) {
   call <- as.list(match.call())
   if (to == "sfobject") return(object)
-  if (to == "sfobject") return(sf::st_as_sf(object))
+  if (to == "spobject") return(as(object, "Spatial"))
   if (to == "vectfile") {
     temp_shape <- tempfile(fileext = ".shp")
     write_shape(object, temp_shape)
