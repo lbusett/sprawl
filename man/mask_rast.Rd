@@ -5,8 +5,8 @@
 \title{Mask a raster based on a vector}
 \usage{
 mask_rast(in_rast, mask, crop = FALSE, buffer = NULL, out_nodata = NULL,
-  to_file = FALSE, out_rast = NULL, out_dt = "FLT4S", verbose = TRUE,
-  verb_foreach = FALSE)
+  to_file = FALSE, out_rast = NULL, overwrite = FALSE, out_dt = "FLT4S",
+  verbose = TRUE, verb_foreach = FALSE)
 }
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
@@ -29,6 +29,8 @@ to the caller. In this case, the path to the saved file is returned instead}
 to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
 file in the \code{R} temporary folder. The file is saved in TIFF format, with \code{DAFLATE} compression.}
 
+\item{overwrite}{DESCRIPTION}
+
 \item{out_dt}{TO BE CHECKED !!!!}
 
 \item{verbose}{\code{logical} if TRUE, extended processing information is sent to the console in the
@@ -48,8 +50,8 @@ vector to allow a more "lenient" masking, or to remove also the borders of the v
 }
 \examples{
 \dontrun{
-libray(sprawl)
-libray(sprawl.data)
+library(sprawl)
+library(sprawl.data)
 library(raster)
 in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
                        stringsAsFactors = T)

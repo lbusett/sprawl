@@ -16,6 +16,7 @@
 #' @param out_rast `character` filename where the masked raster should be saved (ignored if
 #'   to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
 #'   file in the `R` temporary folder. The file is saved in TIFF format, with `DAFLATE` compression.
+#' @param overwrite DESCRIPTION
 #' @param out_dt TO BE CHECKED !!!!
 #' @param verbose `logical` if TRUE, extended processing information is sent to the console in the
 #'   form of messages
@@ -24,8 +25,8 @@
 #'   the filename of the created raster (if to_file == TRUE)
 #' @examples
 #' \dontrun{
-#' libray(sprawl)
-#' libray(sprawl.data)
+#' library(sprawl)
+#' library(sprawl.data)
 #' library(raster)
 #' in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
 #'                        stringsAsFactors = T)
@@ -54,6 +55,7 @@ mask_rast <- function(in_rast,
                       out_nodata = NULL,
                       to_file    = FALSE,
                       out_rast   = NULL,
+                      overwrite  = FALSE,
                       out_dt     = "FLT4S",
                       verbose    = TRUE,
                       verb_foreach = FALSE) {
@@ -70,6 +72,8 @@ mask_rast <- function(in_rast,
   in_rast   <- cast_rast(in_rast, "rastobj")
   rast_proj <- get_projstring(in_rast, abort = TRUE)
   rast_bbox <- get_extent(in_rast)
+  bnames_in <- names(in_rast)
+  times_in  <- raster::getZ(in_rast)
 
   # doubl check if the input raster is associated to a physical file (i.e., not "in memory")
   # If not, create a temporary physical file by saving in tempdir()
@@ -79,7 +83,7 @@ mask_rast <- function(in_rast,
     raster::writeRaster(in_rast,
                         filename  = temprastfile,
                         options   = c("COMPRESS=DEFLATE"),
-                        overwrite = TRUE)
+                        overwrite = overwrite)
     in_rast <- raster::brick(temprastfile)
   }
 
@@ -261,10 +265,30 @@ mask_rast <- function(in_rast,
 
   if (to_file == FALSE) {
     if (clust$opts$n_bands == 1) {
-      return(raster::raster(temp_tiffs))
+      out_obj <- raster::raster(temp_tiffs)
     } else {
-      return(raster::stack(temp_tiffs))
+      out_obj <- raster::stack(temp_tiffs)
     }
+    names(out_obj) <- bnames_in
+    if (!is.null(times_in)) {
+      out_obj <- raster::setZ(out_obj, times_in)
+    }
+    if (!is.null(out_rast)) {
+      if (is.null(out_nodata)) {
+        raster::writeRaster(out_obj,
+                            filename = out_rast,
+                            options   = c("COMPRESS=DEFLATE"),
+                            overwrite = overwrite)
+      } else {
+        raster::writeRaster(out_obj,
+                            filename = out_rast,
+                            options   = c("COMPRESS=DEFLATE"),
+                            NAflag    = out_nodata,
+                            overwrite = overwrite)
+      }
+
+    }
+
   } else {
     tempvrt <- tempfile(fileext = ".vrt")
     gdalUtils::gdalbuildvrt(gdalfile = temp_tiffs, output.vrt = tempvrt, separate = T)
@@ -290,6 +314,6 @@ mask_rast <- function(in_rast,
   #   define clean-up                                                         ####
   on.exit(unlink(temp_shapefile))
   on.exit(unlink(temp_rastermask))
-  on.exit(unlink(temprastfile))
-  return(masked_out)
+  on.exit({if (exists("temprastfile")) unlink(temprastfile)})
+  return(out_obj)
 }
