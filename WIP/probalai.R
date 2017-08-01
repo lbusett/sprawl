@@ -10,7 +10,7 @@ library(anytime)
 in_folds <- list.files("/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/VGT/Raw_data",
                        pattern = "[0-9]", full.names = T)
 in_folds <- in_folds[2:length(in_folds)]
-
+in_folds <- in_folds [19:20]
 in_ERMES_LAI_ex <- "/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/MOD/IT_LAI_MOD_2017_009.tif" %>%
   raster::raster()
 
@@ -44,7 +44,7 @@ rcl_mat <- tibble::tribble(
   ~start, ~end, ~new,
   0,   0.7, NA,
   0.7, 100, 1)
-fc_proba_mask <- reclass_rast(raster::raster(in_lc_proba_file), rcl_mat)
+fc_proba_mask <- sprawl::reclass_rast(raster::raster(in_lc_proba_file), rcl_mat)
 
 cl <-  parallel::makeCluster(4)
 doSNOW::registerDoSNOW(cl)
