@@ -20,23 +20,24 @@ cast_rast(object, to)
 corresponding to a filename (with full path)}
 
 \item{to}{\code{character} indicating to which type of object the input should be re-casted. It can
-be "sfobject" (re-cast to \code{sf}), "spobject" (recast to \code{Spatial}) or "vectfile" (re-cast to
-a shapefile)}
+be "rastobject" (re-cast to \code{Raster}) or "rastfile" (recast to raster file).In the
+second case, recasting is achieved by identifying the raster file associated with the
+Raster object and returning its path. If no file is associated (i.e., the object is
+in-memory), the Raster object is written to disk on a temporary file, which path is returned}
 }
 \value{
 returns the same object, casted to the "class" specified by \code{to} (or the exact same
 object in case \code{object} is already of "class" \code{to})
 }
 \description{
-function to automatically re-cast a "vector" object to a given "class" specified by
-the \code{to} argument.
+function to automatically re-cast between Raster object and raster files on disk
 }
 \details{
 If \code{object} is a valid \code{R} spatial object, it is automatically converted to an object of
 a different class if needed (e.g., from \code{sf} to \code{Spatial} and viceversa, or from \code{sf} to a
 vector file through \code{sprawl::write_shape}). If it is a character string, the function checks if
-it corresponds to a valid vector file and reads it to a \code{sf} or \code{Spatial} object through
-\code{sprawl::read_vect}
+it corresponds to a valid raster file and reads it to a \code{Raster} object through
+\code{rasterr::stack()}
 }
 \examples{
 \dontrun{

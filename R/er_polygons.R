@@ -1,6 +1,6 @@
 #' @title extract raster data on polygons (helper for extract_rast)
 #' @description FUNCTION_DESCRIPTION
-#' @param in_vect_zones PARAM_DESCRIPTION
+#' @param in_vect PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
 #' @param seldates PARAM_DESCRIPTION
 #' @param selbands PARAM_DESCRIPTION
@@ -43,7 +43,7 @@
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom magrittr %>%
 
-er_polygons <- function(in_vect_zones,
+er_polygons <- function(in_vect,
                         in_rast,
                         seldates,
                         selbands,
@@ -53,7 +53,7 @@ er_polygons <- function(in_vect_zones,
                         verb_foreach = FALSE) {
 
   #   ____________________________________________________________________________
-  #   crop in_vect_zones to in_rast extent if necessary and identify "removed"   ####
+  #   crop in_vect to in_rast extent if necessary and identify "removed"   ####
   #   features + Find names of the attribute fields of the original shapefile
 
   if (er_opts$verbose) message("extract_rast --> Cropping the zones object on extent of the raster")
@@ -61,25 +61,25 @@ er_polygons <- function(in_vect_zones,
   #TODO  Do this only if extent of zone object is larger than that of the raster (in any direction)
 
   diff_ext <- as.numeric((extent(in_rast) + 461)[] ) -
-    as.numeric(sf::st_bbox(in_vect_zones)[c(1,3,2,4)])
+    as.numeric(sf::st_bbox(in_vect)[c(1,3,2,4)])
 
   if (max(abs(diff_ext) >= 1000)) {
-    crop               <- er_crop_object(in_vect_zones, in_rast, er_opts$id_field, er_opts$verbose)
-    in_vect_zones_crop <- crop$in_vect_zones_crop
-    outside_feat       <- crop$outside_feat
+    crop               <- er_crop_object(in_vect, in_rast, er_opts$id_field, er_opts$verbose)
+    in_vect_crop <- crop$in_vect_crop
+    outside_feat <- crop$outside_feat
   } else {
-    in_vect_zones_crop <- in_vect_zones
+    in_vect_crop <- in_vect
     outside_feat       <- NULL
   }
-  # in_vect_zones_crop <- in_vect_zones
-  names_shp <- names(in_vect_zones_crop)[!names(in_vect_zones_crop) %in% c("mdxtnq", "geometry")]
+  # in_vect_crop <- in_vect
+  names_shp <- names(in_vect_crop)[!names(in_vect_crop) %in% c("mdxtnq", "geometry")]
 
 
   #   ____________________________________________________________________________
   #   find a correct cropping bounding box which allows to not "move" the corn####
   #    the corners while creating a vrt file
-  # browser()
-  vect_bbox <- sf::st_bbox(in_vect_zones_crop)
+
+  vect_bbox <- sf::st_bbox(in_vect_crop)
   rast_bbox <- raster::extent(in_rast)[c(1,3,2,4)]
 
   col_coords <- rast_bbox[1] + raster::res(in_rast)[1] * seq_len(dim(in_rast)[2])
@@ -107,7 +107,7 @@ er_polygons <- function(in_vect_zones,
 
   #   ____________________________________________________________________________
   #   If `er_opts$rastres` is not null and is er_opts$smaller tha the original                ####
-  #   resolution of in_rast, both `in_vect_zones` and `in_rast` are "super-sampled
+  #   resolution of in_rast, both `in_vect` and `in_rast` are "super-sampled
   #   to `er_opts$rastres` resolution (using nn resampling) prior to data extraction
 
   supersample <- 0
@@ -129,12 +129,12 @@ er_polygons <- function(in_vect_zones,
   if (er_opts$verbose) {message("extract_rast --> Rasterizing shape")}
   if (er_opts$verbose) {message("extract_rast --> Writing temporary shapefile")}
   temp_shapefile = tempfile(tmpdir = tempdir(), fileext = ".shp")
-  write_shape(in_vect_zones_crop, temp_shapefile, overwrite = TRUE)
+  write_shape(in_vect_crop, temp_shapefile, overwrite = TRUE)
 
   # then convert it to raster
   if (er_opts$verbose) {(message("extract_rast --> Writing temporary rasterized shapefile"))}
   temp_rasterfile = tempfile(tmpdir = tempdir(), fileext = ".tif")
-  max_id <- max(in_vect_zones_crop$mdxtnq)
+  max_id <- max(in_vect_crop$mdxtnq)
   ot <- dplyr::case_when(
     (max_id <= 255) == 1 ~ "Byte",
     (max_id >= 255 & max_id < 65535) == 1 ~ "UInt16",
@@ -154,7 +154,7 @@ er_polygons <- function(in_vect_zones,
   system2(file.path(find_gdal(), "gdal_rasterize"),
           args = rast_string, stdout = NULL)
 
-  # # browser()
+
   #   aa = gdalUtils::gdal_rasterize(temp_shapefile,
   #                             temp_rasterfile,
   #                             tr = er_opts$rastres,
@@ -261,13 +261,13 @@ er_polygons <- function(in_vect_zones,
 
                                 if (n_chunks > 1) {
 
-                                  bboxes <- in_vect_zones_crop[c("mdxtnq", "geometry")] %>%
+                                  bboxes <- in_vect_crop[c("mdxtnq", "geometry")] %>%
                                     data.table::data.table()
                                   bboxes = bboxes[, list(min_y = sf::st_bbox(geometry)[2],
                                                          max_y = sf::st_bbox(geometry)[4]),
                                                   by = "mdxtnq"]
                                 } else {
-                                  bboxes <- in_vect_zones_crop[c("mdxtnq", "geometry")]
+                                  bboxes <- in_vect_crop[c("mdxtnq", "geometry")]
                                 }
 
                                 #   _______________________________________________________________________________
@@ -358,7 +358,7 @@ er_polygons <- function(in_vect_zones,
                                       #   If we have all data for any polygon, compute the summary statistics for ####
                                       #   those, and remove them from "temp_outdata", then put temp_outdata in out_data
                                       if (length(complete_polys$mdxtnq) != 0) {
-                                        # browser()
+
                                         data_for_summary  <- subset(temp_outdata, mdxtnq %in% unique(complete_polys$mdxtnq)) %>%
                                           data.table::setkey("mdxtnq")
                                         stat_data[[chunk_n_summ]] <- summarize_data(data_for_summary,
@@ -396,12 +396,12 @@ er_polygons <- function(in_vect_zones,
                                 #   ____________________________________________________________________________
                                 #   extract data for er_opts$small polygons if requested and necessary              ####
 
-                                if (er_opts$small & length(unique(stat_data$mdxtnq) != length(unique(in_vect_zones_crop$mdxtnq)))) {
+                                if (er_opts$small & length(unique(stat_data$mdxtnq) != length(unique(in_vect_crop$mdxtnq)))) {
 
-                                  miss_feat <- setdiff(unique(in_vect_zones_crop$mdxtnq), unique(stat_data$mdxtnq))
+                                  miss_feat <- setdiff(unique(in_vect_crop$mdxtnq), unique(stat_data$mdxtnq))
                                   for (mfeat in miss_feat) {
 
-                                    poly_miss       <- in_vect_zones_crop %>%
+                                    poly_miss       <- in_vect_crop %>%
                                       dplyr::filter(mdxtnq == mfeat) %>%
                                       sf::st_as_sf() %>%
                                       as("Spatial")
@@ -473,11 +473,11 @@ er_polygons <- function(in_vect_zones,
 
   # --------------------------------------------------------------------------------
   # if er_opts$keep_null selected and "outside features" found, replace
-  # in_vect_zones_crop  with in_vect_zones, so that later joins "include" the missing
+  # in_vect_crop  with in_vect, so that later joins "include" the missing
   # features
 
   if (er_opts$keep_null & !is.null(outside_feat)) {
-    in_vect_zones_crop <- in_vect_zones
+    in_vect_crop <- in_vect
   }
 
   #   ____________________________________________________________________________
@@ -492,14 +492,14 @@ er_polygons <- function(in_vect_zones,
     # if er_opts$addfeat, merge the extracted data with the shapefile features
     if (er_opts$addfeat) {
       stat_data <- stat_data[{
-        data.table::as.data.table(in_vect_zones_crop) %>%
+        data.table::as.data.table(in_vect_crop) %>%
           setkey("mdxtnq")}
         ]
     } else {
       if (!is.null(er_opts$id_field)) {
 
         stat_data <- stat_data[{
-          data.table::as.data.table(in_vect_zones_crop[,c(eval(er_opts$id_field), "mdxtnq")]) %>%
+          data.table::as.data.table(in_vect_crop[,c(eval(er_opts$id_field), "mdxtnq")]) %>%
             setkey("mdxtnq")}
           ]
       }
@@ -541,7 +541,7 @@ er_polygons <- function(in_vect_zones,
       keep_cols <- keep_cols[-length(keep_cols)]
       stat_data <- stat_data[, geometry := NULL]
     }
-    # browser()
+
     if (!is.null(er_opts$id_field)) {
       stat_data <- stat_data[, mdxtnq := NULL]
       keep_cols <- keep_cols[which(keep_cols != er_opts$id_field)]
@@ -569,16 +569,16 @@ er_polygons <- function(in_vect_zones,
     # "bind" the different bands
     all_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 1))) %>%
       data.table::setkey("mdxtnq")
-    sf::st_geometry(in_vect_zones_crop) <- NULL
+    sf::st_geometry(in_vect_crop) <- NULL
 
     # if er_opts$addfeat, merge the extracted data with the shapefile features
     if (er_opts$addfeat) {
-      all_data <- merge(all_data, in_vect_zones_crop, by = "mdxtnq", all.y = TRUE)
+      all_data <- merge(all_data, in_vect_crop, by = "mdxtnq", all.y = TRUE)
     } else {
       if (!is.null(er_opts$id_field)) {
 
         all_data <- all_data[{
-          data.table::as.data.table(in_vect_zones_crop[,c(eval(er_opts$id_field), "mdxtnq")]) %>%
+          data.table::as.data.table(in_vect_crop[,c(eval(er_opts$id_field), "mdxtnq")]) %>%
             setkey("mdxtnq")}
           ]
       }

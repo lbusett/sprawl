@@ -4,11 +4,11 @@
 \alias{er_points}
 \title{helper for extract_rast for points extraction}
 \usage{
-er_points(in_vect_points, in_rast, n_selbands, selbands, seldates, id_field,
-  long, date_check, verbose, addfeat, addgeom, keep_null)
+er_points(in_vect, in_rast, n_selbands, selbands, seldates, id_field, long,
+  date_check, verbose, addfeat, addgeom, keep_null)
 }
 \arguments{
-\item{in_vect_points}{\code{sf} object on which features the zonal statistics has to be computed}
+\item{in_vect}{\code{sf} object on which features the zonal statistics has to be computed}
 
 \item{in_rast}{single- or multi-band \code{rasterStack} object containing values to be extracted
 and summarized}

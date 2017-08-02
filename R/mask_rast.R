@@ -69,7 +69,7 @@ mask_rast <- function(in_rast,
 
   # checks on in_rast ----
 
-  in_rast   <- cast_rast(in_rast, "rastobj")
+  in_rast   <- cast_rast(in_rast, "rastobject")
   rast_proj <- get_projstring(in_rast, abort = TRUE)
   rast_bbox <- get_extent(in_rast)
   bnames_in <- names(in_rast)
