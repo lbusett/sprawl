@@ -87,14 +87,14 @@ corresponding to the features of a vector (Polygon, Point or Line)
 library(sprawl)
 library(sprawl.data)
 library(raster)
-options(tibble.width = Inf)
+library(tibble)
 in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
                        stringsAsFactors = T)
 in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
 in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 out      <- extract_rast(in_rast, in_polys, verbose = FALSE)
-head(out$stats)
-head(out$alldata)
+as_tibble(out$stats)
+as_tibble(out$alldata)
 }
 }
 \author{

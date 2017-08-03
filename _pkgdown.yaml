@@ -17,6 +17,7 @@ reference:
       - '`mask_rast`'
       - '`cuttails_rast`'
       - '`cast_rast`'
+      - '`migrate_virtrast`'
   - title: Vector processing
     desc: ~
     contents:
@@ -49,25 +50,27 @@ reference:
       - '`find_command`'
       - '`find_gdal`'
       - '`sprawl_initcluster`'
-    params:
-     - highlight: tango
 navbar:
   type: inverse
   left:
-    - text: "Home"
+    - icon: fa-home
       href: index.html
     - text: "Getting Started"
       href: articles/sprawl.html
-    - text: "Function Reference"
-      href: reference/index.html
     - text: "Examples of Use"
       href: articles/examples.html
-    - text: "FAQ"
-      href: articles/faq.html
     - text: "Contributing"
       href: articles/contributing.html
-    - text: "NEWS"
-      href: news/index.html
   right:
+    - text: "faq"
+      icon: fa-question-circle-o
+      href: articles/faq.html
+    - icon: fa-newspaper-o
+      text: "news"
+      href: news/index.html
+    - icon: fa-file-code-o
+      text: "code reference"
+      href: reference/index.html
     - icon: fa-github fa-lg
-      href: https://github.com/IREA-CNR-MI/sprawl/
+      text: "github"
+      href: https://github.com/lbusett/sprawl/
