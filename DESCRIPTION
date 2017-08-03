@@ -46,7 +46,7 @@ Imports: data.table,
         tools,
         magrittr, 
         parallel, 
-        springr
+        stringr
 Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,
