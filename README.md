@@ -1,17 +1,19 @@
 
--   [sprawl - Spatial Processing (in) R: Amorphous Wrapper Library](#sprawl---spatial-processing-in-r-amorphous-wrapper-library)
+-   [sprawl - Spatial Processing (in) R: Amdvanced Workflow Library](#sprawl---spatial-processing-in-r-amdvanced-workflow-library)
     -   [Intro and rationale](#intro-and-rationale)
     -   [Package philosophy](#package-philosophy)
+    -   [**WORK IN PROGRESS !**](#work-in-progress)
     -   [Installation](#installation)
-    -   [Currently available functions and examples](#currently-available-functions-and-examples)
+    -   [Package Documentation](#package-documentation)
     -   [Contributing](#contributing)
+    -   [Authors](#authors)
     -   [Citation](#citation)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Travis-CI Build Status](https://travis-ci.org/lbusett/sprawl.svg?branch=master)](https://travis-ci.org/lbusett/sprawl) [![codecov](https://codecov.io/gh/lbusett/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/lbusett/sprawl) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-sprawl - Spatial Processing (in) R: Amorphous Wrapper Library
-=============================================================
+sprawl - Spatial Processing (in) R: Amdvanced Workflow Library
+==============================================================
 
 Intro and rationale
 -------------------
@@ -37,35 +39,43 @@ Given this, `sprawl` is expected to be a broadly-aimed (and therefore rather "am
 
 `sprawl` is currently developed and maintained by personnel of the Milan section of CNR-IREA (Institute on Remote Sensing of Environment - National Research Council, Italy - <http://www.irea.cnr.it/en/>)
 
+**WORK IN PROGRESS !**
+----------------------
+
+If you stumble on this page, please be advised that **`sprawl` is currently in an early stage of development. This means that things are going to change rapidly, and we do not guarantee that everything works as expected**. Additionally, be warned that until a first official version is released, **functions may change behaviour or even completely disappear while we test different approaches and solutions** ! (besides this: we would be happy to have beta-testers !)
+
 Installation
 ------------
 
 You can install sprawl from git-hub with:
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("lbusett/sprawl")
 ```
 
-Note that, given its scope, `sprawl` imports functions from several other packages, which need to be installed in your system. Since some of those have quite specific System Requirements, it's possible that you'll struggle a bit in installation due to unresolved dependencies. In that case, please have a look at the installation error messages to see which package has problems in installation and try to install it beforehand (consulting its specific CRAN pages or doing a stackoverflow search may help !).
+<font size="2"> *Note that, given its rather broad scope, `sprawl` **imports functions from several other packages**. Since some of those have quite specific System Requirements, it's possible that you'll struggle a bit in installation due to unresolved dependencies. In that case, please have a look at the installation error messages to see which package has problems in installation and try to install it beforehand (consulting its specific CRAN pages or doing a stackoverflow search may help !).* </font>
 
-Currently available functions and examples
-------------------------------------------
+Package Documentation
+---------------------
 
-The main functions available in `sprawl` will be generally documented \[here - coming soon\], along with common-usage examples.
+The main functions available in `sprawl` will bedocumented in `sprawl` website at [here](https://lbusett.github.io/sprawl), along with usage examples and benchmarking results.
 
 Contributing
 ------------
 
-We are open for contributions/help in improving `sprawl` and extend its functionalities. If you have a suggestion, you can report it in our [issues](https://github.com/lbusett/sprawl/issues) page, or fork the repository and then make a pull request. (note that we plan to provide some "good-practices" instructions for contributing new functions in the future.)
+We are open for contributions/help in improving `sprawl` and extend its functionalities. If you have a **suggestion for and additional functionality** please report it in our [issues](https://github.com/lbusett/sprawl/issues) page. If you **wish to contribute to `sprawl` development**, please see our \[Contributing page\] on Git Hub (COMING SOON !).
+
+Authors
+-------
+
+`sprawl` is currently developed and maintained by Lorenzo Busetto and Luigi Ranghetti of CNR-IREA (Institute on Remote Sensing of Environment - National Research Council, Italy - <http://www.irea.cnr.it/en/>)
 
 Citation
 --------
 
 To cite package `sprawl` in publications use:
 
-Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amorphous Wrapper Library. R package version 0.1.0.9000.
+Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Advanced Workflow Library. R package version 0.1.0.9000.
 
-### Code of Conduct
-
-Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](https://lbusett.github.io/sprawl/articles/conduct.html). By participating in this project you agree to abide by its terms.
