@@ -51,8 +51,8 @@ Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,
           rmarkdown
-URL: https://github.com/IREA-CNR-MI/sprawl/
-BugReports: https://github.com/IREA-CNR-MI/sprawl/issues
+URL: https://github.com/lbusett/sprawl/
+BugReports: https://github.com/lbusett/sprawl/issues
 Encoding: UTF-8
 License: GPL-3 + file LICENSE
 LazyData: true
