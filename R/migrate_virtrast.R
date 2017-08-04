@@ -3,7 +3,7 @@
 #'   such as GDAL VRTs or `R` rasterStacks "pointing" to files on disk in the case that
 #'   the corresponding files on disk are moved.
 #' @param in_rast `character` full file path of an `RData` or `vrt` file
-#' @param newpath `character` new path were the corresponding files are now located. If NULL,
+#' @param new_path `character` new path were the corresponding files are now located. If NULL,
 #'   a file selector is opened allowing to interactively choose the new folder, Default: NULL
 #' @param out_file `character` full path for the new `RData` or `vrt` file to be saved.
 #'   If NULL, the new file is built nby adding "_new" to the basename of the old one.
@@ -20,7 +20,7 @@
 #'  #TODO (Remove the # after uploading a test dataset on sprawl.data)
 #'  #old_vrt  <- "/home/mypath/myfolder/myvrt.vrt
 #'  #new_path <- "/home/mypath/mynewfolder"
-#'  #new_vrt  <- migrate_virtrast(old_vrt, newpath)
+#'  #new_vrt  <- migrate_virtrast(old_vrt, new_path)
 #'  #new_vrt
 #'  #raster::stack(new_vrt)
 #' }
@@ -32,7 +32,7 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 
 migrate_virtrast <- function(in_rast,
-                             newpath,
+                             new_path,
                              out_file = NULL) {
   UseMethod("migrate_virtrast")
 }
@@ -43,7 +43,7 @@ migrate_virtrast <- function(in_rast,
 #' @method migrate_virtrast default
 #' @export
 migrate_virtrast.default  <- function(in_rast,
-                                      newpath,
+                                      new_path,
                                       out_file = NULL) {
   call <- match.call()
   stop("migrate_virtrast --> ", call[[2]], " is not a `RData` or `GDAL vrt` file. Aborting !")
@@ -53,18 +53,18 @@ migrate_virtrast.default  <- function(in_rast,
 #' @export
 
 migrate_virtrast.character  <- function(in_rast,
-                                        newpath  = NULL,
+                                        new_path  = NULL,
                                         out_file = NULL) {
   call <- match.call()
 
   if (!file.exists(in_rast)) stop("migrate_virtrast --> ", call[[2]], " does not exist on
                                   your system. Aborting !")
 
-  if (is.null(newpath)) {
+  if (is.null(new_path)) {
 
-    newpath <- tcltk::tk_choose.dir(default = "",
+    new_path <- tcltk::tk_choose.dir(default = "",
                                     caption = "Select folder containing the raster files")
-    if (is.na(newpath)) {
+    if (is.na(new_path)) {
       stop("migrate_virtrast --> User selected to quit. Aborting !")
     }
   }
@@ -100,7 +100,7 @@ migrate_virtrast.character  <- function(in_rast,
 
     if (tools::file_ext(in_rast) == "RData") {
       rrast_in <- try(get(load(in_rast)))
-      if (class(rrast_in) != "Raster") {
+      if (!inherits(rrast_in, "Raster")) {
         stop("migrate_virtrast --> ", call[[2]], " does not appear to be linked to a
              Raster object. Aborting !")
       } else {

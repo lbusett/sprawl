@@ -1,12 +1,11 @@
 ---
 output: github_document
+title: Extracting statistics for features of a vector file form a multi-band raster file
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## Extracting statistics for features of a vector file form a multi-band raster file
 
 ### Case Study 
 

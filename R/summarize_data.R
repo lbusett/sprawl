@@ -1,24 +1,35 @@
-#' @title extract useful statistics from a data.table (or data.frame or tibble)
+#' @title helper function used to extract statistics of raster values within
+#'   `sprawl::extract_rast` and `sprawl::aggregate_rast`
 #' @description FUNCTION_DESCRIPTION
-#' @param in_data PARAM_DESCRIPTION
-#' @param var PARAM_DESCRIPTION
-#' @param comp_quant PARAM_DESCRIPTION
-#' @param FUN PARAM_DESCRIPTION
+#' @param in_data `data.table` containing raster values (for a full file or a "chunk")
+#' @param var `character` name of the variable (i.e., column) to be used as grouping
+#'   variable for summarization
+#' @param comp_quant `logical` if TRUE, percentiles of the distribution are computed
+#'   alongside standard statistics
+#' @param FUN `function` if not NULL and is  a valid function, FUN is used for summarization
+#'   and only its results are reported. Useful for example for analyses over large
+#'   high-res raster since it reduces memory footprint (see `sprawl::aggregate_rast`)
 #' @param band_n PARAM_DESCRIPTION
 #' @param selband PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
+#' @return `list`
 
 #' @importFrom stats median sd quantile
 #'
-summarize_data <- function(in_data, var, comp_quant, FUN, band_n, selband) {
+summarize_data <- function(in_data,
+                           var,
+                           comp_quant,
+                           FUN,
+                           band_n,
+                           selband) {
 
   #   ____________________________________________________________________________
   #   If a custom function was passed, compute only that                      ####
 
+  # TODO better implementation of "custom" functions
   if (!is.null(FUN)) {
     if (!inherits(FUN, "function")) {
-      stop("summarize_data --> FUN must be the name of a function to be applied to summarize your data !
-           Aborting !")
+      stop("summarize_data --> FUN must be the name of a function to be applied to
+summarize your data ! Aborting !")
     }
 
     myfundata  = in_data[, lapply(.SD, eval(FUN), na.rm = TRUE),
@@ -29,7 +40,7 @@ summarize_data <- function(in_data, var, comp_quant, FUN, band_n, selband) {
                            date   = selband,
                            N_PIX  = .N),
                     by = var]
-    summ[,"myfun":=myfundata$value]
+    summ[,"myfun" := myfundata$value]
   } else {
 
     #   ____________________________________________________________________________

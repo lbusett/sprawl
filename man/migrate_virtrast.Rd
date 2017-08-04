@@ -4,12 +4,12 @@
 \alias{migrate_virtrast}
 \title{migrate "virtual rasters" to a new location}
 \usage{
-migrate_virtrast(in_rast, newpath, out_file = NULL)
+migrate_virtrast(in_rast, new_path, out_file = NULL)
 }
 \arguments{
 \item{in_rast}{\code{character} full file path of an \code{RData} or \code{vrt} file}
 
-\item{newpath}{\code{character} new path were the corresponding files are now located. If NULL,
+\item{new_path}{\code{character} new path were the corresponding files are now located. If NULL,
 a file selector is opened allowing to interactively choose the new folder, Default: NULL}
 
 \item{out_file}{\code{character} full path for the new \code{RData} or \code{vrt} file to be saved.
@@ -37,7 +37,7 @@ DETAILS
  #TODO (Remove the # after uploading a test dataset on sprawl.data)
  #old_vrt  <- "/home/mypath/myfolder/myvrt.vrt
  #new_path <- "/home/mypath/mynewfolder"
- #new_vrt  <- migrate_virtrast(old_vrt, newpath)
+ #new_vrt  <- migrate_virtrast(old_vrt, new_path)
  #new_vrt
  #raster::stack(new_vrt)
 }
