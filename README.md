@@ -8,7 +8,7 @@
     -   [Citation](#citation)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Travis-CI Build Status](https://travis-ci.org/IREA-CNR-MI/sprawl.svg?branch=master)](https://travis-ci.org/lbusett/sprawl) [![codecov](https://codecov.io/gh/IREA-CNR-MI/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/lbusett/sprawl)
+[![Travis-CI Build Status](https://travis-ci.org/lbusett/sprawl.svg?branch=master)](https://travis-ci.org/lbusett/sprawl) [![codecov](https://codecov.io/gh/lbusett/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/lbusett/sprawl) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
 sprawl - Spatial Processing (in) R: Amorphous Wrapper Library
 =============================================================
@@ -44,7 +44,7 @@ You can install sprawl from git-hub with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("IREA-CNR-MI/sprawl")
+devtools::install_github("lbusett/sprawl")
 ```
 
 Note that, given its scope, `sprawl` imports functions from several other packages, which need to be installed in your system. Since some of those have quite specific System Requirements, it's possible that you'll struggle a bit in installation due to unresolved dependencies. In that case, please have a look at the installation error messages to see which package has problems in installation and try to install it beforehand (consulting its specific CRAN pages or doing a stackoverflow search may help !).
@@ -57,7 +57,7 @@ The main functions available in `sprawl` will be generally documented \[here - c
 Contributing
 ------------
 
-We are open for contributions/help in improving `sprawl` and extend its functionalities. If you have a suggestion, you can report it in our [issues](https://github.com/IREA-CNR-MI/sprawl/issues) page, or fork the repository and then make a pull request. (note that we plan to provide some "good-practices" instructions for contributing new functions in the future.)
+We are open for contributions/help in improving `sprawl` and extend its functionalities. If you have a suggestion, you can report it in our [issues](https://github.com/lbusett/sprawl/issues) page, or fork the repository and then make a pull request. (note that we plan to provide some "good-practices" instructions for contributing new functions in the future.)
 
 Citation
 --------
