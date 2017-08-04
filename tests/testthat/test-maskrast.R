@@ -17,8 +17,12 @@ testthat::test_that("Test On raster masking", {
                raster::getValues(out_masked_2))
 
   # Save to file and crop----
-  masked_file <- mask_rast(in_rast, mask_vect, to_file = TRUE, verbose = FALSE, crop = T)
+  masked_file <- mask_rast(in_rast, mask_vect, out_type = "filename", verbose = FALSE, crop = T)
   expect_is(masked_file, "character")
+  masked_file_multi <- mask_rast(in_rast, mask_vect,
+                                 verbose = FALSE, crop = T, save_multiband = TRUE)
+  expect_is(masked_file, "character")
+  expect_is(masked_file_multi, "Raster")
 
   # check that extracted values are equal to those of raster::extract ---
   # Check for all zero on the difference of the two since sprawl::mask

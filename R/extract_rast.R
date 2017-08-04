@@ -5,7 +5,7 @@
 #' 1. A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 #' All `gdal` raster formats are supported
 #' 2. An `raster`, `rasterStack` or `rasterBrick` object
-#' @param in_vect_zones input vector object containing zones from which data has to be extracted.
+#' @param in_vect input vector object containing zones from which data has to be extracted.
 #'  Can be either:
 #' 1. A `file name` corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 #' 2. An `R` `+sp` or `sf` object
@@ -30,12 +30,12 @@
 #' pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE
 #' @param na.rm `logical` If TRUE, NA values are removed while computing statistics, Default: TRUE
 #' @param maxchunk Maximum chunk size (provisional), Default: 5e+06
-#' @param addfeat `logical` If TRUE, columns of the attribute table of the `in_vect_zones` layer are
+#' @param addfeat `logical` If TRUE, columns of the attribute table of the `in_vect` layer are
 #' joined to results of the computation, Default: TRUE
 #' @param addgeom `logical`, If TRUE, the output sent out as an `sf` object, preserving the geometry
-#' of `in_vect_zones`. Note that this leads to duplication of geometries, and may be very slow for
+#' of `in_vect`. Note that this leads to duplication of geometries, and may be very slow for
 #' large datasets. Default: FALSE
-#' @param keep_null `logical` If TRUE, the output preserves features of `in_vect_zones` falling outside
+#' @param keep_null `logical` If TRUE, the output preserves features of `in_vect` falling outside
 #' the extent of `in_rast`. Values for these features are set to NA, Default: FALSE
 #' @param verbose `logical` If TRUE, messages concerning the processing status are shown in the
 #' console, Default: TRUE
@@ -50,14 +50,14 @@
 #' library(sprawl)
 #' library(sprawl.data)
 #' library(raster)
-#' options(tibble.width = Inf)
+#' library(tibble)
 #' in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
 #'                        stringsAsFactors = T)
 #' in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
 #' in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 #' out      <- extract_rast(in_rast, in_polys, verbose = FALSE)
-#' head(out$stats)
-#' head(out$alldata)
+#' as_tibble(out$stats)
+#' as_tibble(out$alldata)
 #'}
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
 #' @importFrom sp proj4string
@@ -69,7 +69,7 @@
 #' @author Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}
 #'
 extract_rast <- function(in_rast,
-                       in_vect_zones,
+                       in_vect,
                        selbands     = NULL,
                        rastres      = NULL,
                        id_field     = NULL,
@@ -98,43 +98,53 @@ extract_rast <- function(in_rast,
                   ncores       = ncores)
 
   #   ______________________________________________________________________________________________
-  #   Check input types - send errors/warnings if not compliant + open the in_vect_zones if      ####
+  #   Check input types - send errors/warnings if not compliant + open the in_vect if      ####
   #   or raster file if filenames were passed instead than a *sp/*sf object or *raster object  ####
 
-  ras_type   <-  get_spatype(in_rast)
-  zone_type  <-  get_spatype(in_vect_zones)
-  if (!ras_type %in% "rastobject") {
-    stop("Input in_rast is not a RasterStack or RasterBrick object")
-  }
+  call <- as.list(match.call())
+  message("extract_rast --> Extracting: ", as.character(call[[2]]), "data on zones of : ",
+          as.character(call[[3]]))
 
-  if (zone_type == "none") {
-    stop("Input in_vect_zones is not a valid vector/raster file or object !")
-  }
-  if (zone_type == "vectfile") {
-    in_vect_zones <- read_vect(in_vect_zones, stringsAsFactors = TRUE)
-    zone_type   <- "sfobject"
-  }
+  in_rast   <- cast_rast(in_rast, "rastobject")
+  rast_proj <- get_projstring(in_rast, abort = TRUE)
 
-  if (zone_type == "rastfile") {
-    in_vect_zones <- raster(in_vect_zones)
-    zone_type   <- "rastobject"
-  }
-
-  # convert to an *sf objet if input is a *sp object
-  if (zone_type == "spobject") {
-    in_vect_zones <- as(in_vect_zones, "sf") %>%
+  in_vect  <- cast_vect(in_vect, "sfobject") %>%
       dplyr::mutate_if(is.character,as.factor) %>%
       tibble::as_tibble() %>%
       sf::st_as_sf()
-    zone_type   <- "sfobject"
-  }
-
-  if (zone_type == "sfobject") {
-    in_vect_zones <- in_vect_zones %>%
-      dplyr::mutate_if(is.character,as.factor) %>%
-      tibble::as_tibble() %>%
-      sf::st_as_sf()
-  }
+  vect_proj <- get_projstring(in_vect, abort = TRUE)
+  # if (!ras_type %in% "rastobject") {
+  #   stop("Input in_rast is not a RasterStack or RasterBrick object")
+  # }
+  #
+  # if (zone_type == "none") {
+  #   stop("Input in_vect is not a valid vector/raster file or object !")
+  # }
+  # if (zone_type == "vectfile") {
+  #   in_vect <- read_vect(in_vect, stringsAsFactors = TRUE)
+  #   zone_type   <- "sfobject"
+  # }
+  #
+  # if (zone_type == "rastfile") {
+  #   in_vect <- raster(in_vect)
+  #   zone_type   <- "rastobject"
+  # }
+  #
+  # # convert to an *sf objet if input is a *sp object
+  # if (zone_type == "spobject") {
+  #   in_vect <- as(in_vect, "sf") %>%
+  #     dplyr::mutate_if(is.character,as.factor) %>%
+  #     tibble::as_tibble() %>%
+  #     sf::st_as_sf()
+  #   zone_type   <- "sfobject"
+  # }
+  #
+  # if (zone_type == "sfobject") {
+  #   in_vect <- in_vect %>%
+  #     dplyr::mutate_if(is.character,as.factor) %>%
+  #     tibble::as_tibble() %>%
+  #     sf::st_as_sf()
+  # }
 
   #   ____________________________________________________________________________
   ### check input arguments                                                   ####
@@ -155,30 +165,30 @@ extract_rast <- function(in_rast,
     dates <- names(in_rast)
   }
   seldates <- dates[selbands]
+  in_vect$mdxtnq = seq(1:dim(in_vect)[1])
 
-  in_vect_zones$mdxtnq = seq(1:dim(in_vect_zones)[1])
   #   ____________________________________________________________________________
   #   Start cycling on dates/bands                                            ####
 
   if (n_selbands > 0) {
 
     #   ____________________________________________________________________________
-    #   start processing for the case in which the in_vect_zones is a vector      ####
+    #   start processing for the case in which the in_vect is a vector      ####
 
-    if (zone_type == "sfobject") {
+    # if (zone_type == "sfobject") {
 
       # check if the id_field was passed and is correct. If not passed or not correct,
       # the record number is used as identifier in the output.
       #
 
-      if (length(id_field) != 0) {
-        if (!id_field %in% names(in_vect_zones)) {
+      if (!is.null(id_field)) {
+        if (!id_field %in% names(in_vect)) {
           warning("Invalid 'id_field' value. Values of the `id_feat` column will be set to the
                   record number of the shapefile feature")
           id_field <- NULL
           er_opts$id_field <- NULL
         } else {
-          if (length(unique(as.data.frame(in_vect_zones[,eval(id_field)])[,1])) != dim(in_vect_zones)[1]) {
+          if (length(unique(as.data.frame(in_vect[,eval(id_field)])[,1])) != dim(in_vect)[1]) {
             # warning("selected ID field is not univoc ! Names of output columns (or values of 'feature' field if
             #       `long` = TRUE) will be set to the record number of the shapefile feature")
             # id_field <- NULL
@@ -186,21 +196,21 @@ extract_rast <- function(in_rast,
         }
       }
 
-      # check if the projection of the in_vect_zones and raster are the same - otherwise
-      # reproject the in_vect_zones on raster CRS
-      if (sf::st_crs(in_vect_zones)$proj4string != sp::proj4string(in_rast)) {
-        if (verbose) message("extract_rast --> Transforming in_vect_xones to the CRS of in_rast")
-        in_vect_zones <- sf::st_transform(in_vect_zones, sp::proj4string(in_rast))
+      # check if the projection of the in_vect and raster are the same - otherwise
+      # reproject the in_vect on raster CRS
+      if (vect_proj != rast_proj) {
+        if (verbose) message("extract_rast --> Reprojecting in_vect to the projection of in_rast")
+        in_vect <- in_vect %>%
+          sf::st_transform(rast_proj)
       }
-
 
       #   ____________________________________________________________________________
       #   Extract values if the zone pbject is a point shapefile                  ####
       #   TODO: extraction on LINES ! )
 
-      if (inherits(sf::st_geometry(in_vect_zones), "sfc_POINT")) {
+      if (inherits(sf::st_geometry(in_vect), "sfc_POINT")) {
         # Convert the zone object to *Spatial to allow use of "raster::extract"
-        out_list <- er_points(in_vect_points = in_vect_zones,
+        out_list <- er_points(in_vect,
                               in_rast,
                               n_selbands,
                               selbands,
@@ -221,11 +231,16 @@ extract_rast <- function(in_rast,
         #   __________________________________________________________________________________
         #   Extract values if the zone object is a polygon shapefile or already a raster  ####
 
-        out_list <- er_polygons(in_vect_zones, in_rast, seldates, selbands,
-                                      n_selbands, date_check, er_opts)
+        out_list <- er_polygons(in_vect,
+                                in_rast,
+                                seldates,
+                                selbands,
+                                n_selbands,
+                                date_check,
+                                er_opts)
 
       }
-    }
+    # }
     return(out_list)
   } else {
     warning("Selected time range does not overlap with the one of the rasterstack input dataset !")

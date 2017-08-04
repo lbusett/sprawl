@@ -11,30 +11,49 @@
 #'   masking `in_rast`. If negative, mask is "reduced" prior to masking (see examples),
 #'   Default: NULL
 #' @param out_nodata `numeric` value to be assigned to areas outside the mask, Default: 'NoData'
-#' @param to_file `logical` If TRUE, the output masked raster is save to file instead than sent back
-#'   to the caller. In this case, the path to the saved file is returned instead
-#' @param out_rast `character` filename where the masked raster should be saved (ignored if
-#'   to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
-#'   file in the `R` temporary folder. The file is saved in TIFF format, with `DAFLATE` compression.
-#' @param out_dt TO BE CHECKED !!!!
-#' @param verbose `logical` if TRUE, extended processing information is sent to the console in the
-#'   form of messages
-#' @param verb_foreach `logical` DESCRIPTION
-#' @return object of class `raster` (if to_file == FALSE), or `character` string corresponding to
-#'   the filename of the created raster (if to_file == TRUE)
+#' @param out_type `character`
+#'   - if == "rastobj", return a `Raster` object;
+#'   - if == "filename", return the filename of the masked layer (GTiff or gdal vrt format
+#'   depending on other arguments - see below)
+#'
+#'   Default: "rastobj" (If an invalid string is provided, defaults to `rastobj`)
+#' @param out_basename `character` filename where the masked raster should be saved (ignored if
+#'   to_file == FALSE). If NULL, the masked raster is saved on a temporaty file in the `R`
+#'   temporary folder, named `<basename(in_rast)>_masked.tif`:. The file is saved in TIFF format, with `DEFLATE` compression. For
+#'   multiband inputs, a separate file is saved for each band (e.g., out_basename_001. tif,
+#'   out_basename_002. tif...), unless the `save_multiband` argument is set to "TRUE"
+#' @param save_multiband `logical`
+#'   - if TRUE, and `in_rast` is multi-band, the single-band masked layers are saved as a
+#'   single multiband tiff at the end of processing, and the single-band files are deleted;
+#'   - if FALSE, and `in_rast` is multi-band, a gdal vrt file pointing to all masked bands
+#'     is created instead.
+#'
+#'   Default: FALSE
+#' @param out_dtype `character` data type of the output masked files, according to gdal
+#'   specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32", "Int32", "Float32",
+#'   "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64"). If NULL, the data type
+#'   is retrieved from the input, Default: NULL
+#' @param overwrite `logical` if TRUE, and out_basename is set and existing, existing files
+#'   are overwritten, Default: FALSE
+#' @param verbose `logical` if TRUE, extended processing information is sent to the console
+#'  in the form of messages
+#' @param verb_foreach `logical` allow verbose output from `foreach` for debugging purposes,
+#'   Default: FALSE
+#' @return object of class `raster` (if out_type == `rastobj`), or `character` string
+#'   corresponding to the filename of the created raster (if out_type == `filename` )
 #' @examples
 #' \dontrun{
-#' libray(sprawl)
-#' libray(sprawl.data)
+#' library(sprawl)
+#' library(sprawl.data)
 #' library(raster)
 #' in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
 #'                        stringsAsFactors = T)
-#' in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl.data"))[[1]]
+#' in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
+#'                        package = "sprawl.data"))[[1]]
 #' in_polys <- sf::st_transform(in_polys, proj4string(in_rast))
 #' masked   <- mask_rast(in_rast, in_polys, verbose = FALSE)
-#' par(mfrow=c(1,2))
-#' plot(in_rast)
-#' plot(masked)
+#' plot_rast(in_rast, in_poly = in_polys)
+#' plot_rast(masked, in_poly = in_polys)
 #' }
 #' @rdname mask_rast
 #' @export
@@ -49,14 +68,16 @@
 
 mask_rast <- function(in_rast,
                       mask,
-                      crop       = FALSE,
-                      buffer     = NULL,
-                      out_nodata = NULL,
-                      to_file    = FALSE,
-                      out_rast   = NULL,
-                      out_dt     = "FLT4S",
-                      verbose    = TRUE,
-                      verb_foreach = FALSE) {
+                      crop           = FALSE,
+                      buffer         = NULL,
+                      out_nodata     = NULL,
+                      out_type       = "rastobj",
+                      out_basename   = NULL,
+                      save_multiband = FALSE,
+                      out_dtype      = NULL,
+                      overwrite      = FALSE,
+                      verbose        = TRUE,
+                      verb_foreach   = FALSE) {
 
   call <- as.list(match.call())
   message("mask_rast --> Masking: ", as.character(call[[2]]), " on: ", as.character(call[[3]]))
@@ -67,11 +88,25 @@ mask_rast <- function(in_rast,
 
   # checks on in_rast ----
 
-  in_rast   <- cast_rast(in_rast, "rastobj")
+  in_rast   <- cast_rast(in_rast, "rastobject")
   rast_proj <- get_projstring(in_rast, abort = TRUE)
   rast_bbox <- get_extent(in_rast)
+  bnames_in <- names(in_rast)
+  times_in  <- raster::getZ(in_rast)
+  n_bands   <- raster::nlayers(in_rast)
+  if (is.null(out_dtype)) {
+    if (n_bands == 1 | (class(in_rast) == "RasterBrick")) {
+      in_dtype <- in_rast@file@datanotation
+    } else {
+      in_dtype <-in_rast@layers[[1]]@file@datanotation
+    }
 
-  # doubl check if the input raster is associated to a physical file (i.e., not "in memory")
+    dtype   <- convert_rastdtype(in_dtype, "raster")
+  } else {
+    dtype   <- convert_rastdtype(out_dtype, "gdal")
+  }
+
+  # double check if the input raster is associated to a physical file (i.e., not "in memory")
   # If not, create a temporary physical file by saving in tempdir()
 
   if (in_rast[[1]]@file@name == "") {
@@ -79,7 +114,7 @@ mask_rast <- function(in_rast,
     raster::writeRaster(in_rast,
                         filename  = temprastfile,
                         options   = c("COMPRESS=DEFLATE"),
-                        overwrite = TRUE)
+                        overwrite = overwrite)
     in_rast <- raster::brick(temprastfile)
   }
 
@@ -89,6 +124,18 @@ mask_rast <- function(in_rast,
 
   #   ____________________________________________________________________________
   #   All checks passed - start working          ####
+
+  #   ____________________________________________________________________________
+  #   set the output folder (in tempdir if out_basename == NULL)              ####
+
+  if (is.null(out_basename)){
+    outfold      <- file.path(tempdir(), paste0("sprawlmask_",sample(1:1000))[1])
+    out_basename <- file.path(outfold, "sprawlmask")
+  } else {
+    outfold <- dirname(out_basename )
+  }
+  dir.create(outfold, showWarnings = FALSE, recursive = TRUE)
+
 
   #   ____________________________________________________________________________
   #   apply buffer to mask if necessary                                       ####
@@ -125,12 +172,10 @@ mask_rast <- function(in_rast,
     write_shape(temp_shapefile, overwrite = TRUE)
 
   vect_bbox <- get_extent(mask)@extent
-  # }
-  #   ____________________________________________________________________________
-  #   If crop ==TREU find a correct cropping bounding box which allows to not "move"
-  #   the  corners while creating vrt files
 
-  # te <- rast_bbox
+  #   ____________________________________________________________________________
+  #   If crop ==TRUE find a correct cropping bounding box which allows to not "move"
+  #   the  corners while creating vrt files
 
   if (crop == TRUE) {
 
@@ -162,10 +207,8 @@ mask_rast <- function(in_rast,
 
   # te <- te - c(-raster::res(in_rast)[1], -raster::res(in_rast)[1], 0,  0)
   # te <- raster::extent(in_rast)[c(1, 3, 2, 4)][] - c(0, -res(in_rast)[1], res(in_rast)[1], 0)
-  #
-
   # write_shape(mask, temp_shapefile, overwrite = TRUE)
-  #
+
   if (verbose) {
     message("mask_rast --> Rasterizing the vector map to a temporary TIFF file")
   }
@@ -191,67 +234,90 @@ mask_rast <- function(in_rast,
     message("mask_rast --> Masking bands")
   }
   clust    <- sprawl_initcluster(in_rast)
-  tempfold <- file.path(tempdir(), "tests", paste0("sprawlmask_",sample(1:1000))[1])
-  dir.create(tempfold, showWarnings = FALSE, recursive = TRUE)
 
   if (verbose) {
-    message("mask_rast --> Masking data from ", clust$opts$n_bands, " bands - Please wait !")
-    pb       <- utils::txtProgressBar(max = clust$opts$n_bands, style = 3)
+    message("mask_rast --> Masking data from ", n_bands, " bands - Please wait !")
+    pb       <- utils::txtProgressBar(max = n_bands, style = 3)
     progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts     <- list(progress = progress)
   } else {
     opts = list()
   }
-
-  temp_tiffs <- foreach::foreach(
+  # browser()
+  out_tiffs <- foreach::foreach(
     band = clust$opts$bands,
     .combine      = "c",
-    .verbose      = FALSE,
-    .packages     = c("raster", "sprawl"),
+    .verbose      = verb_foreach,
+    .packages     = c("raster", "sprawl", "tools"),
     .options.snow = opts
   ) %dopar% {
 
-    tempout  <- file.path(tempfold,paste0("sprawlmask_b",
-                                          sprintf("%03i", band),
-                                          ".tif"))
+    # if (is.null(out_basename)) {
+    #
+    #   if (n_bands == 1) {
+    #     tiffout  <- file.path(outfold, "sprawlmask.tif")
+    #   } else {
+    #     bands_fold <- file.path(outfold, "sprawlmask_bands")
+    #     dir.create(bands_fold, recursive = TRUE, showWarnings = FALSE)
+    #     tiffout   <- file.path(bands_fold, paste0("sprawlmask_b",
+    #                                               sprintf("%03i", band),".tif"))
+    #   }
+    # } else {
 
+    basename_noext <- paste0(basename(tools::file_path_sans_ext(out_basename)))
+    if (n_bands == 1) {
+      tiffout  <- file.path(outfold, paste0(basename_noext, ".tif"))
+    } else {
+      bands_fold <- file.path(outfold, paste0(basename_noext,"_bands"))
+      dir.create(bands_fold, recursive = TRUE, showWarnings = FALSE)
+      tiffout    <- file.path(bands_fold, paste0(basename_noext, "_",
+                                                 sprintf("%03i", band), ".tif"))
+    }
+    # }
     #   ____________________________________________________________________________
-    #   create a temporary vrt file corresponding to the band to be preocesse   ####
+    #   create a temporary vrt file corresponding to the band to be preocessed   ####
     #   This allows flexibility in the case that a stack is passed containing
     #   coming from different files
 
-    infile    <- in_rast[[band]]@file@name
-    temp_vrt  <- tempfile(fileext = ".vrt")
-    buildvrt_string <- paste("-te ", paste(rast_bbox@extent, collapse = " "), temp_vrt, infile)
+    infile          <- in_rast[[band]]@file@name
+    temp_vrt        <- tempfile(fileext = ".vrt")
+    buildvrt_string <- paste("-te ",
+                             paste(rast_bbox@extent, collapse = " "),
+                             temp_vrt,
+                             infile)
+
     system2(file.path(find_gdal(), "gdalbuildvrt"),
             args = buildvrt_string,
             stdout = NULL)
-    in_rast <- raster::brick(temp_vrt)
 
+    in_rast         <- raster::brick(temp_vrt)
 
-    # Now launch the masking between the raster vrt and the
-    # temporary rasterized mask
+    #   ____________________________________________________________________________
+    #   Now launch the masking between the raster vrt and the                   ####
+    #   temporary rasterized mask
 
     if (is.null(out_nodata)) {
 
       raster::mask(in_rast[[band]],
                    maskvalue = 0,
                    raster::brick(temp_rastermask),
-                   filename  = tempout,
+                   filename  = tiffout,
                    options   = c("COMPRESS=DEFLATE"),
-                   overwrite = TRUE)
+                   overwrite = TRUE,
+                   data_type = dtype[["raster"]])
 
     } else {
       raster::mask(in_rast[[band]],
                    maskvalue = 0,
                    raster::brick(temp_rastermask),
-                   filename  = tempout,
+                   filename  = tiffout,
                    options   = c("COMPRESS=DEFLATE"),
                    overwrite = TRUE,
+                   data_type = dtype[["raster"]],
                    NAflag    = out_nodata)
     }
 
-    return(tempout)
+    return(tiffout)
   }
 
   parallel::stopCluster(clust$clust)
@@ -259,37 +325,134 @@ mask_rast <- function(in_rast,
   #   ____________________________________________________________________________
   #   end processing: recast if needed and return                             ####
 
-  if (to_file == FALSE) {
-    if (clust$opts$n_bands == 1) {
-      return(raster::raster(temp_tiffs))
-    } else {
-      return(raster::stack(temp_tiffs))
-    }
-  } else {
-    tempvrt <- tempfile(fileext = ".vrt")
-    gdalUtils::gdalbuildvrt(gdalfile = temp_tiffs, output.vrt = tempvrt, separate = T)
-    if (is.null(out_rast)) {
-      return(tempvrt)
-    } else {
-      if (is.null(out_nodata)) {
-        gdalUtils::gdal_translate(tempvrt,
-                                  out_rast,
-                                  options   = c("COMPRESS=DEFLATE"))
 
+  #   ____________________________________________________________________________
+  #   if save_multiband == TRUE, save all the bands as a sibngle tiff         ####
+
+  if (n_bands == 1) {
+    out_file <- out_tiffs
+  } else {
+
+    out_file <- paste0(tools::file_path_sans_ext(out_basename), ".vrt")
+    gdalUtils::gdalbuildvrt(out_tiffs,
+                            out_file,
+                            separate  = TRUE,
+                            overwrite = TRUE)
+
+    if (save_multiband == TRUE) {
+
+      out_vrt <- out_file
+      out_file <- paste0(tools::file_path_sans_ext(out_basename), ".tif")
+
+      if (is.null(out_nodata)) {
+        gdalUtils::gdal_translate(out_vrt,
+                                  out_file,
+                                  ot        = dtype[["gdal"]],
+                                  co        = "COMPRESS=DEFLATE",
+                                  overwrite = overwrite)
       } else {
-        gdalUtils::gdal_translate(tempvrt,
-                                  out_rast,
-                                  options   = c("COMPRESS=DEFLATE"),
-                                  NAflag    = out_nodata)
+        gdalUtils::gdal_translate(out_vrt,
+                                  out_file,
+                                  ot        = dtype[["gdal"]],
+                                  a_nodata  = out_nodata,
+                                  co        = "COMPRESS=DEFLATE",
+                                  overwrite = overwrite)
       }
-      return(out_rast)
+
     }
+
   }
+
+  if (out_type == "rastobj") {
+
+    out_obj <- raster::brick(out_file)
+    names(out_obj) <- bnames_in
+    if (!is.null(times_in)) {
+      out_obj <- raster::setZ(out_obj, times_in)
+    }
+    return(out_obj)
+
+  } else {
+    return(out_file)
+  }
+
+  #   raster::writeRaster(out_obj,
+  #                       filename = ifelse(
+  #                         is.null(out_basename),
+  #                         file.path(outfold, "sprawlmask.tif"),
+  #                         paste0(file_path_sans_ext(out_basename), ".tif")
+  #                       ), options   = c("COMPRESS=DEFLATE"),
+  #                       overwrite = overwrite)
+  # } else {
+  #   raster::writeRaster(out_obj,
+  #                       filename = ifelse(
+  #                         is.null(out_basename),
+  #                         file.path(outfold, "sprawlmask.tif"),
+  #                         paste0(file_path_sans_ext(out_basename), ".tif")
+  #                       ), options   = c("COMPRESS=DEFLATE"),
+  #                       overwrite = overwrite,
+  #                       NAflag    = out_nodata)
+  # }
+  # }
+
+
+  # if (n_bands == 1) {
+  #   out_obj <- raster::raster(out_tiffs)
+  # } else {
+  #   out_obj <- raster::stack(out_tiffs)
+  # }
+  #
+  # if (to_file == FALSE) {
+  #   if (n_bands == 1) {
+  #     out_obj <- raster::raster(out_tiffs)
+  #   } else {
+  #     out_obj <- raster::stack(out_tiffs)
+  #   }
+  #   names(out_obj) <- bnames_in
+  #   if (!is.null(times_in)) {
+  #     out_obj <- raster::setZ(out_obj, times_in)
+  #   }
+  #   if (!is.null(out_rast)) {
+  #     if (is.null(out_nodata)) {
+  #       raster::writeRaster(out_obj,
+  #                           filename = out_rast,
+  #                           options   = c("COMPRESS=DEFLATE"),
+  #                           overwrite = overwrite)
+  #     } else {
+  #       raster::writeRaster(out_obj,
+  #                           filename = out_rast,
+  #                           options   = c("COMPRESS=DEFLATE"),
+  #                           NAflag    = out_nodata,
+  #                           overwrite = overwrite)
+  #     }
+  #
+  #   }
+  #
+  # } else {
+  #   tempvrt <- tempfile(fileext = ".vrt")
+  #   gdalUtils::gdalbuildvrt(gdalfile = out_tiffs, output.vrt = tempvrt, separate = T)
+  #   if (is.null(out_rast)) {
+  #     return(tempvrt)
+  #   } else {
+  #     if (is.null(out_nodata)) {
+  #       gdalUtils::gdal_translate(tempvrt,
+  #                                 out_rast,
+  #                                 options   = c("COMPRESS=DEFLATE"))
+  #
+  #     } else {
+  #       gdalUtils::gdal_translate(tempvrt,
+  #                                 out_rast,
+  #                                 options   = c("COMPRESS=DEFLATE"),
+  #                                 NAflag    = out_nodata)
+  #     }
+  #     return(out_rast)
+  #   }
+  # }
 
   #   ____________________________________________________________________________
   #   define clean-up                                                         ####
   on.exit(unlink(temp_shapefile))
   on.exit(unlink(temp_rastermask))
-  on.exit(unlink(temprastfile))
-  return(masked_out)
+  on.exit({if (exists("temprastfile")) unlink(temprastfile)})
+  # return(out_obj)
 }

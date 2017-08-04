@@ -4,10 +4,10 @@
 \alias{er_crop_object}
 \title{er_crop_object}
 \usage{
-er_crop_object(in_vect_zones, in_rast, id_field, verbose)
+er_crop_object(in_vect, in_rast, id_field, verbose)
 }
 \arguments{
-\item{in_vect_zones}{PARAM_DESCRIPTION}
+\item{in_vect}{PARAM_DESCRIPTION}
 
 \item{in_rast}{PARAM_DESCRIPTION}
 
@@ -18,13 +18,13 @@ er_crop_object(in_vect_zones, in_rast, id_field, verbose)
 \value{
 \code{list} with the following fields:
 \itemize{
-\item in_vect_zones_crop = cropped \code{sf} object
+\item in_vect_crop = cropped \code{sf} object
 \item outside_feat = data frame containing info on the "removed" features (sequential id and
 corresponding value ofthe "id" field (if provided)
 }
 }
 \description{
-Accessory function for \code{extract_rast}. Crops the in_vect_zones on the extent of the raster
-to improve speed. Then check if some features in the original in_vect_zones were dropped in
+Accessory function for \code{extract_rast}. Crops the in_vect on the extent of the raster
+to improve speed. Then check if some features in the original in_vect were dropped in
 zone_raster_croppped
 }

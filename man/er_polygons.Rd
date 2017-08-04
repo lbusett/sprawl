@@ -4,11 +4,11 @@
 \alias{er_polygons}
 \title{extract raster data on polygons (helper for extract_rast)}
 \usage{
-er_polygons(in_vect_zones, in_rast, seldates, selbands, n_selbands, date_check,
+er_polygons(in_vect, in_rast, seldates, selbands, n_selbands, date_check,
   er_opts, verb_foreach = FALSE)
 }
 \arguments{
-\item{in_vect_zones}{PARAM_DESCRIPTION}
+\item{in_vect}{PARAM_DESCRIPTION}
 
 \item{in_rast}{PARAM_DESCRIPTION}
 

@@ -52,33 +52,49 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
-  <a href="../articles/faq.html">FAQ</a>
-</li>
-<li>
   <a href="../articles/contributing.html">Contributing</a>
-</li>
-<li>
-  <a href="../news/index.html">NEWS</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -96,8 +112,7 @@
     </div>
 
     
-    <p>function to automatically re-cast a "vector" object to a given "class" specified by
-the <code>to</code> argument.</p>
+    <p>function to automatically re-cast between Raster object and raster files on disk</p>
     
 
     <pre class="usage"><span class='fu'>cast_rast</span>(<span class='no'>object</span>, <span class='no'>to</span>)
@@ -122,8 +137,10 @@ corresponding to a filename (with full path)</p></td>
     <tr>
       <th>to</th>
       <td><p><code>character</code> indicating to which type of object the input should be re-casted. It can
-be "sfobject" (re-cast to <code>sf</code>), "spobject" (recast to <code>Spatial</code>) or "vectfile" (re-cast to
-a shapefile)</p></td>
+be "rastobject" (re-cast to <code>Raster</code>) or "rastfile" (recast to raster file).In the
+second case, recasting is achieved by identifying the raster file associated with the
+Raster object and returning its path. If no file is associated (i.e., the object is
+in-memory), the Raster object is written to disk on a temporary file, which path is returned</p></td>
     </tr>
     </table>
     
@@ -137,8 +154,8 @@ object in case <code>object</code> is already of "class" <code>to</code>)</p>
     <p>If <code>object</code> is a valid <code>R</code> spatial object, it is automatically converted to an object of
 a different class if needed (e.g., from <code>sf</code> to <code>Spatial</code> and viceversa, or from <code>sf</code> to a
 vector file through <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/write_shape'>sprawl::write_shape</a></code>). If it is a character string, the function checks if
-it corresponds to a valid vector file and reads it to a <code>sf</code> or <code>Spatial</code> object through
-<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/read_vect'>sprawl::read_vect</a></code></p>
+it corresponds to a valid raster file and reads it to a <code>Raster</code> object through
+<code>rasterr::stack()</code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

@@ -79,6 +79,10 @@ DETAILS
            palette   = "RdYlBu" ,
            title     = "RapidEye - GNDVI",
            maxpixels = 10e5)
+
+ in_rast <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
+                                      package = "sprawl.data"))[[1:4]]
+ plot_rast(in_rast)
  }
 }
 \seealso{

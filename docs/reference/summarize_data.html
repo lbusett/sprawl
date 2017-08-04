@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>extract useful statistics from a data.table (or data.frame or tibble) — summarize_data • sprawl</title>
+<title>helper function used to extract statistics of raster values within
+<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code> — summarize_data • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,33 +53,49 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
 </li>
 <li>
-  <a href="../articles/faq.html">FAQ</a>
-</li>
-<li>
   <a href="../articles/contributing.html">Contributing</a>
-</li>
-<li>
-  <a href="../news/index.html">NEWS</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -92,60 +109,38 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>extract useful statistics from a data.table (or data.frame or tibble)</h1>
+    <h1>helper function used to extract statistics of raster values within
+<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code></h1>
     </div>
 
     
     <p>FUNCTION_DESCRIPTION</p>
-<p>FUNCTION_DESCRIPTION</p>
     
 
-    <pre class="usage"><span class='fu'>summarize_data</span>(<span class='no'>in_data</span>, <span class='no'>var</span>, <span class='no'>comp_quant</span>, <span class='no'>FUN</span>, <span class='no'>band_n</span>, <span class='no'>selband</span>)
-
-<span class='fu'>summarize_data</span>(<span class='no'>in_data</span>, <span class='no'>var</span>, <span class='no'>comp_quant</span>, <span class='no'>FUN</span>, <span class='no'>band_n</span>, <span class='no'>selband</span>)</pre>
+    <pre class="usage"><span class='fu'>summarize_data</span>(<span class='no'>in_data</span>, <span class='no'>var</span>, <span class='no'>comp_quant</span>, <span class='no'>FUN</span>, <span class='no'>band_n</span>, <span class='no'>selband</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_data</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>data.table</code> containing raster values (for a full file or a "chunk")</p></td>
     </tr>
     <tr>
       <th>var</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>character</code> name of the variable (i.e., column) to be used as grouping
+variable for summarization</p></td>
     </tr>
     <tr>
       <th>comp_quant</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>logical</code> if TRUE, percentiles of the distribution are computed
+alongside standard statistics</p></td>
     </tr>
     <tr>
       <th>FUN</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>band_n</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>selband</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>in_data</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>var</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>comp_quant</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>FUN</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>function</code> if not NULL and is  a valid function, FUN is used for summarization
+and only its results are reported. Useful for example for analyses over large
+high-res raster since it reduces memory footprint (see <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code>)</p></td>
     </tr>
     <tr>
       <th>band_n</th>
@@ -159,8 +154,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
-<p>OUTPUT_DESCRIPTION</p>
+    <p><code>list</code></p>
     
 
   </div>

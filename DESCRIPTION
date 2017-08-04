@@ -45,7 +45,8 @@ Imports: data.table,
         RColorBrewer,
         tools,
         magrittr, 
-        parallel
+        parallel, 
+        stringr
 Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,

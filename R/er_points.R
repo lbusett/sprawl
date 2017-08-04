@@ -1,6 +1,6 @@
 #' @title helper for extract_rast for points extraction
 #' @description FUNCTION_DESCRIPTION
-#' @param in_vect_points `sf` object on which features the zonal statistics has to be computed
+#' @param in_vect `sf` object on which features the zonal statistics has to be computed
 #' @param in_rast single- or multi-band `rasterStack` object containing values to be extracted
 #'   and summarized
 #' @param n_selbands PARAM_DESCRIPTION
@@ -29,7 +29,7 @@
 #' @importFrom tidyr gather
 #' @importFrom magrittr %>%
 
-er_points <- function(in_vect_points,
+er_points <- function(in_vect,
                       in_rast,
                       n_selbands,
                       selbands,
@@ -43,13 +43,13 @@ er_points <- function(in_vect_points,
                       keep_null) {
 
   if (verbose) message("extract_rast --> Cropping the zones object on extent of the raster")
-  crop               <- er_crop_object(in_vect_points, in_rast, id_field, verbose)
-  in_vect_points_crop <- crop$in_vect_zones_crop
-  outside_feat     <- crop$outside_feat
+  crop               <- er_crop_object(in_vect, in_rast, id_field, verbose)
+  in_vect_crop <- crop$in_vect_crop
+  outside_feat <- crop$outside_feat
 
   if (verbose) { message("extract_rast --> On point and lines shapefiles, the standard `extract` function is used. This could be slow !")}
 
-  tserie <- matrix(nrow = n_selbands, ncol = dim(in_vect_points_crop)[1])
+  tserie <- matrix(nrow = n_selbands, ncol = dim(in_vect_crop)[1])
 
   for (band in seq_len(n_selbands)) {
     selband <- selbands[band]
@@ -58,7 +58,7 @@ er_points <- function(in_vect_points,
                      seldates[band]))
     }
     tserie[band,] <- in_rast[[selband]] %>%
-      raster::extract(as(in_vect_points_crop, "Spatial"))
+      raster::extract(as(in_vect_crop, "Spatial"))
   }
 
   # add the date/band name column
@@ -67,7 +67,7 @@ er_points <- function(in_vect_points,
     cbind(seldates,.) %>%
     tibble::add_column(band_n = seq(dim(tserie)[1]), .after = 1)
 
-  all_feats <- as.character(in_vect_points_crop$mdxtnq)
+  all_feats <- as.character(in_vect_crop$mdxtnq)
 
   if (date_check) {
     names(tserie) <- c("date", "band_n", all_feats)
@@ -90,7 +90,7 @@ er_points <- function(in_vect_points,
     }
 
   } else {
-    in_vect_points = in_vect_points_crop
+    in_vect = in_vect_crop
   }
 
   # if long format is selected, reshape
@@ -100,7 +100,7 @@ er_points <- function(in_vect_points,
       tidyr::gather(mdxtnq, value, -1, -2) %>%
       tibble::as_tibble() %>%
       dplyr::mutate(mdxtnq = as.numeric(as.character(mdxtnq))) %>%
-      dplyr::right_join(tibble::as_data_frame(in_vect_points), by = "mdxtnq") %>%
+      dplyr::right_join(tibble::as_data_frame(in_vect), by = "mdxtnq") %>%
       sf::st_as_sf()
 
     if (!is.null(id_field)) {
@@ -123,9 +123,9 @@ er_points <- function(in_vect_points,
   } else {
     if (!is.null(id_field) ){
       if (keep_null) {
-        names(tserie)[3:(dim(tserie)[2])] <- t(rbind(tibble::as_data_frame(in_vect_points[, eval(id_field)])[,1]))
+        names(tserie)[3:(dim(tserie)[2])] <- t(rbind(tibble::as_data_frame(in_vect[, eval(id_field)])[,1]))
       } else {
-        names(tserie)[3:dim(tserie)[2]] <- t(rbind(tibble::as_data_frame(in_vect_points_crop[, eval(id_field)])[,1]))
+        names(tserie)[3:dim(tserie)[2]] <- t(rbind(tibble::as_data_frame(in_vect_crop[, eval(id_field)])[,1]))
       }
     }
 
