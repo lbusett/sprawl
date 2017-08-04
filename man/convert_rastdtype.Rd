@@ -2,29 +2,32 @@
 % Please edit documentation in R/convert_rast_dtype.R
 \name{convert_rastdtype}
 \alias{convert_rastdtype}
-\title{FUNCTION_TITLE}
+\title{convert data type between \code{raster} and \code{gdal} conventions}
 \usage{
 convert_rastdtype(dtype_string, type)
 }
 \arguments{
-\item{dtype_string}{PARAM_DESCRIPTION}
+\item{dtype_string}{\code{character} data type string (e.g., Int16, ecc)}
 
-\item{type}{PARAM_DESCRIPTION}
+\item{type}{\code{character} - either "gdal" or "raster"}
 }
 \value{
-OUTPUT_DESCRIPTION
+\code{tibble} containing the representation of the data type both for gdal and
+raster
 }
 \description{
 FUNCTION_DESCRIPTION
 }
-\details{
-DETAILS
-}
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+ in_dtype <- "INT1U"
+ convert_rastdtype(in_dtype, "raster")
+
+ in_dtype <- "Float64"
+ convert_rastdtype(in_dtype, "gdal")
+
+ in_dtype <- "Float123"
+ convert_rastdtype(in_dtype, "gdal")
 }
 }
 \author{

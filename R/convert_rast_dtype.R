@@ -1,14 +1,19 @@
-#' @title FUNCTION_TITLE
+#' @title convert data type between `raster` and `gdal` conventions
 #' @description FUNCTION_DESCRIPTION
-#' @param dtype_string PARAM_DESCRIPTION
-#' @param type PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @param dtype_string `character` data type string (e.g., Int16, ecc)
+#' @param type `character` - either \"gdal\" or \"raster\"
+#' @return `tibble` containing the representation of the data type both for gdal and
+#'   raster
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'  in_dtype <- "INT1U"
+#'  convert_rastdtype(in_dtype, "raster")
+#'
+#'  in_dtype <- "Float64"
+#'  convert_rastdtype(in_dtype, "gdal")
+#'
+#'  in_dtype <- "Float123"
+#'  convert_rastdtype(in_dtype, "gdal")
 #' }
 #' @rdname convert_rastdtype
 #' @export
@@ -40,7 +45,7 @@ convert_rastdtype <- function(dtype_string,
       return(dtype_table[line,])
 
     } else {
-      stop("get_rast_dtype --> ", call[[2]], "is not a recognized ", call[[3]], " format.
+      stop("get_rast_dtype --> ", call[[2]], " is not a recognized ", call[[3]], " format.
            Aborting !")
     }
   }
@@ -50,8 +55,8 @@ convert_rastdtype <- function(dtype_string,
     if (length(line) != 0 ){
       return(dtype_table[line,])
     } else {
-      stop("get_rast_dtype --> ", call[[2]], "is not a recognized ", call[[3]], " format.
-           Aborting !")
+      stop("\nget_rast_dtype --> ", call[[2]], " is not a recognized ", call[[3]], " format.
+            \nAborting !")
     }
   }
 

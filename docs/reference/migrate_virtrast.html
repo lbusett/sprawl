@@ -117,7 +117,7 @@ such as GDAL VRTs or <code>R</code> rasterStacks "pointing" to files on disk in 
 the corresponding files on disk are moved.</p>
     
 
-    <pre class="usage"><span class='fu'>migrate_virtrast</span>(<span class='no'>in_rast</span>, <span class='no'>newpath</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>migrate_virtrast</span>(<span class='no'>in_rast</span>, <span class='no'>new_path</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -127,7 +127,7 @@ the corresponding files on disk are moved.</p>
       <td><p><code>character</code> full file path of an <code>RData</code> or <code>vrt</code> file</p></td>
     </tr>
     <tr>
-      <th>newpath</th>
+      <th>new_path</th>
       <td><p><code>character</code> new path were the corresponding files are now located. If NULL,
 a file selector is opened allowing to interactively choose the new folder, Default: NULL</p></td>
     </tr>
@@ -157,7 +157,7 @@ files</p>
  #TODO (Remove the # after uploading a test dataset on sprawl.data)
  #old_vrt  <- "/home/mypath/myfolder/myvrt.vrt
  #new_path <- "/home/mypath/mynewfolder"
- #new_vrt  <- migrate_virtrast(old_vrt, newpath)
+ #new_vrt  <- migrate_virtrast(old_vrt, new_path)
  #new_vrt
  #raster::stack(new_vrt)
 </div></pre>

@@ -119,8 +119,9 @@ vector to allow a more "lenient" masking, or to remove also the borders of the v
     
 
     <pre class="usage"><span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>mask</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_nodata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_rast</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_dt</span> <span class='kw'>=</span> <span class='st'>"FLT4S"</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verb_foreach</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobj"</span>, <span class='kw'>out_basename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>save_multiband</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>verb_foreach</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -149,39 +150,62 @@ Default: NULL</p></td>
       <td><p><code>numeric</code> value to be assigned to areas outside the mask, Default: 'NoData'</p></td>
     </tr>
     <tr>
-      <th>to_file</th>
-      <td><p><code>logical</code> If TRUE, the output masked raster is save to file instead than sent back
-to the caller. In this case, the path to the saved file is returned instead</p></td>
+      <th>out_type</th>
+      <td><p><code>character</code></p><ul>
+<li><p>if == "rastobj", return a <code>Raster</code> object;</p></li>
+<li><p>if == "filename", return the filename of the masked layer (GTiff or gdal vrt format
+depending on other arguments - see below)</p></li>
+</ul>
+
+<p>Default: "rastobj" (If an invalid string is provided, defaults to <code>rastobj</code>)</p></td>
     </tr>
     <tr>
-      <th>out_rast</th>
+      <th>out_basename</th>
       <td><p><code>character</code> filename where the masked raster should be saved (ignored if
-to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
-file in the <code>R</code> temporary folder. The file is saved in TIFF format, with <code>DAFLATE</code> compression.</p></td>
+to_file == FALSE). If NULL, the masked raster is saved on a temporaty file in the <code>R</code>
+temporary folder, named <code>&lt;basename(in_rast)&gt;_masked.tif</code>:. The file is saved in TIFF format, with <code>DEFLATE</code> compression. For
+multiband inputs, a separate file is saved for each band (e.g., out_basename_001. tif,
+out_basename_002. tif...), unless the <code>save_multiband</code> argument is set to "TRUE"</p></td>
+    </tr>
+    <tr>
+      <th>save_multiband</th>
+      <td><p><code>logical</code></p><ul>
+<li><p>if TRUE, and <code>in_rast</code> is multi-band, the single-band masked layers are saved as a
+single multiband tiff at the end of processing, and the single-band files are deleted;</p></li>
+<li><p>if FALSE, and <code>in_rast</code> is multi-band, a gdal vrt file pointing to all masked bands
+is created instead.</p></li>
+</ul>
+
+<p>Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>out_dtype</th>
+      <td><p><code>character</code> data type of the output masked files, according to gdal
+specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32", "Int32", "Float32",
+"Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64"). If NULL, the data type
+is retrieved from the input, Default: NULL</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>DESCRIPTION</p></td>
-    </tr>
-    <tr>
-      <th>out_dt</th>
-      <td><p>TO BE CHECKED !!!!</p></td>
+      <td><p><code>logical</code> if TRUE, and out_basename is set and existing, existing files
+are overwritten, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p><code>logical</code> if TRUE, extended processing information is sent to the console in the
-form of messages</p></td>
+      <td><p><code>logical</code> if TRUE, extended processing information is sent to the console
+in the form of messages</p></td>
     </tr>
     <tr>
       <th>verb_foreach</th>
-      <td><p><code>logical</code> DESCRIPTION</p></td>
+      <td><p><code>logical</code> allow verbose output from <code>foreach</code> for debugging purposes,
+Default: FALSE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>object of class <code>raster</code> (if to_file == FALSE), or <code>character</code> string corresponding to
-the filename of the created raster (if to_file == TRUE)</p>
+    <p>object of class <code>raster</code> (if out_type == <code>rastobj</code>), or <code>character</code> string
+corresponding to the filename of the created raster (if out_type == <code>filename</code> )</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -190,8 +214,10 @@ the filename of the created raster (if to_file == TRUE)</p>
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>),
                        <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
-<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"testrast.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt; <span class='error'>Error in .rasterObjectFromFile(x, objecttype = "RasterBrick", ...): provide a valid filename</span></div><div class='input'><span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))</div><div class='output co'>#&gt; <span class='error'>Error in proj4string(in_rast): object 'in_rast' not found</span></div><div class='input'><span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='output co'>#&gt; <span class='error'>Error in cast_rast(in_rast, "rastobject"): object 'in_rast' not found</span></div><div class='input'><span class='fu'>par</span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>))
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(in_rast): object 'in_rast' not found</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>masked</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(masked): object 'masked' not found</span></div></pre>
+<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>,
+                       <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
+<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

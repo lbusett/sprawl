@@ -18,6 +18,7 @@ reference:
       - '`cuttails_rast`'
       - '`cast_rast`'
       - '`migrate_virtrast`'
+      - '`convert_rastdtype`'
   - title: Vector processing
     desc: ~
     contents:
