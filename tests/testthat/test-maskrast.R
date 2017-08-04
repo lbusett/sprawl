@@ -6,7 +6,7 @@ testthat::test_that("Test On raster masking", {
   library(sprawl.data)
   # both raster and mask are "R" objects - check if works and equal to raster::mask ----
   mask_vect   <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"), stringsAsFactors = T)
-  in_rast     <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
+  in_rast     <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))[[1]]
   # test both with same projection and differenrt projections between in_rast and mask_vect
   out_masked   <- mask_rast(in_rast, mask_vect, verbose = FALSE, crop = FALSE)
   expect_is(out_masked, "Raster")
