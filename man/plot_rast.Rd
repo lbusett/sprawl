@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_rast.R
 \name{plot_rast}
 \alias{plot_rast}
-\title{FUNCTION_TITLE}
+\title{quick plot for a raster based on level_plot}
 \usage{
 plot_rast(in_rast, band = 1, in_poly = NULL, in_points = NULL,
   background = FALSE, limits = NULL, tails = c(0.02, 0.98),
@@ -33,7 +33,7 @@ cutting the values at the 2nd and 98th percentile)}
 
 \item{palette}{Palette to be used for colors (see \code{\link[RColorBrewer:brewer.pal]{RColorBrewer::brewer.pal}}), Default: 'RdYlGn'}
 
-\item{legend_type}{"standard" or "custom" (see ecamples), Default: 'standard'}
+\item{legend_type}{"standard" or "custom" (see examples), Default: 'standard'}
 
 \item{col_outlow}{Color used to plot the values below the lower limit/tail. Can be a string
 corresponding to a valid "R" color or HEX representation, Default: 'gray10'}
@@ -61,7 +61,6 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  library(sprawl)
 
  in_rast <- system.file("extdata", "gNDVI.tif", package = "sprawl.data")
@@ -80,15 +79,15 @@ if(interactive()){
            palette   = "RdYlBu" ,
            title     = "RapidEye - GNDVI",
            maxpixels = 10e5)
+
+ in_rast <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
+                                      package = "sprawl.data"))[[1:4]]
+ plot_rast(in_rast)
  }
-}
 }
 \seealso{
 \code{\link[latticeExtra]{layer}}
 \code{\link[raster]{stack}},\code{\link[raster]{quantile}}
 \code{\link[rasterVis]{levelplot}}
 \code{\link[RColorBrewer]{brewer.pal}}
-}
-\author{
-Lorenzo Busetto, PhD (2017), email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }

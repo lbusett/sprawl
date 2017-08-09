@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>reclassify values of a raster — reclass_rast • sprawl</title>
+<title>reclassify values of a raster � reclass_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,19 +52,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
-</li>
-<li>
-  <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
   <a href="../articles/contributing.html">Contributing</a>
@@ -73,9 +70,31 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -139,15 +158,14 @@ Default: FALSE</p></td>
     
 <ul>
 <li><p>if to_file == FALSE:  <code>*raster</code> corresponding to the reclassified raster</p></li>
-<li><p>if to_file == TRUE: name of the file where it was saved (either corresponfing to <code>out_rast</code>
+<li><p>if to_file == TRUE: name of the file where it was saved (either corresponding to <code>out_rast</code>
 or to the name of the temporary file created (if <code>out_rast == NULL</code>))</p></li>
 </ul>
 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>reclass_rast
-    <code>reclass_matrix</code> must be a 3-columns <code>data.frame</code> (or similar), including the <code>start</code>, <code>end</code> and
+    <p><code>reclass_matrix</code> must be a 3-columns <code>data.frame</code> (or similar), including the <code>start</code>, <code>end</code> and
 <code>new</code> columns. It can be easily created by, for example:</p><pre>reclass_matrix &lt;- tribble(~start, ~end, ~new,
                                0,    1,   NA, # values &gt;=0 and &lt; 1 will be set to NA
                                1,    5,   1,  # values &gt;=1 and &lt; 5 will be set to 1
@@ -167,12 +185,10 @@ or to the name of the temporary file created (if <code>out_rast == NULL</code>))
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'># reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5 and 9, putting</span>
+    <pre class="examples"><div class='input'><span class='co'># reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5 and 9, putting</span>
 <span class='co'># the rest to 0 and values &gt;= 11 to NA</span>
 <span class='co'># Open  the masking file</span>
-<span class='no'>in_mask</span> <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='no'>in_maskfile</span>)
-<span class='co'># setup the reclassification matrix</span>
+<span class='no'>in_mask</span> <span class='kw'>&lt;-</span> <span class='fu'>raster</span>(<span class='no'>in_maskfile</span>)</div><div class='output co'>#&gt; <span class='error'>Error in raster(in_maskfile): object 'in_maskfile' not found</span></div><div class='input'><span class='co'># setup the reclassification matrix</span>
 
  <span class='no'>reclass_matrix</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/tribble'>tribble</a></span>(
                 ~<span class='no'>start</span>, ~<span class='no'>end</span>, ~<span class='no'>new</span>,
@@ -186,9 +202,7 @@ or to the name of the temporary file created (if <code>out_rast == NULL</code>))
 <span class='no'>reclass_file</span> <span class='kw'>=</span> <span class='st'>"/home/lb/Temp/buttami/pippo_reclass.tif"</span>
 <span class='no'>outmask</span> <span class='kw'>=</span> <span class='fu'>reclass_rast</span>(<span class='no'>in_rast</span>,
                        <span class='no'>reclass_matrix</span>,
-                       <span class='kw'>r_out</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>plot</span>(<span class='no'>outmask</span>)
-<span class='co'># }</span></pre>
+                       <span class='kw'>r_out</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in reclass_rast(in_rast, reclass_matrix, r_out = TRUE): unused argument (r_out = TRUE)</span></div><div class='input'><span class='fu'>plot</span>(<span class='no'>outmask</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(outmask): object 'outmask' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

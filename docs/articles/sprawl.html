@@ -30,19 +30,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
-</li>
-<li>
-  <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
   <a href="../articles/contributing.html">Contributing</a>
@@ -50,9 +47,31 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -70,7 +89,7 @@
       <h1>sprawl: Spatial Processing (in) R: Advanced Workflows Library</h1>
                         <h4 class="author">Lorenzo Busetto</h4>
             
-            <h4 class="date">2017-07-21</h4>
+            <h4 class="date">2017-08-04</h4>
           </div>
 
     
@@ -90,7 +109,7 @@
 <a href="#package-philosophy" class="anchor"></a>Package philosophy</h2>
 <p>The aforementioned objectives are accomplished in <code>sprawl</code> by:</p>
 <ol style="list-style-type: decimal">
-<li>Providing simple <strong>wrappers to common-use functions</strong> for reading/writing spatial data and performing common-use operations (e.g., <code>read_shape</code> and <code>write_shape</code> to read/write vector files from/to disk);</li>
+<li>Providing simple <strong>wrappers to common-use functions</strong> for reading/writing spatial data and performing common-use operations (e.g., <code>read_vect</code> and <code>write_shape</code> to read/write vector files from/to disk);</li>
 <li>Providing <strong>optimized functions for performing some frequently used processing tasks</strong>, by using custom <code>sprawl</code> functions or exploiting functions provided by less-known packages (e.g., <code>mask_rast</code>, <code>extract_rast</code>));</li>
 <li>Optimizing <strong>code execution speed</strong> by providing under-the-hood support for multi-core processing using for example <code>foreach</code> looping along raster bands or <code>raster::MakeCluster</code> functionality;</li>
 <li>Providing <strong>custom functions or workflows for performing more complex processing tasks</strong>,involving the sequential application of different processing steps (e.g., <code>aggregate_rast</code>);</li>
@@ -104,7 +123,7 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install sprawl from git-hub with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools::<span class="kw">install_github</span>(<span class="st">"lbusett/sprawl"</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"lbusett/sprawl"</span>)</code></pre></div>
 <p>Note that, given its scope, <code>sprawl</code> imports functions from several other packages, which need to be installed in your system. Since some of those have quite specific System Requirements, it’s possible that you’ll struggle a bit in installation due to unresolved dependencies. In that case, please have a look at the installation error messages to see which package has problems in installation and try to install it beforehand (consulting its specific CRAN pages or doing a stackoverflow search may help !).</p>
 </div>
 <div id="function-documentation" class="section level2">

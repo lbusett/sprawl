@@ -1,6 +1,6 @@
 context("Checking reprojection of extent")
 testthat::test_that("Test reproj_extent",{
-  skip_on_cran()
+  # skip_on_cran()
   skip_on_travis()
   # no proj set
   library(sprawl.data)
@@ -16,7 +16,7 @@ testthat::test_that("Test reproj_extent",{
   testthat::expect_is(reproj_extent(raster::extent(in_rast[[1]]), "+init=epsg:3035", "+init=epsg:4326"), "Extent")
 
   # All Ok - `sf` bbox
-  in_pts   <- read_shape(system.file("extdata","randpoints.shp", package = "sprawl.data"))
+  in_pts   <- read_vect(system.file("extdata","randpoints.shp", package = "sprawl.data"))
   testthat::expect_is(reproj_extent(sf::st_bbox(in_pts), "+init=epsg:3035", "+init=epsg:4326"), "bbox")
 
   # no proj set

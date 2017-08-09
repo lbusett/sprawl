@@ -19,10 +19,10 @@ er_getbands <- function(in_rast,
   banderr_msg <-"extract_rast --> `selbands` must be either a 2-element numeric array containing starting and ending
          band numbers for the extraction OR a 2-element array containing starting and ending Dates for the extraction"
   # Check if in_rast is a raster object or file -----
-  if (check_spatype(in_rast) == "rastfile") {
+  if (get_spatype(in_rast) == "rastfile") {
     in_rast <- raster::stack(in_rast)
   }
-  if (check_spatype(in_rast) != "rastobject") {
+  if (get_spatype(in_rast) != "rastobject") {
     stop("`in_rast` is not a valid *raster object or raster file ! Aborting !")
   }
   nbands <- raster::nlayers(in_rast)
@@ -48,7 +48,7 @@ er_getbands <- function(in_rast,
     selbands_out <- selbands
     seldates = NA
   } else {
-    # Check if selbands is a 2-element character array cohercible to date -----
+    # Check if selbands is a 2-element character array coercible to date -----
     if (is.character(selbands)) {
       seldates <- try(as.Date(selbands), silent = TRUE)
       if (class(seldates) == "try-error") stop(banderr_msg)

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>er_crop_object — er_crop_object • sprawl</title>
+<title>er_crop_object � er_crop_object • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,19 +52,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
-</li>
-<li>
-  <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
   <a href="../articles/contributing.html">Contributing</a>
@@ -73,9 +70,31 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -93,18 +112,18 @@
     </div>
 
     
-    <p>Accessory function for <code>extract_rast</code>. Crops the in_vect_zones on the extent of the raster
-to improve speed. Then check if some features in the original in_vect_zones were dropped in
+    <p>Accessory function for <code>extract_rast</code>. Crops the in_vect on the extent of the raster
+to improve speed. Then check if some features in the original in_vect were dropped in
 zone_raster_croppped</p>
     
 
-    <pre class="usage"><span class='fu'>er_crop_object</span>(<span class='no'>in_vect_zones</span>, <span class='no'>in_rast</span>, <span class='no'>id_field</span>, <span class='no'>verbose</span>)</pre>
+    <pre class="usage"><span class='fu'>er_crop_object</span>(<span class='no'>in_vect</span>, <span class='no'>in_rast</span>, <span class='no'>id_field</span>, <span class='no'>verbose</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_vect_zones</th>
+      <th>in_vect</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
@@ -124,9 +143,9 @@ zone_raster_croppped</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p><code>list</code> with the following fields:</p><ul>
-<li><p>in_vect_zones_crop = cropped <code>sf</code> object</p></li>
-<li><p>outside_feat = data frame containg info on the "removed" features (sequential id and corresponding
-value ofthe "id" field (if provided)</p></li>
+<li><p>in_vect_crop = cropped <code>sf</code> object</p></li>
+<li><p>outside_feat = data frame containing info on the "removed" features (sequential id and
+corresponding value ofthe "id" field (if provided)</p></li>
 </ul>
 
     

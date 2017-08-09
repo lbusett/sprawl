@@ -105,7 +105,7 @@ er_polygons_velox <- function(in_vect_zones, in_rast, seldates, selbands, n_selb
   #  setup the processing: initialize variables and foreach loop            ####
 
   # Setup the number of cores: defaults to available cores - 2, but up to a maximum
-  # of 8. If user-provided er_opts$ncores is greter than available cores - 2 or greater than 8
+  # of 8. If user-provided er_opts$ncores is greater than available cores - 2 or greater than 8
   # er_opts$ncores is re-set to the minimum between those two. If selbands < er_opts$ncores,
   # use only selbands cores
 

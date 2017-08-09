@@ -2,11 +2,12 @@ title: sprawl
 template:
   params:
     bootswatch: united
+    ganalytics: UA-84499524-3
 reference:
   - title: Reading/writing spatial data
     desc: ~
     contents:
-      - '`read_shape`'
+      - '`read_vect`'
       - '`write_shape`'
   - title: Raster processing
     desc: ~
@@ -16,12 +17,22 @@ reference:
       - '`aggregate_rast`'
       - '`mask_rast`'
       - '`cuttails_rast`'
+      - '`cast_rast`'
+      - '`migrate_virtrast`'
+      - '`convert_rastdtype`'
   - title: Vector processing
     desc: ~
     contents:
       - '`dissolve_shape`'
       - '`create_fishnet`'
       - '`crop_vect`'
+      - '`cast_vect`'
+  - title: Retrieve info from spatial files
+    desc: ~
+    contents:
+      - '`get_spatype`'
+      - '`get_projstring`'
+      - '`get_extent`'
   - title: Visualization and plotting
     desc: ~
     contents:
@@ -30,32 +41,38 @@ reference:
     desc: ~
     contents:
       - '`get_boundaries`'
-  - title: Miscellaneous
+  - title: Miscellaneous Helpers
     desc: ~
     contents:
+      - '`summarize_data`'
       - '`doytodate`'
       - '`datetodoy`'
       - '`build_testraster`'
       - '`build_testshape`'
-      - '`check_spatype`'
       - '`find_command`'
-    params:
-     - highlight: tango
+      - '`find_gdal`'
+      - '`sprawl_initcluster`'
 navbar:
   type: inverse
   left:
-    - text: "Home"
+    - icon: fa-home
       href: index.html
     - text: "Getting Started"
       href: articles/sprawl.html
-    - text: "Function Reference"
-      href: reference/index.html
     - text: "Examples of Use"
       href: articles/examples.html
-    - text: "FAQ"
-      href: articles/faq.html
     - text: "Contributing"
       href: articles/contributing.html
   right:
+    - text: "faq"
+      icon: fa-question-circle-o
+      href: articles/faq.html
+    - icon: fa-newspaper-o
+      text: "news"
+      href: news/index.html
+    - icon: fa-file-code-o
+      text: "code reference"
+      href: reference/index.html
     - icon: fa-github fa-lg
-      href: https://github.com/IREA-CNR-MI/sprawl/
+      text: "github"
+      href: https://github.com/lbusett/sprawl/

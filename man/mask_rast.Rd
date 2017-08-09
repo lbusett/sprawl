@@ -2,41 +2,69 @@
 % Please edit documentation in R/mask_rast.R
 \name{mask_rast}
 \alias{mask_rast}
-\title{Mask a raster file (or object) based on a vector file (or object)}
+\title{Mask a raster based on a vector}
 \usage{
-mask_rast(in_rast, mask_vect, crop = FALSE, buffer = NULL,
-  out_nodata = "NoData", to_file = FALSE, out_rast = NULL,
-  out_dt = "FLT4S", verbose = TRUE)
+mask_rast(in_rast, mask, crop = FALSE, buffer = NULL, out_nodata = NULL,
+  out_type = "rastobj", out_basename = NULL, save_multiband = FALSE,
+  out_dtype = NULL, overwrite = FALSE, verbose = TRUE,
+  verb_foreach = FALSE)
 }
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
 
-\item{mask_vect}{Vector file or object of class \code{*sf} or \code{sp} to be used as a mask}
+\item{mask}{Vector file or object of class \code{*sf} or \code{sp} to be used as a mask}
 
-\item{crop}{\code{logical} if TRUE, \code{in_rast} is also cropped on the extent of \code{mask_vect},
+\item{crop}{\code{logical} if TRUE, \code{in_rast} is also cropped on the extent of \code{mask},
 Default: FALSE}
 
-\item{buffer}{\code{numeric} if not NULL, width of a buffer to be applied to \code{mask_vect} before
-masking \code{in_rast}. If negative, mask_vect is "reduced" prior to masking (see examples),
+\item{buffer}{\code{numeric} if not NULL, width of a buffer to be applied to \code{mask} before
+masking \code{in_rast}. If negative, mask is "reduced" prior to masking (see examples),
 Default: NULL}
 
 \item{out_nodata}{\code{numeric} value to be assigned to areas outside the mask, Default: 'NoData'}
 
-\item{to_file}{\code{logical} If TRUE, the output masked raster is save to file instead than sent back
-to the caller. In this case, the path to the saved file is returned instead}
+\item{out_type}{\code{character}
+\itemize{
+\item if == "rastobj", return a \code{Raster} object;
+\item if == "filename", return the filename of the masked layer (GTiff or gdal vrt format
+depending on other arguments - see below)
+}
 
-\item{out_rast}{\code{character} filename where the masked raster should be saved (ignorted if
-to_file == FALSE). If NULL while to_file == TRUE, the masked raster is saved on a temporaty
-file in the \code{R} temporary folder. The file is saved in TIFF format, with \code{DAFLATE} compression.}
+Default: "rastobj" (If an invalid string is provided, defaults to \code{rastobj})}
 
-\item{out_dt}{TO BE CHECKED !!!!}
+\item{out_basename}{\code{character} filename where the masked raster should be saved (ignored if
+to_file == FALSE). If NULL, the masked raster is saved on a temporaty file in the \code{R}
+temporary folder, named \code{<basename(in_rast)>_masked.tif}:. The file is saved in TIFF format, with \code{DEFLATE} compression. For
+multiband inputs, a separate file is saved for each band (e.g., out_basename_001. tif,
+out_basename_002. tif...), unless the \code{save_multiband} argument is set to "TRUE"}
 
-\item{verbose}{\code{logical} if TRUE, extended processing information is sent to the console in the
-form of messages}
+\item{save_multiband}{\code{logical}
+\itemize{
+\item if TRUE, and \code{in_rast} is multi-band, the single-band masked layers are saved as a
+single multiband tiff at the end of processing, and the single-band files are deleted;
+\item if FALSE, and \code{in_rast} is multi-band, a gdal vrt file pointing to all masked bands
+is created instead.
+}
+
+Default: FALSE}
+
+\item{out_dtype}{\code{character} data type of the output masked files, according to gdal
+specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32", "Int32", "Float32",
+"Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64"). If NULL, the data type
+is retrieved from the input, Default: NULL}
+
+\item{overwrite}{\code{logical} if TRUE, and out_basename is set and existing, existing files
+are overwritten, Default: FALSE}
+
+\item{verbose}{\code{logical} if TRUE, extended processing information is sent to the console
+in the form of messages}
+
+\item{verb_foreach}{\code{logical} allow verbose output from \code{foreach} for debugging purposes,
+Default: FALSE}
 }
 \value{
-object of class \code{raster} (if to_file == FALSE), or \code{character} string corresponding to
-the filename of the created raster (if to_file == TRUE)
+object of class \code{raster} (if out_type == \code{rastobj}), or \code{character} string
+corresponding to the filename of the created raster (if out_type == \code{filename} )
 }
 \description{
 Masks a raster file or object on the basis of a vector file or object. Pixels not
@@ -46,17 +74,17 @@ vector to allow a more "lenient" masking, or to remove also the borders of the v
 }
 \examples{
 \dontrun{
-libray(sprawl)
-libray(sprawl.data)
+library(sprawl)
+library(sprawl.data)
 library(raster)
-in_polys <- read_shape(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
+in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
                        stringsAsFactors = T)
-in_rast  <- raster::stack(system.file("extdata", "testrast.tif", package = "sprawl.data"))[[1]]
+in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
+                       package = "sprawl.data"))[[1]]
 in_polys <- sf::st_transform(in_polys, proj4string(in_rast))
 masked   <- mask_rast(in_rast, in_polys, verbose = FALSE)
-par(mfrow=c(1,2))
-plot(in_rast)
-plot(masked)
+plot_rast(in_rast, in_poly = in_polys)
+plot_rast(masked, in_poly = in_polys)
 }
 }
 \author{

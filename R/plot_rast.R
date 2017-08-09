@@ -1,4 +1,4 @@
-#' @title FUNCTION_TITLE
+#' @title quick plot for a raster based on level_plot
 #' @description FUNCTION_DESCRIPTION
 #' @param in_rast Input raster object or file
 #' @param band PARAM_DESCRIPTION, Default: 1
@@ -14,7 +14,7 @@
 #'   or using the colors specified in `col_outlow` and `col_outhigh`, Default: c(0.02, 0.98) (meaning)
 #'   cutting the values at the 2nd and 98th percentile)
 #' @param palette Palette to be used for colors (see [`RColorBrewer::brewer.pal`]), Default: 'RdYlGn'
-#' @param legend_type "standard" or "custom" (see ecamples), Default: 'standard'
+#' @param legend_type "standard" or "custom" (see examples), Default: 'standard'
 #' @param col_outlow Color used to plot the values below the lower limit/tail. Can be a string
 #'   corresponding to a valid "R" color or HEX representation, Default: 'gray10'
 #' @param col_outhigh Color used to plot the values below the lower limit/tail. Can be a string
@@ -25,10 +25,10 @@
 #'   allowing later plotting/modifications is returned, Default: TRUE
 #' @param ... Any other arguments (?)
 #' @return OUTPUT_DESCRIPTION
+
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  library(sprawl)
 #'
 #'  in_rast <- system.file("extdata", "gNDVI.tif", package = "sprawl.data")
@@ -49,8 +49,11 @@
 #'            palette   = "RdYlBu" ,
 #'            title     = "RapidEye - GNDVI",
 #'            maxpixels = 10e5)
+#'
+#'  in_rast <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
+#'                                       package = "sprawl.data"))[[1:4]]
+#'  plot_rast(in_rast)
 #'  }
-#' }
 #' @seealso
 #'  \code{\link[latticeExtra]{layer}}
 
@@ -59,13 +62,13 @@
 #'  \code{\link[rasterVis]{levelplot}}
 
 #'  \code{\link[RColorBrewer]{brewer.pal}}
-#' @author Lorenzo Busetto, PhD (2017), email: <lbusett@gmail.com>
 #' @rdname plot_rast
 #' @export
 #' @importFrom latticeExtra layer
 #' @importFrom raster stack quantile
 #' @importFrom rasterVis levelplot
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom grDevices colorRampPalette
 #' @importFrom sp sp.polygons sp.points
 plot_rast <- function(in_rast,
                       band        = 1,
@@ -84,33 +87,51 @@ plot_rast <- function(in_rast,
                       ...) {
 
   #TODO Allow inputting a raster FILE
-  if (check_spatype(in_rast) == "rastfile") {
+  if (get_spatype(in_rast) == "rastfile") {
     in_rastplot <- raster::stack(in_rast)
   } else {
     in_rastplot <- in_rast
   }
 
+
+  if (!is.null(in_poly)) {
+    in_poly <- cast_vect(in_poly, "sfobject")
+    proj4_rast <- get_projstring(in_rast)
+    proj4_vect <- get_projstring(in_poly)
+    if (proj4_vect != proj4_rast) {
+      in_poly <- sf::st_transform(in_poly, proj4_rast)
+    }
+  }
+
   #   ____________________________________________________________________________
   #   If limits not passed, compute limits for the plot on the basis of       ####
   #   the values of "cut_tails" and of the distribution of values in in_rast
-
-  if (is.null(limits)) {
-    limits <- raster::quantile(in_rastplot, probs = c(0, tails, 1), ncells = 5000000000)
+  if (raster::nlayers(in_rast) == 1) {
+    if (is.null(limits)) {
+      limits <- raster::quantile(in_rastplot, probs = c(0, tails, 1), ncells = 5000000000)
+    } else {
+      limits <- c(limits[1], limits[1], limits[2], limits[2])
+    }
   } else {
-    limits <- c(limits[1], limits[1], limits[2], limits[2])
+    if (is.null(limits)) {
+      quantiles <- raster::quantile(in_rastplot, probs = c(0, tails, 1), ncells = 5000000000)
+      limits <- c(min(quantiles[,1]), min(quantiles[,2]),
+                  max(quantiles[,3]), max(quantiles[,4]))
+    } else {
+      limits <- c(limits[1], limits[1], limits[2], limits[2])
+    }
   }
-
   #   ____________________________________________________________________________
   #   set up the color table                                                  ####
 
   if (legend_type == "standard") {
-    my.col <- c(colorRampPalette(RColorBrewer::brewer.pal(11, palette))(100))
+    my.col <- c(grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, palette))(100))
     at = c(seq(limits[2], limits[3], (limits[3] - limits[2])/100))
   }
 
   if (legend_type == "custom") {
     my.col <- c(col_outlow,   # color for values below lower limit
-                colorRampPalette(RColorBrewer::brewer.pal(11, palette))(98),
+                grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, palette))(98),
                 col_outhigh)   # color for values abvove lower limit
     at = c(limits[1], seq(limits[2], limits[3], (limits[3] - limits[2])/98), limits[4])
   }
@@ -120,11 +141,14 @@ plot_rast <- function(in_rast,
                                    col.regions = my.col,
                                    at          = at,
                                    maxpixels   = maxpixels,
-                                   main        = title)
+                                   main        = title,
+                                   xlab        = NULL,
+                                   ylab        = NULL,
+                                   scales      = list(draw = FALSE))
 
   case_identifier <- 0
   if (!is.null(in_poly)) {
-    # invisible(in_poly)
+
     polys <- as(in_poly, "Spatial")
     polyplot  <- latticeExtra::layer(sp::sp.polygons(x), data = list(x = polys))
     case_identifier <- case_identifier + 10
@@ -139,7 +163,7 @@ plot_rast <- function(in_rast,
   } else {
     pointplot <- NULL
   }
- # browser()
+
   if (plot_now) {
     if (case_identifier == 0)   print(rastplot)
     if (case_identifier == 10)  print(rastplot + polyplot)

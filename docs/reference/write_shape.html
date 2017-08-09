@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>write_shape — write_shape • sprawl</title>
+<title>write_shape � write_shape • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,19 +52,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
-</li>
-<li>
-  <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
   <a href="../articles/contributing.html">Contributing</a>
@@ -73,9 +70,31 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -93,8 +112,8 @@
     </div>
 
     
-    <p>Wrapper to ~st_read~ for writing an <code>sf</code> or <code>sp</code> object to disk in ESRI shapefile
-format</p>
+    <p>Wrapper on  <code><a href='http://www.rdocumentation.org/packages/sf/topics/st_write'>sf::st_write</a></code> for writing an <code>sf</code> or <code>sp</code> object to disk as
+an ESRI shapefile</p>
     
 
     <pre class="usage"><span class='fu'>write_shape</span>(<span class='no'>out_obj</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -137,8 +156,7 @@ folder tree up to out_file is created, Default: FALSE (use with caution !)</p></
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'># build a spatialpoints data frame</span>
+    <pre class="examples"><div class='input'><span class='co'># build a spatialpoints data frame</span>
 <span class='no'>pts</span>                <span class='kw'>&lt;-</span> <span class='fu'>cbind</span>(<span class='fl'>1</span>:<span class='fl'>5</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)
 <span class='fu'>dimnames</span>(<span class='no'>pts</span>)<span class='kw'>[[</span><span class='fl'>1</span>]] <span class='kw'>&lt;-</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>5</span>]
 <span class='no'>df</span>                 <span class='kw'>&lt;-</span>  <span class='fu'>data.frame</span>(<span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>5</span>)
@@ -148,8 +166,7 @@ folder tree up to out_file is created, Default: FALSE (use with caution !)</p></
 <span class='co'># Save it to a shape file</span>
 <span class='no'>out_file</span>  <span class='kw'>=</span> <span class='fu'>tempfile</span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>tmpdir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(), <span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".shp"</span>)
 <span class='no'>mysp_object</span> <span class='kw'>=</span> <span class='no'>points</span>
-<span class='fu'>write_shape</span>(<span class='no'>mysp_object</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>write_shape</span>(<span class='no'>mysp_object</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

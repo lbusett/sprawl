@@ -146,7 +146,7 @@ er_poly_parallel <- function(zone_object,
   #  setup thew processing: initialize variables and foreach loop            ####
 
   # Setup the number of cores: defaults to available cores - 2, but up to a maximum
-  # of 8. If user-provided ncores is greter than available cores - 2 or greater than 8
+  # of 8. If user-provided ncores is greater than available cores - 2 or greater than 8
   # ncores is re-set to the minimum between those two
   if (is.null(ncores)) {
     ncores <- parallel::detectCores() - 2

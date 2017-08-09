@@ -1,4 +1,4 @@
-#' @title extent_reproj
+#' @title reproject the extent of a spatial object
 #' @description accessory function to convert the extent of a spatial object to a different
 #' projection. simple wrapper for the `spTransform` function on an [`raster::extent`] object
 #'

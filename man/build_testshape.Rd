@@ -33,10 +33,8 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  #EXAMPLE1
  }
-}
 }
 \seealso{
 \code{\link[tibble]{as_tibble}}

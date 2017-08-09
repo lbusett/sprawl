@@ -1,6 +1,6 @@
-#' @title get_boundaries
+#' @title download vecor of administrative boundaries
 #' @description function to download administrative boundaries data from the gadm archive, starting
-#' from a country name or ISO code, and the level of desired administrtive units
+#' from a country name or ISO code, and the level of desired administrative units
 #' @param iso `character` iso name or 2/3 digits code of the country
 #' @param level `numeric` level of administrative units returned, default: 0 (Country Level)
 #' @param path `character`
@@ -35,7 +35,7 @@ get_boundaries <- function(iso,
   data(iso3166, package = "maps", envir = environment())
   match_name <- match(iso, iso3166$ISOname)
   if (!is.na(match_name)) {
-    iso_code <- maps::iso3166$a3[match_name]
+    iso_code <- iso3166$a3[match_name]
   } else {
     match_code_i3 <- match(iso, iso3166$a3)
     if (!is.na(match_code_i3)) {

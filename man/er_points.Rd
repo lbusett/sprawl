@@ -2,48 +2,51 @@
 % Please edit documentation in R/er_points.R
 \name{er_points}
 \alias{er_points}
-\title{er_points}
+\title{helper for extract_rast for points extraction}
 \usage{
-er_points(in_vect_zones, in_rast, n_selbands, selbands, seldates, id_field,
-  date_check, long, verbose, addfeat, addgeom, keep_null)
+er_points(in_vect, in_rast, n_selbands, selbands, seldates, id_field, long,
+  date_check, verbose, addfeat, addgeom, keep_null)
 }
 \arguments{
-\item{in_vect_zones}{\code{sf} object on which features the zonal statistics has to be computed}
+\item{in_vect}{\code{sf} object on which features the zonal statistics has to be computed}
 
-\item{in_rast}{single- or multi-band \code{rasterStack} object containing values to be extracted and
-summarized}
+\item{in_rast}{single- or multi-band \code{rasterStack} object containing values to be extracted
+and summarized}
 
-\item{n_selbands}{aa}
+\item{n_selbands}{PARAM_DESCRIPTION}
 
-\item{selbands}{\code{2-element numeric array} defining starting and ending raster bands to be processed
-(e.g., c(1, 10). Default: NULL, meaining that all bands will be processed}
+\item{selbands}{PARAM_DESCRIPTION}
 
-\item{seldates}{aaa}
+\item{seldates}{PARAM_DESCRIPTION}
 
-\item{id_field}{\code{character} (optional) field of the vector file to be used to identify the
-zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
-shapefile, and a new column named \code{id_feat} is used on the output to distinguish the zones, Default: NULL}
+\item{id_field}{PARAM_DESCRIPTION}
 
-\item{date_check}{zzz}
+\item{long}{PARAM_DESCRIPTION}
 
-\item{long}{\code{logical} If TRUE, \code{out$summ_data} is returned in long format, Default: FALSE}
+\item{date_check}{PARAM_DESCRIPTION}
 
-\item{verbose}{\code{logical} If TRUE, messages concerning the processing status are shown in the
-console, Default: TRUE}
+\item{verbose}{PARAM_DESCRIPTION}
 
-\item{addfeat}{\code{logical} If TRUE, columns of the attribute table of the \code{in_vect_zones} layer are
-joined to results of the computation, Default: TRUE}
+\item{addfeat}{PARAM_DESCRIPTION}
 
-\item{addgeom}{\code{logical}, If TRUE, the output sent out as an \code{sf} object, preserving the geometry
-of \code{in_vect_zones}. Note that this leads to dyuplication of geometries, and may be very slow for
-large datasets. Default: FALSE}
+\item{addgeom}{PARAM_DESCRIPTION}
 
-\item{keep_null}{\code{logical} If TRUE, the output preserves features of \code{in_vect_zones} falling outside
-the extent of \code{in_rast}. Values for these features are set to NA, Default: FALSE}
+\item{keep_null}{PARAM_DESCRIPTION}
 }
 \value{
 OUTPUT_DESCRIPTION
 }
 \description{
 FUNCTION_DESCRIPTION
+}
+\details{
+DETAILS
+}
+\examples{
+\dontrun{
+ #EXAMPLE1
+ }
+}
+\author{
+Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }

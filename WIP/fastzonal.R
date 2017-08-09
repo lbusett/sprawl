@@ -78,14 +78,14 @@ fastzonalssss = function(in_rast,
   if (!class(start_band) %in% c("Date", "POSIXct", "POSIXlt")) {
     start_date = try(as.Date(start_date), silent = TRUE)
     if (class(start_date) == "try-error") {
-      warning("start_date is not a Date object or string cohercible to date - it will be ignored")
+      warning("start_date is not a Date object or string coercible to date - it will be ignored")
       start_date <- as.integer(1)
     }
   }
   if (!class(end_band) %in% c("Date", "POSIXct", "POSIXlt")) {
     end_date = try(as.Date(end_date), silent = TRUE)
     if (class(end_date) == "try-error") {
-      warning("end_date is not a Date object or string cohercible to date - it will be ignored")
+      warning("end_date is not a Date object or string coercible to date - it will be ignored")
       end_date <- nlayers(in_rast)
     }
   }

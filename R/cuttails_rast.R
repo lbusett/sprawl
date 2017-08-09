@@ -13,17 +13,18 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  r     <- raster::raster(ncol=100, nrow=100)
-#'  r     <- raster::setValues(r, 1:10000)
-#'  s     <- raster::brick(r,r,r)
-#'  summary(s)
-#'  s_cut <- cuttails_rast(s)
-#'  summary(s_cut)
-#'  s_cutb1 <- cuttails_rast(s[[1]])
-#'  summary(s_cutb1)
+#'  # on single band
+#'  in_rast <- raster::raster(ncol=100, nrow=100)
+#'  in_rast <- raster::setValues(r, 1:10000)
+#'  in_rast_cut <- cuttails_rast(in_rast)
+#'  in_rast_cut
+#'
+#'  # on multi band
+#'  in_brick <- raster::stack(in_rast,in_rast,in_rast)
+#'  in_brick
+#'  in_brick_cut <- cuttails_rast(in_brick)
+#'  in_brick_cut
 #'  }
-#' }
 #' @seealso
 #'  \code{\link[raster]{quantile}},\code{\link[raster]{getValues}},\code{\link[raster]{setValues}},\code{\link[raster]{brick}}
 #' @rdname cuttails_rast
@@ -36,30 +37,22 @@ cuttails_rast <- function(in_rast,
                           to_file = FALSE,
                           verbose = TRUE) {
 
+  in_rast   <- cast_rast(in_rast, "rastobj")
   quantiles <- raster::quantile(in_rast, probs = tails, na.rm = T)
   nbands    <- length(quantiles)/2
   names_or  <- names(in_rast)
   if (nbands > 1) {
     for (band in 1:dim(quantiles)[1]) {
-      band_values     <- data.table::data.table(V1 = raster::getValues(in_rast[[band]]))
-      band_values[((V1 < quantiles[band,][1]) | (V1 > quantiles[band,][2])), V1 := NA]
-      in_rast[[band]] <- raster::setValues(in_rast[[band]], band_values[,V1])
+      band_values <- data.table::data.table(V1 = raster::getValues(in_rast[[band]]))
+      band_values[((V1 < quantiles[band,1]) | (V1 > quantiles[band,2])), V1 := NA]
+      in_rast[[band]]  <- raster::setValues(in_rast[[band]], band_values[,V1])
     }
   } else {
-    # browser()
-    band_values <- data.table::data.table(V1 = raster::getValues(in_rast))
+    band_values     <- data.table::data.table(V1 = raster::getValues(in_rast))
     band_values[((V1 < quantiles[1]) | (V1 > quantiles[2])), V1 := NA]
-    in_rast     <- raster::setValues(in_rast, band_values[,V1])
+    in_rast <- raster::setValues(in_rast, band_values[,V1])
   }
   names(in_rast) <- names_or
-  return(raster::brick(in_rast))
+  return(in_rast)
 }
-
-
-
-
-
-
-
-
 

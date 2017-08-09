@@ -28,7 +28,7 @@ Default: FALSE}
 \value{
 \itemize{
 \item if to_file == FALSE:  \code{*raster} corresponding to the reclassified raster
-\item if to_file == TRUE: name of the file where it was saved (either corresponfing to \code{out_rast}
+\item if to_file == TRUE: name of the file where it was saved (either corresponding to \code{out_rast}
 or to the name of the temporary file created (if \code{out_rast == NULL}))
 }
 }
@@ -39,8 +39,6 @@ reclassification matrix which specifies which value in the output should be take
 raster::reclassify function, providing a (somehow) easier and extended I/O functionality)
 }
 \details{
-reclass_rast
-
 \code{reclass_matrix} must be a 3-columns \code{data.frame} (or similar), including the \code{start}, \code{end} and
 \code{new} columns. It can be easily created by, for example:\preformatted{reclass_matrix <- tribble(~start, ~end, ~new,
                                0,    1,   NA, # values >=0 and < 1 will be set to NA

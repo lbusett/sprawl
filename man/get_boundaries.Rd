@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_boundaries.R
 \name{get_boundaries}
 \alias{get_boundaries}
-\title{get_boundaries}
+\title{download vecor of administrative boundaries}
 \usage{
 get_boundaries(iso, level = 1, path = NULL, makefold = TRUE)
 }
@@ -20,7 +20,7 @@ SpatialPolygonsDataFrame containing the desired data
 }
 \description{
 function to download administrative boundaries data from the gadm archive, starting
-from a country name or ISO code, and the level of desired administrtive units
+from a country name or ISO code, and the level of desired administrative units
 }
 \details{
 the function is a simple wrapper to the raster::getData function, with a-priori checks

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FUNCTION_TITLE â€” plot_rast â€¢ sprawl</title>
+<title>quick plot for a raster based on level_plot — plot_rast â€¢ sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -52,19 +52,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
-</li>
-<li>
-  <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
   <a href="../articles/contributing.html">Contributing</a>
@@ -73,9 +70,31 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -89,7 +108,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>FUNCTION_TITLE</h1>
+    <h1>quick plot for a raster based on level_plot</h1>
     </div>
 
     
@@ -145,7 +164,7 @@ cutting the values at the 2nd and 98th percentile)</p></td>
     </tr>
     <tr>
       <th>legend_type</th>
-      <td><p>"standard" or "custom" (see ecamples), Default: 'standard'</p></td>
+      <td><p>"standard" or "custom" (see examples), Default: 'standard'</p></td>
     </tr>
     <tr>
       <th>col_outlow</th>
@@ -193,18 +212,14 @@ allowing later plotting/modifications is returned, Default: TRUE</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='kw'>if</span>(<span class='fu'>interactive</span>()){
- <span class='fu'>library</span>(<span class='no'>sprawl</span>)
+    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl</span>)
 
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"gNDVI.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>150</span>)
  <span class='co'># plot only the raster</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)
-
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("character"), structure(function (x) standardGeneric("nlayers"), generic = structure("nlayers", package = "raster"), package = "raster", group = list(), valueClass = character(0), signature = "x", default = `\001NULL\001`, skeleton = (function (x) stop("invalid call in method dispatch to 'nlayers' (no default method)",     domain = NA))(x), class = structure("standardGeneric", package = "methods")),     &lt;environment&gt;): unable to find an inherited method for function ‘nlayers’ for signature ‘"character"’</span></div><div class='input'>
  <span class='co'># plot only the raster with custom legend</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)
-
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("character"), structure(function (x) standardGeneric("nlayers"), generic = structure("nlayers", package = "raster"), package = "raster", group = list(), valueClass = character(0), signature = "x", default = `\001NULL\001`, skeleton = (function (x) stop("invalid call in method dispatch to 'nlayers' (no default method)",     domain = NA))(x), class = structure("standardGeneric", package = "methods")),     &lt;environment&gt;): unable to find an inherited method for function ‘nlayers’ for signature ‘"character"’</span></div><div class='input'>
  <span class='co'># add a polygon and change the legend, palette and maxpixels</span>
  <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>,
            <span class='kw'>in_poly</span>   <span class='kw'>=</span> <span class='no'>in_vect</span>,
@@ -212,9 +227,10 @@ allowing later plotting/modifications is returned, Default: TRUE</p></td>
            <span class='kw'>legend</span>    <span class='kw'>=</span> <span class='st'>"custom"</span>,
            <span class='kw'>palette</span>   <span class='kw'>=</span> <span class='st'>"RdYlBu"</span> ,
            <span class='kw'>title</span>     <span class='kw'>=</span> <span class='st'>"RapidEye - GNDVI"</span>,
-           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)
- }
-<span class='co'># }</span></pre>
+           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("character"), structure(function (x) standardGeneric("nlayers"), generic = structure("nlayers", package = "raster"), package = "raster", group = list(), valueClass = character(0), signature = "x", default = `\001NULL\001`, skeleton = (function (x) stop("invalid call in method dispatch to 'nlayers' (no default method)",     domain = NA))(x), class = structure("standardGeneric", package = "methods")),     &lt;environment&gt;): unable to find an inherited method for function ‘nlayers’ for signature ‘"character"’</span></div><div class='input'>
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>,
+                                      <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>:<span class='fl'>4</span>]]
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='img'><img src='plot_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -229,10 +245,6 @@ allowing later plotting/modifications is returned, Default: TRUE</p></td>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
-
-    <h2>Author</h2>
-    
-Lorenzo Busetto, PhD (2017), email: <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

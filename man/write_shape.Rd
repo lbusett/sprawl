@@ -25,8 +25,8 @@ folder tree up to out_file is created, Default: FALSE (use with caution !)}
 \item{...}{any other arguments to be passed to \code{sf::st_write}}
 }
 \description{
-Wrapper to ~st_read~ for writing an \code{sf} or \code{sp} object to disk in ESRI shapefile
-format
+Wrapper on  \code{sf::st_write} for writing an \code{sf} or \code{sp} object to disk as
+an ESRI shapefile
 }
 \examples{
 \dontrun{

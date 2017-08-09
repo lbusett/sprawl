@@ -15,7 +15,7 @@
 find_command <- function(command,
                          stop_on_missing = TRUE) {
   #   ____________________________________________________________________________
-  #   find gdal_rasterize                                                     ####
+  #   find command on user machine                                            ####
   command_path <- Sys.which(command)
   if ((command_path == "")) {
     stop("find_command --> `", command, "` was not found on your system. Please install it and/or check

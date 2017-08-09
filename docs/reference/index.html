@@ -52,19 +52,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Function Reference</a>
-</li>
-<li>
   <a href="../articles/examples.html">Examples of Use</a>
-</li>
-<li>
-  <a href="../articles/faq.html">FAQ</a>
 </li>
 <li>
   <a href="../articles/contributing.html">Contributing</a>
@@ -73,9 +70,31 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/IREA-CNR-MI/sprawl/">
+  <a href="../articles/faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    faq
+  </a>
+</li>
+<li>
+  <a href="../news/index.html">
+    <span class="fa fa-newspaper-o"></span>
+     
+    news
+  </a>
+</li>
+<li>
+  <a href="../reference/index.html">
+    <span class="fa fa-file-code-o"></span>
+     
+    code reference
+  </a>
+</li>
+<li>
+  <a href="https://github.com/lbusett/sprawl/">
     <span class="fa fa-github fa-lg"></span>
      
+    github
   </a>
 </li>
       </ul>
@@ -113,9 +132,9 @@
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="read_shape.html">read_shape</a></code> </p>
+            <p><code><a href="read_vect.html">read_vect</a></code> </p>
           </td>
-          <td><p>read_shape -&gt; Read an ESRI shapefile into <code>R</code></p></td>
+          <td><p>read a vector spatial file to R</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -135,7 +154,7 @@
           <td>
             <p><code><a href="extract_rast.html">extract_rast</a></code> </p>
           </td>
-          <td><p>extract_rast</p></td>
+          <td><p>extract raster values on features of a vector</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -153,13 +172,31 @@
           <td>
             <p><code><a href="mask_rast.html">mask_rast</a></code> </p>
           </td>
-          <td><p>Mask a raster file (or object) based on a vector file (or object)</p></td>
+          <td><p>Mask a raster based on a vector</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="cuttails_rast.html">cuttails_rast</a></code> </p>
           </td>
           <td><p>remove outliers from a raster image</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="cast_rast.html">cast_rast</a></code> </p>
+          </td>
+          <td><p>automatic recasting between Raster object and raster files on disk</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="migrate_virtrast.html">migrate_virtrast</a></code> </p>
+          </td>
+          <td><p>migrate "virtual rasters" to a new location</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="convert_rastdtype.html">convert_rastdtype</a></code> </p>
+          </td>
+          <td><p>convert data type between <code>raster</code> and <code>gdal</code> conventions</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -173,7 +210,7 @@
           <td>
             <p><code><a href="dissolve_shape.html">dissolve_shape</a></code> </p>
           </td>
-          <td><p>dissolve_shape</p></td>
+          <td><p>dissolve attributes of a vector</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -185,7 +222,39 @@
           <td>
             <p><code><a href="crop_vect.html">crop_vect</a></code> </p>
           </td>
-          <td><p>crop_vect</p></td>
+          <td><p>crop a vector on the extent of a different spatial file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="cast_vect.html">cast_vect</a></code> </p>
+          </td>
+          <td><p>cast a vector object to a different <code>R</code> spatial class or to a shapefile</p></td>
+        </tr>
+      </tbody><tbody>
+        <tr>
+          <th colspan="2">
+            <h2 id="section-retrieve-info-from-spatial-files" class="hasAnchor"><a href="#section-retrieve-info-from-spatial-files" class="anchor"></a>Retrieve info from spatial files</h2>
+            <p class="section-desc"></p>
+          </th>
+        </tr>
+        <tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_spatype.html">get_spatype</a></code> </p>
+          </td>
+          <td><p>check the "spatial type" of an object or file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_projstring.html">get_projstring</a></code> </p>
+          </td>
+          <td><p>return the proj4string of a spatial object or file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_extent.html">get_extent</a></code> </p>
+          </td>
+          <td><p>return the exten of a spatial object or file (with projection)</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -199,7 +268,7 @@
           <td>
             <p><code><a href="plot_rast.html">plot_rast</a></code> </p>
           </td>
-          <td><p>FUNCTION_TITLE</p></td>
+          <td><p>quick plot for a raster based on level_plot</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -213,27 +282,34 @@
           <td>
             <p><code><a href="get_boundaries.html">get_boundaries</a></code> </p>
           </td>
-          <td><p>get_boundaries</p></td>
+          <td><p>download vecor of administrative boundaries</p></td>
         </tr>
       </tbody><tbody>
         <tr>
           <th colspan="2">
-            <h2 id="section-miscellaneous" class="hasAnchor"><a href="#section-miscellaneous" class="anchor"></a>Miscellaneous</h2>
+            <h2 id="section-miscellaneous-helpers" class="hasAnchor"><a href="#section-miscellaneous-helpers" class="anchor"></a>Miscellaneous Helpers</h2>
             <p class="section-desc"></p>
           </th>
         </tr>
         <tr>
           <!--  -->
           <td>
+            <p><code><a href="summarize_data.html">summarize_data</a></code> </p>
+          </td>
+          <td><p>helper function used to extract statistics of raster values within
+<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code></p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
             <p><code><a href="doytodate.html">doytodate</a></code> </p>
           </td>
-          <td><p>FUNCTION_TITLE</p></td>
+          <td><p>convert DOYs to dates</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="datetodoy.html">datetodoy</a></code> </p>
           </td>
-          <td><p>Convert dates to Day Of the Year</p></td>
+          <td><p>Convert dates to DOYs</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -249,15 +325,21 @@
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="check_spatype.html">check_spatype</a></code> </p>
-          </td>
-          <td><p>check_spatype</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
             <p><code><a href="find_command.html">find_command</a></code> </p>
           </td>
           <td><p>find the path to a specified command</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="find_gdal.html">find_gdal</a></code> </p>
+          </td>
+          <td><p>find gdal main folder</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="sprawl_initcluster.html">sprawl_initcluster</a></code> </p>
+          </td>
+          <td><p>initialize clustered processing on multiband raster</p></td>
         </tr>
       </tbody>
       </table>
@@ -270,9 +352,10 @@
       <li><a href="#section-reading-writing-spatial-data">Reading/writing spatial data</a></li>
       <li><a href="#section-raster-processing">Raster processing</a></li>
       <li><a href="#section-vector-processing">Vector processing</a></li>
+      <li><a href="#section-retrieve-info-from-spatial-files">Retrieve info from spatial files</a></li>
       <li><a href="#section-visualization-and-plotting">Visualization and plotting</a></li>
       <li><a href="#section-data-fetching-from-public-repositories">Data fetching from public repositories</a></li>
-      <li><a href="#section-miscellaneous">Miscellaneous</a></li>
+      <li><a href="#section-miscellaneous-helpers">Miscellaneous Helpers</a></li>
     </ul>
   </div>
 </div>

@@ -1,6 +1,6 @@
 #' @title write_shape
-#' @description Wrapper to ~st_read~ for writing an `sf` or `sp` object to disk in ESRI shapefile
-#' format
+#' @description Wrapper on  `sf::st_write` for writing an `sf` or `sp` object to disk as
+#'   an ESRI shapefile
 #' @param out_obj `character` object to be written to the shapefile. Must be a valid `*sp` or `sf`
 #' object
 #' @param out_file  `character` output file name
@@ -56,7 +56,7 @@ write_shape = function(out_obj,
     out_file <- paste0(tools::file_path_sans_ext(out_file), ".shp")
   }
 
-  intype <- check_spatype(out_obj)
+  intype <- get_spatype(out_obj)
   if (intype == "spobject") {
     out_obj <- methods::as(out_obj, "sf")
     intype  <- "sfobject"
