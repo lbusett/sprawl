@@ -8,6 +8,7 @@
 \alias{get_extent.sf}
 \alias{get_extent.sfc}
 \alias{get_extent.Spatial}
+\alias{get_extent.sprawlext}
 \title{return the exten of a spatial object or file (with projection)}
 \usage{
 get_extent(object, abort = FALSE)
@@ -21,6 +22,8 @@ get_extent(object, abort = FALSE)
 \method{get_extent}{sf}(object, abort = FALSE)
 
 \method{get_extent}{sfc}(object, abort = FALSE)
+
+\method{get_extent}{Spatial}(object, abort = FALSE)
 
 \method{get_extent}{Spatial}(object, abort = FALSE)
 }

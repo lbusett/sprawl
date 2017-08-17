@@ -79,8 +79,8 @@ get_extent.character <- function(object,
     names(coords) <- c("xmin", "ymin", "xmax", "ymax")
     projstring    <- get_projstring(object)
     outext        <- methods::new("sprawlext",
-                         extent     = coords,
-                         projstring = projstring)
+                                  extent     = coords,
+                                  projstring = projstring)
     return(outext)
   } else {
     if (abort == TRUE) {
@@ -96,7 +96,7 @@ get_extent.character <- function(object,
 
 
 #   ____________________________________________________________________________
-#   Method for "rastobj" - use raster::extent                            ####
+#   Method for "rastobj" - use raster::extent                               ####
 
 #' @rdname get_extent
 #' @method get_extent Raster
@@ -107,13 +107,13 @@ get_extent.Raster <- function(object,
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   projstring    <- get_projstring.Raster(object, abort = abort)
   outext        <- methods::new("sprawlext",
-                       extent     = coords,
-                       projstring = projstring)
+                                extent     = coords,
+                                projstring = projstring)
   return(outext)
 }
 
 #   ____________________________________________________________________________
-#   Method for "sf" object - use sf::st_bbox                               ####
+#   Method for "sf" object - use sf::st_bbox                                ####
 #
 
 #' @rdname get_extent
@@ -127,8 +127,8 @@ get_extent.sf <- function(object,
   projstring    <- attributes(bbox)[[3]]$proj4string
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   outext        <- methods::new("sprawlext",
-                       extent     = coords,
-                       projstring = projstring)
+                                extent     = coords,
+                                projstring = projstring)
   return(outext)
 
 }
@@ -147,8 +147,8 @@ get_extent.sfc <- function(object,
   projstring    <- attributes(bbox)[[3]]$proj4string
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   outext        <- methods::new("sprawlext",
-                       extent     = coords,
-                       projstring = projstring)
+                                extent     = coords,
+                                projstring = projstring)
   return(outext)
 
 }
@@ -166,8 +166,21 @@ get_extent.Spatial <- function(object,
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   projstring    <- get_projstring.Spatial(object, abort = abort)
   outext        <- methods::new("sprawlext",
-                       extent     = coords,
-                       projstring = projstring)
+                                extent     = coords,
+                                projstring = projstring)
   return(outext)
+
+}
+
+#   ____________________________________________________________________________
+#   Method for "sprawlext" object - do nothing                              s####
+#
+
+#' @rdname get_extent
+#' @method get_extent Spatial
+#' @export
+get_extent.sprawlext <- function(object,
+                                 abort = FALSE) {
+  return(object)
 
 }

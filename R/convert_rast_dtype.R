@@ -19,8 +19,7 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom tibble tribble
-convert_rastdtype <- function(dtype_string,
-                           type){
+convert_rastdtype <- function(dtype_string, type){
 
   call        <- match.call()
 
