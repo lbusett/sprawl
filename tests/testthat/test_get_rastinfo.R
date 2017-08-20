@@ -1,7 +1,7 @@
 context("Get information on a raster object/file")
 
 test_that("get_rastinfo works as expected", {
-
+  skip_on_travis()
   # Calling on a raster file or on a raster object accessing it gets same
   # results
   getinfo_obj <- system.file("extdata/OLI_test", "oli_multi_1000.tif",

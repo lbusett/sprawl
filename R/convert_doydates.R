@@ -23,7 +23,7 @@ doytodate <- function(doys, year, verbose = TRUE){
   if (!length(year) == 1) {
     stop("doytodate --> 'year' must be a single value ! Aborting !" )
   }
-# check for leap year (derived from `lubridate`)
+  # check for leap year (derived from `lubridate`)
   if (!((year %% 4 == 0) & ((year %% 100 != 0) | (year %% 400 == 0)))) {
     range <- c(0,365)
   } else {
@@ -32,9 +32,9 @@ doytodate <- function(doys, year, verbose = TRUE){
 
   # send message if outside range
   if (((min(doys) < min(range))) | (max(doys) > max(range))) {
-   if (verbose) message(
-     "doytodate --> `doy` is not within [0,365] (or [0,366] for leap years)! ",
-     "Dates for doys outside this range will report a different year !" )
+    if (verbose) message(
+      "doytodate --> `doy` is not within [0,365] (or [0,366] for leap years)! ",
+      "Dates for doys outside this range will report a different year !" )
   }
 
   dates <- as.Date(doys - 1, origin = paste0(year, "-01-01"))
@@ -43,12 +43,10 @@ doytodate <- function(doys, year, verbose = TRUE){
 
 #' @title Convert dates to DOYs
 #' @description Converts an array of `Date` (or coercible to `Date`) values to
-#'   DOY (Day Of the Year) values.
+#'   DOY (Day Of the Year) values. Simple wrapper around strftime(date, format = \"\%j\").
 #' @param dates array of dates to be converted. Class must be `Date` or character
-#'   parsable to `Date`
-#' using [`as.Date`] (format "yyyy-mm-dd").
-#' @note  This function is a simple wrapper around `strftime(date, format = "\%j")`.
-#' @examples{
+#'   parsable to `Date` using [`as.Date`] (format "yyyy-mm-dd").
+#' @examples
 #' \dontrun{
 #'  datetodoy(as.Date("2000-04-01"))
 #' }

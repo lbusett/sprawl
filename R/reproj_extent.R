@@ -8,7 +8,6 @@
 #'  input extent
 #' @param out_proj `character` proj4string representing the desired projection
 #'  for the output extent
-#'
 #' @return reprojected extent (in out_proj projection)
 #' @export
 #'

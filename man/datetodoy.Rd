@@ -13,7 +13,12 @@ using \code{\link{as.Date}} (format "yyyy-mm-dd").}
 }
 \description{
 Converts an array of \code{Date} (or coercible to \code{Date}) values to
-DOY (Day Of the Year) values.
+DOY (Day Of the Year) values. Simple wrapper around strftime(date, format = "\%j").
+}
+\examples{
+\dontrun{
+ datetodoy(as.Date("2000-04-01"))
+}
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

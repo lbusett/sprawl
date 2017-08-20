@@ -7,8 +7,8 @@
 reproj_extent(ext_in, in_proj = NULL, out_proj = NULL)
 }
 \arguments{
-\item{ext_in}{object of class \code{\link[sprawl:sprawlext]{sprawl::sprawlext}}, or any other object or
-filename from which a \code{sprawlext} object can be derived}
+\item{ext_in}{object of class \code{sprawlext}, or any other object or
+filename from which a \code{sprawlext} object can be derived (see \code{get_extent})}
 
 \item{in_proj}{\code{character} proj4string representing the projection of the
 input extent}
