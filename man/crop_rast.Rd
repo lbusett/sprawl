@@ -2,36 +2,51 @@
 % Please edit documentation in R/crop_rast.R
 \name{crop_rast}
 \alias{crop_rast}
-\title{crop a raster file/object on a given extent}
+\title{crop a raster file/rast_file on a given extent}
 \usage{
-crop_rast(object, ext_object, out_filename = NULL, out_type = "rastobject",
-  verbose = TRUE)
+crop_rast(rast_object, ext_object, out_type = "rastobject",
+  out_filename = NULL, compress = "None", verbose = TRUE)
 }
 \arguments{
-\item{object}{either an \code{R} object of class \code{Raster}, or a character string
+\item{rast_object}{either an \code{R} object of class \code{Raster}, or a character string
 corresponding to a raster filename (with full path)}
 
-\item{extent}{\code{character} indicating to which type of object the input should be re-croped. It can
-be "rastobject" (re-crop to \code{Raster}) or "rastfile" (recrop to raster file).In the
-second case, recroping is achieved by identifying the raster file associated with the
-Raster object and returning its path. If no file is associated (i.e., the object is
-in-memory), the Raster object is written to disk on a temporary file, which path is returned}
+\item{ext_object}{either an object of class \code{sprawlext}, or an \code{R} object or
+filename from which an object of class \code{sprawlext} can be obtained (see
+\code{sprawl::get_extent()})}
+
+\item{out_type}{\code{character} indicating to which type of rast_file the input should be
+re-cropped.
+\enumerate{
+\item "rastobject" return a \code{raster} rast_file accessing the saved cropped file
+\item "rastfile" return the filename of the GTiff file corresponding to the
+cropped GTiff file. If \code{out_filename == NULL}, this corresponds to a file
+saved in \code{R} temporary folder.
+\item "vrtfile" return the filename of the vrt file built for cropping
+the input raster (no saving to disk is performed)
+, Default: "rastobject"
+}}
+
+\item{out_filename}{\code{character} filename to be used to save the cropped
+raster.}
+
+\item{compress}{\code{character} compression option to be used to saved the cropped
+raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"}
+
+\item{verbose}{\code{logical} if FALSE, suppress processing messages, Default: TRUE}
+}
+\value{
+either a \code{Raster} object containing the cropped raster, or a gdal vrt
+or GTiff filename corresponding to it, depending on \code{out_type}.
 }
 \description{
-function to crop a raster file/object on a given extent. The extent
+function to crop a raster file/rast_file on a given extent. The extent
 can be:
 \enumerate{
-\item directly passed (as a \code{sprawlext} object or numeric array);
-\item derived from a different object (raster of vector file/object) passed to
+\item directly passed (as a \code{sprawlext} rast_file or numeric array);
+\item derived from a different rast_file (raster of vector file/rast_file) passed to
 the function (see details)
 }
-}
-\details{
-If \code{object} is a valid \code{R} spatial object, it is automatically converted to an object of
-a different class if needed (e.g., from \code{sf} to \code{Spatial} and viceversa, or from \code{sf} to a
-vector file through \code{sprawl::write_shape}). If it is a character string, the function checks if
-it corresponds to a valid raster file and reads it to a \code{Raster} object through
-\code{rasterr::stack()}
 }
 \examples{
 \dontrun{

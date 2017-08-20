@@ -4,7 +4,7 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#'  #EXAMPLE1
+#'  find_gdal()
 #'  }
 #' @rdname find_gdal
 #' @export

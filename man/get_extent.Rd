@@ -9,7 +9,7 @@
 \alias{get_extent.sfc}
 \alias{get_extent.Spatial}
 \alias{get_extent.sprawlext}
-\title{return the exten of a spatial object or file (with projection)}
+\title{return the extent of a spatial object or file (with projection)}
 \usage{
 get_extent(object, abort = FALSE)
 
@@ -28,8 +28,8 @@ get_extent(object, abort = FALSE)
 \method{get_extent}{Spatial}(object, abort = FALSE)
 }
 \arguments{
-\item{object}{\code{character} corresponding to the name of a R object, or a filename
-(full path)}
+\item{object}{\code{character} corresponding to the name of a R object, or a
+filename (full path)}
 
 \item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
 invalid projstring is found, Default: FALSE}
@@ -38,27 +38,29 @@ invalid projstring is found, Default: FALSE}
 object of class \code{sprawl_ext}
 }
 \description{
-helper function used to retrieve the extent of a spatial object or file
-with the associated proj4string
+helper function used to retrieve the extent of a spatial object
+or file with the associated proj4string
 }
 \details{
 return an object of class \code{sprawl_ext} with two slots:
 \itemize{
-\item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmanx, ymax)
-\item $projstring: \code{character} proj4string of the object
+\item @extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
+\item @projstring: \code{character} proj4string of the object
 }
 }
 \examples{
 \dontrun{
  library(raster)
 
- in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
+ in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+   package = "sprawl.data")
  get_extent(in_rast)
 
  in_rast <- raster::raster(in_rast)
  get_extent(in_rast)
 
- in_vect <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+ in_vect <- system.file("extdata/shapes","lc_polys.shp",
+   package = "sprawl.data")
  get_extent(in_vect)
 
  in_vect <- read_vect(in_vect)

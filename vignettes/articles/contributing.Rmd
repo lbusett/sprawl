@@ -1,0 +1,53 @@
+---
+output: html_document
+title: Contributing to sprawl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+To contribute to `sprawl` please follow these guidelines (most of this was blatantly copied
+from https://github.com/ropensci/rOpenSci/wiki/Contributing/_edit)
+
+## Reporting a bug or suggesting a new feature: submit an Issue
+
+If you wish to submit a bug report concerning `sprawl` functionality or suggest a new feature,
+please open a new issue at https://github.com/lbusett/sprawl/issues.
+
+Please use an informative title and, in the case of a bug report, shortly explain the problem, 
+providing if possible a minimum reproducible example illustrating it (see
+http://www.tidyverse.org/help/#reprex for hints on this).
+
+## Contributing code: make a pull request
+
+If you wish to contribute code, please make a Pull Request (PR) on https://github.com/lbusett/sprawl
+following this guidelines. Note that it is advisable to discuss significant contributions beforehand
+by opening an issue at https://github.com/lbusett/sprawl/issues to avoid wasting your time 
+on features that we are not considering to implement.
+
+### Requirements for making a PR:
+
+* Some knowledge of [git]()
+* Some knowledge of [GitHub]()
+
+Read more about pull requests on GitHub at [https://help.github.com/articles/using-pull-requests/](https://help.github.com/articles/using-pull-requests/)
+
+### PR instructions
+
+1. Fork the `sprawl` repo to your GitHub account and clone it on your machine (e.g.,
+`git clone git@github.com:lbusett/sprawl.git`;
+
+2. Make sure to track progress upstream (i.e., on our version of the package at `lbusett/sprawl`) by doing `git remote add upstream git@github.com:lbusett/sprawl.git`. Each time you go to make changes on your machine, be sure to pull changes in from upstream (aka the ropensci version) by doing either `git fetch upstream` then merge later or `git pull upstream` to fetch and merge in one step;
+
+3. Create a new branch with a significant name and make your changes there. While 
+making your changes, **Please follow the recommended sprawl [Coding Style](coding_style.html)**
+
+4. Ideally include in your contributions:
+    * Well documented code in roxygen docs
+    * If you add new functions or change functionality, add one or more tests.
+
+5. When you are finished, push the new branch to your github account;
+
+6. Submit a pull request to `lbusett/sprawl`. In the comments section of the PR,
+describe in some detail the changes and their reasons and/or the new functions/functionalities introduced. 

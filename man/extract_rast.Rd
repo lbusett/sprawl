@@ -6,7 +6,7 @@
 \usage{
 extract_rast(in_rast, in_vect, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, long = FALSE, FUN = NULL, small = TRUE,
+  comp_quant = FALSE, long_format = FALSE, FUN = NULL, small = TRUE,
   na.rm = TRUE, maxchunk = 5e+07, addfeat = TRUE, addgeom = TRUE,
   keep_null = FALSE, verbose = TRUE, ncores = NULL)
 }
@@ -18,69 +18,83 @@ All \code{gdal} raster formats are supported
 \item An \code{raster}, \code{rasterStack} or \code{rasterBrick} object
 }}
 
-\item{in_vect}{input vector object containing zones from which data has to be extracted.
+\item{in_vect}{input vector object containing zones from which data has to be
+extracted.
 Can be either:
 \enumerate{
 \item A \code{file name} corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 \item An \code{R} \code{+sp} or \code{sf} object
 }}
 
-\item{selbands}{\code{2-element numeric array} defining starting and ending raster bands to be processed
-(e.g., c(1, 10). Default: NULL, meaining that all bands will be processed}
+\item{selbands}{\code{2-element numeric array} defining starting and ending raster
+bands to be processed (e.g., c(1, 10). Default: NULL, meaning that all bands
+will be processed}
 
-\item{rastres}{\code{numeric}, if not null, the input raster is resampled to rastres prior to
-data extraction using nearest neighbour resampling. This is useful in case the polygons are small
-with respect to \code{in_rast} resolution, Default: NULL (meaning no resampling is done)}
+\item{rastres}{\code{numeric}, if not null, the input raster is resampled to \code{rastres}
+prior to data extraction using nearest neighbour resampling. This is useful
+in case the polygons are small with respect to \code{in_rast} resolution,
+Default: NULL (meaning no resampling is done)}
 
-\item{id_field}{\code{character} (optional) field of the vector file to be used to identify the
-zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
-shapefile, and a new column named \code{id_feat} is used on the output to distinguish the zones, Default: NULL}
+\item{id_field}{\code{character} (optional) field of the vector file to be used to
+identify the zones from which data is to be extracted, If NULL (or invalid)
+zonal statistics are extracted on each row of the shapefile, and a new column
+named \code{id_feat} is used on the output to distinguish the zones, Default: NULL}
 
-\item{summ_data}{\code{logical} If TRUE, summary statistics of values belonging to each vector zone
-are returned in \code{out$stats}. Default statistics are average, median, standard deviation and variation
-coefficient. Quantiles of the distribution can be also returned if \code{comp_quant == TRUE},  Default: TRUE}
+\item{summ_data}{\code{logical} If TRUE, summary statistics of values belonging to
+each vector zone are returned in \code{out$stats}. Default statistics are average,
+median, standard deviation and variation coefficient. Quantiles of the
+distribution can be also returned if \code{comp_quant == TRUE},  Default: TRUE}
 
-\item{full_data}{\code{logical} If TRUE, values of all pixels belonging to each vector zone are returned
-in `out$alldata' (Setting this to FALSE can be a good idea for large datasets....), Default: TRUE}
+\item{full_data}{\code{logical} If TRUE, values of all pixels belonging to each vector
+zone are returned in \code{out$alldata} (Setting this to FALSE can be a good
+idea for large datasets), Default: TRUE}
 
-\item{comp_quant}{\code{logical} if TRUE, also quantiles of the distributions of values are computed for each zone
-and returned in  \code{out$ts_summ}, Default: FALSE}
+\item{comp_quant}{\code{logical} if TRUE, also quantiles of the distributions of
+values are computed for each zone and returned in  \code{out$ts_summ},
+Default: FALSE}
 
-\item{long}{\code{logical} if TRUE, extraction \strong{on points} provides data in long form}
+\item{long_format}{\code{logical} if TRUE, extraction \strong{on points} provides data
+in long format (i.e., only one "value" column, with an "id" column)
+allowing to select specific points, Default: TRUE}
 
 \item{FUN}{\code{character} or function name, Default: NULL}
 
-\item{small}{\code{logical} if TRUE, values are returned also for small polygons not including any
-pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE}
+\item{small}{\code{logical} if TRUE, values are returned also for small polygons not
+including any pixel centroids. Values are taken from all cells "touched" by
+the small polygon, Default: TRUE}
 
-\item{na.rm}{\code{logical} If TRUE, NA values are removed while computing statistics, Default: TRUE}
+\item{na.rm}{\code{logical} If TRUE, NA values are removed while computing statistics,
+Default: TRUE}
 
 \item{maxchunk}{Maximum chunk size (provisional), Default: 5e+06}
 
-\item{addfeat}{\code{logical} If TRUE, columns of the attribute table of the \code{in_vect} layer are
-joined to results of the computation, Default: TRUE}
+\item{addfeat}{\code{logical} If TRUE, columns of the attribute table of the
+\code{in_vect} layer are joined to results of the computation, Default: TRUE}
 
-\item{addgeom}{\code{logical}, If TRUE, the output sent out as an \code{sf} object, preserving the geometry
-of \code{in_vect}. Note that this leads to duplication of geometries, and may be very slow for
-large datasets. Default: FALSE}
+\item{addgeom}{\code{logical}, If TRUE, the output sent out as an \code{sf} object,
+preserving the geometry of \code{in_vect}. Note that this leads to duplication
+of geometries, and may be very slow for large datasets. Default: FALSE}
 
-\item{keep_null}{\code{logical} If TRUE, the output preserves features of \code{in_vect} falling outside
-the extent of \code{in_rast}. Values for these features are set to NA, Default: FALSE}
+\item{keep_null}{\code{logical} If TRUE, the output preserves features of \code{in_vect}
+falling outside the extent of \code{in_rast}. Values for these features are set
+to NA, Default: FALSE}
 
-\item{verbose}{\code{logical} If TRUE, messages concerning the processing status are shown in the
-console, Default: TRUE}
+\item{verbose}{\code{logical} If TRUE, messages concerning the processing status
+are shown in the console, Default: TRUE}
 
-\item{ncores}{\code{numeric} maximum number of cores to be used in the processin. If NULL, defaults to
-available cores - 2, but up to a maximum of 8. If user-provided is greater than available cores - 2
-or greater than 8, ncores is re-set to the minimum between those two.}
+\item{ncores}{\code{numeric} maximum number of cores to be used in the processing.
+If NULL, defaults to  available cores - 2, but up to a maximum of 8. If
+user-provided is greater than available cores - 2  or greater than 8,
+ncores is re-set to the minimum between those two.}
 }
 \value{
-out_list \code{list} containing two tibbles: \code{out_list$summ_data} contains summary statitstics,
-while \code{out_list$alldata} contains the data of all pixels extracted (see examples).
+out_list \code{list} containing two tibbles: \code{out_list$summ_data} contains
+summary statistics, while \code{out_list$alldata} contains the data of all pixels
+extracted (see examples).
 }
 \description{
-Function used to extract values of a single- or multi- band raster for pixels
-corresponding to the features of a vector (Polygon, Point or Line)
+Function used to extract values of a single- or multi- band raster
+for pixels corresponding to the features of a vector (Polygon, Point or Line)
 }
 \examples{
 \dontrun{
@@ -88,9 +102,10 @@ library(sprawl)
 library(sprawl.data)
 library(raster)
 library(tibble)
-in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
-                       stringsAsFactors = T)
-in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data"))
+in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
+                      package = "sprawl.data"), stringsAsFactors = T)
+in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
+                          package = "sprawl.data"))
 in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 out      <- extract_rast(in_rast, in_polys, verbose = FALSE)
 as_tibble(out$stats)

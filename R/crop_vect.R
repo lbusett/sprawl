@@ -25,22 +25,25 @@ crop_vect <- function(in_vect,
                       to_file = FALSE,
                       as_sp   = FALSE) {
 
-  #   ____________________________________________________________________________
-  #   Check arguments                                                         ####
+  #TODO Modify to use get_extent
+
+  #   __________________________________________________________________________
+  #   Check arguments                                                       ####
   vectype <- get_spatype(in_vect)
   objtype <- get_spatype(in_obj)
 
   if (!vectype %in% c("sfobject", "spobject", "vectfile")) {
-    stop("crop_sf --> in_vect is not a valid vector object (sp, sf or vector file")
+    stop("crop_vect --> in_vect is not a valid vector object (sp, sf or ",
+         "vector file")
   }
 
   if (objtype == "none") {
-    stop("crop_sf --> in_obj is not a valid spatial object (sp, sf,
+    stop("crop_vect --> in_obj is not a valid spatial object (sp, sf,
                                            vector file, raster or rasterfile")
   }
 
-  #   ____________________________________________________________________________
-  #   If both in_vect and in_obj are sp objects, use `raster::crop`           ####
+  #   __________________________________________________________________________
+  #   If both in_vect and in_obj are sp objects, use `raster::crop`         ####
 
   if (vectype == "spobject" & objtype == "spobject") {
     out_vec  <- crop(in_vect, in_obj)
@@ -50,8 +53,8 @@ crop_vect <- function(in_vect,
     return(out_vec)
   }
 
-  #   ____________________________________________________________________________
-  #   Otherwise,  retrieve the extent of in_obj, then perform cropping       ####
+  #   __________________________________________________________________________
+  #   Otherwise,  retrieve the extent of in_obj, then perform cropping      ####
   #   using st_intersection or crop on the basis of the class of in_vect
 
   if (objtype == "none") {

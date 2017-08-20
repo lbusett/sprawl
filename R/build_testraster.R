@@ -52,19 +52,20 @@ build_testraster <- function(nrows       = 100,
       # Build the band
       layer <- raster::raster(nrows = nrows,
                               ncols = ncols,
-                              vals =  sample(1:50, (nrows * ncols), replace = TRUE), ...)
+                              vals =  sample(1:50, (nrows * ncols),
+                                             replace = TRUE), ...)
       # change to NA 1 out of each 200 cells at random cells
       if (with_nodata) {
-        layer[stats::runif((nrows * ncols)/200, min = 1, max = nrows * ncols)] = NA
+        layer[stats::runif((nrows * ncols)/200, min = 1, max = nrows * ncols)] <- NA #nolint
       }
     } else {
       # if band != 1, create new layers as multiples of layer 1
       layer_new <- layer * sample(5, 1)
-      # change to NA 1 out of each 500 cells random cells in each new layer (so that NA is not
-      # always on the same cells and we have both cells with "all NA" and cells with NA only in
-      # some layers)
+      # change to NA 1 out of each 500 cells random cells in each new layer (so
+      # that NA is not always on the same cells and we have both cells with
+      # "all NA" and cells with NA only in some layers)
       if (with_nodata) {
-        layer_new[stats::runif((nrows * ncols)/200, min = 1, max = nrows * ncols)] = NA
+        layer_new[stats::runif((nrows * ncols)/200, min = 1, max = nrows * ncols)] <- NA #nolint
       }
     }
     if (b == 1) {
@@ -80,7 +81,9 @@ build_testraster <- function(nrows       = 100,
     if (is.null(out_file)) {
       out_file <- tempfile(fileext = ".tif")
     }
-    tempfile <- raster::writeRaster(stack, filename = out_file, options = c("COMPRESS=LZW", datatype = "INT1U"))
+    tempfile <- raster::writeRaster(stack, filename = out_file,
+                                    options = c("COMPRESS=LZW",
+                                                datatype = "INT1U"))
     return(out_file)
   } else {
     return(stack)

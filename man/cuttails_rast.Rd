@@ -34,7 +34,7 @@ DETAILS
 \dontrun{
  # on single band
  in_rast <- raster::raster(ncol=100, nrow=100)
- in_rast <- raster::setValues(r, 1:10000)
+ in_rast <- raster::setValues(in_rast, 1:10000)
  in_rast_cut <- cuttails_rast(in_rast)
  in_rast_cut
 
@@ -44,7 +44,4 @@ DETAILS
  in_brick_cut <- cuttails_rast(in_brick)
  in_brick_cut
  }
-}
-\seealso{
-\code{\link[raster]{quantile}},\code{\link[raster]{getValues}},\code{\link[raster]{setValues}},\code{\link[raster]{brick}}
 }

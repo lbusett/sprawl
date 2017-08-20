@@ -2,31 +2,34 @@
 % Please edit documentation in R/write_shape.R
 \name{write_shape}
 \alias{write_shape}
-\title{write_shape}
+\title{Write a \code{sf} or \code{sp} to a ESRI shapefil}
 \usage{
 write_shape(out_obj, out_file, overwrite = FALSE, verbose = FALSE,
   encoding = "UTF-8", create_dir = FALSE, ...)
 }
 \arguments{
-\item{out_obj}{\code{character} object to be written to the shapefile. Must be a valid \code{*sp} or \code{sf}
-object}
+\item{out_obj}{\code{character} object to be written to the shapefile. Must be a
+valid \code{*sp} or \code{sf} object}
 
 \item{out_file}{\code{character} output file name}
 
-\item{overwrite}{\code{logical} if TRUE, output file will be overwritten oif existing, Default: FALSE}
+\item{overwrite}{\code{logical} if TRUE, output file will be overwritten if existing,
+Default: FALSE}
 
 \item{verbose}{\code{logical} if TRUE, provide messages on processing, Default: TRUE}
 
-\item{encoding}{\code{character} encoding to be used to write the DBF of the shapefile, Default: "UTF-8"}
+\item{encoding}{\code{character} encoding to be used to write the DBF of the
+shapefile, Default: "UTF-8"}
 
-\item{create_dir}{\code{logical}, if TRUE and the folder of out_file doesn't exist, then the full
-folder tree up to out_file is created, Default: FALSE (use with caution !)}
+\item{create_dir}{\code{logical}, if TRUE and the folder of out_file doesn't exist,
+then the full folder tree up to out_file is created, Default: FALSE
+(use with caution !)}
 
 \item{...}{any other arguments to be passed to \code{sf::st_write}}
 }
 \description{
-Wrapper on  \code{sf::st_write} for writing an \code{sf} or \code{sp} object to disk as
-an ESRI shapefile
+Wrapper on  \code{sf::st_write} for writing an \code{sf} or \code{sp} object to
+disk as an ESRI shapefile
 }
 \examples{
 \dontrun{

@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84499524-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -61,10 +73,25 @@
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../articles/examples.html">Examples of Use</a>
+  <a href="../articles/articles/examples.html">Examples of Use</a>
 </li>
-<li>
-  <a href="../articles/contributing.html">Contributing</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Contributing
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/articles/contributing.html">Contributing</a>
+    </li>
+    <li>
+      <a href="../articles/articles/coding_style.html">Codin Style</a>
+    </li>
+    <li>
+      <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -134,13 +161,13 @@
     </tr>
     <tr>
       <th>in_poly</th>
-      <td><p>optional input polygon vector object or file to be overlayed on the
-plot, Default: NULL</p></td>
+      <td><p>optional input polygon vector object or file to be overlayed on
+the plot, Default: NULL</p></td>
     </tr>
     <tr>
       <th>in_points</th>
-      <td><p>optional input points vector object or file to be overlayed on the
-plot, Default: NULL</p></td>
+      <td><p>optional input points vector object or file to be overlayed
+on the plot, Default: NULL</p></td>
     </tr>
     <tr>
       <th>background</th>
@@ -148,19 +175,21 @@ plot, Default: NULL</p></td>
     </tr>
     <tr>
       <th>limits</th>
-      <td><p><code>numeric array [2]</code> optional limits governing the range of values to be plotted
-(e.g., c(0.2,0.4)), Default: NULL</p></td>
+      <td><p><code>numeric array [2]</code> optional limits governing the range of
+values to be plotted (e.g., c(0.2,0.4)), Default: NULL</p></td>
     </tr>
     <tr>
       <th>tails</th>
-      <td><p><code>numeric array [2]</code> percentiles used to "cut" the values to be plotted to allow
-a "good" representation. Values outside the specified percentiles will be plotted as NoData,
-or using the colors specified in <code>col_outlow</code> and <code>col_outhigh</code>, Default: c(0.02, 0.98) (meaning)
-cutting the values at the 2nd and 98th percentile)</p></td>
+      <td><p><code>numeric array [2]</code> percentiles used to "cut" the values to be
+plotted to allow a "good" representation. Values outside the specified
+percentiles will be plotted as NoData, or using the colors specified in
+<code>col_outlow</code> and <code>col_outhigh</code>, Default: c(0.02, 0.98) (meaning cutting the
+values at the 2nd and 98th percentile)</p></td>
     </tr>
     <tr>
       <th>palette</th>
-      <td><p>Palette to be used for colors (see <code><a href='http://www.rdocumentation.org/packages/RColorBrewer/topics/ColorBrewer'>RColorBrewer::brewer.pal</a></code>), Default: 'RdYlGn'</p></td>
+      <td><p>Palette to be used for colors (see <code><a href='http://www.rdocumentation.org/packages/RColorBrewer/topics/ColorBrewer'>RColorBrewer::brewer.pal</a></code>),
+Default: 'RdYlGn'</p></td>
     </tr>
     <tr>
       <th>legend_type</th>
@@ -168,17 +197,20 @@ cutting the values at the 2nd and 98th percentile)</p></td>
     </tr>
     <tr>
       <th>col_outlow</th>
-      <td><p>Color used to plot the values below the lower limit/tail. Can be a string
-corresponding to a valid "R" color or HEX representation, Default: 'gray10'</p></td>
+      <td><p>Color used to plot the values below the lower limit/tail.
+Can be a <code>character</code> corresponding to a valid "R" color or HEX representation,
+Default: 'gray10'</p></td>
     </tr>
     <tr>
       <th>col_outhigh</th>
-      <td><p>Color used to plot the values below the lower limit/tail. Can be a string
-corresponding to a valid "R" color or HEX representation, Default: 'gray90'</p></td>
+      <td><p>Color used to plot the values below the lower limit/tail.
+Can be a <code>character</code> corresponding to a valid "R" color or HEX representation,
+Default: 'gray90'</p></td>
     </tr>
     <tr>
       <th>maxpixels</th>
-      <td><p><code>numeric</code> Maximum number of pixels to be plotted, Default: 5e+05</p></td>
+      <td><p><code>numeric</code> Maximum number of pixels to be plotted. <strong>Increase
+this to have better rendering at the cost of speed!</strong>, Default: 5e+05</p></td>
     </tr>
     <tr>
       <th>title</th>
@@ -186,8 +218,9 @@ corresponding to a valid "R" color or HEX representation, Default: 'gray90'</p><
     </tr>
     <tr>
       <th>plot_now</th>
-      <td><p><code>logic</code> If TRUE, the plot is immediately printed to screen. Otherwise, an object
-allowing later plotting/modifications is returned, Default: TRUE</p></td>
+      <td><p><code>logic</code> If TRUE, the plot is immediately printed to screen.
+Otherwise, an object allowing later plotting/modifications is returned,
+Default: TRUE</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -205,21 +238,20 @@ allowing later plotting/modifications is returned, Default: TRUE</p></td>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/latticeExtra/topics/layer'>layer</a></code>
-<code><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></code>,<code><a href='http://www.rdocumentation.org/packages/raster/topics/quantile'>quantile</a></code>
-<code><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></code>
+    <p><code><a href='http://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods'>levelplot</a></code>
 <code><a href='http://www.rdocumentation.org/packages/RColorBrewer/topics/ColorBrewer'>brewer.pal</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl</span>)
 
- <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"gNDVI.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/REYE_test"</span>, <span class='st'>"REYE_2016_185_gNDVI.tif"</span>,
+  <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>150</span>)
  <span class='co'># plot only the raster</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("character"), structure(function (x) standardGeneric("nlayers"), generic = structure("nlayers", package = "raster"), package = "raster", group = list(), valueClass = character(0), signature = "x", default = `\001NULL\001`, skeleton = (function (x) stop("invalid call in method dispatch to 'nlayers' (no default method)",     domain = NA))(x), class = structure("standardGeneric", package = "methods")),     &lt;environment&gt;): unable to find an inherited method for function ‘nlayers’ for signature ‘"character"’</span></div><div class='input'>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='img'><img src='plot_rast-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># plot only the raster with custom legend</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("character"), structure(function (x) standardGeneric("nlayers"), generic = structure("nlayers", package = "raster"), package = "raster", group = list(), valueClass = character(0), signature = "x", default = `\001NULL\001`, skeleton = (function (x) stop("invalid call in method dispatch to 'nlayers' (no default method)",     domain = NA))(x), class = structure("standardGeneric", package = "methods")),     &lt;environment&gt;): unable to find an inherited method for function ‘nlayers’ for signature ‘"character"’</span></div><div class='input'>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)</div><div class='img'><img src='plot_rast-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># add a polygon and change the legend, palette and maxpixels</span>
  <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>,
            <span class='kw'>in_poly</span>   <span class='kw'>=</span> <span class='no'>in_vect</span>,
@@ -227,10 +259,12 @@ allowing later plotting/modifications is returned, Default: TRUE</p></td>
            <span class='kw'>legend</span>    <span class='kw'>=</span> <span class='st'>"custom"</span>,
            <span class='kw'>palette</span>   <span class='kw'>=</span> <span class='st'>"RdYlBu"</span> ,
            <span class='kw'>title</span>     <span class='kw'>=</span> <span class='st'>"RapidEye - GNDVI"</span>,
-           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("character"), structure(function (x) standardGeneric("nlayers"), generic = structure("nlayers", package = "raster"), package = "raster", group = list(), valueClass = character(0), signature = "x", default = `\001NULL\001`, skeleton = (function (x) stop("invalid call in method dispatch to 'nlayers' (no default method)",     domain = NA))(x), class = structure("standardGeneric", package = "methods")),     &lt;environment&gt;): unable to find an inherited method for function ‘nlayers’ for signature ‘"character"’</span></div><div class='input'>
- <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>,
-                                      <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>:<span class='fl'>4</span>]]
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='img'><img src='plot_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
+           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)</div><div class='img'><img src='plot_rast-15.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='co'># Plot more than one band</span>
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(
+                          <span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
+                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>2</span>:<span class='fl'>5</span>]]
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e5</span>)</div><div class='img'><img src='plot_rast-16.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

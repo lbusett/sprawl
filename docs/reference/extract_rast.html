@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84499524-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -61,10 +73,25 @@
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../articles/examples.html">Examples of Use</a>
+  <a href="../articles/articles/examples.html">Examples of Use</a>
 </li>
-<li>
-  <a href="../articles/contributing.html">Contributing</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Contributing
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/articles/contributing.html">Contributing</a>
+    </li>
+    <li>
+      <a href="../articles/articles/coding_style.html">Codin Style</a>
+    </li>
+    <li>
+      <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -112,13 +139,13 @@
     </div>
 
     
-    <p>Function used to extract values of a single- or multi- band raster for pixels
-corresponding to the features of a vector (Polygon, Point or Line)</p>
+    <p>Function used to extract values of a single- or multi- band raster
+for pixels corresponding to the features of a vector (Polygon, Point or Line)</p>
     
 
     <pre class="usage"><span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rastres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summ_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>long</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>long_format</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>, <span class='kw'>addfeat</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>addgeom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>keep_null</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
@@ -135,7 +162,8 @@ All <code>gdal</code> raster formats are supported</p></li>
     </tr>
     <tr>
       <th>in_vect</th>
-      <td><p>input vector object containing zones from which data has to be extracted.
+      <td><p>input vector object containing zones from which data has to be
+extracted.
 Can be either:</p><ol>
 <li><p>A <code>file name</code> corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)</p></li>
 <li><p>An <code>R</code> <code>+sp</code> or <code>sf</code> object</p></li>
@@ -143,40 +171,48 @@ Can be either:</p><ol>
     </tr>
     <tr>
       <th>selbands</th>
-      <td><p><code>2-element numeric array</code> defining starting and ending raster bands to be processed
-(e.g., c(1, 10). Default: NULL, meaining that all bands will be processed</p></td>
+      <td><p><code>2-element numeric array</code> defining starting and ending raster
+bands to be processed (e.g., c(1, 10). Default: NULL, meaning that all bands
+will be processed</p></td>
     </tr>
     <tr>
       <th>rastres</th>
-      <td><p><code>numeric</code>, if not null, the input raster is resampled to rastres prior to
-data extraction using nearest neighbour resampling. This is useful in case the polygons are small
-with respect to <code>in_rast</code> resolution, Default: NULL (meaning no resampling is done)</p></td>
+      <td><p><code>numeric</code>, if not null, the input raster is resampled to <code>rastres</code>
+prior to data extraction using nearest neighbour resampling. This is useful
+in case the polygons are small with respect to <code>in_rast</code> resolution,
+Default: NULL (meaning no resampling is done)</p></td>
     </tr>
     <tr>
       <th>id_field</th>
-      <td><p><code>character</code> (optional) field of the vector file to be used to identify the
-zones from which data is to be extracted, If NULL (or invalid) zonal statistics are extracted on each row of the
-shapefile, and a new column named <code>id_feat</code> is used on the output to distinguish the zones, Default: NULL</p></td>
+      <td><p><code>character</code> (optional) field of the vector file to be used to
+identify the zones from which data is to be extracted, If NULL (or invalid)
+zonal statistics are extracted on each row of the shapefile, and a new column
+named <code>id_feat</code> is used on the output to distinguish the zones, Default: NULL</p></td>
     </tr>
     <tr>
       <th>summ_data</th>
-      <td><p><code>logical</code> If TRUE, summary statistics of values belonging to each vector zone
-are returned in <code>out$stats</code>. Default statistics are average, median, standard deviation and variation
-coefficient. Quantiles of the distribution can be also returned if <code>comp_quant == TRUE</code>,  Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, summary statistics of values belonging to
+each vector zone are returned in <code>out$stats</code>. Default statistics are average,
+median, standard deviation and variation coefficient. Quantiles of the
+distribution can be also returned if <code>comp_quant == TRUE</code>,  Default: TRUE</p></td>
     </tr>
     <tr>
       <th>full_data</th>
-      <td><p><code>logical</code> If TRUE, values of all pixels belonging to each vector zone are returned
-in `out$alldata' (Setting this to FALSE can be a good idea for large datasets....), Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, values of all pixels belonging to each vector
+zone are returned in <code>out$alldata</code> (Setting this to FALSE can be a good
+idea for large datasets), Default: TRUE</p></td>
     </tr>
     <tr>
       <th>comp_quant</th>
-      <td><p><code>logical</code> if TRUE, also quantiles of the distributions of values are computed for each zone
-and returned in  <code>out$ts_summ</code>, Default: FALSE</p></td>
+      <td><p><code>logical</code> if TRUE, also quantiles of the distributions of
+values are computed for each zone and returned in  <code>out$ts_summ</code>,
+Default: FALSE</p></td>
     </tr>
     <tr>
-      <th>long</th>
-      <td><p><code>logical</code> if TRUE, extraction <strong>on points</strong> provides data in long form</p></td>
+      <th>long_format</th>
+      <td><p><code>logical</code> if TRUE, extraction <strong>on points</strong> provides data
+in long format (i.e., only one "value" column, with an "id" column)
+allowing to select specific points, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>FUN</th>
@@ -184,12 +220,14 @@ and returned in  <code>out$ts_summ</code>, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>small</th>
-      <td><p><code>logical</code> if TRUE, values are returned also for small polygons not including any
-pixel centroids. Values are taken from all cells "touched" by the small polygon, Default: TRUE</p></td>
+      <td><p><code>logical</code> if TRUE, values are returned also for small polygons not
+including any pixel centroids. Values are taken from all cells "touched" by
+the small polygon, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
-      <td><p><code>logical</code> If TRUE, NA values are removed while computing statistics, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, NA values are removed while computing statistics,
+Default: TRUE</p></td>
     </tr>
     <tr>
       <th>maxchunk</th>
@@ -197,37 +235,40 @@ pixel centroids. Values are taken from all cells "touched" by the small polygon,
     </tr>
     <tr>
       <th>addfeat</th>
-      <td><p><code>logical</code> If TRUE, columns of the attribute table of the <code>in_vect</code> layer are
-joined to results of the computation, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, columns of the attribute table of the
+<code>in_vect</code> layer are joined to results of the computation, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>addgeom</th>
-      <td><p><code>logical</code>, If TRUE, the output sent out as an <code>sf</code> object, preserving the geometry
-of <code>in_vect</code>. Note that this leads to duplication of geometries, and may be very slow for
-large datasets. Default: FALSE</p></td>
+      <td><p><code>logical</code>, If TRUE, the output sent out as an <code>sf</code> object,
+preserving the geometry of <code>in_vect</code>. Note that this leads to duplication
+of geometries, and may be very slow for large datasets. Default: FALSE</p></td>
     </tr>
     <tr>
       <th>keep_null</th>
-      <td><p><code>logical</code> If TRUE, the output preserves features of <code>in_vect</code> falling outside
-the extent of <code>in_rast</code>. Values for these features are set to NA, Default: FALSE</p></td>
+      <td><p><code>logical</code> If TRUE, the output preserves features of <code>in_vect</code>
+falling outside the extent of <code>in_rast</code>. Values for these features are set
+to NA, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p><code>logical</code> If TRUE, messages concerning the processing status are shown in the
-console, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, messages concerning the processing status
+are shown in the console, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>ncores</th>
-      <td><p><code>numeric</code> maximum number of cores to be used in the processin. If NULL, defaults to
-available cores - 2, but up to a maximum of 8. If user-provided is greater than available cores - 2
-or greater than 8, ncores is re-set to the minimum between those two.</p></td>
+      <td><p><code>numeric</code> maximum number of cores to be used in the processing.
+If NULL, defaults to  available cores - 2, but up to a maximum of 8. If
+user-provided is greater than available cores - 2  or greater than 8,
+ncores is re-set to the minimum between those two.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>out_list <code>list</code> containing two tibbles: <code>out_list$summ_data</code> contains summary statitstics,
-while <code>out_list$alldata</code> contains the data of all pixels extracted (see examples).</p>
+    <p>out_list <code>list</code> containing two tibbles: <code>out_list$summ_data</code> contains
+summary statistics, while <code>out_list$alldata</code> contains the data of all pixels
+extracted (see examples).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -235,11 +276,52 @@ while <code>out_list$alldata</code> contains the data of all pixels extracted (s
 <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='fu'>library</span>(<span class='no'>tibble</span>)
-<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>),
-                       <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
-<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
+<span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
+                      <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
+<span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
+                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
-<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>extract_rast --&gt; Extracting: in_rastdata on zones of : in_polys</span></div><div class='output co'>#&gt; <span class='error'>Error in {    if (er_opts$verbose) {        message("extract_rast--&gt; Extracting data from ", ifelse(date_check,             " dates", "bands"), " - Please wait !")    }    all_data &lt;- list()    coords &lt;- list()    stat_data &lt;- list()    temp_outdata &lt;- list()    selband &lt;- seldates[band]    chunk_n_all &lt;- 1    chunk_n_summ &lt;- 1    start_cell &lt;- 1    in_band &lt;- in_rast[[selbands[band]]]    tempvrt &lt;- tempfile(fileext = ".vrt")    if (in_band@file@name == "") {        temprastfile &lt;- tempfile(fileext = ".tif")        writeRaster(in_band, filename = temprastfile, options = c("COMPRESS=DEFLATE",             "PREDICTOR=3"), overwrite = TRUE)        in_band &lt;- raster(temprastfile)    }    buildvrt_string &lt;- paste("-te ", paste(te, collapse = " "),         "-b ", band, tempvrt, in_band@file@name, " ")    system2(file.path(find_gdal(), "gdalbuildvrt"), args = buildvrt_string,         stdout = NULL)    in_band &lt;- raster::raster(tempvrt)    if (supersample) {        temprast &lt;- tempfile(fileext = ".tif")        raster::writeRaster(in_band, temprast)        tempsuper &lt;- tempfile(fileext = ".tif")        in_band &lt;- gdalUtils::gdalwarp(temprast, tempsuper, tr = er_opts$rastres,             te = raster::extent(in_band)[c(1, 3, 2, 4)], output_Raster = TRUE,             multi = TRUE)        in_band &lt;- velox::velox(in_band)        in_band$crop(sp_polys)    }    if (n_chunks &gt; 1) {        bboxes &lt;- in_vect_crop[c("mdxtnq", "geometry")] %&gt;% data.table::data.table()        bboxes = bboxes[, list(min_y = sf::st_bbox(geometry)[2],             max_y = sf::st_bbox(geometry)[4]), by = "mdxtnq"]    }    else {        bboxes &lt;- in_vect_crop[c("mdxtnq", "geometry")]    }    for (chunk in seq_len(n_chunks)) {        if (er_opts$verbose)             message("Working on chunk: ", chunk, " of: ", n_chunks,                 " of band: ", selband)        startrow &lt;- ifelse(chunk == 1, 1, 1 + (chunk - 1) * ceiling(nrows/n_chunks))        chunkrows &lt;- ifelse(chunk != n_chunks, ceiling(nrows/n_chunks),             (1 + nrows - startrow))        endrow &lt;- startrow + chunkrows - 1        ncells &lt;- ncols * chunkrows        end_cell &lt;- start_cell + ncells - 1        out_data &lt;- data.table::data.table(value = as.numeric(raster::getValues(in_band,             startrow, chunkrows)), cell = seq(start_cell, end_cell),             mdxtnq = as.numeric(raster::getValues(rast_zoneobject,                 startrow, chunkrows)), key = "mdxtnq")        out_data &lt;- out_data[mdxtnq != 0]        ext_chunk &lt;- data.frame(x_min = raster::extent(in_band)[1],             x_max = raster::extent(in_band)[2], y_min = raster::yFromRow(in_band,                 endrow), y_max = raster::yFromRow(in_band, 1))        if (dim(out_data)[1] &gt; 0) {            if (er_opts$full_data) {                if (er_opts$addgeom) {                  temp_velox &lt;- velox::velox(matrix(nrow = chunkrows,                     ncol = ncols), ext = as.numeric(ext_chunk),                     res = er_opts$rastres, crs = sp::proj4string(in_band))                  coords &lt;- temp_velox$getCoordinates()[(out_data$cell -                     start_cell), ]                  out_data &lt;- out_data[, `:=`(c("cell", "x_coord",                     "y_coord"), list(NULL, coords[, 1], coords[,                     2]))]                }                else {                  out_data &lt;- out_data[, `:=`(cell, NULL)]                }                all_data[[chunk_n_all]] &lt;- out_data                chunk_n_all &lt;- chunk_n_all + 1            }            if (er_opts$summ_data) {                tot_ext_y &lt;- data.frame(y_min = (raster::yFromRow(in_band,                   endrow) - er_opts$rastres[1]/2), y_max = (raster::yFromRow(in_band,                   1) + er_opts$rastres[1]/2))                temp_outdata &lt;- data.table::rbindlist(list(temp_outdata,                   out_data))                if (n_chunks &gt; 1) {                  complete_polys &lt;- bboxes[min_y &gt;= tot_ext_y$y_min]                }                else {                  complete_polys &lt;- bboxes                }                if (length(complete_polys$mdxtnq) != 0) {                  data_for_summary &lt;- subset(temp_outdata, mdxtnq %in%                     unique(complete_polys$mdxtnq)) %&gt;% data.table::setkey("mdxtnq")                  stat_data[[chunk_n_summ]] &lt;- summarize_data(data_for_summary,                     "mdxtnq", er_opts$comp_quant, er_opts$FUN,                     selbands[band], selband)                  temp_outdata &lt;- temp_outdata[!(mdxtnq %in%                     unique(complete_polys$mdxtnq))]                  chunk_n_summ &lt;- chunk_n_summ + 1                }            }        }        start_cell &lt;- end_cell + 1    }    if (er_opts$full_data) {        all_data &lt;- data.table::rbindlist(all_data) %&gt;% data.table::setkey("mdxtnq")    }    if (er_opts$summ_data) {        stat_data &lt;- data.table::rbindlist(stat_data) %&gt;% data.table::setkey("mdxtnq")    }    if (er_opts$small &amp; length(unique(stat_data$mdxtnq) != length(unique(in_vect_crop$mdxtnq)))) {        miss_feat &lt;- setdiff(unique(in_vect_crop$mdxtnq), unique(stat_data$mdxtnq))        for (mfeat in miss_feat) {            poly_miss &lt;- in_vect_crop %&gt;% dplyr::filter(mdxtnq ==                 mfeat) %&gt;% sf::st_as_sf() %&gt;% as("Spatial")            data_feat &lt;- raster::extract(in_rast[[band]], poly_miss,                 small = TRUE, method = "simple", df = TRUE, cellnumbers = TRUE)            cell &lt;- data_feat[, 2]            miss_feat_data &lt;- data.table::data.table(value = data_feat[,                 3], cell = cell, mdxtnq = mfeat)            if (er_opts$addgeom) {                coords &lt;- raster::xyFromCell(in_band, cell)                miss_feat_data &lt;- miss_feat_data[, `:=`(c("cell",                   "x_coord", "y_coord"), list(NULL, coords[,                   1], coords[, 2]))]            }            else {                miss_feat_data &lt;- miss_feat_data[, `:=`(cell,                   NULL)]            }            if (er_opts$full_data) {                all_data &lt;- rbind(all_data, miss_feat_data)            }            if (er_opts$summ_data) {                miss_feat_stats &lt;- summarize_data(miss_feat_data,                   "mdxtnq", er_opts$comp_quant, er_opts$FUN,                   selbands[band], selband)                stat_data &lt;- rbind(stat_data, miss_feat_stats)            }        }    }    if (er_opts$full_data) {        all_data &lt;- all_data[, `:=`(c("band_n", "date", "N_PIX",             "N"), list(band, seldates[band], .N, seq_len(.N))),             by = mdxtnq]    }    if (er_opts$verbose) {        Sys.sleep(0.001)        utils::setTxtProgressBar(pb, band)    }    out &lt;- list(alldata = all_data, stats = stat_data)    return(out)}: task 2 failed - "could not find function "summarize_data""</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; <span class='error'>Error in as_tibble(out$stats): object 'out' not found</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; <span class='error'>Error in as_tibble(out$alldata): object 'out' not found</span></div></pre>
+<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>extract_rast --&gt; Extracting: in_rast data on zones of : in_polys</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 552 features and 13 fields
+#&gt; geometry type:  POLYGON
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 12897990 ymin: 1685995 xmax: 12971590 ymax: 1780601
+#&gt; epsg (SRID):    NA
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
+#&gt; # A tibble: 552 x 14
+#&gt;    id_feat band_n       date N_PIX      avg   med       sd   min   max    id
+#&gt;      &lt;dbl&gt;  &lt;dbl&gt;     &lt;date&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1       1      1 2013-01-01    61 4830.820  4747 540.6097  3731  5987     1
+#&gt;  2       1      2 2013-01-09    61 4605.131  4648 510.8426  3665  5547     1
+#&gt;  3       1      3 2013-01-17    61 4837.902  4834 557.4429  3640  5827     1
+#&gt;  4       1      4 2013-01-25    61 4484.984  4411 473.7452  3285  5275     1
+#&gt;  5       1      5 2013-02-02    61 4284.197  4237 498.7366  3469  5318     1
+#&gt;  6       1      6 2013-02-10    61 4374.525  4302 471.1914  3317  5363     1
+#&gt;  7       1      7 2013-02-18    61 4113.246  4123 505.7164  2759  4991     1
+#&gt;  8       1      8 2013-02-26    61 4050.689  4164 785.0554  1614  5350     1
+#&gt;  9       1      9 2013-03-06    61 3937.738  3917 452.0158  3039  4850     1
+#&gt; 10       1     10 2013-03-14    61 4281.672  4282 503.7382  3143  5320     1
+#&gt; # ... with 542 more rows, and 4 more variables: lc_type &lt;fctr&gt;,
+#&gt; #   category &lt;fctr&gt;, sup_catego &lt;fctr&gt;, geometry &lt;S3: sfc_POLYGON&gt;</div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; Simple feature collection with 147384 features and 10 fields
+#&gt; geometry type:  POINT
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 12897820 ymin: 1685995 xmax: 12971250 ymax: 1780279
+#&gt; epsg (SRID):    NA
+#&gt; proj4string:    NA
+#&gt; # A tibble: 147,384 x 11
+#&gt;    mdxtnq band_n       date N_PIX     N value    id  lc_type category
+#&gt;     &lt;int&gt;  &lt;int&gt;     &lt;date&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;
+#&gt;  1      1      1 2013-01-01    61     1  4454     1 forest_1   Forest
+#&gt;  2      1      1 2013-01-01    61     2  4260     1 forest_1   Forest
+#&gt;  3      1      1 2013-01-01    61     3  4224     1 forest_1   Forest
+#&gt;  4      1      1 2013-01-01    61     4  4344     1 forest_1   Forest
+#&gt;  5      1      1 2013-01-01    61     5  4489     1 forest_1   Forest
+#&gt;  6      1      1 2013-01-01    61     6  4970     1 forest_1   Forest
+#&gt;  7      1      1 2013-01-01    61     7  3987     1 forest_1   Forest
+#&gt;  8      1      1 2013-01-01    61     8  3904     1 forest_1   Forest
+#&gt;  9      1      1 2013-01-01    61     9  3904     1 forest_1   Forest
+#&gt; 10      1      1 2013-01-01    61    10  4768     1 forest_1   Forest
+#&gt; # ... with 147,374 more rows, and 2 more variables: sup_catego &lt;fctr&gt;,
+#&gt; #   geometry &lt;S3: sfc_POINT&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

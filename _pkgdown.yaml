@@ -12,27 +12,27 @@ reference:
   - title: Raster processing
     desc: ~
     contents:
-      - '`extract_rast`'
-      - '`reclass_rast`'
       - '`aggregate_rast`'
-      - '`mask_rast`'
-      - '`cuttails_rast`'
       - '`cast_rast`'
-      - '`migrate_virtrast`'
-      - '`convert_rastdtype`'
+      - '`crop_rast`'
+      - '`cuttails_rast`'
+      - '`extract_rast`'
+      - '`mask_rast`'
+      - '`reclass_rast`'
   - title: Vector processing
     desc: ~
     contents:
       - '`dissolve_shape`'
+      - '`cast_vect`'
       - '`create_fishnet`'
       - '`crop_vect`'
-      - '`cast_vect`'
   - title: Retrieve info from spatial files
     desc: ~
     contents:
-      - '`get_spatype`'
-      - '`get_projstring`'
       - '`get_extent`'
+      - '`get_rastinfo`'
+      - '`get_projstring`'
+      - '`get_spatype`'
   - title: Visualization and plotting
     desc: ~
     contents:
@@ -44,13 +44,17 @@ reference:
   - title: Miscellaneous Helpers
     desc: ~
     contents:
-      - '`summarize_data`'
-      - '`doytodate`'
-      - '`datetodoy`'
       - '`build_testraster`'
       - '`build_testshape`'
+      - '`convert_rastdtype`'
+      - '`datetodoy`'
+      - '`doytodate`'
       - '`find_command`'
       - '`find_gdal`'
+      - '`make_folder`'
+      - '`migrate_virtrast`'
+      - '`reproj_extent`'
+      - '`summarize_data`'
       - '`sprawl_initcluster`'
 navbar:
   type: inverse
@@ -60,9 +64,15 @@ navbar:
     - text: "Getting Started"
       href: articles/sprawl.html
     - text: "Examples of Use"
-      href: articles/examples.html
+      href: articles/articles/examples.html
     - text: "Contributing"
-      href: articles/contributing.html
+      menu:
+      -  text: Contributing
+         href: articles/articles/contributing.html
+      -  text: Codin Style
+         href: articles/articles/coding_style.html
+      -  text: Code of Conduct
+         href: articles/articles/CONDUCT.html
   right:
     - text: "faq"
       icon: fa-question-circle-o

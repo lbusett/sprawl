@@ -4,10 +4,10 @@
 \alias{mask_rast}
 \title{Mask a raster based on a vector}
 \usage{
-mask_rast(in_rast, mask, crop = FALSE, buffer = NULL, out_nodata = NULL,
-  out_type = "rastobj", out_basename = NULL, save_multiband = FALSE,
-  out_dtype = NULL, overwrite = FALSE, verbose = TRUE,
-  verb_foreach = FALSE)
+mask_rast(in_rast, mask, crop = FALSE, buffer = NULL,
+  out_type = "rastobject", out_filename = NULL, out_dtype = NULL,
+  out_nodata = NULL, compress = "None", overwrite = FALSE,
+  parallel = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
@@ -17,69 +17,64 @@ mask_rast(in_rast, mask, crop = FALSE, buffer = NULL, out_nodata = NULL,
 \item{crop}{\code{logical} if TRUE, \code{in_rast} is also cropped on the extent of \code{mask},
 Default: FALSE}
 
-\item{buffer}{\code{numeric} if not NULL, width of a buffer to be applied to \code{mask} before
-masking \code{in_rast}. If negative, mask is "reduced" prior to masking (see examples),
-Default: NULL}
-
-\item{out_nodata}{\code{numeric} value to be assigned to areas outside the mask, Default: 'NoData'}
+\item{buffer}{\code{numeric} if not NULL, width of a buffer to be applied to \code{mask}
+before masking \code{in_rast}. If negative, mask is "reduced" prior to masking
+(see examples), Default: NULL}
 
 \item{out_type}{\code{character}
 \itemize{
 \item if == "rastobj", return a \code{Raster} object;
 \item if == "filename", return the filename of the masked layer (GTiff or gdal vrt format
 depending on other arguments - see below)
-}
+Default: "rastobj" (If an invalid string is provided, defaults to \code{rastobj})
+}}
 
-Default: "rastobj" (If an invalid string is provided, defaults to \code{rastobj})}
+\item{out_filename}{\code{character} filename where the masked raster should be saved
+If NULL, the masked raster is saved on a temporary file in the \code{R} temporary
+folder, named \code{<basename(in_rast)>_sprawlmask.tif}. The file is saved in GTtiff
+format, with \code{compress} compression.}
 
-\item{out_basename}{\code{character} filename where the masked raster should be saved (ignored if
-to_file == FALSE). If NULL, the masked raster is saved on a temporaty file in the \code{R}
-temporary folder, named \code{<basename(in_rast)>_masked.tif}:. The file is saved in TIFF format, with \code{DEFLATE} compression. For
-multiband inputs, a separate file is saved for each band (e.g., out_basename_001. tif,
-out_basename_002. tif...), unless the \code{save_multiband} argument is set to "TRUE"}
+\item{out_dtype}{\code{character} data type of the output masked files, according
+to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+"Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
+If NULL, the data type is retrieved from the input, Default: NULL}
 
-\item{save_multiband}{\code{logical}
-\itemize{
-\item if TRUE, and \code{in_rast} is multi-band, the single-band masked layers are saved as a
-single multiband tiff at the end of processing, and the single-band files are deleted;
-\item if FALSE, and \code{in_rast} is multi-band, a gdal vrt file pointing to all masked bands
-is created instead.
-}
+\item{out_nodata}{\code{numeric} value to be assigned to areas outside the mask,
+Default: 'NoData'}
 
-Default: FALSE}
+\item{compress}{\code{logical} allow verbose output from \code{foreach} for debugging
+purposes, Default: FALSE}
 
-\item{out_dtype}{\code{character} data type of the output masked files, according to gdal
-specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32", "Int32", "Float32",
-"Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64"). If NULL, the data type
-is retrieved from the input, Default: NULL}
+\item{overwrite}{\code{logical} if TRUE, and out_filename is set and existing,
+existing files are overwritten, Default: FALSE}
 
-\item{overwrite}{\code{logical} if TRUE, and out_basename is set and existing, existing files
-are overwritten, Default: FALSE}
+\item{parallel}{\code{logical} if TRUE, use ClusterR to implement multicore
+processing. This speeds up execution for large rasters, Default: FALSE}
 
-\item{verbose}{\code{logical} if TRUE, extended processing information is sent to the console
-in the form of messages}
-
-\item{verb_foreach}{\code{logical} allow verbose output from \code{foreach} for debugging purposes,
-Default: FALSE}
+\item{verbose}{\code{logical} if TRUE, extended processing information is sent to
+the console in the form of messages}
 }
 \value{
-object of class \code{raster} (if out_type == \code{rastobj}), or \code{character} string
-corresponding to the filename of the created raster (if out_type == \code{filename} )
+object of class \code{raster} (if out_type == \code{rastobj}), or \code{character}
+string corresponding to the filename of the created raster (if out_type ==
+\code{filename})
 }
 \description{
-Masks a raster file or object on the basis of a vector file or object. Pixels not
-covered by the vector features are set to NoData. If the input raster is multi-band, the
-mask is automatically applied to all bands. An optional buffer can be applied to the input
-vector to allow a more "lenient" masking, or to remove also the borders of the vector.
+Masks a raster file or object on the basis of a vector file or object.
+Pixels not covered by the vector features are set to NoData. If the input raster
+is multi-band, the mask is automatically applied to all bands. An optional
+buffer can be applied to the input vector to allow a more "lenient" masking,
+or to remove also the borders of the vector.
 }
 \examples{
 \dontrun{
 library(sprawl)
 library(sprawl.data)
 library(raster)
-in_polys <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"),
+in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
+                                  package = "sprawl.data"),
                        stringsAsFactors = T)
-in_rast  <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
+in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
                        package = "sprawl.data"))[[1]]
 in_polys <- sf::st_transform(in_polys, proj4string(in_rast))
 masked   <- mask_rast(in_rast, in_polys, verbose = FALSE)

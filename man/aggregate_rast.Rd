@@ -6,7 +6,7 @@
 \usage{
 aggregate_rast(in_rast_values, zones_rast, FUN = mean, maxchunk = 5e+07,
   method = "fastdisk", to_file = FALSE, out_file = NULL,
-  nodata_out = NA, verbose = TRUE)
+  nodata_out = -Inf, verbose = TRUE)
 }
 \arguments{
 \item{in_rast_values}{PARAM_DESCRIPTION}
@@ -31,8 +31,9 @@ aggregate_rast(in_rast_values, zones_rast, FUN = mean, maxchunk = 5e+07,
 OUTPUT_DESCRIPTION
 }
 \description{
-Function used to extract values of a single- or multi- band raster for pixels
-corresponding to the features of a vector (Polygon, Point or Line)
+Function used to extract values of a single- or multi- band
+raster for pixels corresponding to the features of a vector (Polygon,
+Point or Line)
 }
 \details{
 DETAILS
@@ -41,12 +42,6 @@ DETAILS
 \dontrun{
  #EXAMPLE1
  }
-}
-\seealso{
-\code{\link[data.table]{data.table}}
-\code{\link[raster]{raster}},\code{\link[raster]{writeRaster}},\code{\link[raster]{rasterize}}
-\code{\link[sf]{st_crs}},\code{\link[sf]{st_transform}},\code{\link[sf]{st_bbox}},\code{\link[sf]{st_coordinates}},\code{\link[sf]{st_centroid}},\code{\link[sf]{st_as_sf}},\code{\link[sf]{st_set_crs}}
-\code{\link[sp]{proj4string}}
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

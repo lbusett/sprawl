@@ -46,7 +46,8 @@ migrate_virtrast.default  <- function(in_rast,
                                       new_path,
                                       out_file = NULL) {
   call <- match.call()
-  stop("migrate_virtrast --> ", call[[2]], " is not a `RData` or `GDAL vrt` file. Aborting !")
+  stop("migrate_virtrast --> ", call[[2]], " is not a `RData` or `GDAL vrt` ",
+       "file. Aborting !")
 }
 
 #' @method migrate_virtrast character
@@ -57,28 +58,31 @@ migrate_virtrast.character  <- function(in_rast,
                                         out_file = NULL) {
   call <- match.call()
 
-  if (!file.exists(in_rast)) stop("migrate_virtrast --> ", call[[2]], " does not exist on
-                                  your system. Aborting !")
+  if (!file.exists(in_rast)) stop("migrate_virtrast --> ", call[[2]], " does ",
+                                  "not exist on your system. Aborting !")
 
   if (is.null(new_path)) {
 
-    new_path <- tcltk::tk_choose.dir(default = "",
-                                    caption = "Select folder containing the raster files")
+    new_path <- tcltk::tk_choose.dir(
+      default = "",
+      caption = "Select folder containing the raster files"
+    )
     if (is.na(new_path)) {
       stop("migrate_virtrast --> User selected to quit. Aborting !")
     }
   }
-  #   ____________________________________________________________________________
-  #   If input file is a gdal vrt, substitute find the lines corresponding    ####
+  #   __________________________________________________________________________
+  #   If input file is a gdal vrt, substitute find the lines corresponding  ####
   #   to file paths and replace folder na,e with `new_path`
 
   if (tools::file_ext(in_rast) == "vrt") {
-    file_in <- readLines(test)
+    file_in <- readLines(in_rast)
     for (line in (seq_along(file_in))) {
       line_i    <- file_in[line]
       is_source <- grep("SourceFilename", line_i )
       if (length(is_source) != 0) {
-        old_file <- stringr::str_split_fixed(stringr::str_split_fixed(line_i, ">" ,2)[2], "<" ,2)[1]
+        old_file <- stringr::str_split_fixed(
+          stringr::str_split_fixed(line_i, ">" ,2)[2], "<" ,2)[1]
         new_file <- file.path(new_path, basename(old_file))
         file_in[line] <- gsub(old_file, new_file, file_in[line])
       }
@@ -94,15 +98,15 @@ migrate_virtrast.character  <- function(in_rast,
     return(out_file)
   } else {
 
-    #   ____________________________________________________________________________
-    #   If input file is a RData file, open it as a rasterStack, then substitute ####
-    #   paths in the layer names
+    #   ________________________________________________________________________
+    #   If input file is a RData file, open it as a rasterStack, then       ####
+    #   substitute paths in the layer names
 
     if (tools::file_ext(in_rast) == "RData") {
       rrast_in <- try(get(load(in_rast)))
       if (!inherits(rrast_in, "Raster")) {
-        stop("migrate_virtrast --> ", call[[2]], " does not appear to be linked to a
-             Raster object. Aborting !")
+        stop("migrate_virtrast --> ", call[[2]], " does not appear to be ",
+             "linked to a Raster object. Aborting !")
       } else {
         for (band in seq_len(raster::nlayers(rrast_in))) {
           old_file <- rrast_in[[band]]@file@name

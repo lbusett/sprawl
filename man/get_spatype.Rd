@@ -42,18 +42,19 @@ or a file corresponding to a raster
 \dontrun{
 library(sprawl.data)
 # input is a raster file
-get_spatype(system.file("extdata","sprawl_EVItest.tif", package = "sprawl.data"))
+in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
+get_spatype(in_rast)
 
 # input is a shapefile
-shp_file <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
-get_spatype(shp_file)
+in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
+get_spatype(in_vect)
 
 # input is a `sp` object
-obj <- read_vect(shp_file, as_sp = TRUE)
+obj <- read_vect(in_vect, as_sp = TRUE)
 get_spatype(obj)
 
 # input is a `sf` object
-obj <- read_vect(shp_file)
+obj <- read_vect(in_vect)
 get_spatype(obj)
 }
 

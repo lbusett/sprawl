@@ -7,19 +7,27 @@
 reproj_extent(ext_in, in_proj = NULL, out_proj = NULL)
 }
 \arguments{
-\item{ext_in}{object of class \code{\link[raster:extent]{raster::extent}}}
+\item{ext_in}{object of class \code{\link[sprawl:sprawlext]{sprawl::sprawlext}}, or any other object or
+filename from which a \code{sprawlext} object can be derived}
 
-\item{in_proj}{\code{character} proj4string representing the projection of the input extent}
+\item{in_proj}{\code{character} proj4string representing the projection of the
+input extent}
 
-\item{out_proj}{\code{character} proj4string representing the desired projection for the output extent}
+\item{out_proj}{\code{character} proj4string representing the desired projection
+for the output extent}
 }
 \value{
 reprojected extent (in out_proj projection)
 }
 \description{
-accessory function to convert the extent of a spatial object to a different
-projection. simple wrapper for the \code{spTransform} function on an \code{\link[raster:extent]{raster::extent}} object
+accessory function to convert the extent of a spatial object to
+a different projection. simple wrapper for the \code{spTransform} function on
+a \code{sprawlext} object
 }
 \examples{
-
+{
+ \dontrun{
+ EXAMPLE_1
+}
+}
 }

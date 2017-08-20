@@ -79,7 +79,8 @@ build_testshape <- function(maxpolys,
   #   int <- sf::st_intersection(polys, polys) %>%
   #     dplyr::filter(id != id.1) %>%
   #     sf::st_as_sf()
-  #   if (length(int$id) > 0) polys <- sf::st_difference(x, sf::st_union(st_combine(y)))
+  #   if (length(int$id) > 0) polys <- sf::st_difference(x,
+  #    sf::st_union(st_combine(y)))
   # }
 
   if (to_file) {

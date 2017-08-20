@@ -1,10 +1,13 @@
 #' @title reproject the extent of a spatial object
-#' @description accessory function to convert the extent of a spatial object to a different
-#' projection. simple wrapper for the `spTransform` function on an [`raster::extent`] object
-#'
-#' @param ext_in   object of class [`raster::extent`]
-#' @param in_proj  `character` proj4string representing the projection of the input extent
-#' @param out_proj `character` proj4string representing the desired projection for the output extent
+#' @description accessory function to convert the extent of a spatial object to
+#'  a different projection. simple wrapper for the `spTransform` function on
+#'  a `sprawlext` object
+#' @param ext_in  object of class `sprawlext`, or any other object or
+#'   filename from which a `sprawlext` object can be derived (see `get_extent`)
+#' @param in_proj  `character` proj4string representing the projection of the
+#'  input extent
+#' @param out_proj `character` proj4string representing the desired projection
+#'  for the output extent
 #'
 #' @return reprojected extent (in out_proj projection)
 #' @export
@@ -14,8 +17,11 @@
 #' @importFrom sp SpatialPoints CRS spTransform
 #' @importFrom magrittr %>%
 #'
-#' @examples
-#'
+#' @examples {
+#'  \dontrun{
+#'  EXAMPLE_1
+#' }
+#'}
 
 reproj_extent <- function(ext_in, in_proj = NULL, out_proj = NULL) {
 

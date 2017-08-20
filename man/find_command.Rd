@@ -15,8 +15,9 @@ find_command(command, stop_on_missing = TRUE)
 \code{character} normalized path to the desired command
 }
 \description{
-helper function allowing to find the path to a given command on the system of the
-user. If the command is not found, a \code{stop} is issued and the program aborts (gracefully).
+helper function allowing to find the path to a given command on
+the system of the user. If the command is not found, a \code{stop} is issued and
+the program aborts (gracefully).
 }
 \examples{
 \dontrun{

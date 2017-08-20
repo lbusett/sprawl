@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84499524-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -61,10 +73,25 @@
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../articles/examples.html">Examples of Use</a>
+  <a href="../articles/articles/examples.html">Examples of Use</a>
 </li>
-<li>
-  <a href="../articles/contributing.html">Contributing</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Contributing
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/articles/contributing.html">Contributing</a>
+    </li>
+    <li>
+      <a href="../articles/articles/coding_style.html">Codin Style</a>
+    </li>
+    <li>
+      <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -150,8 +177,29 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl</span>)
  <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
- <span class='no'>indata</span>    <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
- <span class='no'>byvar</span>     <span class='kw'>&lt;-</span> <span class='st'>"category"</span>
+ <span class='no'>indata</span>    <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
+ <span class='no'>indata</span></div><div class='output co'>#&gt; Simple feature collection with 13 features and 4 fields
+#&gt; geometry type:  POLYGON
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 120.1778 ymin: 15.15353 xmax: 121.3394 ymax: 16.09343
+#&gt; epsg (SRID):    4326
+#&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
+#&gt; # A tibble: 13 x 5
+#&gt;       id       lc_type category sup_catego          geometry
+#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt; &lt;S3: sfc_POLYGON&gt;
+#&gt;  1     1      forest_1   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  2     2      forest_2   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  3     3       urban_1    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt;  4     4    cropland_1 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  5     5    cropland_2 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  6     6      forest_3   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  7     7    reiver_bed    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt;  8     8    cropland_3 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  9     9  urban_2_part    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt; 11    11         water    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt; 12    12    small_feat    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt; 13    13      out_feat    Other      Other &lt;S3: sfc_POLYGON&gt;</div><div class='input'> <span class='no'>byvar</span>     <span class='kw'>&lt;-</span> <span class='st'>"category"</span>
  <span class='no'>out_shape</span> <span class='kw'>&lt;-</span> <span class='fu'>dissolve_shape</span>(<span class='no'>indata</span>, <span class='no'>byvar</span>)
  <span class='no'>out_shape</span></div><div class='output co'>#&gt; # A tibble: 3 x 5
 #&gt;   category       id  lc_type sup_catego       geometry

@@ -45,13 +45,13 @@ DETAILS
 \dontrun{
  library(raster)
 
- in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
+ in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
  get_projstring(in_rast)
 
  in_rast <- raster::raster(in_rast)
  get_projstring(in_rast)
 
- in_vect <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+ in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
  get_projstring(in_vect)
 
  in_vect <- read_vect(in_vect)

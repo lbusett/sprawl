@@ -42,20 +42,32 @@ er_points <- function(in_vect,
                       addgeom,
                       keep_null) {
 
-  if (verbose) message("extract_rast --> Cropping the zones object on extent of the raster")
+  #TODO recheck this function, make it more similar to polygon extraction!
+
+  # To avoid NOTES on check
+  mdxtnq <- value  <- . <- NULL
+
+  if (verbose) {
+    message("extract_rast --> Cropping the zones object on extent ",
+            "of the raster")
+  }
   crop               <- er_crop_object(in_vect, in_rast, id_field, verbose)
   in_vect_crop <- crop$in_vect_crop
   outside_feat <- crop$outside_feat
 
-  if (verbose) { message("extract_rast --> On point and lines shapefiles, the standard `extract` function is used. This could be slow !")}
+  if (verbose) {
+    message("extract_rast --> On point and lines vector objects, the standard",
+            " `raster::extract` function is used. This could be slow !")
+  }
 
   tserie <- matrix(nrow = n_selbands, ncol = dim(in_vect_crop)[1])
 
   for (band in seq_len(n_selbands)) {
     selband <- selbands[band]
     if (verbose) {
-      message(paste0("extract_rast --> Extracting data from ", ifelse(date_check, "date: ", "band: "),
-                     seldates[band]))
+      message("extract_rast --> Extracting data from ",
+              ifelse(date_check, "date: ", "band: "),
+              seldates[band])
     }
     tserie[band,] <- in_rast[[selband]] %>%
       raster::extract(as(in_vect_crop, "Spatial"))
@@ -75,22 +87,21 @@ er_points <- function(in_vect,
     names(tserie) <- c("band_name", "band_n", all_feats)
   }
 
-
-  #   ____________________________________________________________________________
-  #   If some features are outside the raster and add_null = TRUE, add empty  ####
-  #   columns for the missing features at the end of the table
+  # ___________________________________________________________________________
+  # If some features are outside the raster and add_null = TRUE, add empty ####
+  # columns for the missing features at the end of the table
 
   if (keep_null & !is.null(outside_feat)) {
 
-    for (feat in 1:length(outside_feat$outside_ids)) {
+    for (feat in seq_along(outside_feat$outside_ids)) {
 
       addcol <- data.frame(data = rep(NA, length(tserie[,1])))
       names(addcol)[1] <- outside_feat$outside_ids[feat]
-      tserie = cbind(tserie, addcol)
+      tserie <- cbind(tserie, addcol)
     }
 
   } else {
-    in_vect = in_vect_crop
+    in_vect <- in_vect_crop
   }
 
   # if long format is selected, reshape
@@ -106,26 +117,32 @@ er_points <- function(in_vect,
     if (!is.null(id_field)) {
       tserie <- tserie %>%
         dplyr::select(-mdxtnq) %>%
-        dplyr::select(c(1,2, which(names(.) == id_field),
-                 which(!(names(.) %in% c("date", "band_n", eval(id_field))))))
+        dplyr::select(
+          c(1,2, which(names(.) == id_field),
+            which(!(names(.) %in% c("date", "band_n", eval(id_field)))))
+          )
     } else {
       names(tserie)[3] <- "id_feat"
     }
     if (!addgeom) {
-      sf::st_geometry(tserie) = NULL
+      sf::st_geometry(tserie) <- NULL
     }
 
     if (!addfeat) {
-      sf::st_geometry(tserie) = NULL
+      sf::st_geometry(tserie) <- NULL
       tserie <- tserie[c(1:4),]
     }
 
   } else {
-    if (!is.null(id_field) ){
+    if (!is.null(id_field) ) {
       if (keep_null) {
-        names(tserie)[3:(dim(tserie)[2])] <- t(rbind(tibble::as_data_frame(in_vect[, eval(id_field)])[,1]))
+        names(tserie)[3:(dim(tserie)[2])] <- t(
+          rbind(tibble::as_data_frame(in_vect[, eval(id_field)])[,1])
+        )
       } else {
-        names(tserie)[3:dim(tserie)[2]] <- t(rbind(tibble::as_data_frame(in_vect_crop[, eval(id_field)])[,1]))
+        names(tserie)[3:dim(tserie)[2]] <- t(
+          rbind(tibble::as_data_frame(in_vect_crop[, eval(id_field)])[,1])
+        )
       }
     }
 

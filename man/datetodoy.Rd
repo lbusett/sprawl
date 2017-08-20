@@ -7,24 +7,13 @@
 datetodoy(dates = dates)
 }
 \arguments{
-\item{dates}{array of dates to be converted. Class must be \code{Date} or character parsable to \code{Date}
+\item{dates}{array of dates to be converted. Class must be \code{Date} or character
+parsable to \code{Date}
 using \code{\link{as.Date}} (format "yyyy-mm-dd").}
 }
 \description{
-Converts an array of \code{Date} (or coercible to \code{Date}) values to DOY (Day Of the Year) values.
-}
-\details{
-DETAILS
-}
-\note{
-This function is a simple wrapper around `strftime(date, format = "\%j")`.
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Converts an array of \code{Date} (or coercible to \code{Date}) values to
+DOY (Day Of the Year) values.
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

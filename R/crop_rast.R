@@ -4,25 +4,27 @@
 #'  1. directly passed (as a `sprawlext` rast_file or numeric array);
 #'  1. derived from a different rast_file (raster of vector file/rast_file) passed to
 #'    the function (see details)
-#' @param rast_file either an `R` rast_file of class `Raster`, or a character string
+#' @param rast_object either an `R` object of class `Raster`, or a character string
 #'   corresponding to a raster filename (with full path)
-#' @param ext_rast_file either an rast_file of class `sprawlext`, or an `R` rast_file or
-#'   filename from which an rast_file of class `sprawlext` can be obtained (see
-#'    `sprawl::getextent()`)
-#' @param out_type `character` indicating to which type of rast_file the input should be re-croped.
-#'   1. "rastrast_file" return a `raster` rast_file accessing the saved cropped file
+#' @param ext_object either an object of class `sprawlext`, or an `R` object or
+#'   filename from which an object of class `sprawlext` can be obtained (see
+#'    `sprawl::get_extent()`)
+#' @param out_type `character` indicating to which type of rast_file the input should be
+#'  re-cropped.
+#'   1. "rastobject" return a `raster` rast_file accessing the saved cropped file
 #'   2. "rastfile" return the filename of the GTiff file corresponding to the
 #'     cropped GTiff file. If `out_filename == NULL`, this corresponds to a file
 #'     saved in `R` temporary folder.
 #'   3. "vrtfile" return the filename of the vrt file built for cropping
 #'     the input raster (no saving to disk is performed)
-#' , Default: "rastrast_file"
+#' , Default: "rastobject"
 #' @param out_filename `character` filename to be used to save the cropped
 #'   raster.
 #' @param compress `character` compression option to be used to saved the cropped
 #'   raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"
 #' @param verbose `logical` if FALSE, suppress processing messages, Default: TRUE
-#' @return
+#' @return either a `Raster` object containing the cropped raster, or a gdal vrt
+#'   or GTiff filename corresponding to it, depending on `out_type`.
 #' @examples
 #' \dontrun{
 #'  #EXAMPLE1
@@ -30,8 +32,11 @@
 #' @rdname crop_rast
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
+#' @importFrom data.table last
+#' @importFrom raster brick
+#' @importFrom sf st_polygon st_sfc st_transform
 
-crop_rast <- function(object,
+crop_rast <- function(rast_object,
                       ext_object,
                       out_type     = "rastobject",
                       out_filename = NULL,
@@ -42,36 +47,35 @@ crop_rast <- function(object,
           " on extent of: ",
           deparse(substitute(ext_rast_file)))
 
-  #   ____________________________________________________________________________
-  #   Create processing objects: rast_file is a filename, rast_obj a raster   ####
-  #   object used to retrieve extent, resolution, etc
-  rast_file <- cast_rast(object, to = "rastfile")
-  rast_obj  <- ifelse(inherits(object, "Raster"),
-                      object,
-                      raster::brick(rast_file))
   #   __________________________________________________________________________
-  #   Retrieve extent info from `rast_obj` and `ext_object`                   ####
+  #   Create processing objects: rast_file is a filename, rast_object a     ####
+  #   raster object used to retrieve extent, resolution, etc
+  rast_file <- cast_rast(rast_object, to = "rastfile")
+  rast_object  <- if (inherits(rast_object, "Raster")) {
+    rast_object
+  } else {
+    raster::brick(rast_file)
+  }
+  #   __________________________________________________________________________
+  #   Retrieve extent info from `rast_object` and `ext_object`              ####
 
-    bnames <- names(rast_obj)
-    times  <- getZ(rast_obj)
-    res    <- raster::res(rast_obj)
-    rast_bbox <- get_extent(rast_obj, abort = TRUE)
-    crop_bbox <- get_extent(ext_object, abort = TRUE)
-    dims <- dim(rast_obj)
-
-
+  rastinfo  <- get_rastinfo(rast_object)
+  rast_bbox <- get_extent(rast_object, abort = TRUE)
+  crop_bbox <- get_extent(ext_object, abort = TRUE)
+  dims      <- c(rastinfo$nrows, rastinfo$ncols)
   rbbox_ext <- rast_bbox@extent
   cbbox_ext <- crop_bbox@extent
 
   #   __________________________________________________________________________
-  #   reproject `ext_rast_file` if necessary                                   ####
+  #   reproject `ext_rast_file` if necessary                                ####
 
   if (!(rast_bbox@projstring == crop_bbox@projstring)) {
-
+# TODO: replace with call to `reproj_exten()`
     reproj_bbox <- sf::st_polygon(list(rbind(
       c(cbbox_ext["xmin"], cbbox_ext["ymin"]),
-      c(cbbox_ext["xmin"], cbbox_ext["ymaxn"]),
+      c(cbbox_ext["xmin"], cbbox_ext["ymax"]),
       c(cbbox_ext["xmax"], cbbox_ext["ymax"]),
+      c(cbbox_ext["xmax"], cbbox_ext["ymin"]),
       c(cbbox_ext["xmin"], cbbox_ext["ymin"])))
     ) %>%
       sf::st_sfc(crs = crop_bbox@projstring) %>%
@@ -82,8 +86,8 @@ crop_rast <- function(object,
   #   __________________________________________________________________________
   #   retrieve xy coords of raster                                          ####
 
-  col_coords <- rbbox_ext[1] + res[1] * seq_len(dims[2])
-  row_coords <- rbbox_ext[2] + res[2] * seq_len(dims[1])
+  col_coords <- rbbox_ext[1] + rastinfo$res[1] * seq_len(dims[2])
+  row_coords <- rbbox_ext[2] + rastinfo$res[2] * seq_len(dims[1])
 
   #   __________________________________________________________________________
   #   compute a correct bounding box for the cropped raster, to avoid       ####
@@ -113,6 +117,9 @@ crop_rast <- function(object,
     rbbox_ext[4] <- row_coords[last_row + 1]
   }
 
+# TODO: Abort gracefully on incorrect rbbox_ext (e.g., because no intersection)
+
+
   # ____________________________________________________________________________
   # create a temporary vrt file corresponding to the band to be preocessed  ####
   # This allows flexibility in the case that a stack is passed containing
@@ -124,41 +131,37 @@ crop_rast <- function(object,
 
   temp_vrt <- tempfile(fileext = ".vrt")
 
-  if (raster::nlayers(rast_obj) > 1) {
+  if (rastinfo$nbands > 1) {
 
-    bands <- list()
-    files <- list()
-
-    for (bb in seq_len(raster::nlayers(rast_obj))) {
-
-      bands[[bb]] <- rast_obj[[bb]]@data@band
-      files[[bb]] <- rast_obj[[bb]]@file@name
-
-    }
-    bands <- unlist(bands)
-    files <- unlist(files)
-
-    if (length(unique(files)) > 1) {
-
+    if (length(unique(rastinfo$fnames)) > 1) {
+    # buildvrt string on multi band rasters with bands coming from different
+    # files: use the "-input-file-list" argument
       tmp_txt <- tempfile(fileext = ".txt")
-      writeLines(files, tmp_txt)
+      writeLines(rastinfo$fnames, tmp_txt)
       buildvrt_string <- paste("-te", paste(rbbox_ext, collapse = " "),
+                               paste(paste("-b ", rastinfo$indbands),
+                                     collapse = " "),
                                "-separate",
                                "-input_file_list",
                                tmp_txt,
                                temp_vrt)
     } else {
-
-      buildvrt_string <- paste("-te ", paste(rbbox_ext, collapse = " "),
-                               paste(paste("-b ", bands), collapse = " "),
+    # buildvrt string on multi band rasters with bands coming from the same file
+    buildvrt_string <- paste("-te ", paste(rbbox_ext, collapse = " "),
+                               paste(paste("-b ", rastinfo$indbands),
+                                     collapse = " "),
                                temp_vrt,
                                rast_file)
     }
 
   } else {
+    # buildvrt string on single band rasters. The paste on the second line is
+    # useful to get the correct band if the call is done on a subset of a stack
+    # (e.g., rast_in[[3]] - see test_mask_rast_R)
 
-    buildvrt_string <- paste("-te ",
-                             paste(rbbox_ext, collapse = " "),
+    buildvrt_string <- paste("-te ", paste(rbbox_ext, collapse = " "),
+                             paste(paste("-b ", rastinfo$indbands),
+                                   collapse = " "),
                              temp_vrt,
                              rast_file)
   }
@@ -167,20 +170,20 @@ crop_rast <- function(object,
           args = buildvrt_string,
           stdout = NULL)
 
-  #   ____________________________________________________________________________
-  #   save/return the cropped raster according to arguments                   ####
+  #   __________________________________________________________________________
+  #   save/return the cropped raster according to arguments                 ####
 
   if (out_type == "vrtfile") {
+    # Just return the vrt
     return(temp_vrt)
-  } else {
 
+  } else {
+    # Save and return filename or rastobject
     if (is.null(out_filename)) {
-      outdir = file.path(tempdir(), "sprawlcrop")
-      out_filename = tempfile(fileext = ".tif")
-    } else {
-      outdir = dirname(out_filename)
+      out_filename <- tempfile(fileext = ".tif",
+                              tmpdir = file.path(tempdir(), "sprawlcrop"))
     }
-    dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
+    make_folder(out_filename, type = "filename")
     translate_string <- paste("-of GTiff",
                               "-co", paste0("COMPRESS=", compress),
                               temp_vrt,
@@ -191,10 +194,9 @@ crop_rast <- function(object,
 
     if (out_type == "rastobject") {
       out <- raster::brick(out_filename)
-
-      names(out) <- paste0(bnames, "_cropped")
-      if (!is.null(times)) {
-        out <- setZ(out, times)
+      names(out) <- paste0(rastinfo$bnames, "_cropped")
+      if (length(rastinfo$Z) == rastinfo$nbands) {
+        out <- raster::setZ(out, rastinfo$Z)
       }
       return(out)
     } else {

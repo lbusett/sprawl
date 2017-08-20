@@ -17,7 +17,7 @@ DETAILS
 }
 \examples{
 \dontrun{
- #EXAMPLE1
+ find_gdal()
  }
 }
 \author{

@@ -33,7 +33,7 @@ sprawl_initcluster <- function(in_rast,
     if (length(bands) > 1) {
       n_bands <- length(bands)
     } else {
-      n_bands = 1
+      n_bands <- 1
     }
   } else {
     bands   <- seq(bands[1], bands[2])

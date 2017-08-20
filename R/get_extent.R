@@ -1,25 +1,27 @@
-#' @title return the exten of a spatial object or file (with projection)
-#' @description helper function used to retrieve the extent of a spatial object or file
-#'   with the associated proj4string
-#' @param object `character` corresponding to the name of a R object, or a filename
-#' (full path)
+#' @title return the extent of a spatial object or file (with projection)
+#' @description helper function used to retrieve the extent of a spatial object
+#'  or file with the associated proj4string
+#' @param object `character` corresponding to the name of a R object, or a
+#'  filename (full path)
 #' @param abort `logical` if TRUE, the function aborts in case no proj4string or
 #'   invalid projstring is found, Default: FALSE
 #' @return object of class `sprawl_ext`
 #' @details return an object of class `sprawl_ext` with two slots:
-#'   - $extent: `numeric (4)` extent of the object (xmin, ymin, xmanx, ymax)
-#'   - $projstring: `character` proj4string of the object
+#'   - @extent: `numeric (4)` extent of the object (xmin, ymin, xmax, ymax)
+#'   - @projstring: `character` proj4string of the object
 #' @examples
 #' \dontrun{
 #'  library(raster)
 #'
-#'  in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
+#'  in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+#'    package = "sprawl.data")
 #'  get_extent(in_rast)
 #'
 #'  in_rast <- raster::raster(in_rast)
 #'  get_extent(in_rast)
 #'
-#'  in_vect <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+#'  in_vect <- system.file("extdata/shapes","lc_polys.shp",
+#'    package = "sprawl.data")
 #'  get_extent(in_vect)
 #'
 #'  in_vect <- read_vect(in_vect)
@@ -47,13 +49,14 @@ get_extent <- function(object,
 #' @method get_extent default
 #' @export
 get_extent.default  <- function(object, abort = FALSE) {
+
   call <- match.call()
   if (abort == TRUE) {
-    stop("get_extent --> ", call[[2]], " is not a valid vector or raster `R` object or
-   filename. Aborting !")
+    stop("get_extent --> ", call[[2]], " is not a valid vector or ",
+         "raster `R` object or filename. Aborting !")
   } else {
-    warning("get_extent --> ", call[[2]], " is not a valid vector or raster `R` object or
-   filename !")
+    warning("get_extent --> ", call[[2]], " is not a valid vector ",
+            "or raster `R` object or filename !")
   }
 }
 
@@ -63,17 +66,17 @@ get_extent.default  <- function(object, abort = FALSE) {
 #' @rdname get_extent
 #' @method get_extent character
 #' @export
-get_extent.character <- function(object,
-                                 abort = FALSE) {
+get_extent.character <- function(object, abort = FALSE) {
+
   call     <- match.call()
   obj_type <- get_spatype(object, abort = abort)
 
   if (obj_type %in% c("rastfile", "vectfile")) {
 
     if (obj_type == "vectfile") {
-      coords      <- rgdal::ogrInfo(object, rgdal::ogrInfo(object)$layer)$extent
+      coords <- rgdal::ogrInfo(object, rgdal::ogrInfo(object)$layer)$extent
     } else {
-      coords      <- as.numeric(gdalUtils::gdalinfo(object, raw_output = FALSE)$bbox)
+      coords <- as.numeric(gdalUtils::gdalinfo(object, raw_output = FALSE)$bbox)
     }
 
     names(coords) <- c("xmin", "ymin", "xmax", "ymax")
@@ -84,16 +87,15 @@ get_extent.character <- function(object,
     return(outext)
   } else {
     if (abort == TRUE) {
-      stop("get_extent --> `", call[[2]], "` is not a valid vector or raster `R` object
- or filename ! Aborting !")
+      stop("get_extent --> `", call[[2]], "` is not a valid vector ",
+           "or raster `R` object or filename ! Aborting !")
     } else {
-      warning("get_extent --> `", call[[2]], "` is not a valid vector or raster `R` object
- or filename ! ")
+      warning("get_extent --> `", call[[2]], "` is not a valid ",
+              "vector or raster `R` object or filename ! ")
       return("none")
     }
   }
 }
-
 
 #   ____________________________________________________________________________
 #   Method for "rastobj" - use raster::extent                               ####
@@ -101,13 +103,12 @@ get_extent.character <- function(object,
 #' @rdname get_extent
 #' @method get_extent Raster
 #' @export
-get_extent.Raster <- function(object,
-                              abort = FALSE) {
+get_extent.Raster <- function(object, abort = FALSE) {
+
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-  projstring    <- get_projstring.Raster(object, abort = abort)
-  outext        <- methods::new("sprawlext",
-                                extent     = coords,
+  projstring    <- get_projstring(object, abort)
+  outext        <- methods::new("sprawlext", extent = coords,
                                 projstring = projstring)
   return(outext)
 }
@@ -119,15 +120,13 @@ get_extent.Raster <- function(object,
 #' @rdname get_extent
 #' @method get_extent sf
 #' @export
-get_extent.sf <- function(object,
-                          abort = FALSE) {
+get_extent.sf <- function(object, abort = FALSE) {
 
   bbox          <- sf::st_bbox(object)
   coords        <- as.numeric(bbox)
   projstring    <- attributes(bbox)[[3]]$proj4string
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-  outext        <- methods::new("sprawlext",
-                                extent     = coords,
+  outext        <- methods::new("sprawlext", extent     = coords,
                                 projstring = projstring)
   return(outext)
 
@@ -139,15 +138,13 @@ get_extent.sf <- function(object,
 #' @rdname get_extent
 #' @method get_extent sfc
 #' @export
-get_extent.sfc <- function(object,
-                           abort = FALSE) {
+get_extent.sfc <- function(object, abort = FALSE) {
 
   bbox          <- sf::st_bbox(object)
   coords        <- as.numeric(bbox)
   projstring    <- attributes(bbox)[[3]]$proj4string
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-  outext        <- methods::new("sprawlext",
-                                extent     = coords,
+  outext        <- methods::new("sprawlext", extent     = coords,
                                 projstring = projstring)
   return(outext)
 
@@ -160,13 +157,12 @@ get_extent.sfc <- function(object,
 #' @rdname get_extent
 #' @method get_extent Spatial
 #' @export
-get_extent.Spatial <- function(object,
-                               abort = FALSE) {
+get_extent.Spatial <- function(object, abort = FALSE) {
+
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   projstring    <- get_projstring.Spatial(object, abort = abort)
-  outext        <- methods::new("sprawlext",
-                                extent     = coords,
+  outext        <- methods::new("sprawlext", extent     = coords,
                                 projstring = projstring)
   return(outext)
 
@@ -179,8 +175,7 @@ get_extent.Spatial <- function(object,
 #' @rdname get_extent
 #' @method get_extent Spatial
 #' @export
-get_extent.sprawlext <- function(object,
-                                 abort = FALSE) {
+get_extent.sprawlext <- function(object, abort = FALSE) {
   return(object)
 
 }

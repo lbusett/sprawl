@@ -10,7 +10,8 @@ setClasses <- function() {
 
   #' @name sprawlext-class
   #' @rdname sprawlext-class
-  #' @description An S4 class to represent the extent of a spatial object, associated with its proj4
+  #' @description An S4 class to represent the extent of a spatial object,
+  #'  associated with its proj4
   #' string.
   #'
   #' @slot extent `numeric (4)` extent of the object (xmin, ymin, xmanx, ymax)
@@ -23,5 +24,4 @@ setClasses <- function() {
                     methods::representation(extent = "numeric",
                                             projstring = "character"))
 }
-
 setClasses()
