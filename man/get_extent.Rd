@@ -78,4 +78,6 @@ return an object of class \code{sprawlext} with two slots:
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
+
+Luigi Ranghetti, phD (2017) \href{mailto:ranghetti.l@irea.cnr.it}{ranghetti.l@irea.cnr.it}
 }

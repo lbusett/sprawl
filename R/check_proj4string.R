@@ -8,8 +8,8 @@
 #' @return `character` proj4string of the object or file
 #' @details DETAILS
 #'
-#' @importFrom sp proj4string
-#' @importFrom rgdal checkCRSArgs CRSargs CRS
+#' @importFrom sp proj4string CRS
+#' @importFrom rgdal checkCRSArgs CRSargs
 #' @rdname check_proj4string
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

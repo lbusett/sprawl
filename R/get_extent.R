@@ -37,6 +37,7 @@
 #' @importFrom sf st_bbox
 #' @importFrom methods new
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
+#' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #'
 get_extent <- function(object,
                        proj4string = NULL,
@@ -60,7 +61,7 @@ get_extent.default  <- function(object,
     warning("get_extent --> ", call[[2]], " is not a valid vector or raster `R` object or
             filename!")
   }
-  }
+}
 
 #   ____________________________________________________________________________
 #   Method for sprawlext (return input)                                      ####
