@@ -8,8 +8,7 @@ datetodoy(dates = dates)
 }
 \arguments{
 \item{dates}{array of dates to be converted. Class must be \code{Date} or character
-parsable to \code{Date}
-using \code{\link{as.Date}} (format "yyyy-mm-dd").}
+parsable to \code{Date} using \code{\link{as.Date}} (format "yyyy-mm-dd").}
 }
 \description{
 Converts an array of \code{Date} (or coercible to \code{Date}) values to

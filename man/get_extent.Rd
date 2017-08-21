@@ -57,13 +57,8 @@ or file with the associated proj4string
 \details{
 return an object of class \code{sprawlext} with two slots:
 \itemize{
-<<<<<<< HEAD
-\item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmanx, ymax)
-\item $proj4string: \code{character} proj4string of the object
-=======
 \item @extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
-\item @projstring: \code{character} proj4string of the object
->>>>>>> master
+\item $proj4string: \code{character} proj4string of the object
 }
 }
 \examples{

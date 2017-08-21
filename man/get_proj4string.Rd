@@ -45,24 +45,14 @@ DETAILS
 \dontrun{
  library(raster)
 
-<<<<<<< HEAD:man/get_proj4string.Rd
- in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
- get_proj4string(in_rast)
-=======
  in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
  get_projstring(in_rast)
->>>>>>> master:man/get_projstring.Rd
 
  in_rast <- raster::raster(in_rast)
  get_proj4string(in_rast)
 
-<<<<<<< HEAD:man/get_proj4string.Rd
- in_vect <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
- get_proj4string(in_vect)
-=======
  in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
  get_projstring(in_vect)
->>>>>>> master:man/get_projstring.Rd
 
  in_vect <- read_vect(in_vect)
  get_proj4string(in_vect)
