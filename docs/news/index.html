@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84499524-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -61,10 +73,25 @@
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../articles/examples.html">Examples of Use</a>
+  <a href="../articles/articles/examples.html">Examples of Use</a>
 </li>
-<li>
-  <a href="../articles/contributing.html">Contributing</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Contributing
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/articles/contributing.html">Contributing</a>
+    </li>
+    <li>
+      <a href="../articles/articles/coding_style.html">Codin Style</a>
+    </li>
+    <li>
+      <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -113,23 +140,53 @@
     </div>
 
     <div class="contents">
-    <div id="sprawl-0-1-0-9000" class="section level1">
+    <div id="sprawl-0-2-0" class="section level1">
 <h1 class="hasAnchor">
-<a href="#sprawl-0-1-0-9000" class="anchor"></a>sprawl 0.1.0.9000</h1>
+<a href="#sprawl-0-2-0" class="anchor"></a>sprawl 0.2.0</h1>
+<p><br></p>
+<p>20/08/2017 - Second major release, adding some core funtionality and helpers.</p>
 <div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>Major changes</h2>
 <ul>
-<li>21/07/2017 Release of the first (rather unstable) version of <code>sprawl</code>. Introduces some raher comkplex functions (<code>extract_rast</code>, <code>aggregate_rast</code>, plus a series of smaller-scope functions used as helpers).</li>
+<li><p>Addition of <code>mask_rast</code> and <code>crop_rast</code></p></li>
+<li><p>Addition of several helper functions (<code>get_projstring</code>, <code>get_extent</code>, <code>cast_vect</code> <code>cast_rast</code>, <code>reproj_extent</code>…)</p></li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>too many to mention</li>
+</ul>
 </div>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug Fixes</h2>
+<ul>
+<li>too many to mention</li>
+</ul>
+<hr>
+</div>
+</div>
+    <div id="sprawl-0-1-0-9000" class="section level1">
+<h1 class="hasAnchor">
+<a href="#sprawl-0-1-0-9000" class="anchor"></a>sprawl 0.1.0.9000</h1>
+<p><br></p>
+<div id="major-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<ul>
+<li>21/07/2017 Release of the first (rather unstable) version of <code>sprawl</code>. Introduces some raher complex functions (<code>extract_rast</code>, <code>aggregate_rast</code>, plus a series of smaller-scope functions used as helpers).</li>
+</ul>
+</div>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+</div>
+<div id="bug-fixes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes</h2>
 </div>
 </div>
     </div>
@@ -139,6 +196,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#sprawl-0-2-0">0.2.0</a></li>
         <li><a href="#sprawl-0-1-0-9000">0.1.0.9000</a></li>
       </ul>
     </div>

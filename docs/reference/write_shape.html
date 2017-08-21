@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>write_shape — write_shape â€¢ sprawl</title>
+<title>Write a <code>sf</code> or <code>sp</code> to a ESRI shapefil — write_shape â€¢ sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -33,6 +33,18 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84499524-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
   </head>
 
@@ -61,10 +73,25 @@
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../articles/examples.html">Examples of Use</a>
+  <a href="../articles/articles/examples.html">Examples of Use</a>
 </li>
-<li>
-  <a href="../articles/contributing.html">Contributing</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Contributing
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/articles/contributing.html">Contributing</a>
+    </li>
+    <li>
+      <a href="../articles/articles/coding_style.html">Codin Style</a>
+    </li>
+    <li>
+      <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -108,12 +135,12 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>write_shape</h1>
+    <h1>Write a <code>sf</code> or <code>sp</code> to a ESRI shapefil</h1>
     </div>
 
     
-    <p>Wrapper on  <code><a href='http://www.rdocumentation.org/packages/sf/topics/st_write'>sf::st_write</a></code> for writing an <code>sf</code> or <code>sp</code> object to disk as
-an ESRI shapefile</p>
+    <p>Wrapper on  <code><a href='http://www.rdocumentation.org/packages/sf/topics/st_write'>sf::st_write</a></code> for writing an <code>sf</code> or <code>sp</code> object to
+disk as an ESRI shapefile</p>
     
 
     <pre class="usage"><span class='fu'>write_shape</span>(<span class='no'>out_obj</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -124,8 +151,8 @@ an ESRI shapefile</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>out_obj</th>
-      <td><p><code>character</code> object to be written to the shapefile. Must be a valid <code>*sp</code> or <code>sf</code>
-object</p></td>
+      <td><p><code>character</code> object to be written to the shapefile. Must be a
+valid <code>*sp</code> or <code>sf</code> object</p></td>
     </tr>
     <tr>
       <th>out_file</th>
@@ -133,7 +160,8 @@ object</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p><code>logical</code> if TRUE, output file will be overwritten oif existing, Default: FALSE</p></td>
+      <td><p><code>logical</code> if TRUE, output file will be overwritten if existing,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -141,12 +169,14 @@ object</p></td>
     </tr>
     <tr>
       <th>encoding</th>
-      <td><p><code>character</code> encoding to be used to write the DBF of the shapefile, Default: "UTF-8"</p></td>
+      <td><p><code>character</code> encoding to be used to write the DBF of the
+shapefile, Default: "UTF-8"</p></td>
     </tr>
     <tr>
       <th>create_dir</th>
-      <td><p><code>logical</code>, if TRUE and the folder of out_file doesn't exist, then the full
-folder tree up to out_file is created, Default: FALSE (use with caution !)</p></td>
+      <td><p><code>logical</code>, if TRUE and the folder of out_file doesn't exist,
+then the full folder tree up to out_file is created, Default: FALSE
+(use with caution !)</p></td>
     </tr>
     <tr>
       <th>...</th>

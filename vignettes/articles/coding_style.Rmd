@@ -1,0 +1,63 @@
+---
+title: "Coding Style"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+`sprawl` strives at providing **access to complex functionality using a simple syntax**. To 
+  achieve this objective:
+  
+  - The **number of function arguments should be kept as limited as possible**. Required
+      arguments should be limited to one or two, and defaults to allow the more common use
+      of the function must be always provided for optional arguments. Consider that *`sprawl`
+      functions (besides helpers) are meant to address common "use cases"*. Therefore, 
+      they are **not** expected to allow performing also seldom-used processing tasks. For
+      example, `reproj_rast`, though based on `gdalwarp` uses only a limited number of the
+      possible `gdalwarp` arguments - for more complex use cases, the user is referred to 
+      "wrapped" routine. Analogously, `plot_rast` is not meant to replace `levelplot`, 
+      but to provide easy access to some of its more useful functionality);
+      
+  - **Functions should be spatial-class agnostic** (e.g., a function requiring a 
+      "vector" as an input should accept `sp`, `sf` and vector file names as inputs).
+      Automatic recasting to the specific class required by the function can be done at
+      the beginning of the function using `cast_vect` or `cast_rast`); 
+      
+  - **Functions should be generally easily pipable using the %>% operator** to allow 
+      building additional complex functions using pipes of simpler ones. For example, the
+      code below uses `sprawl` functions to implements a pipe which masks and crops a raster
+      file on a vector file, and then extract and summarizes values of the masked raster on
+      features of a second vector
+    ```{r eval = FALSE}
+    in_rast         <- "../mydir/myfile.tif"
+    in_mask_vect    <- "../mydir/mymask.shp"
+    in_feature_vect <- "../mydir/mypolys.shp"
+    out <- in_rast %>% 
+      mask_rast(in_mask_vect, crop = TRUE) %>% 
+      extract_rast(in_feature_vect, id_field = "ID")
+    ```
+      
+* `sprawl` generally follows the [tidyverse coding style guide](http://style.tidyverse.org/), 
+  _with the following small differences/integrations_:
+  
+    - **Function names should use a _\<verb\_objecttype\>_ or _\<verb\_specification\>_ syntax** allowing
+      to easily understand what they do (e.g., *good*: `get_projstring`, `read_vect`, `crop_rast`,
+      `dissolve_vect`, `get_rastinfo`, *bad*: `projection`, `rastinfo`, `resize`); 
+      
+    - **Function arguments should have meaningful** (though short) **names**, allowing to easily
+      understand their meaning (e.g., _good_: `out_extent`, `width`, `color`, `out_filename`
+      , _bad_: `te`, `lwd`, `col`, `file`);
+      
+    - **Calls to imported functions should always use the `package_name::function_name`**
+      syntax to avoid shadowing issues; 
+      
+    - When possible, **documentation of function arguments should start with a description of 
+      the "type" of expected input** (e.g., `character`, `numeric(2)`, `Raster`, etc.). We
+      suggest the use of the [`sinew`](https://github.com/metrumresearchgroup/sinew) package
+      to easily create function documentation skeletons, and of `devtools::document()` to
+      create the `Rd` files;
+      
+    - The 80 characters per line "rule" can be taken lightly, but *really long lines should
+      be avoided* (i.e., above 100 characters) ; 

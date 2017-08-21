@@ -13,7 +13,8 @@ OUTPUT_DESCRIPTION
 \description{
 helper to set classes on package loading
 
-An S4 class to represent the extent of a spatial object, associated with its proj4
+An S4 class to represent the extent of a spatial object,
+associated with its proj4
 string.
 }
 \details{

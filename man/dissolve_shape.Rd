@@ -26,7 +26,8 @@ DETAILS
 \dontrun{
  library(sprawl)
  library(sprawl.data)
- indata    <- read_vect(system.file("extdata","lc_polys.shp", package = "sprawl.data"))
+ indata    <- read_vect(system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data"))
+ indata
  byvar     <- "category"
  out_shape <- dissolve_shape(indata, byvar)
  out_shape

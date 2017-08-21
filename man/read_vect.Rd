@@ -9,8 +9,8 @@ read_vect(shp_file, as_sp = FALSE, ...)
 \arguments{
 \item{shp_file}{\code{character} Filename of ESRI shapefile to be opened}
 
-\item{as_sp}{\code{logical} If TRUE, the opened object is automatically converted to \code{sp} format.
-Otherwise, an \code{sf} object is returned. Default: FALSE}
+\item{as_sp}{\code{logical} If TRUE, the opened object is automatically converted
+to \code{sp} format. Otherwise, an \code{sf} object is returned. Default: FALSE}
 
 \item{...}{other arguments to be passed to\link[sf:st_read]{sf::st_read}}
 }
@@ -18,22 +18,24 @@ Otherwise, an \code{sf} object is returned. Default: FALSE}
 \code{sf} or \code{sp} object (depending on \code{as_sp} setting)
 }
 \description{
-function for easily opening a ESRI shapefile (or other OGR compatible vector file)
-by simply specifying its filename
+function for easily opening a ESRI shapefile (or other OGR
+valid vector file by simply specifying its filename
 }
 \details{
-simple wrapper around \code{sf::read_sf}, with some checks on inputs and possibility of
-automatic re-casting to \code{*sp} objects
+simple wrapper around \code{sf::read_sf}, with some checks on inputs and
+possibility of automatic re-casting to \code{*sp} objects
 }
 \examples{
 \dontrun{
 library(sprawl.data)
 # open a shapefile as a `sf` object
- shp_file = system.file("extdata","lc_polys.shp", package = "sprawl.data")
+ shp_file = system.file("extdata/shapes","lc_polys.shp",
+                        package = "sprawl.data")
  read_vect(shp_file)
 
 # open a shapefile as a `sp` object
- shp_file = system.file("extdata","lc_polys.shp", package = "sprawl.data")
+ shp_file = system.file("extdata/shapes","lc_polys.shp",
+                        package = "sprawl.data")
  read_vect(shp_file, as_sp = TRUE)
 }
 }

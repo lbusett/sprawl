@@ -81,7 +81,7 @@ Worked-out examples of the more comlex `sprawl` functions and workflows can be f
 
 We are open for contributions/help in improving `sprawl` and extend its functionalities. 
 If you have a **suggestion for and additional functionality** please report it in our [issues](https://github.com/lbusett/sprawl/issues) page. 
-If you **wish to contribute to `sprawl` development**, please see our [Contributing page] 
+If you **wish to contribute to `sprawl` development**, please see our [Contributing page](articles/articles/contributing.html) 
 on Git Hub (COMING SOON !).
 
 ## Authors
@@ -97,5 +97,5 @@ To cite package `sprawl` in publications use:
   Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Advanced
   Workflow Library. R package version 0.1.0.9000.
 
-Please note that this project is released with a [Contributor Code of Conduct](https://lbusett.github.io/sprawl/articles/conduct.html). By participating in this
-project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](articles/articles/conduct.html).
+By participating in this project you agree to abide by its terms.

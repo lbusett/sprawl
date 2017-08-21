@@ -17,16 +17,15 @@ doytodate(doys, year, verbose = TRUE)
 \code{Date} array resulting from the conversion
 }
 \description{
-Converts a doy (or array of doys) to date format. Year of origin has to be specified, to allow proper handling of leap years
+Converts a doy (or array of doys) to date format. Year of origin
+has to be specified, to allow proper handling of leap years
 }
 \details{
 DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+ doytodate(100, 2015)
 }
 }
 \author{

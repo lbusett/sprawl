@@ -15,7 +15,7 @@
 #' \dontrun{
 #'  # on single band
 #'  in_rast <- raster::raster(ncol=100, nrow=100)
-#'  in_rast <- raster::setValues(r, 1:10000)
+#'  in_rast <- raster::setValues(in_rast, 1:10000)
 #'  in_rast_cut <- cuttails_rast(in_rast)
 #'  in_rast_cut
 #'
@@ -25,26 +25,25 @@
 #'  in_brick_cut <- cuttails_rast(in_brick)
 #'  in_brick_cut
 #'  }
-#' @seealso
-#'  \code{\link[raster]{quantile}},\code{\link[raster]{getValues}},\code{\link[raster]{setValues}},\code{\link[raster]{brick}}
 #' @rdname cuttails_rast
 #' @export
 #' @importFrom raster quantile getValues setValues brick
-#' @importFrom data.table data.table
+#' @importFrom data.table data.table ":="
 #'
 cuttails_rast <- function(in_rast,
                           tails   = c(0.02,0.98),
                           to_file = FALSE,
                           verbose = TRUE) {
 
-  in_rast   <- cast_rast(in_rast, "rastobj")
-  quantiles <- raster::quantile(in_rast, probs = tails, na.rm = T)
+  V1 <- NULL
+  in_rast   <- cast_rast(in_rast, "rastobject")
+  quantiles <- raster::quantile(in_rast, probs = tails, na.rm = TRUE)
   nbands    <- length(quantiles)/2
   names_or  <- names(in_rast)
   if (nbands > 1) {
     for (band in 1:dim(quantiles)[1]) {
-      band_values <- data.table::data.table(V1 = raster::getValues(in_rast[[band]]))
-      band_values[((V1 < quantiles[band,1]) | (V1 > quantiles[band,2])), V1 := NA]
+      band_values <- data.table::data.table(V1 = raster::getValues(in_rast[[band]])) #nolint
+      band_values[((V1 < quantiles[band,1]) | (V1 > quantiles[band,2])), V1 := NA] #nolint
       in_rast[[band]]  <- raster::setValues(in_rast[[band]], band_values[,V1])
     }
   } else {
@@ -55,4 +54,3 @@ cuttails_rast <- function(in_rast,
   names(in_rast) <- names_or
   return(in_rast)
 }
-

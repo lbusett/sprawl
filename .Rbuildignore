@@ -4,13 +4,13 @@
 ^README\.Rmd$
 ^index\.Rmd$
 ^README-.*\.png$
-temporary\*
-/WIP\*
-/wiki\*
-benchmarking\*
 ^\.travis\.yml$
 ^D:/Documents/Source/git/sprawl/docs$
 ^codecov\.yml$
 ^cran-comments\.md$
 ^CONDUCT\.md$
 ^pkgdown$
+^WIP$
+^benchmarking$
+^docs$
+^index\.md$

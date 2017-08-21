@@ -2,36 +2,48 @@
 % Please edit documentation in R/create_fishnet.R
 \name{create_fishnet}
 \alias{create_fishnet}
-\title{create a "fishnet" vector based on cells of a raster}
+\title{Create a "fishnet" vector based on cells of a raster}
 \usage{
 create_fishnet(in_rast, pix_for_cell = 1, cellsize = NULL,
   to_file = FALSE, out_shape = NULL, overwrite = TRUE,
   crop_layer = NULL)
 }
 \arguments{
-\item{in_rast}{raster file or object of class \code{raster*} on which the fishnet needs to be derived.}
+\item{in_rast}{raster file or object of class \code{raster*} on which the fishnet
+needs to be derived.}
 
-\item{pix_for_cell}{\code{numeric} (optional) 1/2 element numeric array specifying how many pixels of the #' raster will be included in each polygon of the fishnet (if only one element is provided, the #' same number of pixel is aggregated in each direction). Ignored if \code{cellsize} is not null, #' Default: 1}
+\item{pix_for_cell}{\code{numeric(1/2)} (optional) 1/2 element numeric array
+specifying how many pixels of the #' raster will be included in each
+polygon of the fishnet (if only one element is provided, the #' same number
+of pixel is aggregated in each direction). Ignored if \code{cellsize} is not null,
+Default: 1}
 
-\item{cellsize}{\code{numeric} (optional) 1/2 element array specifying the dimensions of the desired #' cells in the x and y directions (if only one element is provided, the same cellsize is #' used in each direction), Default: NULL}
+\item{cellsize}{\code{numeric(1/2)} (optional) 1/2 element array specifying the
+dimensions of the desired #' cells in the x and y directions (if only one
+element is provided, the same cellsize is used in each direction),
+Default: NULL}
 
-\item{to_file}{PARAM_DESCRIPTION, Default: NULL}
+\item{to_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE}
 
-\item{out_shape}{PARAM_DESCRIPTION, Default: NULL}
+\item{out_shape}{\code{logical} PARAM_DESCRIPTION, Default: FALSE}
 
-\item{overwrite}{PARAM_DESCRIPTION, Default: TRUE}
+\item{overwrite}{\code{logical} PARAM_DESCRIPTION, Default: TRUE}
 
-\item{crop_layer}{(optional) object of class \code{Extent}. If not null, the fishnet iscropped on #' this extent, without "moving" the nodes of the grid. This is useful to crop a grid created on #' the basis of a different raster coordinates on top of a different raster, Default: NULL}
+\item{crop_layer}{\code{logical} object of class \code{Extent}. If not null, the
+fishnet is cropped on this extent, without "moving" the nodes of the grid.
+This is useful to crop a grid created on the basis of a different raster
+coordinates on top of a different raster, Default: FALSE}
 }
 \value{
 OUTPUT_DESCRIPTION
 }
 \description{
-function to create a raster and/or polygon fishnet of specified resolution over a
-raster dataset. By default, the fishnet is built so that each cell corresponds to a raster cell.
-If the \code{pix_for_cell} argument is set, then the polygons of the fishnet are built so to include
-the specified number of cells in each direction. If the \code{cellsize} option is set, a fishnet of the
-specified resolution is created over the extent of the raster)
+Function to create a polygon fishnet of specified resolution
+over a raster dataset. By default, the fishnet is built so that
+each cell corresponds to a raster cell. If the \code{pix_for_cell} argument is
+set, then the polygons of the fishnet are built so to include the specified
+number of cells in each direction. If the \code{cellsize} option is set, a fishnet
+of the specified resolution is created over the extent of the raster)
 }
 \details{
 DETAILS
@@ -44,8 +56,8 @@ DETAILS
   library(rasterVis)
 
   in_rast  <- build_testraster(20,20,1)
-
   fishnet  <- create_fishnet(in_rast)
+
   plot_rast(in_rast, in_poly = fishnet)
 
   fishnet  <- create_fishnet(in_rast, pix_for_cell = c(2,2))
@@ -54,10 +66,6 @@ DETAILS
   fishnet  <- create_fishnet(in_rast, cellsize = c(22,50))
   plot_rast(in_rast, in_poly = fishnet)
  }
-}
-\seealso{
-\code{\link[raster]{extent}},\code{\link[raster]{res}}
-\code{\link[sf]{st_as_sfc}},\code{\link[sf]{st_make_grid}}
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

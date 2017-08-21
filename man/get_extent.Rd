@@ -11,7 +11,8 @@
 \alias{get_extent.sf}
 \alias{get_extent.sfc}
 \alias{get_extent.Spatial}
-\title{return the exten of a spatial object or file (with projection)}
+\alias{get_extent.sprawlext}
+\title{return the extent of a spatial object or file (with projection)}
 \usage{
 get_extent(object, proj4string = NULL, abort = FALSE)
 
@@ -32,10 +33,12 @@ get_extent(object, proj4string = NULL, abort = FALSE)
 \method{get_extent}{sfc}(object, abort = FALSE)
 
 \method{get_extent}{Spatial}(object, abort = FALSE)
+
+\method{get_extent}{Spatial}(object, abort = FALSE)
 }
 \arguments{
-\item{object}{\code{character} corresponding to the name of a R object, or a filename
-(full path)}
+\item{object}{\code{character} corresponding to the name of a R object, or a
+filename (full path)}
 
 \item{proj4string}{(optional) \code{character} proj4string representing the projection of
 the input extent. It is needed only if 'object' does not include a
@@ -48,27 +51,34 @@ invalid proj4string is found, Default: FALSE}
 object of class \code{sprawlext}
 }
 \description{
-helper function used to retrieve the extent of a spatial object or file
-with the associated proj4string
+helper function used to retrieve the extent of a spatial object
+or file with the associated proj4string
 }
 \details{
 return an object of class \code{sprawlext} with two slots:
 \itemize{
+<<<<<<< HEAD
 \item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmanx, ymax)
 \item $proj4string: \code{character} proj4string of the object
+=======
+\item @extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
+\item @projstring: \code{character} proj4string of the object
+>>>>>>> master
 }
 }
 \examples{
 \dontrun{
  library(raster)
 
- in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
+ in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+   package = "sprawl.data")
  get_extent(in_rast)
 
  in_rast <- raster::raster(in_rast)
  get_extent(in_rast)
 
- in_vect <- system.file("extdata","lc_polys.shp", package = "sprawl.data")
+ in_vect <- system.file("extdata/shapes","lc_polys.shp",
+   package = "sprawl.data")
  get_extent(in_vect)
 
  in_vect <- read_vect(in_vect)

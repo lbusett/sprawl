@@ -53,7 +53,7 @@
 #' which statistics where extracted.
 #' @export
 #'
-#' @import data.table raster rgdal rgeos gdalUtils rts
+#' @importFrom data.table raster rgdal rgeos gdalUtils rts
 #'
 #' @examples
 #' \dontrun{# Extract average and standard deviation values from a list of raster datasets

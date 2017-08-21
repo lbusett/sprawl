@@ -20,11 +20,11 @@ er_crop_object(in_vect, in_rast, id_field, verbose)
 \itemize{
 \item in_vect_crop = cropped \code{sf} object
 \item outside_feat = data frame containing info on the "removed" features (sequential id and
-corresponding value ofthe "id" field (if provided)
+corresponding value of the "id" field (if provided)
 }
 }
 \description{
 Accessory function for \code{extract_rast}. Crops the in_vect on the extent of the raster
 to improve speed. Then check if some features in the original in_vect were dropped in
-zone_raster_croppped
+zone_raster_cropped
 }

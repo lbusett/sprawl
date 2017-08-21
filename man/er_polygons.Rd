@@ -39,11 +39,3 @@ DETAILS
  #EXAMPLE1
  }
 }
-\seealso{
-\code{\link[doSNOW]{registerDoSNOW}}
-\code{\link[foreach]{foreach}}
-\code{\link[gdalUtils]{gdalwarp}}
-\code{\link[sp]{proj4string}}
-\code{\link[velox]{velox}}
-\code{\link[utils]{setTxtProgressBar}},\code{\link[utils]{txtProgressBar}}
-}

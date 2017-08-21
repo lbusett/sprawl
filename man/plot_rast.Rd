@@ -15,38 +15,44 @@ plot_rast(in_rast, band = 1, in_poly = NULL, in_points = NULL,
 
 \item{band}{PARAM_DESCRIPTION, Default: 1}
 
-\item{in_poly}{optional input polygon vector object or file to be overlayed on the
-plot, Default: NULL}
+\item{in_poly}{optional input polygon vector object or file to be overlayed on
+the plot, Default: NULL}
 
-\item{in_points}{optional input points vector object or file to be overlayed on the
-plot, Default: NULL}
+\item{in_points}{optional input points vector object or file to be overlayed
+on the plot, Default: NULL}
 
 \item{background}{not used, Default: FALSE}
 
-\item{limits}{\code{numeric array [2]} optional limits governing the range of values to be plotted
-(e.g., c(0.2,0.4)), Default: NULL}
+\item{limits}{\code{numeric array [2]} optional limits governing the range of
+values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
 
-\item{tails}{\code{numeric array [2]} percentiles used to "cut" the values to be plotted to allow
-a "good" representation. Values outside the specified percentiles will be plotted as NoData,
-or using the colors specified in \code{col_outlow} and \code{col_outhigh}, Default: c(0.02, 0.98) (meaning)
-cutting the values at the 2nd and 98th percentile)}
+\item{tails}{\code{numeric array [2]} percentiles used to "cut" the values to be
+plotted to allow a "good" representation. Values outside the specified
+percentiles will be plotted as NoData, or using the colors specified in
+\code{col_outlow} and \code{col_outhigh}, Default: c(0.02, 0.98) (meaning cutting the
+values at the 2nd and 98th percentile)}
 
-\item{palette}{Palette to be used for colors (see \code{\link[RColorBrewer:brewer.pal]{RColorBrewer::brewer.pal}}), Default: 'RdYlGn'}
+\item{palette}{Palette to be used for colors (see \code{\link[RColorBrewer:brewer.pal]{RColorBrewer::brewer.pal}}),
+Default: 'RdYlGn'}
 
 \item{legend_type}{"standard" or "custom" (see examples), Default: 'standard'}
 
-\item{col_outlow}{Color used to plot the values below the lower limit/tail. Can be a string
-corresponding to a valid "R" color or HEX representation, Default: 'gray10'}
+\item{col_outlow}{Color used to plot the values below the lower limit/tail.
+Can be a \code{character} corresponding to a valid "R" color or HEX representation,
+Default: 'gray10'}
 
-\item{col_outhigh}{Color used to plot the values below the lower limit/tail. Can be a string
-corresponding to a valid "R" color or HEX representation, Default: 'gray90'}
+\item{col_outhigh}{Color used to plot the values below the lower limit/tail.
+Can be a \code{character} corresponding to a valid "R" color or HEX representation,
+Default: 'gray90'}
 
-\item{maxpixels}{\code{numeric} Maximum number of pixels to be plotted, Default: 5e+05}
+\item{maxpixels}{\code{numeric} Maximum number of pixels to be plotted. \strong{Increase
+this to have better rendering at the cost of speed!}, Default: 5e+05}
 
 \item{title}{\code{character} Title for the plot, Default: 'Raster Plot'}
 
-\item{plot_now}{\code{logic} If TRUE, the plot is immediately printed to screen. Otherwise, an object
-allowing later plotting/modifications is returned, Default: TRUE}
+\item{plot_now}{\code{logic} If TRUE, the plot is immediately printed to screen.
+Otherwise, an object allowing later plotting/modifications is returned,
+Default: TRUE}
 
 \item{...}{Any other arguments (?)}
 }
@@ -63,7 +69,8 @@ DETAILS
 \dontrun{
  library(sprawl)
 
- in_rast <- system.file("extdata", "gNDVI.tif", package = "sprawl.data")
+ in_rast <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
+  package = "sprawl.data")
  in_vect <- create_fishnet(in_rast, pix_for_cell = 150)
  # plot only the raster
  plot_rast(in_rast)
@@ -80,14 +87,14 @@ DETAILS
            title     = "RapidEye - GNDVI",
            maxpixels = 10e5)
 
- in_rast <- raster::stack(system.file("extdata", "sprawl_EVItest.tif",
-                                      package = "sprawl.data"))[[1:4]]
- plot_rast(in_rast)
+ # Plot more than one band
+ in_rast <- raster::stack(system.file(
+                          "extdata/OLI_test", "oli_multi_1000.tif",
+                          package = "sprawl.data"))[[2:5]]
+ plot_rast(in_rast, legend = "custom", maxpixels = 1e5)
  }
 }
 \seealso{
-\code{\link[latticeExtra]{layer}}
-\code{\link[raster]{stack}},\code{\link[raster]{quantile}}
 \code{\link[rasterVis]{levelplot}}
 \code{\link[RColorBrewer]{brewer.pal}}
 }

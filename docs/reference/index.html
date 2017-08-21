@@ -34,6 +34,18 @@
 <![endif]-->
 
 
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-84499524-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
   </head>
 
   <body>
@@ -61,10 +73,25 @@
   <a href="../articles/sprawl.html">Getting Started</a>
 </li>
 <li>
-  <a href="../articles/examples.html">Examples of Use</a>
+  <a href="../articles/articles/examples.html">Examples of Use</a>
 </li>
-<li>
-  <a href="../articles/contributing.html">Contributing</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Contributing
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/articles/contributing.html">Contributing</a>
+    </li>
+    <li>
+      <a href="../articles/articles/coding_style.html">Codin Style</a>
+    </li>
+    <li>
+      <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -110,7 +137,7 @@
     <div class="page-header">
       <h1>
         Reference
-        <small>version&nbsp;0.1.0.9000</small>
+        <small>version&nbsp;0.2.0</small>
       </h1>
     </div>
 
@@ -140,7 +167,7 @@
           <td>
             <p><code><a href="write_shape.html">write_shape</a></code> </p>
           </td>
-          <td><p>write_shape</p></td>
+          <td><p>Write a <code>sf</code> or <code>sp</code> to a ESRI shapefil</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -152,33 +179,9 @@
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="extract_rast.html">extract_rast</a></code> </p>
-          </td>
-          <td><p>extract raster values on features of a vector</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="reclass_rast.html">reclass_rast</a></code> </p>
-          </td>
-          <td><p>reclassify values of a raster</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
             <p><code><a href="aggregate_rast.html">aggregate_rast</a></code> </p>
           </td>
           <td><p>aggregate_rast</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mask_rast.html">mask_rast</a></code> </p>
-          </td>
-          <td><p>Mask a raster based on a vector</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="cuttails_rast.html">cuttails_rast</a></code> </p>
-          </td>
-          <td><p>remove outliers from a raster image</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -188,15 +191,33 @@
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="migrate_virtrast.html">migrate_virtrast</a></code> </p>
+            <p><code><a href="crop_rast.html">crop_rast</a></code> </p>
           </td>
-          <td><p>migrate "virtual rasters" to a new location</p></td>
+          <td><p>crop a raster file/rast_file on a given extent</p></td>
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="convert_rastdtype.html">convert_rastdtype</a></code> </p>
+            <p><code><a href="cuttails_rast.html">cuttails_rast</a></code> </p>
           </td>
-          <td><p>convert data type between <code>raster</code> and <code>gdal</code> conventions</p></td>
+          <td><p>remove outliers from a raster image</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="extract_rast.html">extract_rast</a></code> </p>
+          </td>
+          <td><p>extract raster values on features of a vector</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="mask_rast.html">mask_rast</a></code> </p>
+          </td>
+          <td><p>Mask a raster based on a vector</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="reclass_rast.html">reclass_rast</a></code> </p>
+          </td>
+          <td><p>reclassify values of a raster</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -214,21 +235,21 @@
         </tr><tr>
           <!--  -->
           <td>
+            <p><code><a href="cast_vect.html">cast_vect</a></code> </p>
+          </td>
+          <td><p>cast a vector object to a different <code>R</code> spatial class or to a shapefile</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
             <p><code><a href="create_fishnet.html">create_fishnet</a></code> </p>
           </td>
-          <td><p>create a "fishnet" vector based on cells of a raster</p></td>
+          <td><p>Create a "fishnet" vector based on cells of a raster</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="crop_vect.html">crop_vect</a></code> </p>
           </td>
           <td><p>crop a vector on the extent of a different spatial file</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="cast_vect.html">cast_vect</a></code> </p>
-          </td>
-          <td><p>cast a vector object to a different <code>R</code> spatial class or to a shapefile</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -240,9 +261,15 @@
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="get_spatype.html">get_spatype</a></code> </p>
+            <p><code><a href="get_extent.html">get_extent</a></code> </p>
           </td>
-          <td><p>check the "spatial type" of an object or file</p></td>
+          <td><p>return the extent of a spatial object or file (with projection)</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_rastinfo.html">get_rastinfo</a></code> </p>
+          </td>
+          <td><p>Retrieve useful info from a raster object or file</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -252,9 +279,9 @@
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="get_extent.html">get_extent</a></code> </p>
+            <p><code><a href="get_spatype.html">get_spatype</a></code> </p>
           </td>
-          <td><p>return the exten of a spatial object or file (with projection)</p></td>
+          <td><p>check the "spatial type" of an object or file</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -282,7 +309,7 @@
           <td>
             <p><code><a href="get_boundaries.html">get_boundaries</a></code> </p>
           </td>
-          <td><p>download vecor of administrative boundaries</p></td>
+          <td><p>Download vector of administrative boundaries from GADM</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -292,25 +319,6 @@
           </th>
         </tr>
         <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="summarize_data.html">summarize_data</a></code> </p>
-          </td>
-          <td><p>helper function used to extract statistics of raster values within
-<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code></p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="doytodate.html">doytodate</a></code> </p>
-          </td>
-          <td><p>convert DOYs to dates</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="datetodoy.html">datetodoy</a></code> </p>
-          </td>
-          <td><p>Convert dates to DOYs</p></td>
-        </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="build_testraster.html">build_testraster</a></code> </p>
@@ -325,6 +333,24 @@
         </tr><tr>
           <!--  -->
           <td>
+            <p><code><a href="convert_rastdtype.html">convert_rastdtype</a></code> </p>
+          </td>
+          <td><p>convert data type between <code>raster</code> and <code>gdal</code> conventions</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="datetodoy.html">datetodoy</a></code> </p>
+          </td>
+          <td><p>Convert dates to DOYs</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="doytodate.html">doytodate</a></code> </p>
+          </td>
+          <td><p>convert DOYs to dates</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
             <p><code><a href="find_command.html">find_command</a></code> </p>
           </td>
           <td><p>find the path to a specified command</p></td>
@@ -334,6 +360,31 @@
             <p><code><a href="find_gdal.html">find_gdal</a></code> </p>
           </td>
           <td><p>find gdal main folder</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="make_folder.html">make_folder</a></code> </p>
+          </td>
+          <td><p>FUNCTION_TITLE</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="migrate_virtrast.html">migrate_virtrast</a></code> </p>
+          </td>
+          <td><p>migrate "virtual rasters" to a new location</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="reproj_extent.html">reproj_extent</a></code> </p>
+          </td>
+          <td><p>reproject the extent of a spatial object</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="summarize_data.html">summarize_data</a></code> </p>
+          </td>
+          <td><p>helper function used to extract statistics of raster values within
+<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code></p></td>
         </tr><tr>
           <!--  -->
           <td>

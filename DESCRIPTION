@@ -1,7 +1,6 @@
 Package: sprawl
 Title: sprawl: Spatial Processing (in) R: Advanced Workflows Library
-Version: 0.1.0.9000
-Date: 2017-07-02
+Version: 0.2.0
 Authors@R: c(person("Lorenzo", "Busetto", email = "busetto.l@irea.cnr.it", role = c("aut", "cre")), 
              person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut")))
 Description: **`sprawl` aims to simplify the execution of some "common" spatial processing tasks** 
@@ -45,8 +44,10 @@ Imports: data.table,
         RColorBrewer,
         tools,
         magrittr, 
-        parallel, 
-        stringr
+        stringr,
+        glue,
+        assertthat,
+        parallel
 Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,

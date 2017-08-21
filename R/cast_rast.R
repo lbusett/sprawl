@@ -36,11 +36,12 @@ cast_rast <- function(object,
 
 cast_rast.default <- function(object, to) {
   call <- as.list(match.call())
-  stop("cast_rast --> ", call[[1]], " is not a valid `Raster` object or raster file. Aborting !")
+  stop("cast_rast --> ",
+       call[[1]], " is not a valid `Raster` object or raster file. Aborting !")
 }
 
 #   ____________________________________________________________________________
-#   Method for Raster                                                        ####
+#   Method for Raster                                                       ####
 
 #'@export
 #'@method cast_rast Raster
@@ -62,8 +63,8 @@ cast_rast.Raster <- function(object, to) {
       return(object)
     }
   }
-  stop("cast_rast --> `", as.character(call[[3]]), "` is invalid for `to`. It should be `rastobject`,
-       `rastfile`")
+  stop("cast_rast --> `", as.character(call[[3]]), "` is invalid for `to`. It ",
+       "should be \"rastobject\" or \"rastfile\"")
 }
 
 #   ____________________________________________________________________________
@@ -87,9 +88,10 @@ cast_rast.character <- function(object,
         return(raster::brick(object))
       }
     }
-    stop("cast_vect --> `", as.character(call[[3]]), "` is invalid for `to`. It should be `sfobject`,
-       `spobject` or `vectfile`")
+  stop("cast_rast --> `", as.character(call[[3]]), "` is invalid for `to`. It ",
+       "should be \"rastobject\" or \"rastfile\"")
   }
-  stop("cast_vect --> ",  as.character(call[[2]]), " is not a valid raster filename. Aborting !")
+  stop("cast_vect --> ",  as.character(call[[2]]), " is not a valid raster ",
+       "filename. Aborting !")
 
 }

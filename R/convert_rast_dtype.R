@@ -1,9 +1,9 @@
 #' @title convert data type between `raster` and `gdal` conventions
 #' @description FUNCTION_DESCRIPTION
-#' @param dtype_string `character` data type string (e.g., Int16, ecc)
+#' @param dtype_string `character` data type string (e.g., Int16, etc)
 #' @param type `character` - either \"gdal\" or \"raster\"
-#' @return `tibble` containing the representation of the data type both for gdal and
-#'   raster
+#' @return `tibble` containing the representation of the data type both for gdal
+#'  and raster
 #' @examples
 #' \dontrun{
 #'  in_dtype <- "INT1U"
@@ -19,8 +19,7 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom tibble tribble
-convert_rastdtype <- function(dtype_string,
-                           type){
+convert_rastdtype <- function(dtype_string, type){
 
   call        <- match.call()
 
@@ -45,8 +44,8 @@ convert_rastdtype <- function(dtype_string,
       return(dtype_table[line,])
 
     } else {
-      stop("get_rast_dtype --> ", call[[2]], " is not a recognized ", call[[3]], " format.
-           Aborting !")
+      stop("get_rast_dtype --> ", call[[2]], " is not a recognized ", call[[3]],
+           " format.\nAborting !")
     }
   }
 
@@ -55,11 +54,12 @@ convert_rastdtype <- function(dtype_string,
     if (length(line) != 0 ){
       return(dtype_table[line,])
     } else {
-      stop("\nget_rast_dtype --> ", call[[2]], " is not a recognized ", call[[3]], " format.
-            \nAborting !")
+      stop("\nget_rast_dtype --> ", call[[2]], " is not a recognized ", call[[3]], #nolint
+           " format.\nAborting !")
     }
   }
 
-  stop("get_rast_dtype --> ", call[[3]], " must be \"raster\" or \"gdal\". Aborting !")
+  stop("get_rast_dtype --> ", call[[3]], " must be \"raster\" or \"gdal\".\n",
+       "Aborting !")
 
 }

@@ -1,38 +1,49 @@
-#' @title download vecor of administrative boundaries
-#' @description function to download administrative boundaries data from the gadm archive, starting
-#' from a country name or ISO code, and the level of desired administrative units
+#' @title Download vector of administrative boundaries from GADM
+#' @description Function to download administrative boundaries data from the gadm
+#'   archive, starting from a country name or ISO code, and the level of desired
+#'   administrative units. The function is a simple wrapper to the
+#'   `raster::getData` function, with a-priori checks on country name or ISO code
+#'   and automatic recasting to `sf` format.
 #' @param iso `character` iso name or 2/3 digits code of the country
-#' @param level `numeric` level of administrative units returned, default: 0 (Country Level)
-#' @param path `character`
-#' @param makefold `character`
-#' @return SpatialPolygonsDataFrame containing the desired data
-#' @details the function is a simple wrapper to the raster::getData function, with a-priori checks
-#' on country name or ISO code
+#' @param level `numeric` level of administrative units returned, Default: 0
+#'   (Country Level)
+#' @param path `character` folder where the "RData" file containing polygon
+#'   boundaries should be saved, Default: `tempdir()`
+#' @return `sf` object containing the desired data
 #' @examples
 #' \dontrun{
 #'  library(sprawl)
-#'  library(sp)
 #'  ita_boundaries <- get_boundaries("Italy", 0)
 #'  ita_region_boundaries <- get_boundaries("ITA", 1)
-#'  plot(ita_region_boundaries)
+#'  plot(ita_region_boundaries[1])
 #'  }
-
 #' @seealso
 #'  \code{\link[raster]{getData}}
 #' @rdname get_boundaries
 #' @export
 #' @importFrom raster getData
+#' @importFrom sf st_sf
+#' @importFrom utils data
+#'
 get_boundaries <- function(iso,
-                           level    = 1,
-                           path     = NULL,
-                           makefold = TRUE) {
+                           level = 1,
+                           path  = tempdir()) {
 
-  #   ____________________________________________________________________________
-  #   check if level is numeric and iso is a recognized country name or ISO code ####
+  call <- match.call()
 
-  if (!is.numeric(level)) stop("get_boundaries --> level must be numeric. Aborting !")
+  message("get_boundaries --> Downloading data for: ",
+          deparse(substitute(call)$iso),
+          ", Level: ", deparse(substitute(call)$level))
 
-  data(iso3166, package = "maps", envir = environment())
+  #   __________________________________________________________________________
+  #   check if level is numeric and iso is a recognized country name or ISO ####
+  #   code
+
+  if (!is.numeric(level)) stop(
+    "get_boundaries --> `level` must be numeric. Aborting !"
+  )
+
+  iso3166 <- get(utils::data(iso3166, package = "maps", envir = environment()))
   match_name <- match(iso, iso3166$ISOname)
   if (!is.na(match_name)) {
     iso_code <- iso3166$a3[match_name]
@@ -45,36 +56,24 @@ get_boundaries <- function(iso,
       if (!is.na(match_code_i2)) {
         iso_code <- iso3166$a2[match_code_i2]
       } else {
-        stop("get_boundaries --> Unrecognized ISO code or country name. Aborting !")
+        stop("get_boundaries --> Unrecognized ISO code or country name. Aborting !") #nolint
       }
     }
   }
 
-  if (is.null(path)) {
-    path = tempdir()
-  } else {
-    if (!dir.exists(path)) {
-      if (makefold) {
-        builddir <- try(dir.create(path, recursive = TRUE, showWarnings = FALSE))
-        if (class(builddir == "try-error")) stop("get_boundaries --> Unable to create the ", path, "folder. Please
-                                               check your inputs and verify file system permissions. Aborting")
-      } else {
-        stop("get_boundaries --> `path` folder doesn't exist on your system. Either create it beforehand, or
-set `makefold` to TRUE. Aborting")
-      }
-    }
-  }
-  #   ____________________________________________________________________________
-  #   Download the data                                                       ####
-
+  #   __________________________________________________________________________
+  #   Download the data                                                     ####
+  make_folder(path, type = "dirname")
   adm <- suppressWarnings(try(raster::getData("GADM",
                                               country = iso_code,
                                               level   = level,
                                               path    = path),
                               silent = TRUE))
+
   if (class(adm) == "try-error") {
-    stop("get_boundaries --> Download failed. It is possible that the level of data you are trying to download
-         is not available. Please check at: `http://gadm.org/country`. Aborting !")
+    stop("get_boundaries --> Download failed.\nIt is possible that the level
+         of data you are trying to download is not available.\n",
+         "Please check at: http://gadm.org/country. Aborting !")
   }
-  return(adm)
+  return(sf::st_as_sf(adm))
 }

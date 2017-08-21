@@ -16,8 +16,11 @@ er_getbands <- function(in_rast,
                         selbands = NULL,
                         verbose  = FALSE) {
 
-  banderr_msg <-"extract_rast --> `selbands` must be either a 2-element numeric array containing starting and ending
-         band numbers for the extraction OR a 2-element array containing starting and ending Dates for the extraction"
+  banderr_msg <- glue::glue(
+    "extract_rast --> `selbands` must be either a 2-element numeric array\n",
+    "containing starting and ending band numbers for the extraction OR a\n ",
+    "2-element array containing starting and ending Dates for the extraction."
+  )
   # Check if in_rast is a raster object or file -----
   if (get_spatype(in_rast) == "rastfile") {
     in_rast <- raster::stack(in_rast)
@@ -38,15 +41,15 @@ er_getbands <- function(in_rast,
 
 
   if (is.null(selbands)) {
-    selbands_out = c(1,nbands)
-    seldates = NA
+    selbands_out <- c(1,nbands)
+    seldates     <- NA
   }
 
   # Check if selbands is a 2-element integer array -----
   if (is.numeric(selbands)) {
     if (length(selbands[!is.na(selbands)]) != 2) stop(banderr_msg)
     selbands_out <- selbands
-    seldates = NA
+    seldates     <- NA
   } else {
     # Check if selbands is a 2-element character array coercible to date -----
     if (is.character(selbands)) {
@@ -66,7 +69,8 @@ er_getbands <- function(in_rast,
 
   }
 
-  # Input raster contains valid date information AND dates are passed as argument
+  # Input raster contains valid date information AND dates are passed as
+  # argument
 
   if (date_chk & lubridate::is.timepoint(seldates)) {
     selbands_out    <- c(NA,NA)
@@ -75,33 +79,40 @@ er_getbands <- function(in_rast,
   } else {
     # selbands provided as dates, but no dates in input raster --> aborting
     if (lubridate::is.timepoint(seldates) & !date_chk) {
-      stop("extract_rast --> Input raster doesn't contain valid dates in its 'Z' attribute.
-Please specify the layers to be processed using a numeric array (e.g., selbands = c(1,5)). Aborting. ")
+      stop("extract_rast --> Input raster doesn't contain valid dates in its",
+           "'Z' attribute.\nPlease specify the layers to be processed using",
+           "a numeric array (e.g., selbands = c(1,5)). Aborting. ")
     }
   }
 
   # Check for consistency in selbands -----
   if (selbands_out[1] > nbands) {
     if (!lubridate::is.timepoint((selbands_out[1]))) {
-      stop("extract_rast --> Start band (selbands[1]) greater than number of available layers ! Aborting !")
+      stop("extract_rast --> Start band (selbands[1]) greater than number ",
+           "of available layers ! Aborting !")
     } else {
-      stop("extract_rast --> Start date (selbands[1]) later than last date available in `in_rast` ! Aborting !")
+      stop("extract_rast --> Start date (selbands[1]) later than last date ",
+           "available in `in_rast` ! Aborting !")
     }
   }
 
   if (selbands_out[2] < selbands_out[1]) {
     if (!lubridate::is.timepoint((selbands_out[2]))) {
-      stop("extract_rast --> End band (selbands[2]) smaller than start band (selbands[1]) ! Aborting !")
+      stop("extract_rast --> End band (selbands[2]) smaller than start band ",
+           "(selbands[1]) ! Aborting !")
     } else {
-      stop("extract_rast --> End date (selbands[2]) later than start date (selbands[1]) ! Aborting !")
+      stop("extract_rast --> End date (selbands[2]) later than start date ",
+           "(selbands[1]) ! Aborting !")
     }
   }
 
   if (selbands_out[2] > nbands) {
     if (!lubridate::is.timepoint((selbands_out[2]))) {
-      warning("extract_rast --> End band (selbands[2]) greater than number of available layers ! Resetting End band to nlayers")
+      warning("extract_rast --> End band (selbands[2]) greater than number of ",
+              "available layers ! Resetting End band to nlayers")
     } else {
-      warning("extract_rast --> End date (selbands[2]) later than last date available in `in_rast` ! Resetting End band to nlayers")
+      warning("extract_rast --> End date (selbands[2]) later than last date ",
+              "available in `in_rast` ! Resetting End band to nlayers")
     }
     selbands_out[2] <- nbands
   }

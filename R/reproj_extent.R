@@ -1,21 +1,20 @@
 #' @title reproject the extent of a spatial object
-#' @description accessory function to convert the extent of a spatial object to a different
-#' projection. simple wrapper for the `spTransform` function on an [`raster::extent`] object
-#'
-#' @param ext   object of class `sprawlext`, or any other object or
-#'   filename from which a `sprawlext` object can be derived
-#'   (see [`get_extent`]).
+#' @description accessory function to convert the extent of a spatial object to
+#'  a different projection. simple wrapper for the `spTransform` function on
+#' @param ext_in  object of class `sprawlext`, or any other object or
+#'  a `sprawlext` object
+#'   filename from which a `sprawlext` object can be derived (see `get_extent`)
 #' @param in_proj  `character` (optional) proj4string representing the projection of
-#'  the input extent. It is needed only if ext is an object which does not include a
 #'  projection (like [`extent`] or [`bbox`]).
+#'  the input extent. It is needed only if ext is an object which does not include a
 #' @param out_proj `character` proj4string representing the desired projection for the output extent
 #' @param enlarge `logical` If TRUE, the reprojected bounding box is the
 #' one which completely include the original one; if FALSE (defalt, faster), it is simply
 #' the one obtained by reprojecting the upper-left and the lower-right corners.
 #' @param n_dens `numeric` Densification ratio used in the case enlarge is TRUE.
-#' @return An object of class `sprawlext` representing the
 #'  reprojected extent
 #' @rdname reproj_extent
+#' @return An object of class `sprawlext` representing the
 #' @export
 #'
 #' @importFrom raster extent
@@ -24,8 +23,11 @@
 #' @importFrom sp SpatialPoints CRS spTransform
 #' @importFrom magrittr %>%
 #'
-#' @examples
-#'
+#' @examples {
+#'  \dontrun{
+#'  EXAMPLE_1
+#' }
+#'}
 
 reproj_extent <- function(ext, in_proj = NULL, out_proj = NULL, enlarge=TRUE, n_dens=1E3) {
 

@@ -71,24 +71,26 @@ reclass_rast <- function(in_rast,
                          out_rast  = NULL,
                          overwrite = FALSE){
 
-  #   ____________________________________________________________________________
-  #   determine the required data type based on maximum value of the output   ####
+  #TODO document and make examples
+
+  #   __________________________________________________________________________
+  #   determine the required data type based on maximum value of the output ####
   #   raster
 
   max_out <- max(reclass_matrix$new, na.rm = TRUE)
   if (max_out <= 255) {
-    ot = "INT1U"
+    ot <- "INT1U"
   }  else  {
     if (max_out <= 65536) {
-      ot = "INT2S"
+      ot <- "INT2S"
     } else {
-      ot = "INT4S"
+      ot <- "INT4S"
     }
   }
 
-  #   ____________________________________________________________________________
-  #   Launch raster::reclassify, using intervals open on the left and closed o####
-  #   on the right
+  # ___________________________________________________________________________
+  # Launch raster::reclassify, using intervals open on the left and closed ####
+  # on the right
   if (is.null(out_rast)) {
     out_rast <- tempfile(fileext = ".tif")
   }
