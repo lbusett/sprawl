@@ -34,6 +34,11 @@ ex_extent
 ex_bbox <- as(ex_sprawlext, "matrix")
 ex_bbox
 
+# Convert to Spatial* objects
+as(ex_sprawlext, "SpatialPolygons")
+as(ex_sprawlext, "SpatialPoints")
+as(ex_sprawlext, "SpatialLines")
+
 # Extract proj4string CRS
 ex_crs <- as(ex_sprawlext, "CRS")
 ex_crs

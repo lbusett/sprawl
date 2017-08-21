@@ -27,6 +27,11 @@
 #' ex_bbox <- as(ex_sprawlext, "matrix")
 #' ex_bbox
 #'
+#' # Convert to Spatial* objects
+#' as(ex_sprawlext, "SpatialPolygons")
+#' as(ex_sprawlext, "SpatialPoints")
+#' as(ex_sprawlext, "SpatialLines")
+#'
 #' # Extract proj4string CRS
 #' ex_crs <- as(ex_sprawlext, "CRS")
 #' ex_crs
@@ -56,3 +61,20 @@ setAs("sprawlext", "CRS", function(from) {
   return(CRS(from@proj4string))
 })
 
+setAs("sprawlext", "SpatialPolygons", function(from) {
+  out_poly <- as(extent(from@extent[c(1,3,2,4)]), "SpatialPolygons")
+  out_poly@proj4string <- CRS(from@proj4string)
+  return(out_poly)
+})
+
+setAs("sprawlext", "SpatialLines", function(from) {
+  out_poly <- as(extent(from@extent[c(1,3,2,4)]), "SpatialLines")
+  out_poly@proj4string <- CRS(from@proj4string)
+  return(out_poly)
+})
+
+setAs("sprawlext", "SpatialPoints", function(from) {
+  out_poly <- as(extent(from@extent[c(1,3,2,4)]), "SpatialPoints")
+  out_poly@proj4string <- CRS(from@proj4string)
+  return(out_poly)
+})

@@ -4,18 +4,18 @@
 \alias{reproj_extent}
 \title{reproject the extent of a spatial object}
 \usage{
-reproj_extent(ext, in_proj = NULL, out_proj = NULL, enlarge = TRUE,
+reproj_extent(ext, out_proj, in_proj = NULL, enlarge = TRUE,
   n_dens = 1000)
 }
 \arguments{
+\item{out_proj}{\code{character} proj4string representing the desired projection for the output extent}
+
 \item{in_proj}{\code{character} (optional) proj4string representing the projection of
 projection (like \code{\link{extent}} or \code{\link{bbox}}).
 the input extent. It is needed only if ext is an object which does not include a}
 
-\item{out_proj}{\code{character} proj4string representing the desired projection for the output extent}
-
-\item{enlarge}{\code{logical} If TRUE, the reprojected bounding box is the
-one which completely include the original one; if FALSE (defalt, faster), it is simply
+\item{enlarge}{\code{logical} If TRUE (default), the reprojected bounding box is the
+one which completely include the original one; if FALSE (faster), it is simply
 the one obtained by reprojecting the upper-left and the lower-right corners.}
 
 \item{n_dens}{\code{numeric} Densification ratio used in the case enlarge is TRUE.

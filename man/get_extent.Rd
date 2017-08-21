@@ -16,25 +16,25 @@
 \usage{
 get_extent(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{default}(object, abort = FALSE)
+\method{get_extent}{default}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{sprawlext}(object, abort = FALSE)
+\method{get_extent}{sprawlext}(object, proj4string = NULL, abort = FALSE)
 
 \method{get_extent}{Extent}(object, proj4string, abort = FALSE)
 
 \method{get_extent}{matrix}(object, proj4string, abort = FALSE)
 
-\method{get_extent}{character}(object, abort = FALSE)
+\method{get_extent}{character}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Raster}(object, abort = FALSE)
+\method{get_extent}{Raster}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{sf}(object, abort = FALSE)
+\method{get_extent}{sf}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{sfc}(object, abort = FALSE)
+\method{get_extent}{sfc}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Spatial}(object, abort = FALSE)
+\method{get_extent}{Spatial}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Spatial}(object, abort = FALSE)
+\method{get_extent}{Spatial}(object, proj4string = NULL, abort = FALSE)
 }
 \arguments{
 \item{object}{\code{character} corresponding to the name of a R object, or a

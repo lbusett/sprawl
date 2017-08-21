@@ -4,12 +4,12 @@
 #' @param ext_in  object of class `sprawlext`, or any other object or
 #'  a `sprawlext` object
 #'   filename from which a `sprawlext` object can be derived (see `get_extent`)
+#' @param out_proj `character` proj4string representing the desired projection for the output extent
 #' @param in_proj  `character` (optional) proj4string representing the projection of
 #'  projection (like [`extent`] or [`bbox`]).
 #'  the input extent. It is needed only if ext is an object which does not include a
-#' @param out_proj `character` proj4string representing the desired projection for the output extent
-#' @param enlarge `logical` If TRUE, the reprojected bounding box is the
-#' one which completely include the original one; if FALSE (defalt, faster), it is simply
+#' @param enlarge `logical` If TRUE (default), the reprojected bounding box is the
+#' one which completely include the original one; if FALSE (faster), it is simply
 #' the one obtained by reprojecting the upper-left and the lower-right corners.
 #' @param n_dens `numeric` Densification ratio used in the case enlarge is TRUE.
 #'  reprojected extent
@@ -29,24 +29,20 @@
 #' }
 #'}
 
-reproj_extent <- function(ext, in_proj = NULL, out_proj = NULL, enlarge=TRUE, n_dens=1E3) {
+reproj_extent <- function(ext, out_proj, in_proj = NULL, enlarge=TRUE, n_dens=1E3) {
+
+  # Checks on projections
+  out_proj <- check_proj4string(out_proj)
+  if (!is.null(in_proj)) {
+    in_proj <- check_proj4string(in_proj)
+  }
 
   # Convert ext in sprawlext
-  ext <- get_extent(ext)
-
-  # Checks on out_proj
-  if (is.null(out_proj)) {
-    stop("Output projection not set! Aborting!")
-  }
-  if (class(try(sp::CRS(out_proj), silent = TRUE)) == "try-error") {
-    # print(paste("MY_ERROR:  ",err))
-    stop("reproj_extent --> Invalid input projection! Aborting!")
-  }
-
+  ext <- get_extent(ext, proj4string = in_proj)
 
   # If in_proj and out_proj differ, reproject the shape extent
 
-  if (CRSargs(CRS(out_proj)) != CRSargs(CRS(ext@projstring))) {
+  if (CRSargs(CRS(out_proj)) != CRSargs(CRS(ext@proj4string))) {
 
     if (enlarge) {
       in_ext <- data.frame(
@@ -60,12 +56,9 @@ reproj_extent <- function(ext, in_proj = NULL, out_proj = NULL, enlarge=TRUE, n_
                 ext@extent["ymin"] +
                   diff(ext@extent[c("ymin","ymax")]) * (n_dens:1) / n_dens))
       in_ext <- list(Polygons(list(Polygon(in_ext)), 1)) %>%
-        sp::SpatialPolygons(proj4string = sp::CRS(ext@projstring)) # convert in a SpatialPolygons
+        sp::SpatialPolygons(proj4string = sp::CRS(ext@proj4string)) # convert in a SpatialPolygons
     } else {
-      in_ext <- data.frame(
-        x = ext@extent[rep(c("xmin","xmax"),times=2)],
-        y = ext@extent[rep(c("ymin","ymax"),each=2)]) %>%
-        sp::SpatialPoints(proj4string = sp::CRS(ext@projstring)) # convert in a SpatialPoints
+      in_ext <- as(ext, "SpatialPoints") # convert in a SpatialPoints
     }
 
     out_ext_rep <- sp::spTransform(in_ext, out_proj) %>%

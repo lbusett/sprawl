@@ -54,6 +54,7 @@ get_extent <- function(object,
 #' @method get_extent default
 #' @export
 get_extent.default  <- function(object,
+                                proj4string = NULL,
                                 abort = FALSE) {
   call <- match.call()
   if (abort == TRUE) {
@@ -72,6 +73,7 @@ get_extent.default  <- function(object,
 #' @method get_extent sprawlext
 #' @export
 get_extent.sprawlext  <- function(object,
+                                  proj4string = NULL,
                                   abort = FALSE) {
   return(object)
 }
@@ -127,7 +129,9 @@ get_extent.matrix  <- function(object,
 #' @rdname get_extent
 #' @method get_extent character
 #' @export
-get_extent.character <- function(object, abort = FALSE) {
+get_extent.character <- function(object,
+                                 proj4string = NULL,
+                                 abort = FALSE) {
 
   call     <- match.call()
   obj_type <- get_spatype(object, abort = abort)
@@ -164,7 +168,9 @@ get_extent.character <- function(object, abort = FALSE) {
 #' @rdname get_extent
 #' @method get_extent Raster
 #' @export
-get_extent.Raster <- function(object, abort = FALSE) {
+get_extent.Raster <- function(object,
+                              proj4string = NULL,
+                              abort = FALSE) {
 
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
@@ -182,7 +188,9 @@ get_extent.Raster <- function(object, abort = FALSE) {
 #' @rdname get_extent
 #' @method get_extent sf
 #' @export
-get_extent.sf <- function(object, abort = FALSE) {
+get_extent.sf <- function(object,
+                          proj4string = NULL,
+                          abort = FALSE) {
 
   bbox          <- sf::st_bbox(object)
   coords        <- as.numeric(bbox)
@@ -201,7 +209,9 @@ get_extent.sf <- function(object, abort = FALSE) {
 #' @rdname get_extent
 #' @method get_extent sfc
 #' @export
-get_extent.sfc <- function(object, abort = FALSE) {
+get_extent.sfc <- function(object,
+                           proj4string = NULL,
+                           abort = FALSE) {
 
   bbox          <- sf::st_bbox(object)
   coords        <- as.numeric(bbox)
@@ -221,7 +231,9 @@ get_extent.sfc <- function(object, abort = FALSE) {
 #' @rdname get_extent
 #' @method get_extent Spatial
 #' @export
-get_extent.Spatial <- function(object, abort = FALSE) {
+get_extent.Spatial <- function(object,
+                               proj4string = NULL,
+                               abort = FALSE) {
 
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
@@ -240,7 +252,9 @@ get_extent.Spatial <- function(object, abort = FALSE) {
 #' @rdname get_extent
 #' @method get_extent Spatial
 #' @export
-get_extent.sprawlext <- function(object, abort = FALSE) {
+get_extent.sprawlext <- function(object,
+                                 proj4string = NULL,
+                                 abort = FALSE) {
   return(object)
 
 }
