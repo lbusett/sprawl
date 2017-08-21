@@ -3,6 +3,8 @@
 \name{get_extent}
 \alias{get_extent}
 \alias{get_extent.default}
+\alias{get_extent.sprawlext}
+\alias{get_extent.extent}
 \alias{get_extent.character}
 \alias{get_extent.Raster}
 \alias{get_extent.sf}
@@ -10,9 +12,13 @@
 \alias{get_extent.Spatial}
 \title{return the exten of a spatial object or file (with projection)}
 \usage{
-get_extent(object, abort = FALSE)
+get_extent(object, proj4string = NULL, abort = FALSE)
 
 \method{get_extent}{default}(object, abort = FALSE)
+
+\method{get_extent}{sprawlext}(object, abort = FALSE)
+
+\method{get_extent}{extent}(object, proj4string, abort = FALSE)
 
 \method{get_extent}{character}(object, abort = FALSE)
 
@@ -28,21 +34,25 @@ get_extent(object, abort = FALSE)
 \item{object}{\code{character} corresponding to the name of a R object, or a filename
 (full path)}
 
+\item{proj4string}{(optional) \code{character} proj4string representing the projection of
+the input extent. It is needed only if 'object' does not include a
+projection (like \code{\link[raster:extent]{extent} or \code{\link[sp:bbox]{bbox}).}
+
 \item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
 invalid projstring is found, Default: FALSE}
 }
 \value{
-object of class \code{sprawl_ext}
+object of class \code{sprawlext}
 }
 \description{
 helper function used to retrieve the extent of a spatial object or file
 with the associated proj4string
 }
 \details{
-return an object of class \code{sprawl_ext} with two slots:
+return an object of class \code{sprawlext} with two slots:
 \itemize{
 \item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmanx, ymax)
-\item $projstring: \code{character} proj4string of the object
+\item $proj4string: \code{character} proj4string of the object
 }
 }
 \examples{

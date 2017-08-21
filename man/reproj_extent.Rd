@@ -4,17 +4,29 @@
 \alias{reproj_extent}
 \title{reproject the extent of a spatial object}
 \usage{
-reproj_extent(ext_in, in_proj = NULL, out_proj = NULL)
+reproj_extent(ext, in_proj = NULL, out_proj = NULL, enlarge = TRUE,
+  n_dens = 1000)
 }
 \arguments{
-\item{ext_in}{object of class \code{\link[raster:extent]{raster::extent}}}
+\item{ext}{object of class \code{sprawlext}, or any other object or
+filename from which a \code{sprawlext} object can be derived
+(see \code{\link{get_extent}}).}
 
-\item{in_proj}{\code{character} proj4string representing the projection of the input extent}
+\item{in_proj}{\code{character} (optional) proj4string representing the projection of
+the input extent. It is needed only if ext is an object which does not include a
+projection (like \code{\link{extent}} or \code{\link{bbox}}).}
 
 \item{out_proj}{\code{character} proj4string representing the desired projection for the output extent}
+
+\item{enlarge}{\code{logical} If TRUE, the reprojected bounding box is the
+one which completely include the original one; if FALSE (defalt, faster), it is simply
+the one obtained by reprojecting the upper-left and the lower-right corners.}
+
+\item{n_dens}{\code{numeric} Densification ratio used in the case enlarge is TRUE.}
 }
 \value{
-reprojected extent (in out_proj projection)
+An object of class \code{sprawlext} representing the
+reprojected extent
 }
 \description{
 accessory function to convert the extent of a spatial object to a different

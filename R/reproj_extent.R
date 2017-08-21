@@ -2,14 +2,20 @@
 #' @description accessory function to convert the extent of a spatial object to a different
 #' projection. simple wrapper for the `spTransform` function on an [`raster::extent`] object
 #'
-#' @param ext   object of class [`sprawlext`][sprawl::get_extent()]
+#' @param ext   object of class `sprawlext`, or any other object or
+#'   filename from which a `sprawlext` object can be derived
+#'   (see [`get_extent`]).
+#' @param in_proj  `character` (optional) proj4string representing the projection of
+#'  the input extent. It is needed only if ext is an object which does not include a
+#'  projection (like [`extent`] or [`bbox`]).
 #' @param out_proj `character` proj4string representing the desired projection for the output extent
 #' @param enlarge `logical` If TRUE, the reprojected bounding box is the
 #' one which completely include the original one; if FALSE (defalt, faster), it is simply
 #' the one obtained by reprojecting the upper-left and the lower-right corners.
 #' @param n_dens `numeric` Densification ratio used in the case enlarge is TRUE.
-#' @return An object of class [`sprawlext`][sprawl::get_extent()] representing the
-#' reprojected extent
+#' @return An object of class `sprawlext` representing the
+#'  reprojected extent
+#' @rdname reproj_extent
 #' @export
 #'
 #' @importFrom raster extent
@@ -21,30 +27,10 @@
 #' @examples
 #'
 
-reproj_extent <- function(ext, out_proj = NULL, enlarge=TRUE, n_dens=1E3) {
-  UseMethod("reproj_extent")
-}
+reproj_extent <- function(ext, in_proj = NULL, out_proj = NULL, enlarge=TRUE, n_dens=1E3) {
 
-
-#   ____________________________________________________________________________
-#   Fallback method                                                         ####
-
-#' @rdname reproj_extent
-#' @method reproj_extent default
-#' @export
-reproj_extent.default  <- function(ext, out_proj = NULL, enlarge=TRUE, n_dens=1E3) {
-  stop("reproj_extent --> ", deparse(substitute(ext)), " is not a valid extent of class `sprawlext`;",
-       " see ?get_extent for details.")
-}
-
-
-#   ____________________________________________________________________________
-#   Method for "sprawlext"                                                  ####
-
-#' @rdname reproj_extent
-#' @method reproj_extent sprawlext
-#' @export
-reproj_extent.sprawlext <- function(ext, out_proj = NULL, enlarge=TRUE, n_dens=1E3) {
+  # Convert ext in sprawlext
+  ext <- get_extent(ext)
 
   # Checks on out_proj
   if (is.null(out_proj)) {
@@ -71,8 +57,8 @@ reproj_extent.sprawlext <- function(ext, out_proj = NULL, enlarge=TRUE, n_dens=1
                   diff(ext@extent[c("ymin","ymax")]) * (0:n_dens) / n_dens, rep(ext@extent["ymax"], n_dens - 1),
                 ext@extent["ymin"] +
                   diff(ext@extent[c("ymin","ymax")]) * (n_dens:1) / n_dens))
-        in_ext <- list(Polygons(list(Polygon(in_ext)), 1)) %>%
-          sp::SpatialPolygons(proj4string = sp::CRS(ext@projstring)) # convert in a SpatialPolygons
+      in_ext <- list(Polygons(list(Polygon(in_ext)), 1)) %>%
+        sp::SpatialPolygons(proj4string = sp::CRS(ext@projstring)) # convert in a SpatialPolygons
     } else {
       in_ext <- data.frame(
         x = ext@extent[rep(c("xmin","xmax"),times=2)],
@@ -89,9 +75,7 @@ reproj_extent.sprawlext <- function(ext, out_proj = NULL, enlarge=TRUE, n_dens=1
   }
   return(out_ext_rep)
 
-
 }
-
 
 
 # TODO:

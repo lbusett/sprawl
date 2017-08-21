@@ -22,8 +22,8 @@ DETAILS
 \section{Slots}{
 
 \describe{
-\item{\code{extent}}{\code{numeric (4)} extent of the object (xmin, ymin, xmanx, ymax)}
+\item{\code{extent}}{\code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)}
 
-\item{\code{projstring}}{character` proj4string of the object}
+\item{\code{proj4string}}{character` proj4string of the object}
 }}
 
