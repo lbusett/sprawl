@@ -14,7 +14,7 @@
 #' @param n_dens `numeric` Densification ratio used in the case enlarge is TRUE.
 #'  reprojected extent
 #' @rdname reproj_extent
-#' @return An object of class `sprawlext` representing the
+#' @return An object of class `sprawlext` representing the reprojected extent
 #' @export
 #'
 #' @importFrom raster extent
@@ -79,16 +79,6 @@ reproj_extent <- function(ext, in_proj = NULL, out_proj = NULL, enlarge=TRUE, n_
 
 }
 
-
-# TODO:
-# > migliorare classe sprawlext:
-#   - definire metodi di conversione tra bbox, extent e sprawext
-#   - creare help della classe
-
-
-# proposed changes:
-# > sprawlext@projstring -> sprawlext@proj4string (messing!)
-# > sprawlext@projstring as CRS instead than character
 
 
 

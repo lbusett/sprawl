@@ -46,13 +46,13 @@ DETAILS
  library(raster)
 
  in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
- get_projstring(in_rast)
+ get_proj4string(in_rast)
 
  in_rast <- raster::raster(in_rast)
  get_proj4string(in_rast)
 
  in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
- get_projstring(in_vect)
+ get_proj4string(in_vect)
 
  in_vect <- read_vect(in_vect)
  get_proj4string(in_vect)

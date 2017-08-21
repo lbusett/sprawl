@@ -5,7 +5,7 @@
 \alias{get_extent.default}
 \alias{get_extent.sprawlext}
 \alias{get_extent.Extent}
-\alias{get_extent.bbox}
+\alias{get_extent.matrix}
 \alias{get_extent.character}
 \alias{get_extent.Raster}
 \alias{get_extent.sf}
@@ -22,7 +22,7 @@ get_extent(object, proj4string = NULL, abort = FALSE)
 
 \method{get_extent}{Extent}(object, proj4string, abort = FALSE)
 
-\method{get_extent}{bbox}(object, proj4string, abort = FALSE)
+\method{get_extent}{matrix}(object, proj4string, abort = FALSE)
 
 \method{get_extent}{character}(object, abort = FALSE)
 
@@ -80,6 +80,7 @@ return an object of class \code{sprawlext} with two slots:
  get_extent(in_vect)
 
 }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

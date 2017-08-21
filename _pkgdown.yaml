@@ -31,7 +31,6 @@ reference:
     contents:
       - '`get_extent`'
       - '`get_rastinfo`'
-      - '`get_projstring`'
       - '`get_spatype`'
       - '`get_proj4string`'
       - '`get_extent`'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_shape.R
 \name{write_shape}
 \alias{write_shape}
-\title{Write a \code{sf} or \code{sp} to a ESRI shapefil}
+\title{Write a \code{sf} or \code{sp} to a ESRI shapefile}
 \usage{
 write_shape(out_obj, out_file, overwrite = FALSE, verbose = FALSE,
   encoding = "UTF-8", create_dir = FALSE, ...)

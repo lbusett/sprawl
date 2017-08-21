@@ -12,6 +12,15 @@
 #' @details return an object of class `sprawlext` with two slots:
 #'   - @extent: `numeric (4)` extent of the object (xmin, ymin, xmax, ymax)
 #'   - $proj4string: `character` proj4string of the object
+#' @rdname get_extent
+#' @export
+#' @importFrom rgdal ogrInfo
+#' @importFrom gdalUtils gdalinfo
+#' @importFrom raster extent
+#' @importFrom sf st_bbox
+#' @importFrom methods new
+#' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
+#' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #' @examples
 #' \dontrun{
 #'  library(raster)
@@ -31,15 +40,6 @@
 #'  get_extent(in_vect)
 #'
 #' }
-#' @rdname get_extent
-#' @export
-#' @importFrom rgdal ogrInfo
-#' @importFrom gdalUtils gdalinfo
-#' @importFrom raster extent
-#' @importFrom sf st_bbox
-#' @importFrom methods new
-#' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
-#' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #'
 get_extent <- function(object,
                        proj4string = NULL,
@@ -98,11 +98,20 @@ get_extent.Extent  <- function(object,
 #   Method for bbox   (convert bbox   and proj4string in sprawlext)          ####
 
 #' @rdname get_extent
-#' @method get_extent bbox
+#' @method get_extent matrix
 #' @export
-get_extent.bbox  <- function(object,
-                             proj4string,
-                             abort = FALSE) {
+get_extent.matrix  <- function(object,
+                               proj4string,
+                               abort = FALSE) {
+  # check matrix
+  if (any(dim(object)!=c(2,2))) {
+    if (abort == TRUE) {
+      stop("get_extent --> `", call[[2]], "` is not a valid bbox! Aborting!")
+    } else {
+      warning("get_extent --> `", call[[2]], "` is not a valid bbox! ")
+      return("none")
+    }
+  }
   coords        <- as.numeric(object)
   proj4string   <- check_proj4string(proj4string)
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")

@@ -1,4 +1,4 @@
-#' @title Write a `sf` or `sp` to a ESRI shapefil
+#' @title Write a `sf` or `sp` to a ESRI shapefile
 #' @description Wrapper on  `sf::st_write` for writing an `sf` or `sp` object to
 #'  disk as an ESRI shapefile
 #' @param out_obj `character` object to be written to the shapefile. Must be a

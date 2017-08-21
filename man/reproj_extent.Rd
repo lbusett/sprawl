@@ -26,7 +26,7 @@ a \code{sprawlext} object
 filename from which a \code{sprawlext} object can be derived (see \code{get_extent})}
 }
 \value{
-An object of class \code{sprawlext} representing the
+An object of class \code{sprawlext} representing the reprojected extent
 }
 \description{
 accessory function to convert the extent of a spatial object to
