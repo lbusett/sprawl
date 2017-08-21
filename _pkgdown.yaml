@@ -31,7 +31,7 @@ reference:
     desc: ~
     contents:
       - '`get_spatype`'
-      - '`get_projstring`'
+      - '`get_proj4string`'
       - '`get_extent`'
   - title: Visualization and plotting
     desc: ~
