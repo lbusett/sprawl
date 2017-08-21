@@ -4,7 +4,8 @@
 \alias{get_extent}
 \alias{get_extent.default}
 \alias{get_extent.sprawlext}
-\alias{get_extent.extent}
+\alias{get_extent.Extent}
+\alias{get_extent.bbox}
 \alias{get_extent.character}
 \alias{get_extent.Raster}
 \alias{get_extent.sf}
@@ -18,7 +19,9 @@ get_extent(object, proj4string = NULL, abort = FALSE)
 
 \method{get_extent}{sprawlext}(object, abort = FALSE)
 
-\method{get_extent}{extent}(object, proj4string, abort = FALSE)
+\method{get_extent}{Extent}(object, proj4string, abort = FALSE)
+
+\method{get_extent}{bbox}(object, proj4string, abort = FALSE)
 
 \method{get_extent}{character}(object, abort = FALSE)
 
@@ -39,7 +42,7 @@ the input extent. It is needed only if 'object' does not include a
 projection (like \code{\link[raster:extent]{extent} or \code{\link[sp:bbox]{bbox}).}
 
 \item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
-invalid projstring is found, Default: FALSE}
+invalid proj4string is found, Default: FALSE}
 }
 \value{
 object of class \code{sprawlext}

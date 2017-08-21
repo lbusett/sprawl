@@ -60,9 +60,9 @@ check_proj4string.character  <- function(proj4string,
                                          abort = FALSE) {
   if (rgdal::checkCRSArgs(proj4string)[[1]] == FALSE) {
     if (abort == TRUE) {
-      stop("get_proj4string --> Invalid proj4string detected ! Aborting !")
+      stop("check_proj4string --> Invalid proj4string detected! Aborting!")
     } else {
-      warning("get_proj4string --> Invalid proj4string detected !")
+      warning("check_proj4string --> Invalid proj4string detected!")
       return("invalid")
     }
   } else {

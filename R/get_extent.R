@@ -7,7 +7,7 @@
 #'  the input extent. It is needed only if 'object' does not include a
 #'  projection (like [`extent`][raster::extent()] or [`bbox`][sp::bbox()]).
 #' @param abort `logical` if TRUE, the function aborts in case no proj4string or
-#'   invalid projstring is found, Default: FALSE
+#'   invalid proj4string is found, Default: FALSE
 #' @return object of class `sprawlext`
 #' @details return an object of class `sprawlext` with two slots:
 #'   - $extent: `numeric (4)` extent of the object (xmin, ymin, xmanx, ymax)
@@ -55,10 +55,10 @@ get_extent.default  <- function(object,
   call <- match.call()
   if (abort == TRUE) {
     stop("get_extent --> ", call[[2]], " is not a valid vector or raster `R` object or
-         filename. Aborting !")
+         filename. Aborting!")
   } else {
     warning("get_extent --> ", call[[2]], " is not a valid vector or raster `R` object or
-            filename !")
+            filename!")
   }
   }
 
@@ -74,19 +74,37 @@ get_extent.sprawlext  <- function(object,
 }
 
 #   ____________________________________________________________________________
-#   Method for extent (convert extent and proj4string in sprawlext)          ####
+#   Method for Extent (convert extent and proj4string in sprawlext)          ####
 
 #' @rdname get_extent
-#' @method get_extent extent
+#' @method get_extent Extent
 #' @export
-get_extent.extent  <- function(object,
+get_extent.Extent  <- function(object,
                                proj4string,
                                abort = FALSE) {
   coords        <- object[c(1,3,2,4)]
-  proj4string   <- get_projstring(proj4string)
+  proj4string   <- check_proj4string(proj4string)
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   outext        <- methods::new("sprawlext",
-                                extent     = coords,
+                                extent      = coords,
+                                proj4string = proj4string)
+  return(outext)
+}
+
+#   ____________________________________________________________________________
+#   Method for bbox   (convert bbox   and proj4string in sprawlext)          ####
+
+#' @rdname get_extent
+#' @method get_extent bbox
+#' @export
+get_extent.bbox  <- function(object,
+                             proj4string,
+                             abort = FALSE) {
+  coords        <- as.numeric(object)
+  proj4string   <- check_proj4string(proj4string)
+  names(coords) <- c("xmin", "ymin", "xmax", "ymax")
+  outext        <- methods::new("sprawlext",
+                                extent      = coords,
                                 proj4string = proj4string)
   return(outext)
 }
@@ -111,7 +129,7 @@ get_extent.character <- function(object,
     }
 
     names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-    proj4string   <- get_projstring(object)
+    proj4string   <- get_proj4string(object)
     outext        <- methods::new("sprawlext",
                                   extent     = coords,
                                   proj4string = proj4string)
@@ -139,7 +157,7 @@ get_extent.Raster <- function(object,
                               abort = FALSE) {
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-  proj4string   <- get_projstring.Raster(object, abort = abort)
+  proj4string   <- get_proj4string.Raster(object, abort = abort)
   outext        <- methods::new("sprawlext",
                                 extent     = coords,
                                 proj4string = proj4string)
@@ -198,7 +216,7 @@ get_extent.Spatial <- function(object,
                                abort = FALSE) {
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-  proj4string   <- get_projstring.Spatial(object, abort = abort)
+  proj4string   <- get_proj4string.Spatial(object, abort = abort)
   outext        <- methods::new("sprawlext",
                                 extent     = coords,
                                 proj4string = proj4string)

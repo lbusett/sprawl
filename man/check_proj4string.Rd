@@ -41,7 +41,6 @@ check_proj4string(CRS("+init:epsg:32632"))
 
 \dontrun{
  library(raster)
-
  in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
  in_rast <- raster::raster(in_rast)
  check_proj4string(in_rast@crs)
