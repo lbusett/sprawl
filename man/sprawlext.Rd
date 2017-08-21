@@ -39,6 +39,10 @@ as(ex_sprawlext, "SpatialPolygons")
 as(ex_sprawlext, "SpatialPoints")
 as(ex_sprawlext, "SpatialLines")
 
+# Convert to sf objects
+as(ex_sprawlext, "st_polygon")
+as(ex_sprawlext, "st_multipoint")
+
 # Extract proj4string CRS
 ex_crs <- as(ex_sprawlext, "CRS")
 ex_crs

@@ -8,6 +8,7 @@
 #' @exportClass sprawlext
 #' @importFrom methods setClass representation
 #' @importFrom sp CRS
+#' @importfrom sf st_polygon
 #' @examples
 #' showClass("sprawlext")
 #'
@@ -31,6 +32,10 @@
 #' as(ex_sprawlext, "SpatialPolygons")
 #' as(ex_sprawlext, "SpatialPoints")
 #' as(ex_sprawlext, "SpatialLines")
+#'
+#' # Convert to sf objects
+#' as(ex_sprawlext, "st_polygon")
+#' as(ex_sprawlext, "st_multipoint")
 #'
 #' # Extract proj4string CRS
 #' ex_crs <- as(ex_sprawlext, "CRS")
@@ -76,5 +81,42 @@ setAs("sprawlext", "SpatialLines", function(from) {
 setAs("sprawlext", "SpatialPoints", function(from) {
   out_poly <- as(extent(from@extent[c(1,3,2,4)]), "SpatialPoints")
   out_poly@proj4string <- CRS(from@proj4string)
+  return(out_poly)
+})
+
+setAs("sprawlext", "st_polygon", function(from) {
+  cbbox_ext <- from@extent
+  out_poly <- sf::st_polygon(list(rbind(
+    c(cbbox_ext["xmin"], cbbox_ext["ymin"]),
+    c(cbbox_ext["xmin"], cbbox_ext["ymax"]),
+    c(cbbox_ext["xmax"], cbbox_ext["ymax"]),
+    c(cbbox_ext["xmax"], cbbox_ext["ymin"]),
+    c(cbbox_ext["xmin"], cbbox_ext["ymin"])))
+  ) %>%
+    sf::st_sfc(crs = from@proj4string)
+  return(out_poly)
+})
+
+setAs("sprawlext", "st_polygon", function(from) {
+  cbbox_ext <- from@extent
+  out_poly <- sf::st_polygon(list(rbind(
+    c(cbbox_ext["xmin"], cbbox_ext["ymin"]),
+    c(cbbox_ext["xmin"], cbbox_ext["ymax"]),
+    c(cbbox_ext["xmax"], cbbox_ext["ymax"]),
+    c(cbbox_ext["xmax"], cbbox_ext["ymin"]),
+    c(cbbox_ext["xmin"], cbbox_ext["ymin"])))
+  ) %>%
+    sf::st_sfc(crs = from@proj4string)
+  return(out_poly)
+})
+
+setAs("sprawlext", "st_multipoint", function(from) {
+  cbbox_ext <- from@extent
+  out_poly <- sf::st_sfc(
+    st_point(c(cbbox_ext["xmin"], cbbox_ext["ymin"])),
+    st_point(c(cbbox_ext["xmin"], cbbox_ext["ymax"])),
+    st_point(c(cbbox_ext["xmax"], cbbox_ext["ymax"])),
+    st_point(c(cbbox_ext["xmax"], cbbox_ext["ymin"])),
+    crs = from@proj4string)
   return(out_poly)
 })
