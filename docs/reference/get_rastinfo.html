@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Retrieve useful info from a raster object or file � get_rastinfo • sprawl</title>
+<title>Retrieve useful info from a raster object or file — get_rastinfo • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -169,87 +169,21 @@ filename(s) corresponding to the different bands;</p></li>
 <li><p>Z: <code>ANY</code> if the object has a "z" attribute set using raster::setZ(), values of the
 z attribute;</p></li>
 <li><p>dtype: <code>character</code> datatype of the input raster (<code>raster</code> conventions)</p></li>
-<li><p>projstring: <code>character</code> proj4string of the object/file</p></li>
+<li><p>proj4string: <code>character</code> proj4string of the object/file</p></li>
 </ul>
 
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>get_rastinfo</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: invalid 'cutoff' value for 'deparse', using default</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast</span></div><div class='output co'>#&gt; $nbands
-#&gt; [1] 6
-#&gt; 
-#&gt; $indbands
-#&gt; [1] 1 2 3 4 5 6
-#&gt; 
-#&gt; $ncols
-#&gt; [1] 980
-#&gt; 
-#&gt; $nrows
-#&gt; [1] 993
-#&gt; 
-#&gt; $ncells
-#&gt; [1] 973140
-#&gt; 
-#&gt; $res
-#&gt; [1] 30 30
-#&gt; 
-#&gt; $bnames
-#&gt; [1] "oli_multi_1000.1" "oli_multi_1000.2" "oli_multi_1000.3" "oli_multi_1000.4"
-#&gt; [5] "oli_multi_1000.5" "oli_multi_1000.6"
-#&gt; 
-#&gt; $fnames
-#&gt; [1] "D:\\Documents\\R\\win-library\\3.4\\sprawl.data\\extdata\\OLI_test\\oli_multi_1000.tif"
-#&gt; [2] "D:\\Documents\\R\\win-library\\3.4\\sprawl.data\\extdata\\OLI_test\\oli_multi_1000.tif"
-#&gt; [3] "D:\\Documents\\R\\win-library\\3.4\\sprawl.data\\extdata\\OLI_test\\oli_multi_1000.tif"
-#&gt; [4] "D:\\Documents\\R\\win-library\\3.4\\sprawl.data\\extdata\\OLI_test\\oli_multi_1000.tif"
-#&gt; [5] "D:\\Documents\\R\\win-library\\3.4\\sprawl.data\\extdata\\OLI_test\\oli_multi_1000.tif"
-#&gt; [6] "D:\\Documents\\R\\win-library\\3.4\\sprawl.data\\extdata\\OLI_test\\oli_multi_1000.tif"
-#&gt; 
-#&gt; $Z
-#&gt; list()
-#&gt; 
-#&gt; $dtype
-#&gt; [1] "FLT8S"
-#&gt; 
-#&gt; $projstring
-#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
-#&gt; </div><div class='input'> <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000_b1.tif"</span>,
+ <span class='fu'>get_rastinfo</span>(<span class='no'>in_rast</span>)
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000_b1.tif"</span>,
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>get_rastinfo</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: invalid 'cutoff' value for 'deparse', using default</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast</span></div><div class='output co'>#&gt; $nbands
-#&gt; [1] 1
-#&gt; 
-#&gt; $indbands
-#&gt; [1] 1
-#&gt; 
-#&gt; $ncols
-#&gt; [1] 980
-#&gt; 
-#&gt; $nrows
-#&gt; [1] 993
-#&gt; 
-#&gt; $ncells
-#&gt; [1] 973140
-#&gt; 
-#&gt; $res
-#&gt; [1] 30 30
-#&gt; 
-#&gt; $bnames
-#&gt; [1] "oli_multi_1000_b1"
-#&gt; 
-#&gt; $fnames
-#&gt; [1] "D:\\Documents\\R\\win-library\\3.4\\sprawl.data\\extdata\\OLI_test\\oli_multi_1000_b1.tif"
-#&gt; 
-#&gt; $Z
-#&gt; list()
-#&gt; 
-#&gt; $dtype
-#&gt; [1] "FLT8S"
-#&gt; 
-#&gt; $projstring
-#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
-#&gt; </div><div class='input'> </div></pre>
+ <span class='fu'>get_rastinfo</span>(<span class='no'>in_rast</span>)
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

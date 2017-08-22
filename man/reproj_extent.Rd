@@ -8,6 +8,9 @@ reproj_extent(ext, out_proj, in_proj = NULL, enlarge = TRUE,
   n_dens = 1000)
 }
 \arguments{
+\item{ext}{object of class \code{sprawlext}, or any other object or
+filename from which a \code{sprawlext} object can be derived (see \code{get_extent})}
+
 \item{out_proj}{\code{character} proj4string representing the desired projection for the output extent}
 
 \item{in_proj}{\code{character} (optional) proj4string representing the projection of
@@ -20,10 +23,6 @@ the one obtained by reprojecting the upper-left and the lower-right corners.}
 
 \item{n_dens}{\code{numeric} Densification ratio used in the case enlarge is TRUE.
 reprojected extent}
-
-\item{ext_in}{object of class \code{sprawlext}, or any other object or
-a \code{sprawlext} object
-filename from which a \code{sprawlext} object can be derived (see \code{get_extent})}
 }
 \value{
 An object of class \code{sprawlext} representing the reprojected extent
@@ -33,9 +32,34 @@ accessory function to convert the extent of a spatial object to
 a different projection. simple wrapper for the \code{spTransform} function on
 }
 \examples{
-{
- \dontrun{
- EXAMPLE_1
+\dontrun{
+library(raster)
+in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+  package = "sprawl.data")
+in_rast <- raster::raster(in_file)
+in_sprawlext <- get_extent(in_rast)
+
+# Reproject a sprawlext
+reproj_extent(in_sprawlext_1, "+init=epsg:32651")
+
+# Reproject the extent of a file
+reproj_extent(in_file, "+init=epsg:32651")
+
+# Reproject the extent of a raster
+reproj_extent(in_rast, "+init=epsg:32651")
+
+# Reproject an extent or a bounding box (given the input projection)
+reproj_extent(extent(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
+reproj_extent(bbox(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
+# (this fails without providing in_proj value:)
+reproj_extent(bbox(in_rast), "+init=epsg:32651")
+
+# Reproject without enlarging
+reproj_extent(in_sprawlext_1, "+init=epsg:32651", enlarge = FALSE)
 }
 }
+\author{
+Luigi Ranghetti, phD (2017) \href{mailto:ranghetti.l@irea.cnr.it}{ranghetti.l@irea.cnr.it}
+
+Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
 }

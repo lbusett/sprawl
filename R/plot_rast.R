@@ -102,8 +102,8 @@ plot_rast <- function(in_rast,
 
   if (!is.null(in_poly)) {
     in_poly    <- cast_vect(in_poly, "sfobject")
-    proj4_rast <- get_projstring(in_rast)
-    proj4_vect <- get_projstring(in_poly)
+    proj4_rast <- get_proj4string(in_rast)
+    proj4_vect <- get_proj4string(in_poly)
     if (proj4_vect != proj4_rast) {
       in_poly <- sf::st_transform(in_poly, proj4_rast)
     }

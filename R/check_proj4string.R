@@ -10,24 +10,26 @@
 #'
 #' @importFrom sp proj4string CRS
 #' @importFrom rgdal checkCRSArgs CRSargs
+#' @name check_proj4string
 #' @rdname check_proj4string
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #'
 #' @examples
-#' check_proj4string("+init:epsg:32632")
+#' check_proj4string("+init=epsg:32632")
 #'
 #' check_proj4string("example of invalid string")
 #'
-#' check_proj4string(CRS("+init:epsg:32632"))
+#' library(sp)
+#' check_proj4string(CRS("+init=epsg:32632"))
 #'
 #' \dontrun{
-#'  library(raster)
-#'  in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
-#'  in_rast <- raster::raster(in_rast)
-#'  check_proj4string(in_rast@crs)
-#'  }
+#' library(raster)
+#' in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
+#' in_rast <- raster::raster(in_rast)
+#' check_proj4string(in_rast@crs)
+#' }
 
 check_proj4string <- function(proj4string,
                               abort = FALSE) {
@@ -54,7 +56,7 @@ check_proj4string.default  <- function(proj4string,
 #   Method for character - check that it is a valid proj4string             ####
 
 #' @rdname check_proj4string
-#' @method check_proj4string default
+#' @method check_proj4string character
 #' @export
 check_proj4string.character  <- function(proj4string,
                                          abort = FALSE) {
@@ -74,8 +76,9 @@ check_proj4string.character  <- function(proj4string,
 #   Method for CRS - get proj4string                                        ####
 
 #' @rdname check_proj4string
-#' @method check_proj4string default
+#' @method check_proj4string CRS
 #' @export
-check_proj4string.CRS  <- function(proj4string) {
-  return(CRSargs(CRS("+init=epsg:4326")))
+check_proj4string.CRS  <- function(proj4string,
+                                   abort = FALSE) {
+  return(CRSargs(proj4string))
 }

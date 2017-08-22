@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>reproject the extent of a spatial object � reproj_extent • sprawl</title>
+<title>reproject the extent of a spatial object — reproj_extent • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -140,46 +140,74 @@
 
     
     <p>accessory function to convert the extent of a spatial object to
-a different projection. simple wrapper for the <code>spTransform</code> function on
-a <code>sprawlext</code> object</p>
+a different projection. simple wrapper for the <code>spTransform</code> function on</p>
     
 
-    <pre class="usage"><span class='fu'>reproj_extent</span>(<span class='no'>ext_in</span>, <span class='kw'>in_proj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_proj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>reproj_extent</span>(<span class='no'>ext</span>, <span class='no'>out_proj</span>, <span class='kw'>in_proj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>n_dens</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ext_in</th>
-      <td><p>object of class <code>sprawl::sprawlext</code>, or any other object or
-filename from which a <code>sprawlext</code> object can be derived</p></td>
-    </tr>
-    <tr>
-      <th>in_proj</th>
-      <td><p><code>character</code> proj4string representing the projection of the
-input extent</p></td>
+      <th>ext</th>
+      <td><p>object of class <code>sprawlext</code>, or any other object or
+filename from which a <code>sprawlext</code> object can be derived (see <code>get_extent</code>)</p></td>
     </tr>
     <tr>
       <th>out_proj</th>
-      <td><p><code>character</code> proj4string representing the desired projection
-for the output extent</p></td>
+      <td><p><code>character</code> proj4string representing the desired projection for the output extent</p></td>
+    </tr>
+    <tr>
+      <th>in_proj</th>
+      <td><p><code>character</code> (optional) proj4string representing the projection of
+projection (like <code>extent</code> or <code>bbox</code>).
+the input extent. It is needed only if ext is an object which does not include a</p></td>
+    </tr>
+    <tr>
+      <th>enlarge</th>
+      <td><p><code>logical</code> If TRUE (default), the reprojected bounding box is the
+one which completely include the original one; if FALSE (faster), it is simply
+the one obtained by reprojecting the upper-left and the lower-right corners.</p></td>
+    </tr>
+    <tr>
+      <th>n_dens</th>
+      <td><p><code>numeric</code> Densification ratio used in the case enlarge is TRUE.
+reprojected extent</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>reprojected extent (in out_proj projection)</p>
+    <p>An object of class <code>sprawlext</code> representing the reprojected extent</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>{
- </div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:3:0: unexpected end of input</span>
-#&gt; <span class='error'>1: {</span>
-#&gt; <span class='error'>2:  </span>
-#&gt; <span class='error'>  ^</span></div><div class='input'> <span class='no'>EXAMPLE_1</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'EXAMPLE_1' not found</span></div><div class='input'>}
-</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:1:1: unexpected '}'</span>
-#&gt; <span class='error'>1: }</span>
-#&gt; <span class='error'>    ^</span></div></pre>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>raster</span>)
+<span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
+  <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>in_file</span>)
+<span class='no'>in_sprawlext</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_rast</span>)
+
+<span class='co'># Reproject a sprawlext</span>
+<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>)
+
+<span class='co'># Reproject the extent of a file</span>
+<span class='fu'>reproj_extent</span>(<span class='no'>in_file</span>, <span class='st'>"+init=epsg:32651"</span>)
+
+<span class='co'># Reproject the extent of a raster</span>
+<span class='fu'>reproj_extent</span>(<span class='no'>in_rast</span>, <span class='st'>"+init=epsg:32651"</span>)
+
+<span class='co'># Reproject an extent or a bounding box (given the input projection)</span>
+<span class='fu'>reproj_extent</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)
+<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)
+<span class='co'># (this fails without providing in_proj value:)</span>
+<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>)
+
+<span class='co'># Reproject without enlarging</span>
+<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -190,6 +218,12 @@ for the output extent</p></td>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
+
+    <h2>Author</h2>
+    
+Luigi Ranghetti, phD (2017) <a href='mailto:ranghetti.l@irea.cnr.it'>ranghetti.l@irea.cnr.it</a>
+
+Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
 
   </div>
 </div>

@@ -15,7 +15,7 @@
 #'   - Z: `ANY` if the object has a "z" attribute set using raster::setZ(), values of the
 #'     z attribute;
 #'   - dtype: `character` datatype of the input raster (`raster` conventions)
-#'   - projstring: `character` proj4string of the object/file
+#'   - proj4string: `character` proj4string of the object/file
 #' @examples
 #' \dontrun{
 #'  in_rast <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
@@ -46,40 +46,40 @@ get_rastinfo <- function(object) {
                  fnames     = rep(object@file@name, object@data@nlayers),
                  Z          = object@z,
                  dtype      = object@file@datanotation,
-                 projstring = get_projstring(object))
+                 proj4string = get_proj4string(object))
     return(info)
   }
 
   if (inherits(object, "RasterLayer")) {
-    info <- list(nbands     = 1,
-                 indbands   = object@data@band,
-                 ncols      = object@ncols,
-                 nrows      = object@nrows,
-                 ncells     = object@ncols * object@nrows,
-                 res        = res(object),
-                 bnames     = names(object),
-                 fnames     = object@file@name,
-                 Z          = object@z,
-                 dtype      = object@file@datanotation,
-                 projstring = get_projstring(object))
+    info <- list(nbands      = 1,
+                 indbands    = object@data@band,
+                 ncols       = object@ncols,
+                 nrows       = object@nrows,
+                 ncells      = object@ncols * object@nrows,
+                 res         = res(object),
+                 bnames      = names(object),
+                 fnames      = object@file@name,
+                 Z           = object@z,
+                 dtype       = object@file@datanotation,
+                 proj4string = get_proj4string(object))
     return(info)
   }
   if (inherits(object, "RasterStack")) {
 
-    info <- list(nbands     = length(object@layers),
-                 indbands   = unlist(lapply(object@layers,
-                                            FUN = function(x) {x@data@band})),
-                 ncols      = object@ncols,
-                 nrows      = object@nrows,
-                 ncells     = object@ncols * object@nrows,
-                 res        = res(object),
-                 bnames     = names(object),
-                 fnames     = unlist(lapply(object@layers,
-                                            FUN = function(x) {x@file@name})),
-                 Z          = object@z,
-                 dtype_rast = unlist(lapply(object@layers,
-                                            FUN = function(x) {x@file@datanotation})), #nolint
-                 projstring = get_projstring(object))
+    info <- list(nbands      = length(object@layers),
+                 indbands    = unlist(lapply(object@layers,
+                                             FUN = function(x) {x@data@band})),
+                 ncols       = object@ncols,
+                 nrows       = object@nrows,
+                 ncells      = object@ncols * object@nrows,
+                 res         = res(object),
+                 bnames      = names(object),
+                 fnames      = unlist(lapply(object@layers,
+                                             FUN = function(x) {x@file@name})),
+                 Z           = object@z,
+                 dtype_rast  = unlist(lapply(object@layers,
+                                             FUN = function(x) {x@file@datanotation})), #nolint
+                 proj4string = get_proj4string(object))
     return(info)
   }
 }

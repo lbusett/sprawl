@@ -42,7 +42,7 @@ filename (full path)}
 
 \item{proj4string}{(optional) \code{character} proj4string representing the projection of
 the input extent. It is needed only if 'object' does not include a
-projection (like \code{\link[raster:extent]{extent} or \code{\link[sp:bbox]{bbox}).}
+projection (like \code{\link{extent}} or \code{\link{bbox}}).}
 
 \item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
 invalid proj4string is found, Default: FALSE}
@@ -57,28 +57,27 @@ or file with the associated proj4string
 \details{
 return an object of class \code{sprawlext} with two slots:
 \itemize{
-\item @extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
+\item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
 \item $proj4string: \code{character} proj4string of the object
 }
 }
 \examples{
 \dontrun{
- library(raster)
+library(raster)
 
- in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
-   package = "sprawl.data")
- get_extent(in_rast)
+in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+  package = "sprawl.data")
+get_extent(in_rast)
 
- in_rast <- raster::raster(in_rast)
- get_extent(in_rast)
+in_rast <- raster::raster(in_rast)
+get_extent(in_rast)
 
- in_vect <- system.file("extdata/shapes","lc_polys.shp",
-   package = "sprawl.data")
- get_extent(in_vect)
+in_vect <- system.file("extdata/shapes","lc_polys.shp",
+  package = "sprawl.data")
+get_extent(in_vect)
 
- in_vect <- read_vect(in_vect)
- get_extent(in_vect)
-
+in_vect <- read_vect(in_vect)
+get_extent(in_vect)
 }
 
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>check the "spatial type" of an object or file � get_spatype • sprawl</title>
+<title>check the "spatial type" of an object or file — get_spatype • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -184,19 +184,24 @@ R spatial file or valid vector or raster file</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 <span class='co'># input is a raster file</span>
 <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; [1] "rastfile"</div><div class='input'>
+<span class='fu'>get_spatype</span>(<span class='no'>in_rast</span>)
+
 <span class='co'># input is a shapefile</span>
 <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; [1] "vectfile"</div><div class='input'>
+<span class='fu'>get_spatype</span>(<span class='no'>in_vect</span>)
+
 <span class='co'># input is a `sp` object</span>
 <span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "spobject"</div><div class='input'>
+<span class='fu'>get_spatype</span>(<span class='no'>obj</span>)
+
 <span class='co'># input is a `sf` object</span>
 <span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "sfobject"</div><div class='input'>
+<span class='fu'>get_spatype</span>(<span class='no'>obj</span>)
+<span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

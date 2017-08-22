@@ -5,13 +5,14 @@
 #'  filename (full path)
 #' @param proj4string (optional) `character` proj4string representing the projection of
 #'  the input extent. It is needed only if 'object' does not include a
-#'  projection (like [`extent`][raster::extent()] or [`bbox`][sp::bbox()]).
+#'  projection (like [`extent`] or [`bbox`]).
 #' @param abort `logical` if TRUE, the function aborts in case no proj4string or
 #'   invalid proj4string is found, Default: FALSE
 #' @return object of class `sprawlext`
 #' @details return an object of class `sprawlext` with two slots:
-#'   - @extent: `numeric (4)` extent of the object (xmin, ymin, xmax, ymax)
+#'   - $extent: `numeric (4)` extent of the object (xmin, ymin, xmax, ymax)
 #'   - $proj4string: `character` proj4string of the object
+#' @name get_extent
 #' @rdname get_extent
 #' @export
 #' @importFrom rgdal ogrInfo
@@ -23,22 +24,21 @@
 #' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #' @examples
 #' \dontrun{
-#'  library(raster)
+#' library(raster)
 #'
-#'  in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
-#'    package = "sprawl.data")
-#'  get_extent(in_rast)
+#' in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+#'   package = "sprawl.data")
+#' get_extent(in_rast)
 #'
-#'  in_rast <- raster::raster(in_rast)
-#'  get_extent(in_rast)
+#' in_rast <- raster::raster(in_rast)
+#' get_extent(in_rast)
 #'
-#'  in_vect <- system.file("extdata/shapes","lc_polys.shp",
-#'    package = "sprawl.data")
-#'  get_extent(in_vect)
+#' in_vect <- system.file("extdata/shapes","lc_polys.shp",
+#'   package = "sprawl.data")
+#' get_extent(in_vect)
 #'
-#'  in_vect <- read_vect(in_vect)
-#'  get_extent(in_vect)
-#'
+#' in_vect <- read_vect(in_vect)
+#' get_extent(in_vect)
 #' }
 #'
 get_extent <- function(object,
@@ -59,10 +59,10 @@ get_extent.default  <- function(object,
   call <- match.call()
   if (abort == TRUE) {
     stop("get_extent --> ", call[[2]], " is not a valid vector or ",
-         "raster `R` object or filename. Aborting !")
+         "raster `R` object or filename. Aborting!")
   } else {
     warning("get_extent --> ", call[[2]], " is not a valid vector ",
-            "or raster `R` object or filename !")
+            "or raster `R` object or filename!")
   }
 }
 
@@ -88,7 +88,7 @@ get_extent.Extent  <- function(object,
                                proj4string,
                                abort = FALSE) {
   coords        <- object[c(1,3,2,4)]
-  proj4string   <- check_proj4string(proj4string)
+  proj4string   <- check_proj4string(proj4string, abort = abort)
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   outext        <- methods::new("sprawlext",
                                 extent      = coords,
@@ -115,7 +115,7 @@ get_extent.matrix  <- function(object,
     }
   }
   coords        <- as.numeric(object)
-  proj4string   <- check_proj4string(proj4string)
+  proj4string   <- check_proj4string(proj4string, abort = abort)
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   outext        <- methods::new("sprawlext",
                                 extent      = coords,
@@ -153,10 +153,10 @@ get_extent.character <- function(object,
   } else {
     if (abort == TRUE) {
       stop("get_extent --> `", call[[2]], "` is not a valid vector ",
-           "or raster `R` object or filename ! Aborting !")
+           "or raster `R` object or filename! Aborting!")
     } else {
       warning("get_extent --> `", call[[2]], "` is not a valid ",
-              "vector or raster `R` object or filename ! ")
+              "vector or raster `R` object or filename! ")
       return("none")
     }
   }

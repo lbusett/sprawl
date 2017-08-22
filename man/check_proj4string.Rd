@@ -11,9 +11,9 @@ check_proj4string(proj4string, abort = FALSE)
 
 \method{check_proj4string}{default}(proj4string, abort = FALSE)
 
-\method{check_proj4string}{default}(proj4string, abort = FALSE)
+\method{check_proj4string}{character}(proj4string, abort = FALSE)
 
-\method{check_proj4string}{default}(proj4string)
+\method{check_proj4string}{CRS}(proj4string, abort = FALSE)
 }
 \arguments{
 \item{proj4string}{\code{character} or \code{\link{CRS}} corresponding to the
@@ -33,18 +33,19 @@ is a valid string or a CRS object.
 DETAILS
 }
 \examples{
-check_proj4string("+init:epsg:32632")
+check_proj4string("+init=epsg:32632")
 
 check_proj4string("example of invalid string")
 
-check_proj4string(CRS("+init:epsg:32632"))
+library(sp)
+check_proj4string(CRS("+init=epsg:32632"))
 
 \dontrun{
- library(raster)
- in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
- in_rast <- raster::raster(in_rast)
- check_proj4string(in_rast@crs)
- }
+library(raster)
+in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
+in_rast <- raster::raster(in_rast)
+check_proj4string(in_rast@crs)
+}
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

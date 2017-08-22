@@ -24,7 +24,7 @@ filename(s) corresponding to the different bands;
 \item Z: \code{ANY} if the object has a "z" attribute set using raster::setZ(), values of the
 z attribute;
 \item dtype: \code{character} datatype of the input raster (\code{raster} conventions)
-\item projstring: \code{character} proj4string of the object/file
+\item proj4string: \code{character} proj4string of the object/file
 }
 }
 \description{

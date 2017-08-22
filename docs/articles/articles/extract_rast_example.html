@@ -144,7 +144,7 @@
 
 in_polys &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/read_vect.html">read_vect</a></span>(<span class="kw">system.file</span>(<span class="st">"extdata/shapes"</span>,<span class="st">"lc_polys.shp"</span>,
                                   <span class="dt">package =</span> <span class="st">"sprawl.data"</span>))
-in_rast  &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class="kw">system.file</span>(<span class="st">"extdata/MODIS_test"</span>, <span class="st">"EVIts_test.tif"</span>,
+in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(<span class="kw">system.file</span>(<span class="st">"extdata/MODIS_test"</span>, <span class="st">"EVIts_test.tif"</span>,
                               <span class="dt">package =</span> <span class="st">"sprawl.data"</span>))</code></pre></div>
 <p>Now, in <code>in_polys</code> we have a vector with 13 polygons:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">in_polys</code></pre></div>
@@ -190,13 +190,13 @@ in_rast  &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class
 <li>
 <code>extracted_values$alldata</code> contains the values for each extracted pixel, along with information extracted from the vector file. Additionally, the number of pixels extracted from each polygon is shown in the <code>N_PIX</code> column, and an identifier to each pixel in the <code>N</code> column</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(extracted_values<span class="op">$</span>alldata)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/headtail">head</a></span>(extracted_values<span class="op">$</span>alldata)</code></pre></div>
 <pre><code>## Simple feature collection with 6 features and 9 fields
 ## geometry type:  POINT
 ## dimension:      XY
 ## bbox:           xmin: 12918200 ymin: 1754797 xmax: 12919360 ymax: 1754797
 ## epsg (SRID):    NA
-## proj4string:    NA
+## proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 ##    lc_type band_n    band_name N_PIX N value id category sup_catego
 ## 1 forest_1      1 EVIts_test.1    61 1  4454  1   Forest Vegetation
 ## 2 forest_1      1 EVIts_test.1    61 2  4260  1   Forest Vegetation
@@ -215,7 +215,7 @@ in_rast  &lt;-<span class="st"> </span><span class="kw">stack</span>(<span class
 <li>
 <code>extracted_values$statdata</code> contains instead the statistics for each polygon and band. By default, average, standard deviation, minimum, maximum and median are computed (see the help of the function)</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(extracted_values<span class="op">$</span>stats)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/headtail">head</a></span>(extracted_values<span class="op">$</span>stats)</code></pre></div>
 <pre><code>## Simple feature collection with 6 features and 12 fields
 ## geometry type:  POLYGON
 ## dimension:      XY

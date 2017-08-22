@@ -45,6 +45,7 @@ reference:
   - title: Miscellaneous Helpers
     desc: ~
     contents:
+      - '`sprawlext`'
       - '`build_testraster`'
       - '`build_testshape`'
       - '`convert_rastdtype`'

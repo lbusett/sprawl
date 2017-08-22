@@ -92,7 +92,7 @@ mask_rast <- function(in_rast,
 
   in_rast   <- cast_rast(in_rast, "rastobject")
   rastinfo  <- get_rastinfo(in_rast)
-  rast_proj <- get_projstring(in_rast, abort = TRUE)
+  rast_proj <- get_proj4string(in_rast, abort = TRUE)
   bnames_in <- names(in_rast)
   times_in  <- raster::getZ(in_rast)
   if (is.null(out_dtype)) {
@@ -117,7 +117,7 @@ mask_rast <- function(in_rast,
 
   # checks on mask ----
   mask      <- cast_vect(mask, "sfobject")
-  mask_proj <- get_projstring(mask, abort = TRUE)
+  mask_proj <- get_proj4string(mask, abort = TRUE)
 
   #   __________________________________________________________________________
   #   set the output folder (in tempdir if out_filename == NULL)            ####

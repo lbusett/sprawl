@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>return the extent of a spatial object or file (with projection) � get_extent • sprawl</title>
+<title>return the extent of a spatial object or file (with projection) — get_extent • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -143,28 +143,37 @@
 or file with the associated proj4string</p>
     
 
-    <pre class="usage"><span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for sprawlext</span>
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for Extent</span>
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for matrix</span>
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Raster</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for sf</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for sfc</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Spatial</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Spatial</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -175,65 +184,48 @@ or file with the associated proj4string</p>
 filename (full path)</p></td>
     </tr>
     <tr>
+      <th>proj4string</th>
+      <td><p>(optional) <code>character</code> proj4string representing the projection of
+the input extent. It is needed only if 'object' does not include a
+projection (like <code>extent</code> or <code>bbox</code>).</p></td>
+    </tr>
+    <tr>
       <th>abort</th>
       <td><p><code>logical</code> if TRUE, the function aborts in case no proj4string or
-invalid projstring is found, Default: FALSE</p></td>
+invalid proj4string is found, Default: FALSE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>object of class <code>sprawl_ext</code></p>
+    <p>object of class <code>sprawlext</code></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>return an object of class <code>sprawl_ext</code> with two slots:</p><ul>
-<li><p>@extent: <code>numeric (4)</code> extent of the object (xmin, ymin, xmax, ymax)</p></li>
-<li><p>@projstring: <code>character</code> proj4string of the object</p></li>
+    <p>return an object of class <code>sprawlext</code> with two slots:</p><ul>
+<li><p>$extent: <code>numeric (4)</code> extent of the object (xmin, ymin, xmax, ymax)</p></li>
+<li><p>$proj4string: <code>character</code> proj4string of the object</p></li>
 </ul>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>raster</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>raster</span>)
 
- <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
-   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>get_extent</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
-#&gt; Slot "extent":
-#&gt;     xmin     ymin     xmax     ymax 
-#&gt; 12897004  1685995 12973683  1789545 
-#&gt; 
-#&gt; Slot "projstring":
-#&gt; [1] "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs"
-#&gt; </div><div class='input'>
- <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>in_rast</span>)
- <span class='fu'>get_extent</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
-#&gt; Slot "extent":
-#&gt;     xmin     ymin     xmax     ymax 
-#&gt; 12897004  1685995 12973683  1789545 
-#&gt; 
-#&gt; Slot "projstring":
-#&gt; [1] "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs"
-#&gt; </div><div class='input'>
- <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
-   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>get_extent</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
-#&gt; Slot "extent":
-#&gt;      xmin      ymin      xmax      ymax 
-#&gt; 120.17779  15.15353 121.33942  16.09343 
-#&gt; 
-#&gt; Slot "projstring":
-#&gt; [1] "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-#&gt; </div><div class='input'>
- <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>)
- <span class='fu'>get_extent</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
-#&gt; Slot "extent":
-#&gt;      xmin      ymin      xmax      ymax 
-#&gt; 120.17779  15.15353 121.33942  16.09343 
-#&gt; 
-#&gt; Slot "projstring":
-#&gt; [1] "+proj=longlat +datum=WGS84 +no_defs"
-#&gt; </div><div class='input'>
+<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
+  <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_rast</span>)
+
+<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>in_rast</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_rast</span>)
+
+<span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
+  <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_vect</span>)
+
+<span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_vect</span>)
+<span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -251,6 +243,8 @@ invalid projstring is found, Default: FALSE</p></td>
     <h2>Author</h2>
     
 Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
+
+Luigi Ranghetti, phD (2017) <a href='mailto:ranghetti.l@irea.cnr.it'>ranghetti.l@irea.cnr.it</a>
 
   </div>
 </div>

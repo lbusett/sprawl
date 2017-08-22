@@ -7,30 +7,31 @@
 #'   invalid proj4string is found, Default: FALSE
 #' @return `character` proj4string of the object or file
 #' @details DETAILS
-#' @examples
-#' \dontrun{
-#'  library(raster)
-#'
-#'  in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
-#'  get_proj4string(in_rast)
-#'
-#'  in_rast <- raster::raster(in_rast)
-#'  get_proj4string(in_rast)
-#'
-#'  in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
-#'  get_proj4string(in_vect)
-#'
-#'  in_vect <- read_vect(in_vect)
-#'  get_proj4string(in_vect)
-#'
-#'  }
 #' @importFrom dplyr case_when
 #' @importFrom gdalUtils gdalsrsinfo
 #' @importFrom sp proj4string
 #' @importFrom sf st_crs
+#' @name get_proj4string
 #' @rdname get_proj4string
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
+#' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
+#' @examples
+#' \dontrun{
+#' library(raster)
+#'
+#' in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
+#' get_proj4string(in_rast)
+#'
+#' in_rast <- raster::raster(in_rast)
+#' get_proj4string(in_rast)
+#'
+#' in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
+#' get_proj4string(in_vect)
+#'
+#' in_vect <- read_vect(in_vect)
+#' get_proj4string(in_vect)
+#' }
 #'
 get_proj4string <- function(object,
                             abort = FALSE) {

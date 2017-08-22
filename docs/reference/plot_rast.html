@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>quick plot for a raster based on level_plot � plot_rast • sprawl</title>
+<title>quick plot for a raster based on level_plot — plot_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -243,15 +243,18 @@ Default: TRUE</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+ <span class='fu'>library</span>(<span class='no'>sprawl</span>)
 
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/REYE_test"</span>, <span class='st'>"REYE_2016_185_gNDVI.tif"</span>,
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>150</span>)
  <span class='co'># plot only the raster</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='img'><img src='plot_rast-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)
+
  <span class='co'># plot only the raster with custom legend</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)</div><div class='img'><img src='plot_rast-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)
+
  <span class='co'># add a polygon and change the legend, palette and maxpixels</span>
  <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>,
            <span class='kw'>in_poly</span>   <span class='kw'>=</span> <span class='no'>in_vect</span>,
@@ -259,12 +262,15 @@ Default: TRUE</p></td>
            <span class='kw'>legend</span>    <span class='kw'>=</span> <span class='st'>"custom"</span>,
            <span class='kw'>palette</span>   <span class='kw'>=</span> <span class='st'>"RdYlBu"</span> ,
            <span class='kw'>title</span>     <span class='kw'>=</span> <span class='st'>"RapidEye - GNDVI"</span>,
-           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)</div><div class='img'><img src='plot_rast-15.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)
+
  <span class='co'># Plot more than one band</span>
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(
                           <span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>2</span>:<span class='fl'>5</span>]]
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e5</span>)</div><div class='img'><img src='plot_rast-16.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e5</span>)
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
