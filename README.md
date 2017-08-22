@@ -1,5 +1,5 @@
 
--   [sprawl - Spatial Processing (in) R: Amdvanced Workflow Library](#sprawl---spatial-processing-in-r-amdvanced-workflow-library)
+-   [sprawl - Spatial Processing (in) R: Advanced Workflow Library](#sprawl---spatial-processing-in-r-advanced-workflow-library)
     -   [Intro and rationale](#intro-and-rationale)
     -   [Package philosophy](#package-philosophy)
     -   [**WORK IN PROGRESS !**](#work-in-progress)
@@ -12,8 +12,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Travis-CI Build Status](https://travis-ci.org/lbusett/sprawl.svg?branch=master)](https://travis-ci.org/lbusett/sprawl) [![codecov](https://codecov.io/gh/lbusett/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/lbusett/sprawl) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-sprawl - Spatial Processing (in) R: Amdvanced Workflow Library
-==============================================================
+sprawl - Spatial Processing (in) R: Advanced Workflow Library
+=============================================================
 
 Intro and rationale
 -------------------
