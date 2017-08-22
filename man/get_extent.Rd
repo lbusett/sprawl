@@ -3,6 +3,9 @@
 \name{get_extent}
 \alias{get_extent}
 \alias{get_extent.default}
+\alias{get_extent.sprawlext}
+\alias{get_extent.Extent}
+\alias{get_extent.matrix}
 \alias{get_extent.character}
 \alias{get_extent.Raster}
 \alias{get_extent.sf}
@@ -11,63 +14,75 @@
 \alias{get_extent.sprawlext}
 \title{return the extent of a spatial object or file (with projection)}
 \usage{
-get_extent(object, abort = FALSE)
+get_extent(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{default}(object, abort = FALSE)
+\method{get_extent}{default}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{character}(object, abort = FALSE)
+\method{get_extent}{sprawlext}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Raster}(object, abort = FALSE)
+\method{get_extent}{Extent}(object, proj4string, abort = FALSE)
 
-\method{get_extent}{sf}(object, abort = FALSE)
+\method{get_extent}{matrix}(object, proj4string, abort = FALSE)
 
-\method{get_extent}{sfc}(object, abort = FALSE)
+\method{get_extent}{character}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Spatial}(object, abort = FALSE)
+\method{get_extent}{Raster}(object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Spatial}(object, abort = FALSE)
+\method{get_extent}{sf}(object, proj4string = NULL, abort = FALSE)
+
+\method{get_extent}{sfc}(object, proj4string = NULL, abort = FALSE)
+
+\method{get_extent}{Spatial}(object, proj4string = NULL, abort = FALSE)
+
+\method{get_extent}{Spatial}(object, proj4string = NULL, abort = FALSE)
 }
 \arguments{
 \item{object}{\code{character} corresponding to the name of a R object, or a
 filename (full path)}
 
+\item{proj4string}{(optional) \code{character} proj4string representing the projection of
+the input extent. It is needed only if 'object' does not include a
+projection (like \code{\link{extent}} or \code{\link{bbox}}).}
+
 \item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
-invalid projstring is found, Default: FALSE}
+invalid proj4string is found, Default: FALSE}
 }
 \value{
-object of class \code{sprawl_ext}
+object of class \code{sprawlext}
 }
 \description{
 helper function used to retrieve the extent of a spatial object
 or file with the associated proj4string
 }
 \details{
-return an object of class \code{sprawl_ext} with two slots:
+return an object of class \code{sprawlext} with two slots:
 \itemize{
-\item @extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
-\item @projstring: \code{character} proj4string of the object
+\item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
+\item $proj4string: \code{character} proj4string of the object
 }
 }
 \examples{
 \dontrun{
- library(raster)
+library(raster)
 
- in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
-   package = "sprawl.data")
- get_extent(in_rast)
+in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+  package = "sprawl.data")
+get_extent(in_rast)
 
- in_rast <- raster::raster(in_rast)
- get_extent(in_rast)
+in_rast <- raster::raster(in_rast)
+get_extent(in_rast)
 
- in_vect <- system.file("extdata/shapes","lc_polys.shp",
-   package = "sprawl.data")
- get_extent(in_vect)
+in_vect <- system.file("extdata/shapes","lc_polys.shp",
+  package = "sprawl.data")
+get_extent(in_vect)
 
- in_vect <- read_vect(in_vect)
- get_extent(in_vect)
-
+in_vect <- read_vect(in_vect)
+get_extent(in_vect)
 }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
+
+Luigi Ranghetti, phD (2017) \href{mailto:ranghetti.l@irea.cnr.it}{ranghetti.l@irea.cnr.it}
 }

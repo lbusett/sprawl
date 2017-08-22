@@ -648,7 +648,7 @@ er_polygons <- function(in_vect,
     if (er_opts$addgeom) {
       all_data  <- sf::st_as_sf(all_data, coords = c("x_coord", "y_coord"),
                                 na.fail = FALSE)
-      sf::st_set_crs(all_data, get_projstring(in_rast))
+      sf::st_set_crs(all_data, get_proj4string(in_rast))
     }
   }
 

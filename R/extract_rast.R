@@ -126,13 +126,13 @@ extract_rast <- function(in_rast,
   #   Cast the inputs to "correct" types and do some reshuffling            ####
 
   in_rast   <- cast_rast(in_rast, "rastobject")
-  rast_proj <- get_projstring(in_rast, abort = TRUE)
+  rast_proj <- get_proj4string(in_rast, abort = TRUE)
 
   in_vect  <- cast_vect(in_vect, "sfobject") %>%
     dplyr::mutate_if(is.character, as.factor) %>%
     tibble::as_tibble() %>%
     sf::st_as_sf()
-  vect_proj <- get_projstring(in_vect, abort = TRUE)
+  vect_proj <- get_proj4string(in_vect, abort = TRUE)
 
   #   __________________________________________________________________________
   #   Identify the bands/dates to be processed                              ####

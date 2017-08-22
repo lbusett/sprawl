@@ -17,7 +17,7 @@ testthat::test_that("Test On raster masking", {
   #  and mask_vect
   out_masked   <- mask_rast(rast_in, mask_vect, verbose = FALSE, crop = FALSE)
   expect_is(out_masked, "Raster")
-  mask_in_2    <- sf::st_transform(mask_in, get_projstring(rast_in))
+  mask_in_2    <- sf::st_transform(mask_in, get_proj4string(rast_in))
   out_masked_2 <- mask_rast(rast_in, mask_in_2, verbose = FALSE)
   expect_is(out_masked_2, "Raster")
   expect_equal(raster::getValues(out_masked),

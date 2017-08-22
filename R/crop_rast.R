@@ -69,18 +69,8 @@ crop_rast <- function(rast_object,
   #   __________________________________________________________________________
   #   reproject `ext_rast_file` if necessary                                ####
 
-  if (!(rast_bbox@projstring == crop_bbox@projstring)) {
-# TODO: replace with call to `reproj_exten()`
-    reproj_bbox <- sf::st_polygon(list(rbind(
-      c(cbbox_ext["xmin"], cbbox_ext["ymin"]),
-      c(cbbox_ext["xmin"], cbbox_ext["ymax"]),
-      c(cbbox_ext["xmax"], cbbox_ext["ymax"]),
-      c(cbbox_ext["xmax"], cbbox_ext["ymin"]),
-      c(cbbox_ext["xmin"], cbbox_ext["ymin"])))
-    ) %>%
-      sf::st_sfc(crs = crop_bbox@projstring) %>%
-      sf::st_transform(rast_bbox@projstring) %>%
-      get_extent()
+  if (!(rast_bbox@proj4string == crop_bbox@proj4string)) {
+    reproj_bbox <- reproj_extent(crop_bbox, rast_bbox@proj4string)
   }
 
   #   __________________________________________________________________________

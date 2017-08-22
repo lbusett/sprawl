@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mask a raster based on a vector � mask_rast • sprawl</title>
+<title>Mask a raster based on a vector — mask_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -231,7 +231,8 @@ string corresponding to the filename of the created raster (if out_type ==
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>sprawl</span>)
 <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
@@ -240,7 +241,10 @@ string corresponding to the filename of the created raster (if out_type ==
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
-<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: invalid 'cutoff' value for 'deparse', using default</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast</span></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-7.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-8.png' alt='' width='700' height='432.632880098887' /></div></pre>
+<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
