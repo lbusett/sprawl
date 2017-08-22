@@ -43,9 +43,9 @@ crop_rast <- function(rast_object,
                       compress     = "None",
                       verbose      = TRUE){
 
-  message("crop_rast --> Cropping: ", deparse(substitute(object)),
-          " on extent of: ",
-          deparse(substitute(ext_rast_file)))
+  call <- match.call()
+  message("crop_rast --> Cropping: ", deparse(substitute(call)$rast_object),
+          " on extent of: ", deparse(substitute(call)$ext_object))
 
   #   __________________________________________________________________________
   #   Create processing objects: rast_file is a filename, rast_object a     ####

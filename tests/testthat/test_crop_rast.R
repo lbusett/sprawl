@@ -4,6 +4,7 @@ testthat::test_that("Test On raster cropping", {
   skip_on_travis()
   library(testthat)
   library(sprawl.data)
+  library(raster)
   in_rast <- raster::stack(system.file("extdata/OLI_test", "oli_multi_1000.tif",
                                        package = "sprawl.data"))
   in_vect <- create_fishnet(in_rast, pix_for_cell = 60)[50,]
@@ -18,8 +19,8 @@ testthat::test_that("Test On raster cropping", {
   expect_is(out_rastfile, "character")
   expect_is(raster::brick(out_vrt), "Raster")
   expect_is(raster::brick(out_rastfile), "Raster")
-  expect_equal(as.numeric(getValues(raster::brick(out_vrt))),
-               as.numeric(getValues(raster::brick(out_rastfile))))
+  expect_equal(as.numeric(raster::getValues(raster::brick(out_vrt))),
+               as.numeric(raster::getValues(raster::brick(out_rastfile))))
   expect_error(expect_warning(crop_rast("ciao", in_vect)))
   expect_error(expect_warning(crop_rast(in_rast, "ciao.shp")))
 

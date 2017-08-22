@@ -47,7 +47,9 @@ Imports: data.table,
         stringr,
         glue,
         assertthat,
-        parallel
+        parallel,
+        ggspatial,
+        ggsn
 Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,

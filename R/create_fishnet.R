@@ -56,8 +56,7 @@ create_fishnet <- function(in_rast,
                            overwrite    = TRUE,
                            crop_layer   = NULL) {
 
-  #TODO
-  # modify automatically the extent so that the cellsize is ALWAYS respected,
+  #TODO modify automatically the extent so that the cellsize is ALWAYS respected,
   # even if it is not a submultiple of the extent.
 
   #   __________________________________________________________________________
