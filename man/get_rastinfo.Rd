@@ -25,6 +25,7 @@ filename(s) corresponding to the different bands;
 z attribute;
 \item dtype: \code{character} datatype of the input raster (\code{raster} conventions)
 \item proj4string: \code{character} proj4string of the object/file
+\item units: \code{character} distance units of the projections
 }
 }
 \description{

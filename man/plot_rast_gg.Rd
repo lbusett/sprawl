@@ -2,15 +2,21 @@
 % Please edit documentation in R/plot_rast_gg.R
 \name{plot_rast_gg}
 \alias{plot_rast_gg}
-\title{FUNCTION_TITLE}
+\title{plot_rast_gg}
 \usage{
-plot_rast_gg(in_rast, xlims = NULL, ylims = NULL, basemap = NULL,
-  zoomin = -1, scalebar = TRUE, scalebar_dist = NULL,
-  na.color = "transparent", palette_type = "gradient", palette = NULL,
-  no_labels = TRUE, title = NULL, subtitle = NULL)
+plot_rast_gg(in_rast, band_names = NULL, bands_to_plot = NULL,
+  nrows = NULL, xlims = NULL, ylims = NULL, basemap = NULL,
+  zoomin = -1, scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
+  na.color = "transparent", na.value = NA, palette_type = "gradient",
+  palette = NULL, labels = NULL, no_labels = TRUE, title = NULL,
+  subtitle = NULL)
 }
 \arguments{
 \item{in_rast}{PARAM_DESCRIPTION}
+
+\item{band_names}{PARAM_DESCRIPTION}
+
+\item{bands_to_plot}{PARAM_DESCRIPTION}
 
 \item{xlims}{PARAM_DESCRIPTION, Default: NULL}
 
@@ -26,9 +32,13 @@ plot_rast_gg(in_rast, xlims = NULL, ylims = NULL, basemap = NULL,
 
 \item{na.color}{PARAM_DESCRIPTION, Default: 'transparent'}
 
+\item{na.value}{PARAM_DESCRIPTION, Default: NA}
+
 \item{palette_type}{PARAM_DESCRIPTION, Default: 'gradient'}
 
 \item{palette}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{labels}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{no_labels}{PARAM_DESCRIPTION, Default: TRUE}
 
@@ -47,7 +57,28 @@ DETAILS
 }
 \examples{
 \dontrun{
- #EXAMPLE1
+ in_rast <- raster::stack(system.file("extdata/OLI_test",
+  "oli_multi_1000_b2.tif", package = "sprawl.data"))
+ plot_rast_gg(in_rast, basemap = "osm",
+                  palette_type = "diverging",
+                  no_labels = T,
+                  na.value = 0,
+                  zoomin = 0, title = "OLI", subtitle = "Band 2")
+
+ plot_rast_gg(in_rast, basemap = "stamenbw",
+                  palette_type = "diverging",
+                  no_labels = F,
+                  na.value = 0, transparency = 0.2,
+                  zoomin = 0, title = "OLI - 15/06/2017",
+                   subtitle = "Band 2 - Green")
+
+ in_rast <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
+                          package = "sprawl.data")
+ plot_rast_gg(in_rast, basemap = "cartolight",
+                  palette_type = "diverging",
+                  no_labels = F, zoomin = -1,
+                  na.value = 0, transparency = 0.5,
+                  title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 }
 }
 \author{
