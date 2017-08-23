@@ -14,3 +14,4 @@
 ^benchmarking$
 ^docs$
 ^index\.md$
+^rosm.cache$

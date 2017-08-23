@@ -50,7 +50,8 @@ Imports: data.table,
         parallel,
         ggspatial,
         ggsn, 
-        ggplot2
+        ggplot2, 
+        rosm
 Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,

@@ -29,6 +29,9 @@ If NULL, one row for each band is used (to be changed !), Default: NULL}
 \item{xlims}{\code{numeric(2)}, minimum and maximum x coordinates to be plotted.
 If NULL, the whole x-range is plotted, Default: NULL}
 
+\item{ylims}{\code{numeric(2)}, minimum and maximum y coordinates to be plotted.
+If NULL, the whole y-range is plotted, Default: NULL}
+
 \item{basemap}{\code{character} If not NULL and valid, the selected basemap is
 used as background. For a list of valid values, see \code{rosm::osm.types()},
 Default: NULL}
@@ -75,9 +78,6 @@ Default: FALSE}
 \item{title}{\code{character}, Title of the plot, Default: NULL}
 
 \item{subtitle}{Subtitle of the plot, Default: NULL}
-
-\item{xlims}{\code{numeric(2)}, minimum and maximum y coordinates to be plotted.
-If NULL, the whole y-range is plotted, Default: NULL}
 }
 \value{
 a \code{ggplot}

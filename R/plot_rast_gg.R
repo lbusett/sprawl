@@ -12,7 +12,7 @@
 #'   If NULL, one row for each band is used (to be changed !), Default: NULL
 #' @param xlims `numeric(2)`, minimum and maximum x coordinates to be plotted.
 #'   If NULL, the whole x-range is plotted, Default: NULL
-#' @param xlims `numeric(2)`, minimum and maximum y coordinates to be plotted.
+#' @param ylims `numeric(2)`, minimum and maximum y coordinates to be plotted.
 #'   If NULL, the whole y-range is plotted, Default: NULL
 #' @param basemap `character` If not NULL and valid, the selected basemap is
 #'   used as background. For a list of valid values, see `rosm::osm.types()`,
@@ -81,10 +81,12 @@
 #' @importFrom ggplot2 fortify ggplot scale_x_continuous
 #' scale_y_continuous ggtitle geom_raster aes scale_fill_brewer
 #' scale_fill_distiller coord_fixed theme_light theme element_blank
+#' facet_wrap
 #' @importFrom ggsn scalebar
 #' @importFrom ggspatial geom_osm
 #' @importFrom raster stack
 #' @importFrom rosm osm.types
+#' @importFrom stats na.omit
 
 plot_rast_gg <- function(
   in_rast,
@@ -103,7 +105,8 @@ plot_rast_gg <- function(
   #TODO Implement checks on input arguments (e.g., bands_to_plot, band_names)
   #TODO Verify possibility to have a "satellite" basemap
   #TODO Add MaxPixels
-  require(ggspatial)
+  requireNamespace("ggspatial")
+  requireNamespace("ggplot2")
   x <- y <- value <- NULL
 
   assert_that(palette_type %in% c("categorical", "gradient", "diverging"),
@@ -290,7 +293,7 @@ plot_rast_gg <- function(
                      axis.ticks.y = ggplot2::element_blank())
   }
 
-    plot_gg <- plot_gg + facet_wrap(~band, nrow = nrows)
+    plot_gg <- plot_gg + ggplot2::facet_wrap(~band, nrow = nrows)
 
   return(plot_gg)
 }
