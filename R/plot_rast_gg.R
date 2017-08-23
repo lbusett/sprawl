@@ -1,37 +1,65 @@
-#' @title plot_rast_gg
+#' @title plot a raster object using ggplot
 #' @description FUNCTION_DESCRIPTION
-#' @param in_rast PARAM_DESCRIPTION
-#' @param band_names PARAM_DESCRIPTION
-#' @param bands_to_plot PARAM_DESCRIPTION
-#' @param xlims PARAM_DESCRIPTION, Default: NULL
-#' @param ylims PARAM_DESCRIPTION, Default: NULL
-#' @param basemap PARAM_DESCRIPTION, Default: NULL
-#' @param zoomin PARAM_DESCRIPTION, Default: -1
-#' @param scalebar PARAM_DESCRIPTION, Default: TRUE
-#' @param scalebar_dist PARAM_DESCRIPTION, Default: NULL
-#' @param na.color PARAM_DESCRIPTION, Default: 'transparent'
-#' @param na.value PARAM_DESCRIPTION, Default: NA
-#' @param palette_type PARAM_DESCRIPTION, Default: 'gradient'
-#' @param palette PARAM_DESCRIPTION, Default: NULL
-#' @param labels PARAM_DESCRIPTION, Default: NULL
-#' @param no_labels PARAM_DESCRIPTION, Default: TRUE
-#' @param title PARAM_DESCRIPTION, Default: NULL
-#' @param subtitle PARAM_DESCRIPTION, Default: NULL
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @param in_rast `Raster` object to be plotted. Both mono- and multi-band
+#'   rasters are supported
+#' @param band_names `character(nbands)`, array of band names. These will used
+#'   to populate the "strips" above each plotted band. If NULL, bnames are
+#'   retrieved from the input raster using `sprawl::get_rastinfo`, Default: NULL
+#' @param bands_to_plot `numeric array`, array of band numbers to be plotted (in
+#'   case `in_rast` is multi-band. If NULL, all bands are plotted separately
+#'   using facet_wrap, Default: NULL
+#' @param nrows `numeric`, number of rows used for plotting multiple bands,
+#'   If NULL, one row for each band is used (to be changed !), Default: NULL
+#' @param xlims `numeric(2)`, minimum and maximum x coordinates to be plotted.
+#'   If NULL, the whole x-range is plotted, Default: NULL
+#' @param xlims `numeric(2)`, minimum and maximum y coordinates to be plotted.
+#'   If NULL, the whole y-range is plotted, Default: NULL
+#' @param basemap `character` If not NULL and valid, the selected basemap is
+#'   used as background. For a list of valid values, see `rosm::osm.types()`,
+#'   Default: NULL
+#' @param zoomin `numeric`, Adjustement factor for basemap zoom. Negative values
+#'   lead to less detailed basemap, but larger text. Default: 0
+#' @param scalebar `logical` If TRUE, add a scalebar on the bottom right corner,
+#'   Default: TRUE
+#' @param scalebar_dist `numeric` Width of the scale bar (in km). If NULL, it
+#'   is computed automatically on the basis of the range in x direction,
+#'   Default: NULL
+#' @param transparency `numeric [0,1]`, transparency of the raster layer. Higer
+#'   values lead to higher transparency, Default: 0 (ignored if basemap == NULL)
+#' @param na.color `character`, color to be used to plot NA values,
+#'   Default: 'transparent'
+#' @param na.value `numeric`, Additional values to be treatedas NA, Default: NA
+#' @param palette_type `character` Type of brewer color ramp to be used. Possible
+#'  values are `gradient`, `divergent` and `categorical`, Default: 'gradient'
+#' @param palette name of the palette to be used. If NULL, the following
+#'  defaults are used as a function of palette_type:
+#'  - categorical --> "Set1"
+#'  - gradient    --> "Greens"
+#'  - diverging   --> "RdYlGn")
+#'  Note that if a wrong palette name is specified, plot_rast_gg also reverts to
+#'  the default values, Default: NULL
+#' @param labels `character` labels to be used in the legend if palette_type is
+#'   "categorical". The number of labels must correspond to the number of
+#'   unique values of the raster to be plotted. If NULL or not valid, the legend
+#'   will use the raster values in the legend (see examples), Default: NULL
+#' @param no_axis `logical`, If TRUE, axis names and labels are suppressed,
+#'   Default: FALSE
+#' @param title `character`, Title of the plot, Default: NULL
+#' @param subtitle Subtitle of the plot, Default: NULL
+#' @return a `ggplot`
 #' @examples
 #' \dontrun{
 #'  in_rast <- raster::stack(system.file("extdata/OLI_test",
 #'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
-#'  plot_rast_gg(in_rast, basemap = "osm",
+#'  a = plot_rast_gg(in_rast, basemap = "osm",
 #'                   palette_type = "diverging",
-#'                   no_labels = T,
+#'                   no_axis = T,
 #'                   na.value = 0,
 #'                   zoomin = 0, title = "OLI", subtitle = "Band 2")
 #'
 #'  plot_rast_gg(in_rast, basemap = "stamenbw",
 #'                   palette_type = "diverging",
-#'                   no_labels = F,
+#'                   no_axis = F,
 #'                   na.value = 0, transparency = 0.2,
 #'                   zoomin = 0, title = "OLI - 15/06/2017",
 #'                    subtitle = "Band 2 - Green")
@@ -40,7 +68,7 @@
 #'                           package = "sprawl.data")
 #'  plot_rast_gg(in_rast, basemap = "cartolight",
 #'                   palette_type = "diverging",
-#'                   no_labels = F, zoomin = -1,
+#'                   no_axis = F, zoomin = -1,
 #'                   na.value = 0, transparency = 0.5,
 #'                   title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 #' }
@@ -56,17 +84,18 @@
 #' @importFrom ggsn scalebar
 #' @importFrom ggspatial geom_osm
 #' @importFrom raster stack
+#' @importFrom rosm osm.types
 
 plot_rast_gg <- function(
   in_rast,
   band_names     = NULL, bands_to_plot = NULL, nrows = NULL,
   xlims          = NULL, ylims = NULL,
-  basemap        = NULL, zoomin = -1,
+  basemap        = NULL, zoomin = 0,
   scalebar       = TRUE, scalebar_dist = NULL,
   transparency   = 0,
   na.color       = "transparent", na.value = NA,
   palette_type   = "gradient", palette = NULL, labels = NULL,
-  no_labels      = TRUE,
+  no_axis      = TRUE,
   title          = NULL, subtitle = NULL
 ) {
 
@@ -77,10 +106,14 @@ plot_rast_gg <- function(
   require(ggspatial)
   x <- y <- value <- NULL
 
-  assertthat::assert_that(palette_type %in% c("categorical", "gradient",
-                                              "diverging"),
-                          msg = "Invalid palette_type. Aborting!")
+  assert_that(palette_type %in% c("categorical", "gradient", "diverging"),
+              msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
+  )
 
+  if (!is.null(basename)){
+    assert_that(basemap %in% rosm::osm.types(),
+                msg = "plot_rast_gg --> Invalid basemap name. Aborting!")
+  }
   #   __________________________________________________________________________
   #   Set default palettes for different categories                         ####
   def_palettes <- list(categorical = "Set1",
@@ -246,7 +279,7 @@ plot_rast_gg <- function(
   plot_gg <- plot_gg +
     ggplot2::coord_fixed()
 
-  if (no_labels) {
+  if (no_axis) {
 
     plot_gg <- plot_gg + ggplot2::theme_light() +
       ggplot2::theme(axis.title.x = ggplot2::element_blank(),

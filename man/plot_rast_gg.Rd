@@ -2,72 +2,102 @@
 % Please edit documentation in R/plot_rast_gg.R
 \name{plot_rast_gg}
 \alias{plot_rast_gg}
-\title{plot_rast_gg}
+\title{plot a raster object using ggplot}
 \usage{
 plot_rast_gg(in_rast, band_names = NULL, bands_to_plot = NULL,
   nrows = NULL, xlims = NULL, ylims = NULL, basemap = NULL,
-  zoomin = -1, scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
+  zoomin = 0, scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
   na.color = "transparent", na.value = NA, palette_type = "gradient",
-  palette = NULL, labels = NULL, no_labels = TRUE, title = NULL,
+  palette = NULL, labels = NULL, no_axis = TRUE, title = NULL,
   subtitle = NULL)
 }
 \arguments{
-\item{in_rast}{PARAM_DESCRIPTION}
+\item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
+rasters are supported}
 
-\item{band_names}{PARAM_DESCRIPTION}
+\item{band_names}{\code{character(nbands)}, array of band names. These will used
+to populate the "strips" above each plotted band. If NULL, bnames are
+retrieved from the input raster using \code{sprawl::get_rastinfo}, Default: NULL}
 
-\item{bands_to_plot}{PARAM_DESCRIPTION}
+\item{bands_to_plot}{\code{numeric array}, array of band numbers to be plotted (in
+case \code{in_rast} is multi-band. If NULL, all bands are plotted separately
+using facet_wrap, Default: NULL}
 
-\item{xlims}{PARAM_DESCRIPTION, Default: NULL}
+\item{nrows}{\code{numeric}, number of rows used for plotting multiple bands,
+If NULL, one row for each band is used (to be changed !), Default: NULL}
 
-\item{ylims}{PARAM_DESCRIPTION, Default: NULL}
+\item{xlims}{\code{numeric(2)}, minimum and maximum x coordinates to be plotted.
+If NULL, the whole x-range is plotted, Default: NULL}
 
-\item{basemap}{PARAM_DESCRIPTION, Default: NULL}
+\item{basemap}{\code{character} If not NULL and valid, the selected basemap is
+used as background. For a list of valid values, see \code{rosm::osm.types()},
+Default: NULL}
 
-\item{zoomin}{PARAM_DESCRIPTION, Default: -1}
+\item{zoomin}{\code{numeric}, Adjustement factor for basemap zoom. Negative values
+lead to less detailed basemap, but larger text. Default: 0}
 
-\item{scalebar}{PARAM_DESCRIPTION, Default: TRUE}
+\item{scalebar}{\code{logical} If TRUE, add a scalebar on the bottom right corner,
+Default: TRUE}
 
-\item{scalebar_dist}{PARAM_DESCRIPTION, Default: NULL}
+\item{scalebar_dist}{\code{numeric} Width of the scale bar (in km). If NULL, it
+is computed automatically on the basis of the range in x direction,
+Default: NULL}
 
-\item{na.color}{PARAM_DESCRIPTION, Default: 'transparent'}
+\item{transparency}{\code{numeric [0,1]}, transparency of the raster layer. Higer
+values lead to higher transparency, Default: 0 (ignored if basemap == NULL)}
 
-\item{na.value}{PARAM_DESCRIPTION, Default: NA}
+\item{na.color}{\code{character}, color to be used to plot NA values,
+Default: 'transparent'}
 
-\item{palette_type}{PARAM_DESCRIPTION, Default: 'gradient'}
+\item{na.value}{\code{numeric}, Additional values to be treatedas NA, Default: NA}
 
-\item{palette}{PARAM_DESCRIPTION, Default: NULL}
+\item{palette_type}{\code{character} Type of brewer color ramp to be used. Possible
+values are \code{gradient}, \code{divergent} and \code{categorical}, Default: 'gradient'}
 
-\item{labels}{PARAM_DESCRIPTION, Default: NULL}
+\item{palette}{name of the palette to be used. If NULL, the following
+defaults are used as a function of palette_type:
+\itemize{
+\item categorical --> "Set1"
+\item gradient    --> "Greens"
+\item diverging   --> "RdYlGn")
+Note that if a wrong palette name is specified, plot_rast_gg also reverts to
+the default values, Default: NULL
+}}
 
-\item{no_labels}{PARAM_DESCRIPTION, Default: TRUE}
+\item{labels}{\code{character} labels to be used in the legend if palette_type is
+"categorical". The number of labels must correspond to the number of
+unique values of the raster to be plotted. If NULL or not valid, the legend
+will use the raster values in the legend (see examples), Default: NULL}
 
-\item{title}{PARAM_DESCRIPTION, Default: NULL}
+\item{no_axis}{\code{logical}, If TRUE, axis names and labels are suppressed,
+Default: FALSE}
 
-\item{subtitle}{PARAM_DESCRIPTION, Default: NULL}
+\item{title}{\code{character}, Title of the plot, Default: NULL}
+
+\item{subtitle}{Subtitle of the plot, Default: NULL}
+
+\item{xlims}{\code{numeric(2)}, minimum and maximum y coordinates to be plotted.
+If NULL, the whole y-range is plotted, Default: NULL}
 }
 \value{
-OUTPUT_DESCRIPTION
+a \code{ggplot}
 }
 \description{
 FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
 }
 \examples{
 \dontrun{
  in_rast <- raster::stack(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
- plot_rast_gg(in_rast, basemap = "osm",
+ a = plot_rast_gg(in_rast, basemap = "osm",
                   palette_type = "diverging",
-                  no_labels = T,
+                  no_axis = T,
                   na.value = 0,
                   zoomin = 0, title = "OLI", subtitle = "Band 2")
 
  plot_rast_gg(in_rast, basemap = "stamenbw",
                   palette_type = "diverging",
-                  no_labels = F,
+                  no_axis = F,
                   na.value = 0, transparency = 0.2,
                   zoomin = 0, title = "OLI - 15/06/2017",
                    subtitle = "Band 2 - Green")
@@ -76,7 +106,7 @@ DETAILS
                           package = "sprawl.data")
  plot_rast_gg(in_rast, basemap = "cartolight",
                   palette_type = "diverging",
-                  no_labels = F, zoomin = -1,
+                  no_axis = F, zoomin = -1,
                   na.value = 0, transparency = 0.5,
                   title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 }
