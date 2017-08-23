@@ -50,7 +50,7 @@
 #' @importFrom assertthat assert_that
 #' @importFrom data.table as.data.table
 #' @importFrom gdalUtils gdalwarp
-#' @importFrom ggplot2 fortify ggplot scale_x_continuous expand_scale
+#' @importFrom ggplot2 fortify ggplot scale_x_continuous
 #' scale_y_continuous ggtitle geom_raster aes scale_fill_brewer
 #' scale_fill_distiller coord_fixed theme_light theme element_blank
 #' @importFrom ggsn scalebar
@@ -184,10 +184,10 @@ plot_rast_gg <- function(
 
   plot_gg <- ggplot2::ggplot(in_rast_fort) +
     ggplot2::scale_x_continuous(xlab,
-                                expand = ggplot2::expand_scale(mult = c(0.02,0.02)),
+                                expand = expand_scale(mult = c(0.02,0.02)),
                                 limits = c(xlims[1], xlims[2])) +
     ggplot2::scale_y_continuous(ylab,
-                                expand = ggplot2::expand_scale(mult = c(0.02,0.02)),
+                                expand = expand_scale(mult = c(0.02,0.02)),
                                 limits = c(ylims[1], ylims[2])) +
     ggplot2::ggtitle(title, subtitle = subtitle)
 
