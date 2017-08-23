@@ -164,13 +164,50 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
- <span class='no'>setinfo_obj</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
+    <pre class="examples"><div class='input'> <span class='no'>setinfo_obj</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/brick'>brick</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
                                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
- <span class='no'>setinfo_obj</span> <span class='kw'>&lt;-</span> <span class='fu'>setinfo_rast</span>(<span class='no'>setinfo_obj</span>)
- <span class='no'>setinfo_obj</span>@<span class='kw'>info</span>
-
-<span class='co'># }</span></pre>
+ <span class='no'>setinfo_obj</span> <span class='kw'>&lt;-</span> <span class='fu'>setinfo_rast</span>(<span class='no'>setinfo_obj</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `object`</span></div><div class='input'> <span class='no'>setinfo_obj</span>@<span class='kw'>info</span></div><div class='output co'>#&gt; $nbands
+#&gt; [1] 6
+#&gt; 
+#&gt; $indbands
+#&gt; [1] 1 2 3 4 5 6
+#&gt; 
+#&gt; $ncols
+#&gt; [1] 980
+#&gt; 
+#&gt; $nrows
+#&gt; [1] 993
+#&gt; 
+#&gt; $ncells
+#&gt; [1] 973140
+#&gt; 
+#&gt; $res
+#&gt; [1] 30 30
+#&gt; 
+#&gt; $bnames
+#&gt; [1] "oli_multi_1000.1" "oli_multi_1000.2" "oli_multi_1000.3" "oli_multi_1000.4"
+#&gt; [5] "oli_multi_1000.5" "oli_multi_1000.6"
+#&gt; 
+#&gt; $fnames
+#&gt; [1] "/home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/OLI_test/oli_multi_1000.tif"
+#&gt; [2] "/home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/OLI_test/oli_multi_1000.tif"
+#&gt; [3] "/home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/OLI_test/oli_multi_1000.tif"
+#&gt; [4] "/home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/OLI_test/oli_multi_1000.tif"
+#&gt; [5] "/home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/OLI_test/oli_multi_1000.tif"
+#&gt; [6] "/home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/OLI_test/oli_multi_1000.tif"
+#&gt; 
+#&gt; $Z
+#&gt; list()
+#&gt; 
+#&gt; $dtype
+#&gt; [1] "FLT8S"
+#&gt; 
+#&gt; $proj4string
+#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
+#&gt; 
+#&gt; $units
+#&gt; [1] "m"
+#&gt; </div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

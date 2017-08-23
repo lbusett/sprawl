@@ -178,18 +178,43 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
+    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 <span class='co'># open a shapefile as a `sf` object</span>
  <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>read_vect</span>(<span class='no'>shp_file</span>)
-
+ <span class='fu'>read_vect</span>(<span class='no'>shp_file</span>)</div><div class='output co'>#&gt; Simple feature collection with 13 features and 4 fields
+#&gt; geometry type:  POLYGON
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 120.1778 ymin: 15.15353 xmax: 121.3394 ymax: 16.09343
+#&gt; epsg (SRID):    4326
+#&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
+#&gt; # A tibble: 13 x 5
+#&gt;       id       lc_type category sup_catego          geometry
+#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt; &lt;S3: sfc_POLYGON&gt;
+#&gt;  1     1      forest_1   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  2     2      forest_2   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  3     3       urban_1    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt;  4     4    cropland_1 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  5     5    cropland_2 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  6     6      forest_3   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  7     7    reiver_bed    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt;  8     8    cropland_3 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt;  9     9  urban_2_part    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
+#&gt; 11    11         water    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt; 12    12    small_feat    Other      Other &lt;S3: sfc_POLYGON&gt;
+#&gt; 13    13      out_feat    Other      Other &lt;S3: sfc_POLYGON&gt;</div><div class='input'>
 <span class='co'># open a shapefile as a `sp` object</span>
  <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>read_vect</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='co'># }</span></pre>
+ <span class='fu'>read_vect</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
+#&gt; features    : 13 
+#&gt; extent      : 120.1778, 121.3394, 15.15353, 16.09343  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
+#&gt; variables   : 4
+#&gt; names       : id,    lc_type, category, sup_catego 
+#&gt; min values  :  1, cropland_1, Cropland,      Other 
+#&gt; max values  : 13,      water,    Other, Vegetation </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
