@@ -94,7 +94,7 @@ get_proj4string.character <- function(object,
 get_proj4string.Raster <- function(object, abort = FALSE) {
 
   proj4string  <- sp::proj4string(object)
-  proj4string <- check_proj4string(proj4string)
+  proj4string  <- check_proj4string(proj4string, abort)
   return(proj4string)
 }
 
@@ -110,7 +110,7 @@ get_proj4string.sf <- function(object,
                                abort = FALSE) {
 
   proj4string  <- sf::st_crs(object)$proj4string
-  proj4string <- check_proj4string(proj4string)
+  proj4string <- check_proj4string(proj4string, abort)
   return(proj4string)
 
 }
@@ -125,7 +125,7 @@ get_proj4string.sf <- function(object,
 get_proj4string.sfc <- function(object, abort = FALSE) {
 
   proj4string  <- sf::st_crs(object)$proj4string
-  proj4string <- check_proj4string(proj4string)
+  proj4string <- check_proj4string(proj4string, abort)
   return(proj4string)
 
 }
@@ -140,7 +140,7 @@ get_proj4string.sfc <- function(object, abort = FALSE) {
 get_proj4string.Spatial <- function(object, abort = FALSE) {
 
   proj4string  <- sp::proj4string(object)
-  proj4string <- check_proj4string(proj4string)
+  proj4string  <- check_proj4string(proj4string, abort)
   return(proj4string)
 
 }

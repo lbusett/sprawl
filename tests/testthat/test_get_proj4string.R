@@ -28,7 +28,7 @@ testthat::test_that("Test projection string",{
                "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")  #nolint
 
   expect_equal(get_proj4string(read_vect(in_vect)),
-               "+proj=longlat +datum=WGS84 +no_defs")
+               "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 
   expect_equal(get_proj4string(read_vect(in_vect, as_sp = TRUE)),
                "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")  #nolint
