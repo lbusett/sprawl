@@ -2,12 +2,13 @@
 % Please edit documentation in R/plot_rast_gg.R
 \name{plot_rast_gg}
 \alias{plot_rast_gg}
-\title{FUNCTION_TITLE}
+\title{plot_rast_gg}
 \usage{
 plot_rast_gg(in_rast, xlims = NULL, ylims = NULL, basemap = NULL,
   zoomin = -1, scalebar = TRUE, scalebar_dist = NULL,
-  na.color = "transparent", palette_type = "gradient", palette = NULL,
-  no_labels = TRUE, title = NULL, subtitle = NULL)
+  na.color = "transparent", na.value = NA, palette_type = "gradient",
+  palette = NULL, labels = NULL, no_labels = TRUE, title = NULL,
+  subtitle = NULL)
 }
 \arguments{
 \item{in_rast}{PARAM_DESCRIPTION}
@@ -26,9 +27,13 @@ plot_rast_gg(in_rast, xlims = NULL, ylims = NULL, basemap = NULL,
 
 \item{na.color}{PARAM_DESCRIPTION, Default: 'transparent'}
 
+\item{na.value}{PARAM_DESCRIPTION, Default: NA}
+
 \item{palette_type}{PARAM_DESCRIPTION, Default: 'gradient'}
 
 \item{palette}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{labels}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{no_labels}{PARAM_DESCRIPTION, Default: TRUE}
 
@@ -47,7 +52,22 @@ DETAILS
 }
 \examples{
 \dontrun{
- #EXAMPLE1
+ in_rast <- raster::stack(system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
+                                  package = "sprawl.data"))
+ plot_rast_gg(in_rast, basemap = "cartolight",
+                  palette_type = "diverging",
+                  no_labels = T,
+                  na.value = 0,
+                  zoomin = 0, title = "OLI", subtitle = "Band 2")
+
+ in_rast <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
+                          package = "sprawl.data")
+ plot_rast_gg(in_rast, basemap = "cartolight",
+                  palette_type = "diverging",
+                  no_labels = F,
+                  na.value = 0,
+                  zoomin = 0,
+                  title = "Rapideye", subtitle = "gNDVI")
 }
 }
 \author{
