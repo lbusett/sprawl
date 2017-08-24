@@ -131,7 +131,6 @@ crop_rast <- function(rast_object,
       buildvrt_string <- paste("-te", paste(rbbox_ext, collapse = " "),
                                paste(paste("-b ", rastinfo$indbands),
                                      collapse = " "),
-                               "-separate",
                                "-input_file_list",
                                tmp_txt,
                                temp_vrt)
