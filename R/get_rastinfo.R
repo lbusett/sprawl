@@ -2,6 +2,7 @@
 #' @description Function used to facilitate retrieval useful info from a raster object or
 #'  file.
 #' @param object either the name of a `Raster` object or a valid raster filename
+#' @param verbose if FALSE supress messages
 #' @return `list` containing the following object:
 #'   - nbands: `numeric` Number of bands of the object/file;
 #'   - indbands: `numeric` If the object is associated with a file on disk, bands of the
@@ -31,9 +32,9 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom glue glue
 
-get_rastinfo <- function(object) {
+get_rastinfo <- function(object, verbose = TRUE) {
   call <- match.call()
-  message("get_rastinfo --> Retrieving info from: `",
+  if (verbose) message("get_rastinfo --> Retrieving info from: `",
                      deparse(substitute(call)$object), "`")
   object <- cast_rast(object, "rastobject")
   if (inherits(object, "RasterBrick")) {

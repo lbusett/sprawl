@@ -4,10 +4,12 @@
 \alias{get_rastinfo}
 \title{Retrieve useful info from a raster object or file}
 \usage{
-get_rastinfo(object)
+get_rastinfo(object, verbose = TRUE)
 }
 \arguments{
 \item{object}{either the name of a \code{Raster} object or a valid raster filename}
+
+\item{verbose}{if FALSE supress messages}
 }
 \value{
 \code{list} containing the following object:

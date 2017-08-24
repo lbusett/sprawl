@@ -5,11 +5,13 @@
 \title{plot a raster object using ggplot}
 \usage{
 plot_rast_gg(in_rast, band_names = NULL, bands_to_plot = NULL,
-  nrows = NULL, xlims = NULL, ylims = NULL, basemap = NULL,
-  zoomin = 0, scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
-  na.color = "transparent", na.value = NA, palette_type = "gradient",
-  palette = NULL, labels = NULL, no_axis = TRUE, title = NULL,
-  subtitle = NULL)
+  nrows = NULL, xlims = NULL, ylims = NULL, zlims = NULL,
+  zlims_type = "vals", basemap = NULL, zoomin = 0, scalebar = TRUE,
+  scalebar_dist = NULL, transparency = 0, na.color = "transparent",
+  na.value = NA, palette_type = "gradient", palette = NULL,
+  legend_type = NULL, labels = NULL, breaks = NULL, no_axis = TRUE,
+  title = NULL, subtitle = NULL, theme = ggplot2::theme_bw(),
+  verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
@@ -31,6 +33,17 @@ If NULL, the whole x-range is plotted, Default: NULL}
 
 \item{ylims}{\code{numeric(2)}, minimum and maximum y coordinates to be plotted.
 If NULL, the whole y-range is plotted, Default: NULL}
+
+\item{zlims}{\code{numeric array [2]} limits governing the range of
+values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
+
+\item{zlims_type}{\code{character} type of zlims specified.
+\itemize{
+\item "vals": zlims indicates the range of values to be plotted
+\item "percs": zlims indicates the range of percentiles to be plotted (e.g.,
+specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
+values between the 2nd to 98th percentile)
+}}
 
 \item{basemap}{\code{character} If not NULL and valid, the selected basemap is
 used as background. For a list of valid values, see \code{rosm::osm.types()},
@@ -67,10 +80,14 @@ Note that if a wrong palette name is specified, plot_rast_gg also reverts to
 the default values, Default: NULL
 }}
 
+\item{legend_type}{DESCREIPTION}
+
 \item{labels}{\code{character} labels to be used in the legend if palette_type is
 "categorical". The number of labels must correspond to the number of
 unique values of the raster to be plotted. If NULL or not valid, the legend
 will use the raster values in the legend (see examples), Default: NULL}
+
+\item{breaks}{\code{character} DESCRIPTIOS Default: NULL}
 
 \item{no_axis}{\code{logical}, If TRUE, axis names and labels are suppressed,
 Default: FALSE}
@@ -78,6 +95,9 @@ Default: FALSE}
 \item{title}{\code{character}, Title of the plot, Default: NULL}
 
 \item{subtitle}{Subtitle of the plot, Default: NULL}
+
+\item{verbose}{\code{logical}, If FALSE, suppress processing message,
+Default: TRUE}
 }
 \value{
 a \code{ggplot}
@@ -89,7 +109,7 @@ FUNCTION_DESCRIPTION
 \dontrun{
  in_rast <- raster::stack(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
- a = plot_rast_gg(in_rast, basemap = "osm",
+ plot_rast_gg(in_rast, basemap = "osm",
                   palette_type = "diverging",
                   no_axis = T,
                   na.value = 0,

@@ -48,6 +48,7 @@ cast_rast.default <- function(object, to) {
 #'@rdname cast_rast
 
 cast_rast.Raster <- function(object, to) {
+
   call <- as.list(match.call())
   if (to == "rastobject") return(object)
   if (to == "rastfile") {
