@@ -31,3 +31,5 @@ docs/pkgdown\.css
 inst/doc
 
 rosm\.cache/
+
+*.png
