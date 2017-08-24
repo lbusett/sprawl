@@ -38,6 +38,7 @@ reference:
     desc: ~
     contents:
       - '`plot_rast`'
+      - '`plot_rast_gg`'
   - title: Data fetching from public repositories
     desc: ~
     contents:

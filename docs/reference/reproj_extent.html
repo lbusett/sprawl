@@ -183,31 +183,51 @@ reprojected extent</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>raster</span>)
+    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
 <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>in_file</span>)
 <span class='no'>in_sprawlext</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_rast</span>)
 
 <span class='co'># Reproject a sprawlext</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>)
-
+<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get_extent(ext, proj4string = in_proj, abort = TRUE): object 'in_sprawlext_1' not found</span></div><div class='input'>
 <span class='co'># Reproject the extent of a file</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_file</span>, <span class='st'>"+init=epsg:32651"</span>)
-
+<span class='fu'>reproj_extent</span>(<span class='no'>in_file</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;      xmin      ymin      xmax      ymax 
+#&gt;  195742.3 1677398.6  332519.7 1780655.5 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
+#&gt; </div><div class='input'>
 <span class='co'># Reproject the extent of a raster</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_rast</span>, <span class='st'>"+init=epsg:32651"</span>)
-
+<span class='fu'>reproj_extent</span>(<span class='no'>in_rast</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;      xmin      ymin      xmax      ymax 
+#&gt;  195742.3 1677398.6  332519.7 1780655.5 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
+#&gt; </div><div class='input'>
 <span class='co'># Reproject an extent or a bounding box (given the input projection)</span>
-<span class='fu'>reproj_extent</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)
-<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)
-<span class='co'># (this fails without providing in_proj value:)</span>
-<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>)
-
+<span class='fu'>reproj_extent</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;      xmin      ymin      xmax      ymax 
+#&gt;  195742.3 1677398.6  332519.7 1780655.5 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
+#&gt; </div><div class='input'><span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;      xmin      ymin      xmax      ymax 
+#&gt;  195742.3 1677398.6  332519.7 1780655.5 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
+#&gt; </div><div class='input'><span class='co'># (this fails without providing in_proj value:)</span>
+<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in check_proj4string.default(proj4string, abort = abort): check_proj4string --&gt; proj4string is not a valid CRS object or proj4string. Aborting!</span></div><div class='input'>
 <span class='co'># Reproject without enlarging</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='co'># }</span></pre>
+<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get_extent(ext, proj4string = in_proj, abort = TRUE): object 'in_sprawlext_1' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

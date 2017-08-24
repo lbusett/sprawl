@@ -49,7 +49,9 @@ Imports: data.table,
         assertthat,
         parallel,
         ggspatial,
-        ggsn
+        ggsn, 
+        ggplot2, 
+        rosm
 Remotes: lbusett/sprawl.data
 Suggests: testthat,
           knitr,

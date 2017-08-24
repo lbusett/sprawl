@@ -45,6 +45,6 @@ testthat::test_that("Test retrieval of extent",{
   expect_is(ext_from_bbox, "sprawlext")
   expect_equal(ext_from_bbox, ext_from_extent)
   expect_error(get_extent(in_bbox, abort = TRUE))
-  expect_warning(get_extent(in_extent, abort = FALSE))
+  expect_error(get_extent(in_extent, abort = FALSE))
 
 })

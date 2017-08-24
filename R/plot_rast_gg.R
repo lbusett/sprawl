@@ -1,64 +1,124 @@
-#' @title FUNCTION_TITLE
+#' @title plot a raster object using ggplot
 #' @description FUNCTION_DESCRIPTION
-#' @param in_rast PARAM_DESCRIPTION
-#' @param xlims PARAM_DESCRIPTION, Default: NULL
-#' @param ylims PARAM_DESCRIPTION, Default: NULL
-#' @param basemap PARAM_DESCRIPTION, Default: NULL
-#' @param zoomin PARAM_DESCRIPTION, Default: -1
-#' @param scalebar PARAM_DESCRIPTION, Default: TRUE
-#' @param scalebar_dist PARAM_DESCRIPTION, Default: NULL
-#' @param na.color PARAM_DESCRIPTION, Default: 'transparent'
-#' @param palette_type PARAM_DESCRIPTION, Default: 'gradient'
-#' @param palette PARAM_DESCRIPTION, Default: NULL
-#' @param no_labels PARAM_DESCRIPTION, Default: TRUE
-#' @param title PARAM_DESCRIPTION, Default: NULL
-#' @param subtitle PARAM_DESCRIPTION, Default: NULL
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @param in_rast `Raster` object to be plotted. Both mono- and multi-band
+#'   rasters are supported
+#' @param band_names `character(nbands)`, array of band names. These will used
+#'   to populate the "strips" above each plotted band. If NULL, bnames are
+#'   retrieved from the input raster using `sprawl::get_rastinfo`, Default: NULL
+#' @param bands_to_plot `numeric array`, array of band numbers to be plotted (in
+#'   case `in_rast` is multi-band. If NULL, all bands are plotted separately
+#'   using facet_wrap, Default: NULL
+#' @param nrows `numeric`, number of rows used for plotting multiple bands,
+#'   If NULL, one row for each band is used (to be changed !), Default: NULL
+#' @param xlims `numeric(2)`, minimum and maximum x coordinates to be plotted.
+#'   If NULL, the whole x-range is plotted, Default: NULL
+#' @param ylims `numeric(2)`, minimum and maximum y coordinates to be plotted.
+#'   If NULL, the whole y-range is plotted, Default: NULL
+#' @param basemap `character` If not NULL and valid, the selected basemap is
+#'   used as background. For a list of valid values, see `rosm::osm.types()`,
+#'   Default: NULL
+#' @param zoomin `numeric`, Adjustement factor for basemap zoom. Negative values
+#'   lead to less detailed basemap, but larger text. Default: 0
+#' @param scalebar `logical` If TRUE, add a scalebar on the bottom right corner,
+#'   Default: TRUE
+#' @param scalebar_dist `numeric` Width of the scale bar (in km). If NULL, it
+#'   is computed automatically on the basis of the range in x direction,
+#'   Default: NULL
+#' @param transparency `numeric [0,1]`, transparency of the raster layer. Higer
+#'   values lead to higher transparency, Default: 0 (ignored if basemap == NULL)
+#' @param na.color `character`, color to be used to plot NA values,
+#'   Default: 'transparent'
+#' @param na.value `numeric`, Additional values to be treatedas NA, Default: NA
+#' @param palette_type `character` Type of brewer color ramp to be used. Possible
+#'  values are `gradient`, `divergent` and `categorical`, Default: 'gradient'
+#' @param palette name of the palette to be used. If NULL, the following
+#'  defaults are used as a function of palette_type:
+#'  - categorical --> "Set1"
+#'  - gradient    --> "Greens"
+#'  - diverging   --> "RdYlGn")
+#'  Note that if a wrong palette name is specified, plot_rast_gg also reverts to
+#'  the default values, Default: NULL
+#' @param labels `character` labels to be used in the legend if palette_type is
+#'   "categorical". The number of labels must correspond to the number of
+#'   unique values of the raster to be plotted. If NULL or not valid, the legend
+#'   will use the raster values in the legend (see examples), Default: NULL
+#' @param no_axis `logical`, If TRUE, axis names and labels are suppressed,
+#'   Default: FALSE
+#' @param title `character`, Title of the plot, Default: NULL
+#' @param subtitle Subtitle of the plot, Default: NULL
+#' @return a `ggplot`
 #' @examples
 #' \dontrun{
-#'  in_rast <- raster::stack(system.file("extdata/OLI_test", "oli_multi_1000.tif",
-#'                                   package = "sprawl.data"))
-#'  plot_rast_gg(in_rast, basemap = "cartolight",
+#'  in_rast <- raster::stack(system.file("extdata/OLI_test",
+#'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
+#'  a = plot_rast_gg(in_rast, basemap = "osm",
 #'                   palette_type = "diverging",
-#'                   no_labels = T,
+#'                   no_axis = T,
 #'                   na.value = 0,
-#'                   zoomin = 0)
+#'                   zoomin = 0, title = "OLI", subtitle = "Band 2")
 #'
-#' in_rast <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
-#'  package = "sprawl.data")
+#'  plot_rast_gg(in_rast, basemap = "stamenbw",
+#'                   palette_type = "diverging",
+#'                   no_axis = F,
+#'                   na.value = 0, transparency = 0.2,
+#'                   zoomin = 0, title = "OLI - 15/06/2017",
+#'                    subtitle = "Band 2 - Green")
+#'
+#'  in_rast <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
+#'                           package = "sprawl.data")
 #'  plot_rast_gg(in_rast, basemap = "cartolight",
 #'                   palette_type = "diverging",
-#'                   no_labels = T,
-#'                   na.value = 0,
-#'                   zoomin = 0)
+#'                   no_axis = F, zoomin = -1,
+#'                   na.value = 0, transparency = 0.5,
+#'                   title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 #' }
 #' @rdname plot_rast_gg
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that
 #' @importFrom data.table as.data.table
-#' @importFrom ggplot2 fortify ggplot theme_bw xlim ylim ggtitle geom_raster aes
-#'  scale_fill_brewer coord_fixed
+#' @importFrom gdalUtils gdalwarp
+#' @importFrom ggplot2 fortify ggplot scale_x_continuous
+#' scale_y_continuous ggtitle geom_raster aes scale_fill_brewer
+#' scale_fill_distiller coord_fixed theme_light theme element_blank
+#' facet_wrap
 #' @importFrom ggsn scalebar
-#' @importFrom sf st_as_sf st_set_crs st_transform st_coordinates
-#' @importFrom magrittr "%>%"
-#' @import ggspatial
+#' @importFrom ggspatial geom_osm
+#' @importFrom raster stack
+#' @importFrom rosm osm.types
+#' @importFrom stats na.omit
 
-plot_rast_gg <- function(in_rast,
-                         xlims          = NULL, ylims = NULL,
-                         basemap        = NULL, zoomin = -1,
-                         scalebar       = TRUE, scalebar_dist = NULL,
-                         na.color       = "transparent", na.value = NA,
-                         palette_type   = "gradient", palette = NULL,
-                         no_labels      = TRUE,
-                         title          = NULL, subtitle = NULL) {
+plot_rast_gg <- function(
+  in_rast,
+  band_names     = NULL, bands_to_plot = NULL, nrows = NULL,
+  xlims          = NULL, ylims = NULL,
+  basemap        = NULL, zoomin = 0,
+  scalebar       = TRUE, scalebar_dist = NULL,
+  transparency   = 0,
+  na.color       = "transparent", na.value = NA,
+  palette_type   = "gradient", palette = NULL, labels = NULL,
+  no_axis      = TRUE,
+  title          = NULL, subtitle = NULL
+) {
 
-  assertthat::assert_that(palette_type %in% c("categorical", "gradient", "diverging"),
-                          msg = "Invalid palette_type. Aborting!")
+  #TODO find a way to avoid "require"
+  #TODO Implement checks on input arguments (e.g., bands_to_plot, band_names)
+  #TODO Verify possibility to have a "satellite" basemap
+  #TODO Add MaxPixels
+  requireNamespace("ggspatial")
+  requireNamespace("ggplot2")
+  x <- y <- value <- NULL
 
-  #   ____________________________________________________________________________
-  #   Set default palettes for different categories                           ####
+  assert_that(palette_type %in% c("categorical", "gradient", "diverging"),
+              msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
+  )
+
+  if (!is.null(basename)){
+    assert_that(basemap %in% rosm::osm.types(),
+                msg = "plot_rast_gg --> Invalid basemap name. Aborting!")
+  }
+  #   __________________________________________________________________________
+  #   Set default palettes for different categories                         ####
   def_palettes <- list(categorical = "Set1",
                        gradient    = "Greens",
                        diverging   = "RdYlGn")
@@ -67,13 +127,28 @@ plot_rast_gg <- function(in_rast,
     palette <- as.character(def_palettes[palette_type])
   }
 
+  if (!is.null(bands_to_plot)) {
 
-  #   ____________________________________________________________________________
-  #   Reproject to 3857 to allow overlap with background map                  ####
+    in_rast <- in_rast[[bands_to_plot]]
+
+  }
+
+  #   __________________________________________________________________________
+  #   Reproject to 3857 to allow overlap with background map                ####
+
+  rastinfo <- get_rastinfo(in_rast)
+
+  if (is.null(nrows)){
+   nrows <- rastinfo$nbands
+  }
+
+  if (any(rastinfo$fnames == "")) {
+    rastfile <- cast_rast(in_rast, "rastfile")
+    in_rast <- raster::stack(rastfile)
+  }
+  rastinfo$fnames <- get_rastinfo(in_rast)$fnames
 
   if (!is.null(basemap)) {
-
-    rastinfo <- get_rastinfo(in_rast)
 
     in_rast <- gdalUtils::gdalwarp(rastinfo$fnames,
                                    tempfile(fileext = ".tif"),
@@ -88,19 +163,24 @@ plot_rast_gg <- function(in_rast,
   #   ____________________________________________________________________________
   #   Fortify the raster to allow ggplotting                                  ####
 
-  ext <- get_extent(in_rast)
-  in_rast_fort <- ggplot2::fortify(in_rast) %>%
+  in_rast_fort <- ggplot2::fortify(in_rast, format = "long") %>%
     data.table::as.data.table()
 
+  if (is.null(band_names)) {
+    in_rast_fort[[3]] <- factor(in_rast_fort[[3]], labels = rastinfo$bnames)
+  } else {
+    in_rast_fort[[3]] <- factor(in_rast_fort[[3]], labels = band_names)
+  }
+
   if (!is.na(na.value)) {
-    in_rast_fort[band1 == na.value] <- NA
+    in_rast_fort[value == na.value] <- NA
   }
 
   #   ____________________________________________________________________________
   #   if transparent NA, remove the NAs from the data to speed-up rendering   ####
 
   if (na.color == "transparent")  {
-    in_rast_fort <- na.omit(in_rast_fort, 3)
+    in_rast_fort <- na.omit(in_rast_fort, "value")
   }
 
   #   ____________________________________________________________________________
@@ -114,20 +194,37 @@ plot_rast_gg <- function(in_rast,
   #   ____________________________________________________________________________
   #   If no scalebar dist passed, compute automatically from lonfgitude range ####
   if (is.null(scalebar_dist)) {
-    km_extent  <- round(diff(xlims)/1000)
+    km_extent     <- round(diff(xlims)/1000)
     scalebar_dist <- round(km_extent/100*10)
   }
 
   if (palette_type == "categorical") {
-    in_rast_fort[[3]] <- factor(in_rast_fort[[3]])
+
+    if (is.null(labels)) {
+      in_rast_fort[[4]] <- factor(in_rast_fort[[4]])
+    } else {
+      in_rast_fort[[4]] <- factor(in_rast_fort[[4]], labels = labels)
+    }
   }
 
   #   ____________________________________________________________________________
   #   Initialize the plot                                                     ####
 
+  if (rastinfo$units == "dec.degrees") {
+    xlab = "Longitude"
+    ylab = "Latitude"
+  } else {
+    xlab = paste0("Easting [",rastinfo$units,"]")
+    ylab = paste0("Northing [",rastinfo$units,"]")
+  }
+
   plot_gg <- ggplot2::ggplot(in_rast_fort) +
-    ggplot2::xlim(xlims[1], xlims[2]) +
-    ggplot2::ylim(ylims[1], ylims[2]) +
+    ggplot2::scale_x_continuous(xlab,
+                                expand = expand_scale(mult = c(0.02,0.02)),
+                                limits = c(xlims[1], xlims[2])) +
+    ggplot2::scale_y_continuous(ylab,
+                                expand = expand_scale(mult = c(0.02,0.02)),
+                                limits = c(ylims[1], ylims[2])) +
     ggplot2::ggtitle(title, subtitle = subtitle)
 
   #   ____________________________________________________________________________
@@ -135,14 +232,16 @@ plot_rast_gg <- function(in_rast,
 
   if (!is.null(basemap)) {
     plot_gg <- plot_gg + ggspatial::geom_osm(zoomin = zoomin,
-                                             type   = basemap)
+                                             type   = basemap,
+                                             progress = "none")
   }
 
   #   ____________________________________________________________________________
   #   add the raster layer          ####
 
   plot_gg <- plot_gg +
-    ggplot2::geom_raster(aes(x, y, fill = band1))
+    ggplot2::geom_raster(ggplot2::aes(x, y, fill = value),
+                         alpha = 1 - transparency)
 
   #   ____________________________________________________________________________
   #   Modify the palette according to varaible type and palette               ####
@@ -156,7 +255,8 @@ plot_rast_gg <- function(in_rast,
         ggplot2::scale_fill_distiller(type = "seq", palette = palette)
     } else {
       plot_gg <- plot_gg +
-        ggplot2::scale_fill_distiller(type = "div", palette = palette, direction = -1)
+        ggplot2::scale_fill_distiller(type = "div", palette = palette,
+                                      direction = 1)
     }
   }
 
@@ -169,9 +269,9 @@ plot_rast_gg <- function(in_rast,
       ggsn::scalebar(dd2km = FALSE, dist = scalebar_dist,
                      x.min = xlims[1], x.max = xlims[2],
                      y.min = ylims[1], y.max = ylims[2],
-                     location = "bottomright", st.size = 3,
+                     location = "bottomright", st.size = 3.5,
                      st.bottom = FALSE, model = NULL,
-                     st.dist = 0.03)
+                     st.dist = 0.025)
   }
 
 
@@ -182,9 +282,9 @@ plot_rast_gg <- function(in_rast,
   plot_gg <- plot_gg +
     ggplot2::coord_fixed()
 
-  if (no_labels) {
+  if (no_axis) {
 
-    plot_gg <- plot_gg + ggplot2::theme_bw() +
+    plot_gg <- plot_gg + ggplot2::theme_light() +
       ggplot2::theme(axis.title.x = ggplot2::element_blank(),
                      axis.text.x  = ggplot2::element_blank(),
                      axis.ticks.x = ggplot2::element_blank(),
@@ -192,6 +292,8 @@ plot_rast_gg <- function(in_rast,
                      axis.text.y  = ggplot2::element_blank(),
                      axis.ticks.y = ggplot2::element_blank())
   }
+
+    plot_gg <- plot_gg + ggplot2::facet_wrap(~band, nrow = nrows)
 
   return(plot_gg)
 }

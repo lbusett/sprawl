@@ -87,6 +87,7 @@ get_extent.sprawlext  <- function(object,
 get_extent.Extent  <- function(object,
                                proj4string,
                                abort = FALSE) {
+  assertthat::assert_that(class("proj4string") == "character")
   coords        <- object[c(1,3,2,4)]
   proj4string   <- check_proj4string(proj4string, abort = abort)
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")

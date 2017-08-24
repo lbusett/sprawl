@@ -16,6 +16,7 @@
 #'     z attribute;
 #'   - dtype: `character` datatype of the input raster (`raster` conventions)
 #'   - proj4string: `character` proj4string of the object/file
+#'   - units: `character` distance units of the projections
 #' @examples
 #' \dontrun{
 #'  in_rast <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
@@ -33,20 +34,21 @@
 get_rastinfo <- function(object) {
   call <- match.call()
   message("get_rastinfo --> Retrieving info from: `",
-                     deparse(substitute(call)$object, "`"))
+                     deparse(substitute(call)$object), "`")
   object <- cast_rast(object, "rastobject")
   if (inherits(object, "RasterBrick")) {
-    info <- list(nbands     = object@data@nlayers,
-                 indbands   = seq(1, object@data@nlayers, 1),
-                 ncols      = object@ncols,
-                 nrows      = object@nrows,
-                 ncells     = object@ncols * object@nrows,
-                 res        = res(object),
-                 bnames     = names(object),
-                 fnames     = rep(object@file@name, object@data@nlayers),
-                 Z          = object@z,
-                 dtype      = object@file@datanotation,
-                 proj4string = get_proj4string(object))
+    info <- list(nbands      = object@data@nlayers,
+                 indbands    = seq(1, object@data@nlayers, 1),
+                 ncols       = object@ncols,
+                 nrows       = object@nrows,
+                 ncells      = object@ncols * object@nrows,
+                 res         = raster::res(object),
+                 bnames      = names(object),
+                 fnames      = rep(object@file@name, object@data@nlayers),
+                 Z           = object@z,
+                 dtype       = object@file@datanotation,
+                 proj4string = get_proj4string(object),
+                 units       = get_projunits(get_proj4string(object)))
     return(info)
   }
 
@@ -56,12 +58,13 @@ get_rastinfo <- function(object) {
                  ncols       = object@ncols,
                  nrows       = object@nrows,
                  ncells      = object@ncols * object@nrows,
-                 res         = res(object),
+                 res         = raster::res(object),
                  bnames      = names(object),
                  fnames      = object@file@name,
                  Z           = object@z,
                  dtype       = object@file@datanotation,
-                 proj4string = get_proj4string(object))
+                 proj4string = get_proj4string(object),
+                 units       = get_projunits(get_proj4string(object)))
     return(info)
   }
   if (inherits(object, "RasterStack")) {
@@ -72,14 +75,15 @@ get_rastinfo <- function(object) {
                  ncols       = object@ncols,
                  nrows       = object@nrows,
                  ncells      = object@ncols * object@nrows,
-                 res         = res(object),
+                 res         = raster::res(object),
                  bnames      = names(object),
                  fnames      = unlist(lapply(object@layers,
                                              FUN = function(x) {x@file@name})),
                  Z           = object@z,
                  dtype_rast  = unlist(lapply(object@layers,
                                              FUN = function(x) {x@file@datanotation})), #nolint
-                 proj4string = get_proj4string(object))
+                 proj4string = get_proj4string(object),
+                 units       = get_projunits(get_proj4string(object)))
     return(info)
   }
 }
