@@ -29,3 +29,5 @@ ignore/
 *.pdf
 docs/pkgdown\.css
 inst/doc
+
+rosm\.cache/
