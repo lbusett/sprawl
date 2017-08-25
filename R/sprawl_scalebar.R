@@ -12,7 +12,11 @@
 #' @param st.bottom `logical` If TRUE (default) the scale bar text is displayed
 #'   at the bottom of the scale bar, if FALSE, it is displayed at the top.
 #' @param st.size `numeric` value to indicate the scale bar text size. It is
-#'   passed to the size argument of `annotate` function.
+#'   passed to the size argument of `ggplot::annotate` function.
+#' @param st.color Text color for the scalebar, Default: 'black'
+#' @param box.fill fill colors for the scalebar polygons,
+#'   Default: c("black", "white")
+#' @param box.color line color for the scalebar polygons, Default: 'black'
 #' @param dd2km `logical` If TRUE it is assumed that map coordinates are in
 #'   decimal degrees, if FALSE, it assumed they are in meters, Default: FALSE
 #' @param model `character` choice of ellipsoid model ("WGS84", "GRS80", "Airy",
@@ -43,17 +47,20 @@
 #'      argument and changing the text accordingly
 #'    - fontface to bold in the scalebar to improve visibility.
 #' @export
+#' @importFrom ggplot2 geom_polygon geom_text
 #' @importFrom maptools gcDestination
 #' @importFrom sf st_bbox
 #' @importFrom utils tail
 
-sprawl_scalebar <- function(data = NULL, location = "bottomright", dist, height = 0.02,
-                             st.dist = 0.025, st.bottom = TRUE, st.size = 3.5, st.color = "black",
-                             box.fill = c("black", "white"), box.color = "black", dd2km = FALSE,
-                             model, x.min, x.max, y.min, y.max, anchor = NULL, facet.var = NULL,
-                             facet.lev = NULL, units = "m")
+sprawl_scalebar <- function(
+  data = NULL, location = "bottomright", dist, height = 0.02,
+  st.dist = 0.025, st.bottom = TRUE, st.size = 3.5, st.color = "black",
+  box.fill = c("black", "white"), box.color = "black", dd2km = FALSE,
+  model, x.min, x.max, y.min, y.max, anchor = NULL, facet.var = NULL,
+  facet.lev = NULL, units = "m")
 {
 
+  label <- NULL
   if (is.null(data)) {
     if (is.null(x.min) | is.null(x.max) | is.null(y.min) |
         is.null(y.max)) {
@@ -90,7 +97,7 @@ sprawl_scalebar <- function(data = NULL, location = "bottomright", dist, height 
   }
   if (location == "bottomright") {
     if (is.null(anchor)) {
-      x <- xmax - 0.045 * (xmax - xmin)
+      x <- xmax - 0.055 * (xmax - xmin)
       y <- ymin + 0.008 * (ymax - ymin)
     }
     else {
@@ -171,10 +178,10 @@ sprawl_scalebar <- function(data = NULL, location = "bottomright", dist, height 
     }
   }
   legend <- cbind(text = c(0, dist, dist * 2), row.names = NULL)
-  gg.box1 <- geom_polygon(data = box1, aes(x, y),
+  gg.box1 <- ggplot2::geom_polygon(data = box1, aes(x, y),
                           fill = utils::tail(box.fill, 1),
                           color = utils::tail(box.color, 1))
-  gg.box2 <- geom_polygon(data = box2, aes(x, y),
+  gg.box2 <- ggplot2::geom_polygon(data = box2, aes(x, y),
                           fill = box.fill[1],
                           color = box.color[1])
   x.st.pos <- c(box1[c(1, 3), 1], box2[3, 1])
@@ -192,12 +199,12 @@ sprawl_scalebar <- function(data = NULL, location = "bottomright", dist, height 
     }
   }
   if (!is.null(facet.var) & !is.null(facet.lev)) {
-    gg.legend <- geom_text(data = legend2, aes(x, y, label = label),
+    gg.legend <- ggplot2::geom_text(data = legend2, aes(x, y, label = label),
                            size = st.size, color = st.color,
                            fontface = "bold")
   }
   else {
-    gg.legend <- geom_text(data = legend2, aes(x, y, label = label),
+    gg.legend <- ggplot2::geom_text(data = legend2, aes(x, y, label = label),
                            size = st.size, color = st.color,
                            fontface = "bold")
   }

@@ -29,7 +29,14 @@ Default: 0.02}
 at the bottom of the scale bar, if FALSE, it is displayed at the top.}
 
 \item{st.size}{\code{numeric} value to indicate the scale bar text size. It is
-passed to the size argument of \code{annotate} function.}
+passed to the size argument of \code{ggplot::annotate} function.}
+
+\item{st.color}{Text color for the scalebar, Default: 'black'}
+
+\item{box.fill}{fill colors for the scalebar polygons,
+Default: c("black", "white")}
+
+\item{box.color}{line color for the scalebar polygons, Default: 'black'}
 
 \item{dd2km}{\code{logical} If TRUE it is assumed that map coordinates are in
 decimal degrees, if FALSE, it assumed they are in meters, Default: FALSE}
