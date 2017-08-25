@@ -144,7 +144,7 @@
 #' @importFrom data.table as.data.table
 #' @importFrom dplyr filter
 #' @importFrom gdalUtils gdalwarp
-#' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous
+#' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous expand_scale
 #'   scale_y_continuous ggtitle theme element_blank element_text geom_raster
 #'   aes scale_fill_brewer scale_fill_distiller waiver coord_fixed facet_wrap
 #' @importFrom ggspatial geom_osm
@@ -360,10 +360,10 @@ plot_rast_gg <- function(
   # Blank plot
   plot_gg <- ggplot2::ggplot(in_rast_fort) + theme +
     ggplot2::scale_x_continuous(xlab,
-                                expand = expand_scale(mult = c(0.005,0.005)),
+                                expand = ggplot2::expand_scale(mult = c(0.005,0.005)),
                                 limits = c(xlims[1], xlims[2])) +
     ggplot2::scale_y_continuous(ylab,
-                                expand = expand_scale(mult = c(0.005,0.005)),
+                                expand = ggplot2::expand_scale(mult = c(0.005,0.005)),
                                 limits = c(ylims[1], ylims[2])) +
     ggplot2::ggtitle(title, subtitle = subtitle)
 
