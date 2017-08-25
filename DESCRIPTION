@@ -51,7 +51,8 @@ Imports: data.table,
         ggplot2,
         ggspatial,
         rosm,
-        maptools
+        maptools, 
+        sprawl.data
 Remotes: lbusett/sprawl.data, tidyverse/ggplot2
 Suggests: testthat,
           knitr,
