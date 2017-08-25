@@ -49,10 +49,10 @@ Imports: data.table,
         assertthat,
         parallel,
         ggspatial,
-        ggplot2, 
         rosm,
         maptools
-Remotes: lbusett/sprawl.data
+Remotes: lbusett/sprawl.data,
+        tidyverse/ggplot2
 Suggests: testthat,
           knitr,
           rmarkdown
