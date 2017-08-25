@@ -14,7 +14,7 @@
 #'  }
 #' @export
 #' @rdname sprawl_initcluster
-#' @importFrom doSNOW registerDoSNOW
+#' @importFrom doParallel registerDoParallel
 #' @importFrom raster nlayers nrow ncol
 #' @importFrom parallel detectCores makeCluster
 
@@ -50,7 +50,7 @@ sprawl_initcluster <- function(in_rast,
     clust <- parallel::makeCluster(ncores)
   }
 
-  doSNOW::registerDoSNOW(clust)
+  doParallel::registerDoParallel(clust)
 
   nrows    <- raster::nrow(in_rast)
   ncols    <- raster::ncol(in_rast)

@@ -9,7 +9,7 @@ get_rastinfo(object, verbose = TRUE)
 \arguments{
 \item{object}{either the name of a \code{Raster} object or a valid raster filename}
 
-\item{verbose}{if FALSE supress messages}
+\item{verbose}{if FALSE suppress messages}
 }
 \value{
 \code{list} containing the following object:

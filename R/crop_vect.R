@@ -1,7 +1,7 @@
 #' @title crop a vector on the extent of a different spatial file
 #' @description Function allowing to crop an input vector object or shapefile on the extent of a
 #' different spatial object. in_vect must be an *sp, *sf object or vector file, while in_obj should
-#' be a valid spatial object (sp, sf, vector file, raster or rasterfile)
+#' be a valid spatial object (sp, sf, vector file, raster or raster file name)
 #' @param in_vect PARAM_DESCRIPTION
 #' @param in_obj PARAM_DESCRIPTION
 #' @param to_file PARAM_DESCRIPTION, Default: FALSE
@@ -38,8 +38,8 @@ crop_vect <- function(in_vect,
   }
 
   if (objtype == "none") {
-    stop("crop_vect --> in_obj is not a valid spatial object (sp, sf,
-                                           vector file, raster or rasterfile")
+    stop("crop_vect --> in_obj is not a valid spatial object (sp, sf, vector ",
+         "file, raster or raster file name")
   }
 
   #   __________________________________________________________________________
@@ -58,8 +58,8 @@ crop_vect <- function(in_vect,
   #   using st_intersection or crop on the basis of the class of in_vect
 
   if (objtype == "none") {
-    stop("crop_sf --> in_obj is not a valid spatial object (sp, sf,
-                                           vector file, raster or rasterfile")
+    stop("crop_sf --> in_obj is not a valid spatial object (sp, sf, vector ",
+         "file, raster or rasterfile")
   }
   if (objtype %in% c("spobject", "rastobject")) {
     ext_in  <- raster::extent(in_obj)

@@ -249,9 +249,9 @@ Default: TRUE</p></td>
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>150</span>)
  <span class='co'># plot only the raster</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='img'><img src='plot_rast-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>)</div><div class='img'><img src='plot_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># plot only the raster with custom legend</span>
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)</div><div class='img'><img src='plot_rast-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>)</div><div class='img'><img src='plot_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># add a polygon and change the legend, palette and maxpixels</span>
  <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>,
            <span class='kw'>in_poly</span>   <span class='kw'>=</span> <span class='no'>in_vect</span>,
@@ -259,12 +259,12 @@ Default: TRUE</p></td>
            <span class='kw'>legend</span>    <span class='kw'>=</span> <span class='st'>"custom"</span>,
            <span class='kw'>palette</span>   <span class='kw'>=</span> <span class='st'>"RdYlBu"</span> ,
            <span class='kw'>title</span>     <span class='kw'>=</span> <span class='st'>"RapidEye - GNDVI"</span>,
-           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)</div><div class='img'><img src='plot_rast-7.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e5</span>)</div><div class='img'><img src='plot_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># Plot more than one band</span>
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(
                           <span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>2</span>:<span class='fl'>5</span>]]
- <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e5</span>)</div><div class='img'><img src='plot_rast-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
+ <span class='fu'>plot_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='st'>"custom"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e5</span>)</div><div class='img'><img src='plot_rast-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

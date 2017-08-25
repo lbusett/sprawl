@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_rast_gg.R
 \name{plot_rast_gg}
 \alias{plot_rast_gg}
-\title{plot a raster object using ggplot}
+\title{Plot a raster object using ggplot}
 \usage{
 plot_rast_gg(in_rast, band_names = NULL, bands_to_plot = NULL,
   facet_rows = NULL, xlims = NULL, ylims = NULL, zlims = NULL,
@@ -49,7 +49,7 @@ values between the 2nd to 98th percentile)
 used as background. For a list of valid values, see \code{rosm::osm.types()},
 Default: NULL}
 
-\item{zoomin}{\code{numeric}, Adjustement factor for basemap zoom. Negative values
+\item{zoomin}{\code{numeric}, Adjustment factor for basemap zoom. Negative values
 lead to less detailed basemap, but larger text. Default: 0}
 
 \item{scalebar}{\code{logical} If TRUE, add a scalebar on the bottom right corner,
@@ -65,7 +65,7 @@ values lead to higher transparency, Default: 0 (ignored if basemap == NULL)}
 \item{na.color}{\code{character}, color to be used to plot NA values,
 Default: 'transparent'}
 
-\item{na.value}{\code{numeric}, Additional values to be treatedas NA, Default: NA}
+\item{na.value}{\code{numeric}, Additional values to be treated as NA, Default: NA}
 
 \item{palette_type}{\code{character} Type of brewer color ramp to be used. Possible
 values are \code{gradient}, \code{diverging} and \code{categorical}, Default: 'gradient'}
@@ -81,7 +81,7 @@ the default values. Run \code{RColorBrewer::display.brewer.all()} to see a list
 of available palettes, Default: NULL
 }}
 
-\item{leg_type}{DESCREIPTION}
+\item{leg_type}{DESCRIPTION NEEDEDD}
 
 \item{leg_labels}{\code{character (n_leg_breaks)} labels to be used in the legend
 \itemize{
@@ -90,15 +90,15 @@ the number of unique values of the raster to be plotted. If NULL or not valid,
 the legend will use the unique raster values in the legend (see examples)
 \item If palette_type is "gradient" or "diverging" the number of labels must be
 equal to the number of breaks specified by "leg_breaks". If this is not
-TRUE, leg_breaks and leg_labelse are reset to \code{waiver()} (TBD),
-Default: NULL (\code{labels = waiver()} the default is used)
+TRUE, leg_breaks and leg_labels are reset to \code{waiver()} (TBD),
+Default: NULL (the default ggplot2 \code{labels = waiver()} is used)
 }}
 
 \item{leg_breaks}{\code{numeric (n_leg_labels)} Values in the scale at which
 leg_labels must be placed (if palette_type != "categorical"). The number
 of breaks must be equal to the number of labels specified by "leg_labels".
-If this is not TRUE, leg_breaks and leg_labelse are reset to \code{waiver()}
-(TBD)  Default: NULL (the default \code{labels = waiver()} is used)}
+If this is not TRUE, leg_breaks and leg_labels are reset to \code{waiver()}
+(TBD)  Default: NULL (the default ggplot2 \code{labels = waiver()} is used)}
 
 \item{no_axis}{\code{logical}, If TRUE, axis names and labels are suppressed,
 Default: FALSE}
@@ -110,14 +110,29 @@ Default: FALSE}
 \item{theme}{\code{theme function} ggplot theme to be used
 (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()}
 
-\item{verbose}{\code{logical}, If FALSE, suppress processing message,
+\item{verbose}{\code{logical}, If FALSE, suppress processing messages,
 Default: TRUE}
 }
 \value{
 a \code{ggplot}
 }
 \description{
-FUNCTION_DESCRIPTION
+Plot a raster object using ggplot witn an (optional) basemap.
+The function allows to:
+\itemize{
+\item Plot a single- or multi-band image using facet_wrap (args \code{bands_to_plot},
+\code{facet_rows})
+\item Add an optional basemap to the plot, and adjust transparency of the
+overlayed raster (args \code{basemap}, \code{transparency})
+\item "Easily" select different palettes (args \code{palette_type}, \code{palette_name})
+\item Easily control plotting limits on the z-dimension, specifying either
+values or quantiles ranges (args \code{zlims}, \code{zlims_type})
+\item "Easily" control breaks and labels in legends (args \code{leg_type}, \code{leg_breaks},
+\code{leg_labels})
+\item Automatically add a scalebar to the plot (args\code{scalebar}, \code{scalebar_dist})
+}
+
+See the description of the arguments for details on their use
 }
 \examples{
 \dontrun{

@@ -1,5 +1,18 @@
-#' @title plot a raster object using ggplot
-#' @description FUNCTION_DESCRIPTION
+#' @title Plot a raster object using ggplot
+#' @description Plot a raster object using ggplot witn an (optional) basemap.
+#'   The function allows to:
+#'   - Plot a single- or multi-band image using facet_wrap (args `bands_to_plot`,
+#'    `facet_rows`)
+#'   - Add an optional basemap to the plot, and adjust transparency of the
+#'     overlayed raster (args `basemap`, `transparency`)
+#'   - "Easily" select different palettes (args `palette_type`, `palette_name`)
+#'   - Easily control plotting limits on the z-dimension, specifying either
+#'     values or quantiles ranges (args `zlims`, `zlims_type`)
+#'   - "Easily" control breaks and labels in legends (args `leg_type`, `leg_breaks`,
+#'     `leg_labels`)
+#'   - Automatically add a scalebar to the plot (args`scalebar`, `scalebar_dist`)
+#'
+#' See the description of the arguments for details on their use
 #' @param in_rast `Raster` object to be plotted. Both mono- and multi-band
 #'   rasters are supported
 #' @param band_names `character(nbands)`, array of band names. These will used
@@ -24,7 +37,7 @@
 #' @param basemap `character` If not NULL and valid, the selected basemap is
 #'   used as background. For a list of valid values, see `rosm::osm.types()`,
 #'   Default: NULL
-#' @param zoomin `numeric`, Adjustement factor for basemap zoom. Negative values
+#' @param zoomin `numeric`, Adjustment factor for basemap zoom. Negative values
 #'   lead to less detailed basemap, but larger text. Default: 0
 #' @param scalebar `logical` If TRUE, add a scalebar on the bottom right corner,
 #'   Default: TRUE
@@ -35,7 +48,7 @@
 #'   values lead to higher transparency, Default: 0 (ignored if basemap == NULL)
 #' @param na.color `character`, color to be used to plot NA values,
 #'   Default: 'transparent'
-#' @param na.value `numeric`, Additional values to be treatedas NA, Default: NA
+#' @param na.value `numeric`, Additional values to be treated as NA, Default: NA
 #' @param palette_type `character` Type of brewer color ramp to be used. Possible
 #'  values are `gradient`, `diverging` and `categorical`, Default: 'gradient'
 #' @param palette_name name of the palette to be used. If NULL, the following
@@ -46,27 +59,27 @@
 #'  Note that if a wrong palette name is specified, plot_rast_gg reverts to
 #'  the default values. Run `RColorBrewer::display.brewer.all()` to see a list
 #'  of available palettes, Default: NULL
-#' @param leg_type DESCREIPTION
+#' @param leg_type DESCRIPTION NEEDEDD
 #' @param leg_labels `character (n_leg_breaks)` labels to be used in the legend
 #'   - If palette_type is "categorical", the number of labels must correspond to
 #'   the number of unique values of the raster to be plotted. If NULL or not valid,
 #'   the legend will use the unique raster values in the legend (see examples)
 #'   - If palette_type is "gradient" or "diverging" the number of labels must be
 #'     equal to the number of breaks specified by "leg_breaks". If this is not
-#'     TRUE, leg_breaks and leg_labelse are reset to `waiver()` (TBD),
-#'     Default: NULL (`labels = waiver()` the default is used)
+#'     TRUE, leg_breaks and leg_labels are reset to `waiver()` (TBD),
+#'     Default: NULL (the default ggplot2 `labels = waiver()` is used)
 #' @param leg_breaks `numeric (n_leg_labels)` Values in the scale at which
 #'   leg_labels must be placed (if palette_type != "categorical"). The number
 #'   of breaks must be equal to the number of labels specified by "leg_labels".
-#'   If this is not TRUE, leg_breaks and leg_labelse are reset to `waiver()`
-#'   (TBD)  Default: NULL (the default `labels = waiver()` is used)
+#'   If this is not TRUE, leg_breaks and leg_labels are reset to `waiver()`
+#'   (TBD)  Default: NULL (the default ggplot2 `labels = waiver()` is used)
 #' @param no_axis `logical`, If TRUE, axis names and labels are suppressed,
 #'   Default: FALSE
 #' @param title `character`, Title of the plot, Default: NULL
 #' @param subtitle Subtitle of the plot, Default: NULL
 #' @param theme `theme function` ggplot theme to be used
 #' (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()
-#' @param verbose `logical`, If FALSE, suppress processing message,
+#' @param verbose `logical`, If FALSE, suppress processing messages,
 #'  Default: TRUE
 #' @return a `ggplot`
 #' @examples
@@ -129,7 +142,7 @@
 #' @importFrom rosm osm.types
 #' @importFrom grid unit
 #' @importFrom stats na.omit
-#' @importFrom magrittr %>%
+#' @importFrom magrittr "%>%"
 
 plot_rast_gg <- function(
   in_rast,
@@ -151,16 +164,16 @@ plot_rast_gg <- function(
   #TODO Implement checks on input arguments (e.g., bands_to_plot, band_names)
   #TODO Verify possibility to have a "satellite" basemap
   #TODO Add MaxPixels
-  requireNamespace("ggspatial")
-  requireNamespace("ggplot2")
+  loadNamespace("ggspatial")
+  loadNamespace("ggplot2")
   x <- y <- value <- band <- category <- NULL
 
-  assert_that(palette_type %in% c("categorical", "gradient", "diverging"),
+  assertthat::assert_that(palette_type %in% c("categorical", "gradient", "diverging"), #nolint
               msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
   )
 
   if (!is.null(basemap)) {
-    assert_that(basemap %in% rosm::osm.types(),
+    assertthat::assert_that(basemap %in% rosm::osm.types(),
                 msg = "plot_rast_gg --> Invalid basemap name. Aborting!")
   }
   #   __________________________________________________________________________

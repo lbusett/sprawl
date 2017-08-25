@@ -1,9 +1,9 @@
 Package: sprawl
-Title: sprawl: Spatial Processing (in) R: Advanced Workflows Library
+Title: Spatial Processing (in) R: Advanced Workflows Library
 Version: 0.2.0
 Authors@R: c(person("Lorenzo", "Busetto", email = "busetto.l@irea.cnr.it", role = c("aut", "cre")), 
              person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut")))
-Description: **`sprawl` aims to simplify the execution of some "common" spatial processing tasks** 
+Description: Simplify execution of **frequently performed spatial processing tasks** 
   (e.g., reading and writing spatial datasets, extracting statistics from large datasets, etc.) **by 
   providing a single and (hopefully) simpler access point to functionalities spread in the `R` 
   packages ecosystem.** The aforementioned broad objectives are accomplished in `sprawl` by: 
@@ -28,12 +28,10 @@ Imports: data.table,
         stats,
         tibble,
         gdalUtils,
-        DBI,
-        rgeos,
         dplyr,
         lubridate,
         tidyr,
-        doSNOW,
+        doParallel,
         foreach,
         velox,
         utils,

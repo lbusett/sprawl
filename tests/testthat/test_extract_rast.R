@@ -29,10 +29,8 @@ testthat::test_that("Test On polygons extraction", {
                        selbands = c(1,2), small = F)
   out2 <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                        selbands = c(1,2), maxchunk = 30000,  small = F)
-  expect_equal(dplyr::select(out$alldata, -geometry),
-               dplyr::select(out2$alldata, -geometry))
-  expect_equal(dplyr::select(out$stats, -geometry),
-               dplyr::select(out2$stats, -geometry))
+  expect_equal(out$alldata$value, out2$alldata$value)
+  expect_equal(out$stats$avg, out2$stats$avg)
 
   # Check that processing with and without valid id_field are identical
   out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
@@ -53,7 +51,7 @@ testthat::test_that("Test On polygons extraction", {
 
   # Check that processing with and without comp_quant are equal for a common
   # variable
-  out2  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
+  out2  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
                         selbands = c(1,2), small = T, comp_quant = TRUE)
   expect_equal(out$stats$avg, out2$stats$avg)
   expect_equal(out$stats$sd, out2$stats$sd)

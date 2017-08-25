@@ -10,7 +10,7 @@
 #' - in_vect_crop = cropped `sf` object
 #' - outside_feat = data frame containing info on the "removed" features (sequential id and
 #' corresponding value of the "id" field (if provided)
-
+#' @export
 #' @importFrom raster extent
 #' @importFrom sf st_intersection st_set_crs st_as_sf st_crs st_bbox
 #' @importFrom tibble as_data_frame

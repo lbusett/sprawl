@@ -23,13 +23,13 @@ knitr::opts_chunk$set(
 
 Support for spatial processing tasks is provided in `R` by several great packages, spanning 
 from all-purpose packages providing generalized access to the main spatial data classes and
-corresponding processing methods (e.g.,  [`sp`](https://cran.r-project.org/web/packages/sp/index.html) and [`sf`](https://cran.r-project.org/web/packages/sf/index.html), [`raster`](https://cran.r-project.org/web/packages/raster/index.html) and [`rgdal`](https://cran.r-project.org/web/packages/rgdal/index.html) - providing functions 
+corresponding processing methods (e.g.,  [`sp`](https://CRAN.R-project.org/package=sp) and [`sf`](https://CRAN.R-project.org/package=sf), [`raster`](https://CRAN.R-project.org/package=raster) and [`rgdal`](https://CRAN.R-project.org/package=rgdal) - providing functions 
 for handling raster and vector spatial data -), to more "specialized" ones meant to allow 
-conducting more specific processing tasks (e.g., [`geosphere`](https://cran.r-project.org/web/packages/geosphere/index.html), [`raster`](https://cran.r-project.org/web/packages/raster/index.html),  [`landsat`](https://cran.r-project.org/web/packages/landsat/index.html), [`MODIStsp`](https://cran.r-project.org/web/packages/MODIStsp/index.html)), or to provide 
+conducting more specific processing tasks (e.g., [`geosphere`](https://CRAN.R-project.org/package=geosphere), [`landsat`](https://CRAN.R-project.org/package=landsat), [`MODIStsp`](https://CRAN.R-project.org/package=MODIStsp)), or to provide 
 optimized/improved/easier solutions for methods already provided by the aforementioned
-general-purpose packages (e.g., [`velox`](https://cran.r-project.org/web/packages/velox/index.html), [`mapview`](https://cran.r-project.org/web/packages/mapview/index.html)) (Curated lists of 
-some very good packages can be found [here](https://cran.r-project.org/web/views/Spatial.html), 
-[here]( https://ropensci.org/blog/blog/2016/11/22/geospatial-suite) and 
+general-purpose packages (e.g., [`velox`](https://CRAN.R-project.org/package=velox), [`mapview`](https://CRAN.R-project.org/package=mapview)) (Curated lists of 
+some very good packages can be found [here](https://CRAN.R-project.org/view=Spatial), 
+[here](https://ropensci.org/blog/blog/2016/11/22/geospatial-suite) and 
 [here](https://github.com/ropensci/maptools)). 
 
 This huge variability provides advanced `R` programmers with great flexibility for conducting 
