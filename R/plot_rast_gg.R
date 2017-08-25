@@ -34,6 +34,11 @@
 #'   - "percs": zlims indicates the range of percentiles to be plotted (e.g.,
 #'      specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
 #'      values between the 2nd to 98th percentile)
+#' @param oob_style `character` specifies how the values outside of the
+#'   zlims range will be pllotted. If == NULL (the default), out of bounds values
+#'   are plotted using the color specified in "oob.color". If == "expand",
+#'   they are plotted using the minimum and maximum colours of the scale (using)
+#'   `scales::squish`
 #' @param basemap `character` If not NULL and valid, the selected basemap is
 #'   used as background. For a list of valid values, see `rosm::osm.types()`,
 #'   Default: NULL
@@ -47,7 +52,7 @@
 #' @param transparency `numeric [0,1]`, transparency of the raster layer. Higer
 #'   values lead to higher transparency, Default: 0 (ignored if basemap == NULL)
 #' @param na.color `character`, color to be used to plot NA values,
-#'   Default: 'transparent'
+#'   Default: 'grey50'. TO set to "invisible" use na.color = "transparent"
 #' @param na.value `numeric`, Additional values to be treated as NA, Default: NA
 #' @param palette_type `character` Type of brewer color ramp to be used. Possible
 #'  values are `gradient`, `diverging` and `categorical`, Default: 'gradient'
@@ -149,10 +154,11 @@ plot_rast_gg <- function(
   band_names   = NULL, bands_to_plot = NULL, facet_rows = NULL,
   xlims        = NULL, ylims = NULL,
   zlims        = NULL, zlims_type = "vals",
+  oob_style    = NULL, oob_color = "purple",
   basemap      = NULL, zoomin = 0,
   scalebar     = TRUE, scalebar_dist = NULL,
   transparency = 0,
-  na.color     = "transparent", na.value = NA,
+  na.color     = NULL, na.value = NULL,
   palette_type = "gradient", palette_name = NULL,
   leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL,
   no_axis      = FALSE, title = NULL, subtitle = NULL,
@@ -169,12 +175,12 @@ plot_rast_gg <- function(
   x <- y <- value <- band <- category <- NULL
 
   assertthat::assert_that(palette_type %in% c("categorical", "gradient", "diverging"), #nolint
-              msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
+                          msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
   )
 
   if (!is.null(basemap)) {
     assertthat::assert_that(basemap %in% rosm::osm.types(),
-                msg = "plot_rast_gg --> Invalid basemap name. Aborting!")
+                            msg = "plot_rast_gg --> Invalid basemap name. Aborting!")
   }
   #   __________________________________________________________________________
   #   Set default palettes for different categories                         ####
@@ -202,7 +208,7 @@ plot_rast_gg <- function(
     # Check validity of palette_name.
     # reset to default if palette_name not valid for selected palette_type
     all_pals <- cbind(name = row.names(RColorBrewer::brewer.pal.info),
-                        RColorBrewer::brewer.pal.info)
+                      RColorBrewer::brewer.pal.info)
     valid_pals <- subset(all_pals, category == palette_type)
 
     if (!palette_name %in% valid_pals$name) {
@@ -284,17 +290,17 @@ plot_rast_gg <- function(
     in_rast_fort[[3]] <- factor(in_rast_fort[[3]], labels = band_names)
   }
 
-  if (!is.na(na.value)) {
+  if (!is.null(na.value)) {
     in_rast_fort[value == na.value] <- NA
   }
 
   #   ____________________________________________________________________________
   #   if transparent NA, remove the NAs from the data to speed-up rendering   ####
-
-  if (na.color == "transparent")  {
-    in_rast_fort <- na.omit(in_rast_fort, "value")
+  if (!is.null(na.color)){
+    if (na.color == "transparent")  {
+      in_rast_fort <- na.omit(in_rast_fort, "value")
+    }
   }
-
   if (!is.null(zlims) & zlims_type == "percs") {
 
     all_lims <- in_rast_fort[,  as.list(quantile(value, zlims, na.rm=TRUE)),
@@ -410,8 +416,9 @@ plot_rast_gg <- function(
           leg_labels
         }, type = ifelse(palette_type == "sequential", "seq", "div"),
         guide = ifelse(leg_type == "qual", "legend", "colourbar"),
-        palette = palette_name,
-        direction = 1) +
+        palette = palette_name, oob = ifelse(is.null(oob_style), censor, squish),
+        direction = 1,
+        na.value = ifelse(is.null(na.color), "grey50", na.color)) +
       theme(legend.justification = "center",
             legend.box.spacing = grid::unit(0.5,"points"))
   }
@@ -423,11 +430,11 @@ plot_rast_gg <- function(
     # ggplot2::coord_cartesian(xlim = xlims, ylim = ylims) +
     plot_gg <- plot_gg +
       sprawl_scalebar(dd2km = FALSE, dist = scalebar_dist,
-                              x.min = xlims[1], x.max = xlims[2],
-                              y.min = ylims[1], y.max = ylims[2],
-                              location = "bottomright", st.size = 3.5,
-                              st.bottom = FALSE, model = NULL,
-                              st.dist = 0.025, units = rastinfo$units)
+                      x.min = xlims[1], x.max = xlims[2],
+                      y.min = ylims[1], y.max = ylims[2],
+                      location = "bottomright", st.size = 3.5,
+                      st.bottom = FALSE, model = NULL,
+                      st.dist = 0.025, units = rastinfo$units)
   }
 
   #   __________________________________________________________________________
