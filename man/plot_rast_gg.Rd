@@ -5,11 +5,13 @@
 \title{plot a raster object using ggplot}
 \usage{
 plot_rast_gg(in_rast, band_names = NULL, bands_to_plot = NULL,
-  nrows = NULL, xlims = NULL, ylims = NULL, basemap = NULL,
-  zoomin = 0, scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
-  na.color = "transparent", na.value = NA, palette_type = "gradient",
-  palette = NULL, labels = NULL, no_axis = TRUE, title = NULL,
-  subtitle = NULL)
+  facet_rows = NULL, xlims = NULL, ylims = NULL, zlims = NULL,
+  zlims_type = "vals", basemap = NULL, zoomin = 0, scalebar = TRUE,
+  scalebar_dist = NULL, transparency = 0, na.color = "transparent",
+  na.value = NA, palette_type = "gradient", palette_name = NULL,
+  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  no_axis = FALSE, title = NULL, subtitle = NULL,
+  theme = ggplot2::theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
@@ -23,7 +25,7 @@ retrieved from the input raster using \code{sprawl::get_rastinfo}, Default: NULL
 case \code{in_rast} is multi-band. If NULL, all bands are plotted separately
 using facet_wrap, Default: NULL}
 
-\item{nrows}{\code{numeric}, number of rows used for plotting multiple bands,
+\item{facet_rows}{\code{numeric}, number of rows used for plotting multiple bands,
 If NULL, one row for each band is used (to be changed !), Default: NULL}
 
 \item{xlims}{\code{numeric(2)}, minimum and maximum x coordinates to be plotted.
@@ -31,6 +33,17 @@ If NULL, the whole x-range is plotted, Default: NULL}
 
 \item{ylims}{\code{numeric(2)}, minimum and maximum y coordinates to be plotted.
 If NULL, the whole y-range is plotted, Default: NULL}
+
+\item{zlims}{\code{numeric array [2]} limits governing the range of
+values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
+
+\item{zlims_type}{\code{character} type of zlims specified.
+\itemize{
+\item "vals": zlims indicates the range of values to be plotted
+\item "percs": zlims indicates the range of percentiles to be plotted (e.g.,
+specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
+values between the 2nd to 98th percentile)
+}}
 
 \item{basemap}{\code{character} If not NULL and valid, the selected basemap is
 used as background. For a list of valid values, see \code{rosm::osm.types()},
@@ -55,22 +68,37 @@ Default: 'transparent'}
 \item{na.value}{\code{numeric}, Additional values to be treatedas NA, Default: NA}
 
 \item{palette_type}{\code{character} Type of brewer color ramp to be used. Possible
-values are \code{gradient}, \code{divergent} and \code{categorical}, Default: 'gradient'}
+values are \code{gradient}, \code{diverging} and \code{categorical}, Default: 'gradient'}
 
-\item{palette}{name of the palette to be used. If NULL, the following
+\item{palette_name}{name of the palette to be used. If NULL, the following
 defaults are used as a function of palette_type:
 \itemize{
 \item categorical --> "Set1"
 \item gradient    --> "Greens"
 \item diverging   --> "RdYlGn")
-Note that if a wrong palette name is specified, plot_rast_gg also reverts to
-the default values, Default: NULL
+Note that if a wrong palette name is specified, plot_rast_gg reverts to
+the default values. Run \code{RColorBrewer::display.brewer.all()} to see a list
+of available palettes, Default: NULL
 }}
 
-\item{labels}{\code{character} labels to be used in the legend if palette_type is
-"categorical". The number of labels must correspond to the number of
-unique values of the raster to be plotted. If NULL or not valid, the legend
-will use the raster values in the legend (see examples), Default: NULL}
+\item{leg_type}{DESCREIPTION}
+
+\item{leg_labels}{\code{character (n_leg_breaks)} labels to be used in the legend
+\itemize{
+\item If palette_type is "categorical", the number of labels must correspond to
+the number of unique values of the raster to be plotted. If NULL or not valid,
+the legend will use the unique raster values in the legend (see examples)
+\item If palette_type is "gradient" or "diverging" the number of labels must be
+equal to the number of breaks specified by "leg_breaks". If this is not
+TRUE, leg_breaks and leg_labelse are reset to \code{waiver()} (TBD),
+Default: NULL (\code{labels = waiver()} the default is used)
+}}
+
+\item{leg_breaks}{\code{numeric (n_leg_labels)} Values in the scale at which
+leg_labels must be placed (if palette_type != "categorical"). The number
+of breaks must be equal to the number of labels specified by "leg_labels".
+If this is not TRUE, leg_breaks and leg_labelse are reset to \code{waiver()}
+(TBD)  Default: NULL (the default \code{labels = waiver()} is used)}
 
 \item{no_axis}{\code{logical}, If TRUE, axis names and labels are suppressed,
 Default: FALSE}
@@ -78,6 +106,12 @@ Default: FALSE}
 \item{title}{\code{character}, Title of the plot, Default: NULL}
 
 \item{subtitle}{Subtitle of the plot, Default: NULL}
+
+\item{theme}{\code{theme function} ggplot theme to be used
+(e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()}
+
+\item{verbose}{\code{logical}, If FALSE, suppress processing message,
+Default: TRUE}
 }
 \value{
 a \code{ggplot}
@@ -87,28 +121,47 @@ FUNCTION_DESCRIPTION
 }
 \examples{
 \dontrun{
+#single band plot
  in_rast <- raster::stack(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
- a = plot_rast_gg(in_rast, basemap = "osm",
+ plot_rast_gg(in_rast, basemap = "osm",
                   palette_type = "diverging",
-                  no_axis = T,
                   na.value = 0,
-                  zoomin = 0, title = "OLI", subtitle = "Band 2")
+                  title = "OLI", subtitle = "Band 2")
 
+ #Change basemap and transparency
  plot_rast_gg(in_rast, basemap = "stamenbw",
                   palette_type = "diverging",
-                  no_axis = F,
+                  palette_name = "RdYlBu",
+                  no_axis = T,
                   na.value = 0, transparency = 0.2,
-                  zoomin = 0, title = "OLI - 15/06/2017",
-                   subtitle = "Band 2 - Green")
+                  title = "OLI - 15/06/2017",
+                  subtitle = "Band 2 - Green")
 
- in_rast <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
-                          package = "sprawl.data")
- plot_rast_gg(in_rast, basemap = "cartolight",
+#Multi band plot with selection of bands
+ in_rast <- raster::stack(system.file("extdata/OLI_test",
+  "oli_multi_1000.tif", package = "sprawl.data"))
+ plot_rast_gg(in_rast, basemap = "osm", bands_to_plot = c(1,4),
                   palette_type = "diverging",
-                  no_axis = F, zoomin = -1,
-                  na.value = 0, transparency = 0.5,
-                  title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
+                  na.value = 0,
+                  title = "OLI", subtitle = "Band 2 vs band 4",
+                  facet_row = 1)
+
+#Adjusting limits and changing palette
+ in_rast <- raster::stack(system.file("extdata/REYE_test",
+                          "REYE_2016_185_gNDVI.tif",
+                          package = "sprawl.data"))
+ #vanilla
+ plot_rast_gg(in_rast,
+             palette_type = "diverging", palette_name = "RdYlBu",
+             title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
+
+ # limits adjusted on the 1st and 100th percentile to remove very low
+ # values outliers and better use the palette
+ plot_rast_gg(in_rast,
+             palette_type = "diverging", palette_name = "RdYlBu",
+             zlims = c(0.01, 1.0), zlims_type = "percs",
+             title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 }
 }
 \author{

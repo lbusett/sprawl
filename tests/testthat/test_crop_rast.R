@@ -31,5 +31,7 @@ testthat::test_that("Test On raster cropping", {
                                        package = "sprawl.data"))
   out_cropped  <- crop_rast(in_rast, in_vect, verbose = FALSE,
                             out_type = "rastobject")
+  expect_is(out_cropped, "Raster")
+  expect_equal(raster::nlayers(out_cropped), 2)
 
 })

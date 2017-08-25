@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>plot_rast_gg — plot_rast_gg • sprawl</title>
+<title>plot a raster object using ggplot — plot_rast_gg • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,7 +135,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>plot_rast_gg</h1>
+    <h1>plot a raster object using ggplot</h1>
     </div>
 
     
@@ -144,9 +144,9 @@
 
     <pre class="usage"><span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>band_names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>bands_to_plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>nrows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zoomin</span> <span class='kw'>=</span> -<span class='fl'>1</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"gradient"</span>,
-  <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>no_labels</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>no_axis</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -154,81 +154,113 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_rast</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>Raster</code> object to be plotted. Both mono- and multi-band
+rasters are supported</p></td>
     </tr>
     <tr>
       <th>band_names</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>character(nbands)</code>, array of band names. These will used
+to populate the "strips" above each plotted band. If NULL, bnames are
+retrieved from the input raster using <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/get_rastinfo'>sprawl::get_rastinfo</a></code>, Default: NULL</p></td>
     </tr>
     <tr>
       <th>bands_to_plot</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>numeric array</code>, array of band numbers to be plotted (in
+case <code>in_rast</code> is multi-band. If NULL, all bands are plotted separately
+using facet_wrap, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>nrows</th>
+      <td><p><code>numeric</code>, number of rows used for plotting multiple bands,
+If NULL, one row for each band is used (to be changed !), Default: NULL</p></td>
     </tr>
     <tr>
       <th>xlims</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>numeric(2)</code>, minimum and maximum x coordinates to be plotted.
+If NULL, the whole x-range is plotted, Default: NULL</p></td>
     </tr>
     <tr>
       <th>ylims</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>numeric(2)</code>, minimum and maximum y coordinates to be plotted.
+If NULL, the whole y-range is plotted, Default: NULL</p></td>
     </tr>
     <tr>
       <th>basemap</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>character</code> If not NULL and valid, the selected basemap is
+used as background. For a list of valid values, see <code><a href='http://www.rdocumentation.org/packages/rosm/topics/osm.types'>rosm::osm.types()</a></code>,
+Default: NULL</p></td>
     </tr>
     <tr>
       <th>zoomin</th>
-      <td><p>PARAM_DESCRIPTION, Default: -1</p></td>
+      <td><p><code>numeric</code>, Adjustement factor for basemap zoom. Negative values
+lead to less detailed basemap, but larger text. Default: 0</p></td>
     </tr>
     <tr>
       <th>scalebar</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> If TRUE, add a scalebar on the bottom right corner,
+Default: TRUE</p></td>
     </tr>
     <tr>
       <th>scalebar_dist</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>numeric</code> Width of the scale bar (in km). If NULL, it
+is computed automatically on the basis of the range in x direction,
+Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>transparency</th>
+      <td><p><code>numeric [0,1]</code>, transparency of the raster layer. Higer
+values lead to higher transparency, Default: 0 (ignored if basemap == NULL)</p></td>
     </tr>
     <tr>
       <th>na.color</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'transparent'</p></td>
+      <td><p><code>character</code>, color to be used to plot NA values,
+Default: 'transparent'</p></td>
     </tr>
     <tr>
       <th>na.value</th>
-      <td><p>PARAM_DESCRIPTION, Default: NA</p></td>
+      <td><p><code>numeric</code>, Additional values to be treatedas NA, Default: NA</p></td>
     </tr>
     <tr>
       <th>palette_type</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'gradient'</p></td>
+      <td><p><code>character</code> Type of brewer color ramp to be used. Possible
+values are <code>gradient</code>, <code>divergent</code> and <code>categorical</code>, Default: 'gradient'</p></td>
     </tr>
     <tr>
       <th>palette</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p>name of the palette to be used. If NULL, the following
+defaults are used as a function of palette_type:</p><ul>
+<li><p>categorical --&gt; "Set1"</p></li>
+<li><p>gradient    --&gt; "Greens"</p></li>
+<li><p>diverging   --&gt; "RdYlGn")
+Note that if a wrong palette name is specified, plot_rast_gg also reverts to
+the default values, Default: NULL</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>labels</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>character</code> labels to be used in the legend if palette_type is
+"categorical". The number of labels must correspond to the number of
+unique values of the raster to be plotted. If NULL or not valid, the legend
+will use the raster values in the legend (see examples), Default: NULL</p></td>
     </tr>
     <tr>
-      <th>no_labels</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <th>no_axis</th>
+      <td><p><code>logical</code>, If TRUE, axis names and labels are suppressed,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>title</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>character</code>, Title of the plot, Default: NULL</p></td>
     </tr>
     <tr>
       <th>subtitle</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p>Subtitle of the plot, Default: NULL</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+    <p>a <code>ggplot</code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -236,22 +268,22 @@
   <span class='st'>"oli_multi_1000_b2.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
  <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"osm"</span>,
                   <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"diverging"</span>,
-                  <span class='kw'>no_labels</span> <span class='kw'>=</span> <span class='no'>T</span>,
+                  <span class='kw'>no_axis</span> <span class='kw'>=</span> <span class='no'>T</span>,
                   <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-                  <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"OLI"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"Band 2"</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                  <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"OLI"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"Band 2"</span>)</div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"stamenbw"</span>,
                   <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"diverging"</span>,
-                  <span class='kw'>no_labels</span> <span class='kw'>=</span> <span class='no'>F</span>,
+                  <span class='kw'>no_axis</span> <span class='kw'>=</span> <span class='no'>F</span>,
                   <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
                   <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"OLI - 15/06/2017"</span>,
-                   <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"Band 2 - Green"</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                   <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"Band 2 - Green"</span>)</div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/REYE_test"</span>, <span class='st'>"REYE_2016_185_gNDVI.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"cartolight"</span>,
                   <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"diverging"</span>,
-                  <span class='kw'>no_labels</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>zoomin</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
+                  <span class='kw'>no_axis</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>zoomin</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
                   <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-                  <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"gNDVI - 14/03/2016"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"From RapidEye"</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-7.png' alt='' width='700' height='432.632880098887' /></div></pre>
+                  <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"gNDVI - 14/03/2016"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"From RapidEye"</span>)</div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-7.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -259,8 +291,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
