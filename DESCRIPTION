@@ -48,11 +48,11 @@ Imports: data.table,
         glue,
         assertthat,
         parallel,
+        ggplot2,
         ggspatial,
         rosm,
         maptools
-Remotes: lbusett/sprawl.data,
-        tidyverse/ggplot2
+Remotes: lbusett/sprawl.data, tidyverse/ggplot2
 Suggests: testthat,
           knitr,
           rmarkdown
