@@ -80,6 +80,10 @@
 #'   (TBD)  Default: NULL (the default ggplot2 `labels = waiver()` is used)
 #' @param no_axis `logical`, If TRUE, axis names and labels are suppressed,
 #'   Default: FALSE
+#' @param title `character`, Title of the plot, Default: NULL
+#' @param subtitle Subtitle of the plot, Default: NULL
+#' @param theme `theme function` ggplot theme to be used
+#' (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()
 #' @param verbose `logical`, If FALSE, suppress processing message,
 #'  Default: TRUE
 #' @param title `character`, Title of the plot, Default: NULL
