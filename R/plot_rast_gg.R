@@ -43,7 +43,7 @@
 #'   - If == "to_minmax" they are plotted using the minimum and maximum colours
 #'     of the current palette (using scales::squish())
 #'   `scales::squish`
-#' @param outliers_color `character (1/2)` specifies colors to be used to plot
+#' @param outliers_colors `character (1/2)` specifies colors to be used to plot
 #'   values outside zlims. If only one color is passed, both values above max(zlims)
 #'   are plotted with the same color. If two colors are passed, the first color
 #'   is used to plot values <. min(zlims) and the second to plot colors > max(zlims)
@@ -93,12 +93,6 @@
 #' @param theme `theme function` ggplot theme to be used
 #' (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()
 #' @param verbose `logical`, If FALSE, suppress processing message,
-#'  Default: TRUE
-#' @param title `character`, Title of the plot, Default: NULL
-#' @param subtitle Subtitle of the plot, Default: NULL
-#' @param theme `theme function` ggplot theme to be used
-#' (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()
-#' @param verbose `logical`, If FALSE, suppress processing messages,
 #'  Default: TRUE
 #' @return a `ggplot`
 #' @examples
@@ -154,9 +148,10 @@
 #' @importFrom dplyr mutate
 #' @importFrom gdalUtils gdalwarp
 #' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous expand_scale
-#' scale_y_continuous ggtitle theme element_blank element_text geom_raster aes
-#' scale_fill_brewer scale_fill_distiller waiver geom_polygon scale_colour_manual
-#' guides guide_legend scale_color_manual coord_fixed facet_wrap
+#' scale_y_continuous ggtitle theme element_blank element_text element_rect
+#' geom_raster aes scale_fill_brewer scale_fill_distiller waiver geom_polygon
+#' scale_colour_manual guides guide_legend scale_color_manual coord_fixed
+#' facet_wrap
 #' @importFrom ggspatial geom_osm
 #' @importFrom raster stack
 #' @importFrom RColorBrewer brewer.pal.info
@@ -187,7 +182,7 @@ plot_rast_gg <- function(
   #TODO Add MaxPixels
   loadNamespace("ggspatial")
   loadNamespace("ggplot2")
-  x <- y <- value <- band <- category <- NULL
+  x <- y <- value <- band <- category <- color <- NULL
 
   assertthat::assert_that(palette_type %in% c("categorical", "gradient", "diverging"), #nolint
                           msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
@@ -321,7 +316,7 @@ plot_rast_gg <- function(
   #   if transparent NA, remove the NAs from the data to speed-up rendering ####
   if (!is.null(na.color)) {
     if (na.color == "transparent")  {
-      in_rast_fort <- na.omit(in_rast_fort, "value")
+      in_rast_fort <- stats::na.omit(in_rast_fort, "value")
     }
   }
   if (!is.null(zlims) & zlims_type == "percs") {
@@ -424,7 +419,7 @@ plot_rast_gg <- function(
   # Center the title - can be overriden in case after plot completion
   plot_gg <- plot_gg +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-                   panel.background = element_rect(fill = "transparent"))
+                   panel.background = ggplot2::element_rect(fill = "transparent"))
 
   #   __________________________________________________________________________
   #   add background map - need to do this here to prevent "shadowing"      ####
