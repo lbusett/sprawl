@@ -34,11 +34,19 @@
 #'   - "percs": zlims indicates the range of percentiles to be plotted (e.g.,
 #'      specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
 #'      values between the 2nd to 98th percentile)
-#' @param oob_style `character` specifies how the values outside of the
-#'   zlims range will be pllotted. If == NULL (the default), out of bounds values
-#'   are plotted using the color specified in "oob.color". If == "expand",
-#'   they are plotted using the minimum and maximum colours of the scale (using)
+#' @param outliers_style `character ["as_na" / "recolor" / "to_minmax"]` specifies how
+#'   the values outside of the zlims range will be plotted.
+#'   - If == "as_na" (the default), out of bounds values are plotted using the
+#'     color specified for na.color;
+#'   - If == "recolor", they are plotted using the oob_high_color and oob_low_color
+#'     arguments
+#'   - If == "to_minmax" they are plotted using the minimum and maximum colours
+#'     of the current palette (using scales::squish())
 #'   `scales::squish`
+#' @param outliers_colors `character (1/2)` specifies colors to be used to plot
+#'   values outside zlims. If only one color is passed, both values above max(zlims)
+#'   are plotted with the same color. If two colors are passed, the first color
+#'   is used to plot values <. min(zlims) and the second to plot colors > max(zlims)
 #' @param basemap `character` If not NULL and valid, the selected basemap is
 #'   used as background. For a list of valid values, see `rosm::osm.types()`,
 #'   Default: NULL
@@ -84,7 +92,7 @@
 #' @param subtitle Subtitle of the plot, Default: NULL
 #' @param theme `theme function` ggplot theme to be used
 #' (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()
-#' @param verbose `logical`, If FALSE, suppress processing messages,
+#' @param verbose `logical`, If FALSE, suppress processing message,
 #'  Default: TRUE
 #' @return a `ggplot`
 #' @examples
@@ -128,33 +136,35 @@
 #'  # values outliers and better use the palette
 #'  plot_rast_gg(in_rast,
 #'              palette_type = "diverging", palette_name = "RdYlBu",
-#'              zlims = c(0.01, 1.0), zlims_type = "percs",
-#'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
+#'              zlims = c(0.2, 0.8), zlims_type = "percs",
+#'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
+#'              outliers_style = "recolor", outliers_colors = "grey90")
 #' }
 #' @rdname plot_rast_gg
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that
 #' @importFrom data.table as.data.table
-#' @importFrom dplyr filter
+#' @importFrom dplyr mutate
 #' @importFrom gdalUtils gdalwarp
 #' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous expand_scale
-#'   scale_y_continuous ggtitle theme element_blank element_text geom_raster
-#'   aes scale_fill_brewer scale_fill_distiller waiver coord_fixed facet_wrap
+#' scale_y_continuous ggtitle theme element_blank element_text element_rect
+#' geom_raster aes scale_fill_brewer scale_fill_distiller waiver geom_polygon
+#' scale_colour_manual guides guide_legend scale_color_manual coord_fixed
+#' facet_wrap
 #' @importFrom ggspatial geom_osm
 #' @importFrom raster stack
 #' @importFrom RColorBrewer brewer.pal.info
 #' @importFrom rosm osm.types
+#' @importFrom scales squish censor
 #' @importFrom grid unit
-#' @importFrom stats na.omit
-#' @importFrom magrittr "%>%"
 
 plot_rast_gg <- function(
   in_rast,
   band_names   = NULL, bands_to_plot = NULL, facet_rows = NULL,
   xlims        = NULL, ylims = NULL,
   zlims        = NULL, zlims_type = "vals",
-  oob_style    = NULL, oob_color = "purple",
+  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   basemap      = NULL, zoomin = 0,
   scalebar     = TRUE, scalebar_dist = NULL,
   transparency = 0,
@@ -172,7 +182,7 @@ plot_rast_gg <- function(
   #TODO Add MaxPixels
   loadNamespace("ggspatial")
   loadNamespace("ggplot2")
-  x <- y <- value <- band <- category <- NULL
+  x <- y <- value <- band <- category <- color <- NULL
 
   assertthat::assert_that(palette_type %in% c("categorical", "gradient", "diverging"), #nolint
                           msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
@@ -231,13 +241,21 @@ plot_rast_gg <- function(
 
   }
 
+  if (length(outliers_colors) == 1) {
+    out_high_color <- out_low_color <- outliers_colors
+  } else {
+    out_high_color = outliers_colors[2]
+    out_low_color = outliers_colors[1]
+  }
+
+
   #   __________________________________________________________________________
   #   Reproject to 3857 to allow overlap with background map                ####
 
   rastinfo <- get_rastinfo(in_rast, verbose = FALSE)
 
   if (is.null(facet_rows)) {
-    facet_rows <- rastinfo$nbands
+    facet_rows <- round(rastinfo$nbands / 2)
   }
 
   if (any(rastinfo$fnames == "")) {
@@ -291,31 +309,56 @@ plot_rast_gg <- function(
   }
 
   if (!is.null(na.value)) {
-    in_rast_fort[value == na.value] <- NA
+    in_rast_fort[value == na.value, value := NA]
   }
 
-  #   ____________________________________________________________________________
-  #   if transparent NA, remove the NAs from the data to speed-up rendering   ####
-  if (!is.null(na.color)){
+  #   _________________________________________________________________________
+  #   if transparent NA, remove the NAs from the data to speed-up rendering ####
+  if (!is.null(na.color)) {
     if (na.color == "transparent")  {
-      in_rast_fort <- na.omit(in_rast_fort, "value")
+      in_rast_fort <- stats::na.omit(in_rast_fort, "value")
     }
   }
   if (!is.null(zlims) & zlims_type == "percs") {
-
-    all_lims <- in_rast_fort[,  as.list(quantile(value, zlims, na.rm=TRUE)),
+    all_lims <- in_rast_fort[,  as.list(stats::quantile(value, zlims,
+                                                        na.rm = TRUE)),
                              by = band]
-    zlims <- as.numeric(all_lims[,2:3])
+    zlims <- c(min(all_lims[,2]), max(all_lims[,3]))
+
   }
 
+  if (!is.null(zlims)) {
+    #   ____________________________________________________________________________
+    #   If oob_style == "recolor" create additional data tables                 ####
+    #   containing only values above / below limits
+    if (outliers_style == "recolor") {
 
-  #   ____________________________________________________________________________
-  #   If no limits passed, compute them from the input extent                 ####
+      out_low_tbl  <- subset(in_rast_fort, value < zlims[1])
+      out_high_tbl <- subset(in_rast_fort, value > zlims[2])
+
+      if (out_high_color == "transparent") {
+        in_rast_fort <- subset(in_rast_fort,
+                               value < zlims[2] | is.na(value) == TRUE)
+      }
+
+      if (out_low_color == "transparent") {
+        in_rast_fort <- subset(in_rast_fort,
+                               value > zlims[1] | is.na(value) == TRUE)
+      }
+
+    }
+  }
+  #   __________________________________________________________________________
+  #   If no geo limits passed, compute them from the input extent           ####
 
   if (is.null(xlims)) {
     xlims <- c(min(in_rast_fort$x), max(in_rast_fort$x))
+  }
+
+  if (is.null(ylims)) {
     ylims <- c(min(in_rast_fort$y), max(in_rast_fort$y))
   }
+
 
   #   __________________________________________________________________________
   #   If no scalebar dist passed, compute automatically from lonfgitude     ####
@@ -330,7 +373,7 @@ plot_rast_gg <- function(
   #   of the categorical variables using leg_labels. Otherwis, the numeric
   #   value of the variable will be used !
 
-  if (palette_type == "categorical") {
+  if (palette_type == "qual") {
 
     if (is.null(leg_labels)) {
       in_rast_fort[[4]] <- factor(in_rast_fort[[4]])
@@ -352,7 +395,7 @@ plot_rast_gg <- function(
   }
 
   # Blank plot
-  plot_gg <- ggplot2::ggplot(in_rast_fort) + theme +
+  plot_gg <- ggplot2::ggplot() + theme +
     ggplot2::scale_x_continuous(xlab,
                                 expand = ggplot2::expand_scale(mult = c(0.005,0.005)),
                                 limits = c(xlims[1], xlims[2])) +
@@ -375,7 +418,8 @@ plot_rast_gg <- function(
 
   # Center the title - can be overriden in case after plot completion
   plot_gg <- plot_gg +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
+                   panel.background = ggplot2::element_rect(fill = "transparent"))
 
   #   __________________________________________________________________________
   #   add background map - need to do this here to prevent "shadowing"      ####
@@ -392,8 +436,8 @@ plot_rast_gg <- function(
   #   add the raster layer                                                  ####
 
   plot_gg <- plot_gg +
-    ggplot2::geom_raster(ggplot2::aes(x, y, fill = value),
-                         alpha = 1 - transparency)
+    ggplot2::geom_raster(data = in_rast_fort, ggplot2::aes(x, y, fill = value),
+                         alpha = 1 - transparency, na.rm = TRUE)
 
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
@@ -405,7 +449,7 @@ plot_rast_gg <- function(
 
     plot_gg <- plot_gg +
       ggplot2::scale_fill_distiller(
-        "",
+        "Value",
         limits = zlims, breaks = if (is.null(leg_breaks)) {
           ggplot2::waiver()
         } else {
@@ -416,15 +460,73 @@ plot_rast_gg <- function(
           leg_labels
         }, type = ifelse(palette_type == "sequential", "seq", "div"),
         guide = ifelse(leg_type == "qual", "legend", "colourbar"),
-        palette = palette_name, oob = ifelse(is.null(oob_style), censor, squish),
+        palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
+                                             scales::squish, scales::censor),
         direction = 1,
         na.value = ifelse(is.null(na.color), "grey50", na.color)) +
-      theme(legend.justification = "center",
-            legend.box.spacing = grid::unit(0.5,"points"))
+      ggplot2::theme(legend.justification = "center",
+                     legend.box.spacing = grid::unit(0.5,"points"))
   }
 
+
   #   ____________________________________________________________________________
-  #   Add scalebar               ####
+  #   if oob_style = recolor, add "layers" corresponding to oob data          ####
+
+  if (outliers_style == "recolor" & !is.null(zlims)) {
+
+    if (length(unique(outliers_colors)) == 1) {
+
+      dummy_data <- data.frame(out_high_tbl[1,]) %>%
+        dplyr::mutate(cat = c("Out"), color = c(out_high_color))
+      plot_gg <- plot_gg + ggplot2::geom_polygon(data = dummy_data,
+                                                 ggplot2::aes(x = x,
+                                                              y = y,
+                                                              colour = color))
+      plot_gg <- plot_gg + ggplot2::scale_colour_manual(
+        "Outliers",
+        values     = out_high_color,
+        labels     = paste0("< ", format(zlims[1], digits = 2)
+                            , " OR ", "> ", format(zlims[2], digits = 2))
+      )
+
+      plot_gg <- plot_gg +
+        ggplot2::guides(colour = ggplot2::guide_legend(
+          title = "Outliers", override.aes = list(fill = out_high_color,
+                                                  color = "black")))
+    } else {
+
+      dummy_data <- data.frame(rbind(out_high_tbl[2,], out_low_tbl[1,])) %>%
+        dplyr::mutate(cat = c("High","Low"),
+                      color = c(out_low_color, out_high_color))
+      plot_gg <- plot_gg + ggplot2::geom_polygon(data = dummy_data,
+                                                 ggplot2::aes(x = x, y = y,
+                                                              colour = color))
+      plot_gg <- plot_gg + ggplot2::scale_color_manual(
+        "Outliers",
+        values     = c(out_low_color, out_high_color),
+        labels     = c(paste0("< ", format(zlims[1], digits = 2)),
+                       paste0("> ", format(zlims[2], digits = 2)))
+      )
+      plot_gg <- plot_gg +
+        ggplot2::guides(colour = ggplot2::guide_legend(
+          title = "Outliers",
+          override.aes = list(fill = c(out_low_color, out_high_color),
+                              color = "black")))
+    }
+
+    plot_gg <- plot_gg + ggplot2::geom_raster(data = out_high_tbl,
+                                              ggplot2::aes(x = x, y = y),
+                                              fill = out_high_color, na.rm = TRUE)
+    plot_gg <- plot_gg + ggplot2::geom_raster(data = out_low_tbl,
+                                              ggplot2::aes(x = x, y = y),
+                                              fill = out_low_color,
+                                              na.rm = TRUE)
+
+  }
+
+
+  #   _________________________________________________________________________
+  #   Add scalebar                                                          ####
 
   if (scalebar) {
     # ggplot2::coord_cartesian(xlim = xlims, ylim = ylims) +

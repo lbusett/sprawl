@@ -6,11 +6,12 @@
 \usage{
 plot_rast_gg(in_rast, band_names = NULL, bands_to_plot = NULL,
   facet_rows = NULL, xlims = NULL, ylims = NULL, zlims = NULL,
-  zlims_type = "vals", basemap = NULL, zoomin = 0, scalebar = TRUE,
-  scalebar_dist = NULL, transparency = 0, na.color = "transparent",
-  na.value = NA, palette_type = "gradient", palette_name = NULL,
-  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
-  no_axis = FALSE, title = NULL, subtitle = NULL,
+  zlims_type = "vals", outliers_style = "recolor",
+  outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
+  scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
+  na.color = NULL, na.value = NULL, palette_type = "gradient",
+  palette_name = NULL, leg_type = NULL, leg_labels = NULL,
+  leg_breaks = NULL, no_axis = FALSE, title = NULL, subtitle = NULL,
   theme = ggplot2::theme_bw(), verbose = TRUE)
 }
 \arguments{
@@ -45,6 +46,23 @@ specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
 values between the 2nd to 98th percentile)
 }}
 
+\item{outliers_style}{\code{character ["as_na" / "recolor" / "to_minmax"]} specifies how
+the values outside of the zlims range will be plotted.
+\itemize{
+\item If == "as_na" (the default), out of bounds values are plotted using the
+color specified for na.color;
+\item If == "recolor", they are plotted using the oob_high_color and oob_low_color
+arguments
+\item If == "to_minmax" they are plotted using the minimum and maximum colours
+of the current palette (using scales::squish())
+\code{scales::squish}
+}}
+
+\item{outliers_colors}{\code{character (1/2)} specifies colors to be used to plot
+values outside zlims. If only one color is passed, both values above max(zlims)
+are plotted with the same color. If two colors are passed, the first color
+is used to plot values <. min(zlims) and the second to plot colors > max(zlims)}
+
 \item{basemap}{\code{character} If not NULL and valid, the selected basemap is
 used as background. For a list of valid values, see \code{rosm::osm.types()},
 Default: NULL}
@@ -63,7 +81,7 @@ Default: NULL}
 values lead to higher transparency, Default: 0 (ignored if basemap == NULL)}
 
 \item{na.color}{\code{character}, color to be used to plot NA values,
-Default: 'transparent'}
+Default: 'grey50'. TO set to "invisible" use na.color = "transparent"}
 
 \item{na.value}{\code{numeric}, Additional values to be treated as NA, Default: NA}
 
@@ -110,7 +128,7 @@ Default: FALSE}
 \item{theme}{\code{theme function} ggplot theme to be used
 (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()}
 
-\item{verbose}{\code{logical}, If FALSE, suppress processing messages,
+\item{verbose}{\code{logical}, If FALSE, suppress processing message,
 Default: TRUE}
 }
 \value{
@@ -175,8 +193,9 @@ See the description of the arguments for details on their use
  # values outliers and better use the palette
  plot_rast_gg(in_rast,
              palette_type = "diverging", palette_name = "RdYlBu",
-             zlims = c(0.01, 1.0), zlims_type = "percs",
-             title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
+             zlims = c(0.2, 0.8), zlims_type = "percs",
+             title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
+             outliers_style = "recolor", outliers_colors = "grey90")
 }
 }
 \author{

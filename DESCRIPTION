@@ -50,7 +50,8 @@ Imports: data.table,
         ggspatial,
         rosm,
         maptools, 
-        sprawl.data
+        sprawl.data,
+        scales
 Remotes: lbusett/sprawl.data, tidyverse/ggplot2
 Suggests: testthat,
           knitr,
