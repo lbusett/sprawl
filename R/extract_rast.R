@@ -13,7 +13,7 @@
 #' @param selbands `2-element numeric array` defining starting and ending raster
 #'   bands to be processed (e.g., c(1, 10). Default: NULL, meaning that all bands
 #'   will be processed
-#' @param rastres `numeric`, if not null, the input raster is resampled to `rastres`
+#' @param rastres `numeric(2)`, if not null, the input raster is resampled to `rastres`
 #'   prior to data extraction using nearest neighbour resampling. This is useful
 #'   in case the polygons are small with respect to `in_rast` resolution,
 #'   Default: NULL (meaning no resampling is done)
@@ -110,7 +110,7 @@ extract_rast <- function(in_rast,
     summ_data = summ_data, full_data = full_data, comp_quant = comp_quant,
     FUN = FUN,  small = small, na.rm = na.rm, maxchunk = maxchunk,
     addfeat = addfeat, addgeom = addgeom, keep_null = keep_null,
-    verbose   = verbose, ncores = ncores
+    verbose   = verbose, ncores = ncores, long_format = long_format
   )
 
   #   __________________________________________________________________________
@@ -120,19 +120,13 @@ extract_rast <- function(in_rast,
 
   call <- as.list(match.call())
   message("extract_rast --> Extracting: ", deparse(substitute(call)$in_rast),
-                     " data on zones of : ", deparse(substitute(call)$in_vect))
+          " data on zones of : ", deparse(substitute(call)$in_vect))
 
   #   __________________________________________________________________________
   #   Cast the inputs to "correct" types and do some reshuffling            ####
 
   in_rast   <- cast_rast(in_rast, "rastobject")
   rast_proj <- get_proj4string(in_rast, abort = TRUE)
-
-  in_vect  <- cast_vect(in_vect, "sfobject") %>%
-    dplyr::mutate_if(is.character, as.factor) %>%
-    tibble::as_tibble() %>%
-    sf::st_as_sf()
-  vect_proj <- get_proj4string(in_vect, abort = TRUE)
 
   #   __________________________________________________________________________
   #   Identify the bands/dates to be processed                              ####
@@ -146,6 +140,10 @@ extract_rast <- function(in_rast,
     dates <- names(in_rast)
   }
   seldates <- dates[selbands]
+
+  # Extract bands to be processed from the original raster
+
+  in_rast <- in_rast[[selbands]]
   in_vect$mdxtnq <- seq(1:dim(in_vect)[1])
 
   #   __________________________________________________________________________
@@ -167,24 +165,67 @@ extract_rast <- function(in_rast,
         id_field <- NULL
         er_opts$id_field <- NULL
       } else {
-      # if (length(unique(as.data.frame(in_vect[,eval(id_field)])[,1])) != dim(in_vect)[1]) { #nolint
-      #   # warning("selected ID field is not univoc ! Names of output columns",
-      #   # (or values of 'feature' field if `long` = TRUE) will be set to the",
-      #   # record number of the shapefile feature").
-      #   # id_field <- NULL
-      # }
+        # if (length(unique(as.data.frame(in_vect[,eval(id_field)])[,1])) != dim(in_vect)[1]) { #nolint
+        #   # warning("selected ID field is not univoc ! Names of output columns",
+        #   # (or values of 'feature' field if `long` = TRUE) will be set to the",
+        #   # record number of the shapefile feature").
+        #   # id_field <- NULL
+        # }
       }
     }
 
-    # check if the projection of the in_vect and raster are the same - otherwise
-    # reproject the in_vect on raster CRS
-    if (vect_proj != rast_proj) {
-      if (verbose) message(
-        "extract_rast --> Reprojecting in_vect to the projection of in_rast"
-      )
-      in_vect <- in_vect %>%
-        sf::st_transform(rast_proj)
+    # Get the vector input and do some preprocessing. Reproject and crop
+    # if necessary
+    in_vect_crop  <- cast_vect(in_vect, "sfobject") %>%
+      dplyr::mutate_if(is.character, as.factor) %>%
+      tibble::as_tibble() %>%
+      sf::st_as_sf() %>%
+      sf::st_transform(rast_proj) %>%
+      crop_vect(in_rast)
+
+    if (dim(in_vect_crop)[1] == 0) {
+      stop("extract_rast --> `in_vect` doesn't intersect `in_rast`. Aborting!")
     }
+
+    # Identify features cropped in the intersection
+    if (dim(in_vect_crop)[1] != dim(in_vect)[1]) {
+      if (verbose) {
+        message(glue::glue(
+          "Some features of the spatial object are outside or partially outside ",
+          "the extent of the input RasterStack ! Outputs for features only ",
+          "partially inside will be retrieved using only the available pixels !",
+          "Outputs for features outside rasterstack extent will be set to NA.")
+        )
+      }
+
+      if (!setequal(in_vect$mdxtnq, in_vect_crop$mdxtnq)) {
+
+        outside_ids   <- setdiff(in_vect$mdxtnq, in_vect_crop$mdxtnq)
+        outside_names <- ifelse(
+          !is.null(id_field),
+          as.character(in_vect[[eval(id_field)]][outside_ids]),
+          as.character(in_vect[["mdxtnq"]][outside_ids]))
+        outside_feat  <- data.frame(outside_ids   = in_vect$mdxtnq[outside_ids],
+                                    outside_names = outside_names)
+
+      } else {
+        outside_feat  <- NULL
+      }
+    } else {
+      outside_feat  <- NULL
+    }
+
+    # Now crop the raster on the vector extent. This speeds-up consistently the
+    # processing in case the vectors cover only a small part of the raster
+
+    in_rast_proc <- crop_rast(in_rast, in_vect_crop, out_type = "rastobject") %>%
+      raster::stack()
+
+    # reset some useful info as that of the original file
+    # TODO change "crop_rast" behaviour to keep this info from the original !
+    names(in_rast_proc) <- names(in_rast)
+    if (date_check) in_rast_proc <- raster::setZ(in_rast_proc,
+                                                 raster::getZ(in_rast))
 
     #   ________________________________________________________________________
     #   Extract values if the zone pbject is a point shapefile              ####
@@ -192,18 +233,15 @@ extract_rast <- function(in_rast,
 
     if (inherits(sf::st_geometry(in_vect), "sfc_POINT")) {
       # Convert the zone object to *Spatial to allow use of "raster::extract"
-      out_list <- er_points(in_vect,
+      out_list <- er_points(in_vect_crop,
+                            in_vect,
                             in_rast,
-                            n_selbands,
-                            selbands,
                             seldates,
-                            id_field,
-                            long_format,
+                            selbands,
+                            n_selbands,
                             date_check,
-                            verbose,
-                            addfeat,
-                            addgeom,
-                            keep_null)
+                            er_opts,
+                            outside_feat)
 
       # end processing on points
 
@@ -211,13 +249,15 @@ extract_rast <- function(in_rast,
 
       #   ______________________________________________________________________
       #   Extract values if the zone object is a polygon                    ####
-      out_list <- er_polygons(in_vect,
+      out_list <- er_polygons(in_vect_crop,
+                              in_vect,
                               in_rast,
                               seldates,
                               selbands,
                               n_selbands,
                               date_check,
-                              er_opts)
+                              er_opts,
+                              outside_feat)
 
     }
 
