@@ -297,10 +297,12 @@ plot_rast_gg <- function(
 
   #   ____________________________________________________________________________
   #   Fortify the raster to allow ggplotting                                  ####
-
+  # browser()
+  in_rast <-  "sampleRegular"(in_rast, 10e5, asRaster = TRUE)
   in_rast_fort <- ggplot2::fortify(in_rast, format = "long") %>%
     data.table::as.data.table()
   names(in_rast_fort)[1:2] <- c("x", "y")
+
 
   #   __________________________________________________________________________
   #   If band_names not passed use the band names found in the file - these are
@@ -324,6 +326,7 @@ plot_rast_gg <- function(
     }
   }
   if (!is.null(zlims) & zlims_type == "percs") {
+
     all_lims <- in_rast_fort[,  as.list(stats::quantile(value, zlims,
                                                         na.rm = TRUE)),
                              by = band]
@@ -425,6 +428,7 @@ plot_rast_gg <- function(
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                    panel.background = ggplot2::element_rect(fill = "transparent"))
 
+
   #   __________________________________________________________________________
   #   add background map - need to do this here to prevent "shadowing"      ####
 
@@ -442,7 +446,9 @@ plot_rast_gg <- function(
   plot_gg <- plot_gg +
     ggplot2::geom_raster(data = in_rast_fort, ggplot2::aes(x, y, fill = value),
                          alpha = 1 - transparency, na.rm = TRUE)
-
+   if (rastinfo$nbands > 1) {
+    plot_gg <- plot_gg + ggplot2::facet_wrap(~band, nrow = facet_rows, drop = T)
+  }
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 
@@ -454,7 +460,8 @@ plot_rast_gg <- function(
     plot_gg <- plot_gg +
       ggplot2::scale_fill_distiller(
         "Value",
-        limits = zlims, breaks = if (is.null(leg_breaks)) {
+        limits = zlims,
+        breaks = if (is.null(leg_breaks)) {
           ggplot2::waiver()
         } else {
           leg_breaks
@@ -472,7 +479,6 @@ plot_rast_gg <- function(
                      legend.box.spacing = grid::unit(0.5,"points"))
   }
 
-
   #   ____________________________________________________________________________
   #   if oob_style = recolor, add "layers" corresponding to oob data          ####
 
@@ -481,7 +487,9 @@ plot_rast_gg <- function(
     if (length(unique(outliers_colors)) == 1) {
 
       dummy_data <- data.frame(out_high_tbl[1,]) %>%
-        dplyr::mutate(cat = c("Out"), color = c(out_high_color))
+        dplyr::mutate(cat = c("Out"),
+                      color = c(out_high_color),
+                      band = levels(in_rast_fort$band)[1])
       plot_gg <- plot_gg + ggplot2::geom_polygon(data = dummy_data,
                                                  ggplot2::aes(x = x,
                                                               y = y,
@@ -501,7 +509,8 @@ plot_rast_gg <- function(
 
       dummy_data <- data.frame(rbind(out_high_tbl[2,], out_low_tbl[1,])) %>%
         dplyr::mutate(cat = c("High","Low"),
-                      color = c(out_low_color, out_high_color))
+                      color = c(out_low_color, out_high_color),
+                      band = levels(in_rast_fort$band)[1])
       plot_gg <- plot_gg + ggplot2::geom_polygon(data = dummy_data,
                                                  ggplot2::aes(x = x, y = y,
                                                               colour = color))
@@ -549,9 +558,7 @@ plot_rast_gg <- function(
   plot_gg <- plot_gg +
     ggplot2::coord_fixed()
 
-  if (rastinfo$nbands > 1) {
-    plot_gg <- plot_gg + ggplot2::facet_wrap(~band, nrow = facet_rows)
-  }
+
   plot_gg
 }
 
