@@ -67,7 +67,7 @@ er_polygons <- function(in_vect_crop,
     if (length(er_opts$rastres) == 2 &
         length(is.finite(er_opts$rastres) == TRUE) &
         min(er_opts$rastres, na.rm = TRUE) > 0) {
-      er_opts$rastres <- er_opts$rastres
+      rastres <- er_opts$rastres
       supersample <- 1
       # ______________________________________________________________________
       # if "supersampling" requested, resample input raster to higher     ####

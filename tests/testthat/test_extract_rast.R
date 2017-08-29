@@ -22,7 +22,7 @@ testthat::test_that("Test On polygons extraction", {
   out <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
                       verbose = FALSE)
   expect_is(out, "list")
-  out <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = FALSE)
+  out <- extract_rast(in_rast, in_polys, selbands = c(2,3), verbose = FALSE)
   expect_is(out, "list")
   # Check that chunked and non-chunked processing yields the same results
   out  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
