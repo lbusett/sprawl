@@ -31,95 +31,28 @@ crop_vect <- function(in_vect,
   #   Check arguments                                                       ####
   vectype <- get_spatype(in_vect)
   objtype <- get_spatype(in_obj)
-
   if (!vectype %in% c("sfobject", "spobject", "vectfile")) {
     stop("crop_vect --> in_vect is not a valid vector object (sp, sf or ",
          "vector file")
   }
-
   if (objtype == "none") {
     stop("crop_vect --> in_obj is not a valid spatial object (sp, sf, vector ",
-         "file, raster or raster file name")
+         "file, raster or raster file name) or sprawlext object")
   }
-
-  #   __________________________________________________________________________
-  #   If both in_vect and in_obj are sp objects, use `raster::crop`         ####
-
-  if (vectype == "spobject" & objtype == "spobject") {
-    out_vec  <- crop(in_vect, in_obj)
-    if (!as_sp) {
-      out_vec <- sf::st_as_sf(out_vec)
-    }
-    return(out_vec)
-  }
-
-  #   __________________________________________________________________________
-  #   Otherwise,  retrieve the extent of in_obj, then perform cropping      ####
-  #   using st_intersection or crop on the basis of the class of in_vect
-
-  if (objtype == "none") {
-    stop("crop_sf --> in_obj is not a valid spatial object (sp, sf, vector ",
-         "file, raster or rasterfile")
-  }
-  if (objtype %in% c("spobject", "rastobject")) {
-    ext_in  <- raster::extent(in_obj)
-    crs_ext <- proj4string(in_obj)
-  }
-  if (objtype == "rastfile") {
-    ext_in <- in_obj %>%
-      raster::raster() %>%
-      raster::extent()
-    crs_ext <- proj4string(in_obj)
-  }
-  if (objtype == "sfobject"){
-    ext_in  <- sf::st_bbox(in_obj)[c(1,3,2,4)]
-    crs_ext <- st_crs(ext_in)
-  }
-  if (objtype == "vectfile") {
-    ext_in <- in_obj %>%
-      read_vect() %>%
-      raster::extent()[c(1,3,2,4)]
-    crs_ext <- st_crs(ext_in)
-  }
-
-  if (vectype == "vectfile") {
-    in_vect  <- read_vect(in_vect)
-  }
-
-  if (vectype %in% c("vectfile", "sfobject")) {
-    crs_vect <- sf::st_crs(in_vect)$proj4string
+  if (vectype == "sprawlext") {
+    in_vect <- as(in_vect, "sfc_POLYGON")
   } else {
-    crs_vect <- sp::proj4string(in_vect)
+    in_vect <- cast_vect(in_vect, "sfobject")
+  }
+  obj_bbox  <- get_extent(in_obj)
+  invect_proj <- get_proj4string(in_vect)
+  inobj_proj  <- get_proj4string(in_obj)
+  obj_boundaries <- as(obj_bbox, "sfc_POLYGON")
+  if (invect_proj != inobj_proj) {
+    obj_boundaries <- sf::st_transform(obj_boundaries, invect_proj)
   }
 
-  if (vectype == "sfobject") {
-    ext_poly   <- sf::st_as_sfc(c(paste0("POLYGON((",
-                                         ext_in[1], " ", ext_in[3], ", ",
-                                         ext_in[1], " ", ext_in[4], ", ",
-                                         ext_in[2], " ", ext_in[4], ", ",
-                                         ext_in[2], " ", ext_in[3], ", ",
-                                         ext_in[1], " ", ext_in[3], "",
-                                         "))")),
-                                crs = crs_ext)
-
-    in_vect  <- sf::st_set_agr(in_vect, "constant")
-    # ext_poly <- sf::st_set_agr(ext_poly,  "constant")
-    if (!(crs_ext == crs_vect)) {
-      ext_poly <- sf::st_transform(ext_poly, crs_vect)
-    }
-    crop_vect <- sf::st_intersection(in_vect, ext_poly)
-
-    if (as_sp) {
-      crop_vect <- as(crop_vect, "Spatial")
-    }
-  } else {
-    if (!(crs_ext == crs_vect)) {
-      ext_poly <- sf::st_transform(ext_poly, crs_vect)
-    }
-    crop_vect <- raster::crop(in_vect, ext_in)
-    if (!as_sp) {
-      crop_vect <- sf::st_as_sf(crop_vect)
-    }
-  }
-  return(crop_vect)
+  sf::st_agr(in_vect) = "constant"
+  cropped_vect <- sf::st_intersection(in_vect, obj_boundaries)
+  return(cropped_vect)
 }
