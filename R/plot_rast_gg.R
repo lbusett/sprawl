@@ -297,6 +297,7 @@ plot_rast_gg <- function(
 
   in_rast_fort <- ggplot2::fortify(in_rast, format = "long") %>%
     data.table::as.data.table()
+  names(in_rast_fort)[1:2] <- c("x", "y")
 
   #   __________________________________________________________________________
   #   If band_names not passed use the band names found in the file - these are

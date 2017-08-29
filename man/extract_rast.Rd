@@ -30,7 +30,7 @@ Can be either:
 bands to be processed (e.g., c(1, 10). Default: NULL, meaning that all bands
 will be processed}
 
-\item{rastres}{\code{numeric}, if not null, the input raster is resampled to \code{rastres}
+\item{rastres}{\code{numeric(2)}, if not null, the input raster is resampled to \code{rastres}
 prior to data extraction using nearest neighbour resampling. This is useful
 in case the polygons are small with respect to \code{in_rast} resolution,
 Default: NULL (meaning no resampling is done)}

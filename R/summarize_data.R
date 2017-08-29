@@ -12,8 +12,9 @@
 #' @param band_n PARAM_DESCRIPTION
 #' @param selband PARAM_DESCRIPTION
 #' @return `list`
+#' @export
 #' @importFrom stats median sd
-#'
+
 summarize_data <- function(in_data,
                            var,
                            comp_quant,

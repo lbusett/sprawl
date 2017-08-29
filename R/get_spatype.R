@@ -196,3 +196,15 @@ get_spatype.Spatial <- function(object,
                                 abort = FALSE) {
   "spobject"
 }
+
+#   ____________________________________________________________________________
+#   Method for "sprawlext"                                                    ####
+
+#' @rdname get_spatype
+#' @method get_spatype Spatial
+#' @export
+get_spatype.sprawlext <- function(object,
+                                abort = FALSE) {
+  "sprawlext"
+}
+

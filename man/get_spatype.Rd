@@ -8,6 +8,7 @@
 \alias{get_spatype.sf}
 \alias{get_spatype.sfc}
 \alias{get_spatype.Spatial}
+\alias{get_spatype.sprawlext}
 \title{check the "spatial type" of an object or file}
 \usage{
 get_spatype(object, abort = FALSE)
@@ -21,6 +22,8 @@ get_spatype(object, abort = FALSE)
 \method{get_spatype}{sf}(object, abort = FALSE)
 
 \method{get_spatype}{sfc}(object, abort = FALSE)
+
+\method{get_spatype}{Spatial}(object, abort = FALSE)
 
 \method{get_spatype}{Spatial}(object, abort = FALSE)
 }

@@ -2,36 +2,29 @@
 % Please edit documentation in R/er_points.R
 \name{er_points}
 \alias{er_points}
-\title{helper for extract_rast for points extraction}
+\title{helper for `extract_rast`` for points extraction}
 \usage{
-er_points(in_vect, in_rast, n_selbands, selbands, seldates, id_field, long,
-  date_check, verbose, addfeat, addgeom, keep_null)
+er_points(in_vect_crop, in_vect, in_rast, seldates, selbands, n_selbands,
+  date_check, er_opts, outside_feat)
 }
 \arguments{
-\item{in_vect}{\code{sf} object on which features the zonal statistics has to be computed}
+\item{in_vect_crop}{PARAM_DESCRIPTION}
 
-\item{in_rast}{single- or multi-band \code{rasterStack} object containing values to be extracted
-and summarized}
+\item{in_vect}{PARAM_DESCRIPTION}
 
-\item{n_selbands}{PARAM_DESCRIPTION}
-
-\item{selbands}{PARAM_DESCRIPTION}
+\item{in_rast}{PARAM_DESCRIPTION}
 
 \item{seldates}{PARAM_DESCRIPTION}
 
-\item{id_field}{PARAM_DESCRIPTION}
+\item{selbands}{PARAM_DESCRIPTION}
 
-\item{long}{PARAM_DESCRIPTION}
+\item{n_selbands}{PARAM_DESCRIPTION}
 
 \item{date_check}{PARAM_DESCRIPTION}
 
-\item{verbose}{PARAM_DESCRIPTION}
+\item{er_opts}{PARAM_DESCRIPTION}
 
-\item{addfeat}{PARAM_DESCRIPTION}
-
-\item{addgeom}{PARAM_DESCRIPTION}
-
-\item{keep_null}{PARAM_DESCRIPTION}
+\item{outside_feat}{PARAM_DESCRIPTION}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -41,11 +34,6 @@ FUNCTION_DESCRIPTION
 }
 \details{
 DETAILS
-}
-\examples{
-\dontrun{
- #EXAMPLE1
- }
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

@@ -1,24 +1,16 @@
-#' @title helper for extract_rast for points extraction
+#' @title helper for `extract_rast`` for points extraction
 #' @description FUNCTION_DESCRIPTION
-#' @param in_vect `sf` object on which features the zonal statistics has to be computed
-#' @param in_rast single- or multi-band `rasterStack` object containing values to be extracted
-#'   and summarized
-#' @param n_selbands PARAM_DESCRIPTION
-#' @param selbands PARAM_DESCRIPTION
+#' @param in_vect_crop PARAM_DESCRIPTION
+#' @param in_vect PARAM_DESCRIPTION
+#' @param in_rast PARAM_DESCRIPTION
 #' @param seldates PARAM_DESCRIPTION
-#' @param id_field PARAM_DESCRIPTION
-#' @param long PARAM_DESCRIPTION
+#' @param selbands PARAM_DESCRIPTION
+#' @param n_selbands PARAM_DESCRIPTION
 #' @param date_check PARAM_DESCRIPTION
-#' @param verbose PARAM_DESCRIPTION
-#' @param addfeat PARAM_DESCRIPTION
-#' @param addgeom PARAM_DESCRIPTION
-#' @param keep_null PARAM_DESCRIPTION
+#' @param er_opts PARAM_DESCRIPTION
+#' @param outside_feat PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples
-#' \dontrun{
-#'  #EXAMPLE1
-#'  }
 #' @rdname er_points
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
@@ -29,42 +21,33 @@
 #' @importFrom tidyr gather
 #' @importFrom magrittr %>%
 
-er_points <- function(in_vect,
-                      in_rast,
-                      n_selbands,
-                      selbands,
-                      seldates,
-                      id_field,
-                      long,
-                      date_check,
-                      verbose,
-                      addfeat,
-                      addgeom,
-                      keep_null) {
-
-  #TODO recheck this function, make it more similar to polygon extraction!
+er_points <- function(in_vect_crop,
+                        in_vect,
+                        in_rast,
+                        seldates,
+                        selbands,
+                        n_selbands,
+                        date_check,
+                        er_opts,
+                        outside_feat) {
 
   # To avoid NOTES on check
   mdxtnq <- value  <- . <- NULL
 
-  if (verbose) {
+  if (er_opts$verbose) {
     message("extract_rast --> Cropping the zones object on extent ",
             "of the raster")
   }
-  crop               <- er_crop_object(in_vect, in_rast, id_field, verbose)
-  in_vect_crop <- crop$in_vect_crop
-  outside_feat <- crop$outside_feat
 
-  if (verbose) {
+  if (er_opts$verbose) {
     message("extract_rast --> On point and lines vector objects, the standard",
-            " `raster::extract` function is used. This could be slow !")
+            "extract function is used. This could be slow!")
   }
-
   tserie <- matrix(nrow = n_selbands, ncol = dim(in_vect_crop)[1])
 
   for (band in seq_len(n_selbands)) {
     selband <- selbands[band]
-    if (verbose) {
+    if (er_opts$verbose) {
       message("extract_rast --> Extracting data from ",
               ifelse(date_check, "date: ", "band: "),
               seldates[band])
@@ -91,7 +74,7 @@ er_points <- function(in_vect,
   # If some features are outside the raster and add_null = TRUE, add empty ####
   # columns for the missing features at the end of the table
 
-  if (keep_null & !is.null(outside_feat)) {
+  if (er_opts$keep_null & !is.null(outside_feat)) {
 
     for (feat in seq_along(outside_feat$outside_ids)) {
 
@@ -105,7 +88,7 @@ er_points <- function(in_vect,
   }
 
   # if long format is selected, reshape
-  if (long) {
+  if (er_opts$long_format) {
 
     tserie <- tserie %>%
       tidyr::gather(mdxtnq, value, -1, -2) %>%
@@ -114,35 +97,31 @@ er_points <- function(in_vect,
       dplyr::right_join(tibble::as_data_frame(in_vect), by = "mdxtnq") %>%
       sf::st_as_sf()
 
-    if (!is.null(id_field)) {
+    if (!is.null(er_opts$id_field)) {
       tserie <- tserie %>%
         dplyr::select(-mdxtnq) %>%
         dplyr::select(
-          c(1,2, which(names(.) == id_field),
-            which(!(names(.) %in% c("date", "band_n", eval(id_field)))))
+          c(1,2, which(names(.) == er_opts$id_field),
+            which(!(names(.) %in% c("date", "band_n", eval(er_opts$id_field)))))
           )
     } else {
       names(tserie)[3] <- "id_feat"
     }
-    if (!addgeom) {
+    if (!er_opts$addgeom) {
       sf::st_geometry(tserie) <- NULL
     }
 
-    if (!addfeat) {
+    if (!er_opts$addfeat) {
       sf::st_geometry(tserie) <- NULL
       tserie <- tserie[c(1:4),]
     }
 
   } else {
-    if (!is.null(id_field) ) {
-      if (keep_null) {
-        names(tserie)[3:(dim(tserie)[2])] <- t(
-          rbind(tibble::as_data_frame(in_vect[, eval(id_field)])[,1])
-        )
+    if (!is.null(er_opts$id_field) ) {
+      if (er_opts$keep_null) {
+        names(tserie)[3:(dim(tserie)[2])] <- in_vect[[eval(er_opts$id_field)]]
       } else {
-        names(tserie)[3:dim(tserie)[2]] <- t(
-          rbind(tibble::as_data_frame(in_vect_crop[, eval(id_field)])[,1])
-        )
+        names(tserie)[3:(dim(tserie)[2])] <- in_vect_crop[[eval(er_opts$id_field)]]
       }
     }
 
