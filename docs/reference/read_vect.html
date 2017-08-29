@@ -190,20 +190,20 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
 #&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
 #&gt; # A tibble: 13 x 5
 #&gt;       id       lc_type category sup_catego          geometry
-#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt; &lt;S3: sfc_POLYGON&gt;
-#&gt;  1     1      forest_1   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  2     2      forest_2   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  3     3       urban_1    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt;  4     4    cropland_1 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  5     5    cropland_2 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  6     6      forest_3   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  7     7    reiver_bed    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt;  8     8    cropland_3 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  9     9  urban_2_part    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt; 11    11         water    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt; 12    12    small_feat    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt; 13    13      out_feat    Other      Other &lt;S3: sfc_POLYGON&gt;</div><div class='input'>
+#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;  &lt;simple_feature&gt;
+#&gt;  1     1      forest_1   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  2     2      forest_2   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  3     3       urban_1    Other      Other &lt;POLYGON ((12...&gt;
+#&gt;  4     4    cropland_1 Cropland Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  5     5    cropland_2 Cropland Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  6     6      forest_3   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  7     7    reiver_bed    Other      Other &lt;POLYGON ((12...&gt;
+#&gt;  8     8    cropland_3 Cropland Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  9     9  urban_2_part    Other      Other &lt;POLYGON ((12...&gt;
+#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt; 11    11         water    Other      Other &lt;POLYGON ((12...&gt;
+#&gt; 12    12    small_feat    Other      Other &lt;POLYGON ((12...&gt;
+#&gt; 13    13      out_feat    Other      Other &lt;POLYGON ((12...&gt;</div><div class='input'>
 <span class='co'># open a shapefile as a `sp` object</span>
  <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)

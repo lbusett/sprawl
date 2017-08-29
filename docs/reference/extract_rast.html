@@ -177,7 +177,7 @@ will be processed</p></td>
     </tr>
     <tr>
       <th>rastres</th>
-      <td><p><code>numeric</code>, if not null, the input raster is resampled to <code>rastres</code>
+      <td><p><code>numeric(2)</code>, if not null, the input raster is resampled to <code>rastres</code>
 prior to data extraction using nearest neighbour resampling. This is useful
 in case the polygons are small with respect to <code>in_rast</code> resolution,
 Default: NULL (meaning no resampling is done)</p></td>
@@ -281,7 +281,7 @@ extracted (see examples).</p>
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
-<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>extract_rast --&gt; Extracting: in_rast data on zones of : in_polys</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 552 features and 13 fields
+<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>extract_rast --&gt; Extracting: in_rast data on zones of : in_polys</span></div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Cropping: in_rast on extent of: in_vect_crop</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `rast_object`</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 552 features and 13 fields
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12897990 ymin: 1685995 xmax: 12971590 ymax: 1780601
@@ -301,27 +301,27 @@ extracted (see examples).</p>
 #&gt;  9       1      9 2013-03-06    61 3937.738  3917 452.0158  3039  4850     1
 #&gt; 10       1     10 2013-03-14    61 4281.672  4282 503.7382  3143  5320     1
 #&gt; # ... with 542 more rows, and 4 more variables: lc_type &lt;fctr&gt;,
-#&gt; #   category &lt;fctr&gt;, sup_catego &lt;fctr&gt;, geometry &lt;S3: sfc_POLYGON&gt;</div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; Simple feature collection with 147384 features and 10 fields
+#&gt; #   category &lt;fctr&gt;, sup_catego &lt;fctr&gt;, geometry &lt;simple_feature&gt;</div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; Simple feature collection with 147384 features and 10 fields
 #&gt; geometry type:  POINT
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12897820 ymin: 1685995 xmax: 12971250 ymax: 1780279
 #&gt; epsg (SRID):    NA
-#&gt; proj4string:    NA
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 #&gt; # A tibble: 147,384 x 11
-#&gt;    mdxtnq band_n       date N_PIX     N value    id  lc_type category
-#&gt;     &lt;int&gt;  &lt;int&gt;     &lt;date&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;
-#&gt;  1      1      1 2013-01-01    61     1  4454     1 forest_1   Forest
-#&gt;  2      1      1 2013-01-01    61     2  4260     1 forest_1   Forest
-#&gt;  3      1      1 2013-01-01    61     3  4224     1 forest_1   Forest
-#&gt;  4      1      1 2013-01-01    61     4  4344     1 forest_1   Forest
-#&gt;  5      1      1 2013-01-01    61     5  4489     1 forest_1   Forest
-#&gt;  6      1      1 2013-01-01    61     6  4970     1 forest_1   Forest
-#&gt;  7      1      1 2013-01-01    61     7  3987     1 forest_1   Forest
-#&gt;  8      1      1 2013-01-01    61     8  3904     1 forest_1   Forest
-#&gt;  9      1      1 2013-01-01    61     9  3904     1 forest_1   Forest
-#&gt; 10      1      1 2013-01-01    61    10  4768     1 forest_1   Forest
+#&gt;    id_feat band_n       date N_PIX     N value    id  lc_type category
+#&gt;      &lt;int&gt;  &lt;int&gt;     &lt;date&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;
+#&gt;  1       1      1 2013-01-01    61     1  4454     1 forest_1   Forest
+#&gt;  2       1      1 2013-01-01    61     2  4260     1 forest_1   Forest
+#&gt;  3       1      1 2013-01-01    61     3  4224     1 forest_1   Forest
+#&gt;  4       1      1 2013-01-01    61     4  4344     1 forest_1   Forest
+#&gt;  5       1      1 2013-01-01    61     5  4489     1 forest_1   Forest
+#&gt;  6       1      1 2013-01-01    61     6  4970     1 forest_1   Forest
+#&gt;  7       1      1 2013-01-01    61     7  3987     1 forest_1   Forest
+#&gt;  8       1      1 2013-01-01    61     8  3904     1 forest_1   Forest
+#&gt;  9       1      1 2013-01-01    61     9  3904     1 forest_1   Forest
+#&gt; 10       1      1 2013-01-01    61    10  4768     1 forest_1   Forest
 #&gt; # ... with 147,374 more rows, and 2 more variables: sup_catego &lt;fctr&gt;,
-#&gt; #   geometry &lt;S3: sfc_POINT&gt;</div></pre>
+#&gt; #   geometry &lt;simple_feature&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -159,7 +159,7 @@ See the description of the arguments for details on their use
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
  plot_rast_gg(in_rast, basemap = "osm",
                   palette_type = "diverging",
-                  na.value = 0,
+                  na.value = 0, na.color = "transparent",
                   title = "OLI", subtitle = "Band 2")
 
  #Change basemap and transparency
@@ -167,7 +167,8 @@ See the description of the arguments for details on their use
                   palette_type = "diverging",
                   palette_name = "RdYlBu",
                   no_axis = T,
-                  na.value = 0, transparency = 0.2,
+                  na.value = 0, na.color = "transparent",
+                  transparency = 0.2,
                   title = "OLI - 15/06/2017",
                   subtitle = "Band 2 - Green")
 
@@ -176,7 +177,7 @@ See the description of the arguments for details on their use
   "oli_multi_1000.tif", package = "sprawl.data"))
  plot_rast_gg(in_rast, basemap = "osm", bands_to_plot = c(1,4),
                   palette_type = "diverging",
-                  na.value = 0,
+                  na.value = 0, na.color = "transparent",
                   title = "OLI", subtitle = "Band 2 vs band 4",
                   facet_row = 1)
 
@@ -189,13 +190,15 @@ See the description of the arguments for details on their use
              palette_type = "diverging", palette_name = "RdYlBu",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 
- # limits adjusted on the 1st and 100th percentile to remove very low
- # values outliers and better use the palette
- plot_rast_gg(in_rast,
+ # limits adjusted on the 10th and 99.9th percentile to remove very low
+ # values outliers and better use the palette on high values. Note that
+ # outliers can be set as transparent!
+ plot_rast_gg(in_rast, basemap = "osm",
              palette_type = "diverging", palette_name = "RdYlBu",
-             zlims = c(0.2, 0.8), zlims_type = "percs",
+             zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
-             outliers_style = "recolor", outliers_colors = "grey90")
+             outliers_style = "recolor",
+             outliers_colors = c("transparent", "purple"))
 }
 }
 \author{

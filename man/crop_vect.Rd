@@ -28,7 +28,22 @@ DETAILS
 }
 \examples{
 \dontrun{
- #EXAMPLE1
+ library(raster)
+ library(sf)
+ in_polys <- read_vect(system.file("extdata/shapes", "lc_polys.shp",
+                                         package = "sprawl.data"))
+ in_rast <- raster::raster(system.file("extdata/MODIS_test",
+                                  "EVIts_test.tif", package = "sprawl.data"))
+ in_polys_cropped <- crop_vect(in_polys, in_rast)
+
+ # Retrieve a polygon representing in_rast extent and reproject it
+ rast_extent <- as(get_extent(in_rast), "sfc_POLYGON") \%>\%
+    sf::st_transform(get_proj4string(in_polys))
+ par(mfrow=c(1,2))
+ plot(in_polys[1])
+ plot(rast_extent, add = T)
+ plot(in_polys_cropped[1])
+ plot(rast_extent, add = T)
  }
 }
 \seealso{

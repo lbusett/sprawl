@@ -186,27 +186,33 @@
 #&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
 #&gt; # A tibble: 13 x 5
 #&gt;       id       lc_type category sup_catego          geometry
-#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt; &lt;S3: sfc_POLYGON&gt;
-#&gt;  1     1      forest_1   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  2     2      forest_2   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  3     3       urban_1    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt;  4     4    cropland_1 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  5     5    cropland_2 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  6     6      forest_3   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  7     7    reiver_bed    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt;  8     8    cropland_3 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt;  9     9  urban_2_part    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-#&gt; 11    11         water    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt; 12    12    small_feat    Other      Other &lt;S3: sfc_POLYGON&gt;
-#&gt; 13    13      out_feat    Other      Other &lt;S3: sfc_POLYGON&gt;</div><div class='input'> <span class='no'>byvar</span>     <span class='kw'>&lt;-</span> <span class='st'>"category"</span>
+#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;  &lt;simple_feature&gt;
+#&gt;  1     1      forest_1   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  2     2      forest_2   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  3     3       urban_1    Other      Other &lt;POLYGON ((12...&gt;
+#&gt;  4     4    cropland_1 Cropland Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  5     5    cropland_2 Cropland Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  6     6      forest_3   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  7     7    reiver_bed    Other      Other &lt;POLYGON ((12...&gt;
+#&gt;  8     8    cropland_3 Cropland Vegetation &lt;POLYGON ((12...&gt;
+#&gt;  9     9  urban_2_part    Other      Other &lt;POLYGON ((12...&gt;
+#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;POLYGON ((12...&gt;
+#&gt; 11    11         water    Other      Other &lt;POLYGON ((12...&gt;
+#&gt; 12    12    small_feat    Other      Other &lt;POLYGON ((12...&gt;
+#&gt; 13    13      out_feat    Other      Other &lt;POLYGON ((12...&gt;</div><div class='input'> <span class='no'>byvar</span>     <span class='kw'>&lt;-</span> <span class='st'>"category"</span>
  <span class='no'>out_shape</span> <span class='kw'>&lt;-</span> <span class='fu'>dissolve_shape</span>(<span class='no'>indata</span>, <span class='no'>byvar</span>)
- <span class='no'>out_shape</span></div><div class='output co'>#&gt; # A tibble: 3 x 5
-#&gt;   category       id  lc_type sup_catego       geometry
-#&gt;     &lt;fctr&gt;    &lt;chr&gt;    &lt;chr&gt;     &lt;fctr&gt;         &lt;list&gt;
-#&gt; 1 Cropland variable variable Vegetation &lt;dbl [18 x 2]&gt;
-#&gt; 2   Forest variable variable Vegetation &lt;dbl [12 x 2]&gt;
-#&gt; 3    Other variable variable      Other &lt;dbl [25 x 2]&gt;</div><div class='input'> </div></pre>
+ <span class='no'>out_shape</span></div><div class='output co'>#&gt; Simple feature collection with 3 features and 4 fields
+#&gt; geometry type:  MULTIPOLYGON
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 120.1778 ymin: 15.15353 xmax: 121.3394 ymax: 16.09343
+#&gt; epsg (SRID):    4326
+#&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
+#&gt; # A tibble: 3 x 5
+#&gt;   category       id  lc_type sup_catego          geometry
+#&gt;     &lt;fctr&gt;    &lt;chr&gt;    &lt;chr&gt;     &lt;fctr&gt;  &lt;simple_feature&gt;
+#&gt; 1 Cropland variable variable Vegetation &lt;MULTIPOLYGON...&gt;
+#&gt; 2   Forest variable variable Vegetation &lt;MULTIPOLYGON...&gt;
+#&gt; 3    Other variable variable      Other &lt;MULTIPOLYGON...&gt;</div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
