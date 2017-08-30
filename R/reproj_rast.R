@@ -28,7 +28,7 @@
 #' @importFrom gdalUtils gdalwarp
 reproj_rast <- function(object,
                         out_proj,
-                        out_extent   = NULL,
+                        out_res      = NULL,
                         resamp_meth  = "near",
                         out_type     = "rastobject",
                         out_format   = "GTiff",
@@ -55,19 +55,21 @@ reproj_rast <- function(object,
     te = reproj_extent(out_extent, get_proj4string(object))
   }
 
-  out <- gdalUtils::gdalwarp(srcfile = temp_vrt,
-                             dstfile = out_filename,
-                             s_srs   = get_proj4string(object),
-                             t_srs   = "+init=epsg:3035 +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
-                             # te      = NULL,
-                             # tr    = tr
-                             r       = resamp_meth,
-                             multi   = TRUE,
-                             to      = ifelse(out_format == "GTiff",
-                                              paste0("COMPRESS=", compression),
-                                              ""),
-                             overwrite = TRUE, verbose = T, output_Raster = T
-                             )
+
+
+  out <- gdalUtils::gdalwarp(
+    srcfile = temp_vrt,
+    dstfile = out_filename,
+    s_srs   = get_proj4string(object),
+    t_srs   = "+init=epsg:3035 +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+    tr      = out_res,
+    r       = resamp_meth,
+    multi   = TRUE,
+    to      = ifelse(out_format == "GTiff",
+                     paste0("COMPRESS=", compression),
+                     ""),
+    overwrite = TRUE, verbose = T, output_Raster = T
+  )
 
   if (out_type == "rastobject") {
     return(out)
