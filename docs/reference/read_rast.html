@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check the validity of the input proj4string — check_proj4string • sprawl</title>
+<title>read a raster file from disk — read_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,43 +135,40 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check the validity of the input proj4string</h1>
+    <h1>read a raster file from disk</h1>
     </div>
 
     
-    <p>helper function used to check that the input proj4string object
-is a valid string or a CRS object.</p>
+    <p>reads a raster file to a <code>RasterLayer</code>, <code>RasterStack</code> or
+<code>RasterBrick</code>, automatically checking if the input file is valid and is
+a single- or multi-band object.</p>
     
 
-    <pre class="usage"><span class='fu'>check_proj4string</span>(<span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='co'># S3 method for default</span>
-<span class='fu'>check_proj4string</span>(<span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='co'># S3 method for character</span>
-<span class='fu'>check_proj4string</span>(<span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
-<span class='co'># S3 method for CRS</span>
-<span class='fu'>check_proj4string</span>(<span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>read_rast</span>(<span class='no'>object</span>, <span class='kw'>bands_to_read</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>proj4string</th>
-      <td><p><code>character</code> or <code>CRS</code> corresponding to the
-proj4string to be checked</p></td>
+      <th>object</th>
+      <td><p><code>character</code> filename to be read</p></td>
     </tr>
     <tr>
-      <th>abort</th>
-      <td><p><code>logical</code> if TRUE, the function aborts in case no proj4string or
-invalid proj4string is found, Default: FALSE</p></td>
+      <th>bands_to_read</th>
+      <td><p><code>numeric array</code> If the input is a multiband raster,
+band numbers to be read (e.g., bands_to_read = c(1,5,7) will read only the
+specified bands in a <code>RasterStack</code>)</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> If FALSE, processing mesasges are suppressed,
+Default: TRUE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>character</code> proj4string of the object or file</p>
+    <p>a <code>RasterLayer</code>, <code>RasterStack</code> or <code>RasterBrick</code> object</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -179,13 +176,42 @@ invalid proj4string is found, Default: FALSE</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>check_proj4string</span>(<span class='st'>"+init=epsg:32632"</span>)</div><div class='output co'>#&gt; [1] "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
-<span class='fu'>check_proj4string</span>(<span class='st'>"example of invalid string"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: check_proj4string --&gt; Invalid proj4string detected!</span></div><div class='output co'>#&gt; [1] "invalid"</div><div class='input'>
-<span class='fu'>library</span>(<span class='no'>sp</span>)
-<span class='fu'>check_proj4string</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='st'>"+init=epsg:32632"</span>))</div><div class='output co'>#&gt; [1] "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
-</div><div class='input'><span class='fu'>library</span>(<span class='no'>raster</span>)
-<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .rasterObjectFromFile(x, band = band, objecttype = "RasterLayer",     ...): Cannot create a RasterLayer object from this file.</span></div><div class='input'><span class='fu'>check_proj4string</span>(<span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; <span class='error'>Error in check_proj4string(in_rast@crs): trying to get slot "crs" from an object of a basic class ("character") with no slots</span></div></pre>
+    <pre class="examples"><div class='input'> <span class='co'># read a singleband file</span>
+  <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/REYE_test"</span>, <span class='st'>"REYE_2016_185_gNDVI.tif"</span>,
+                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `object`</span></div><div class='output co'>#&gt; class       : RasterLayer 
+#&gt; dimensions  : 1763, 2081, 3668803  (nrow, ncol, ncell)
+#&gt; resolution  : 5, 5  (x, y)
+#&gt; extent      : 465485, 475890, 5004050, 5012865  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0 
+#&gt; data source : /home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/REYE_test/REYE_2016_185_gNDVI.tif 
+#&gt; names       : REYE_2016_185_gNDVI 
+#&gt; values      : -0.472001, 0.9999797  (min, max)
+#&gt; </div><div class='input'>
+  <span class='co'># read a multiband file</span>
+  <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
+                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `object`</span></div><div class='output co'>#&gt; class       : RasterBrick 
+#&gt; dimensions  : 447, 331, 147957, 46  (nrow, ncol, ncell, nlayers)
+#&gt; resolution  : 231.6564, 231.6564  (x, y)
+#&gt; extent      : 12897004, 12973683, 1685995, 1789545  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs 
+#&gt; data source : /home/lb/R/x86_64-pc-linux-gnu-library/3.4/sprawl.data/extdata/MODIS_test/EVIts_test.tif 
+#&gt; names       : EVIts_test.1, EVIts_test.2, EVIts_test.3, EVIts_test.4, EVIts_test.5, EVIts_test.6, EVIts_test.7, EVIts_test.8, EVIts_test.9, EVIts_test.10, EVIts_test.11, EVIts_test.12, EVIts_test.13, EVIts_test.14, EVIts_test.15, ... 
+#&gt; min values  :         -621,         -813,         -834,         -559,         -323,         -680,         -557,        -1886,         -861,          -884,          -917,          -550,          -540,         -1948,         -1912, ... 
+#&gt; max values  :         9971,         9167,         9307,         9988,         8706,         9767,         9740,         9939,         8452,          9358,          9983,          8504,          9858,          9976,          9980, ... 
+#&gt; </div><div class='input'>
+  <span class='co'># read a multiband file selecting specific bands</span>
+  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>, <span class='kw'>bands_to_read</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>10</span>))</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `object`</span></div><div class='output co'>#&gt; class       : RasterStack 
+#&gt; dimensions  : 447, 331, 147957, 2  (nrow, ncol, ncell, nlayers)
+#&gt; resolution  : 231.6564, 231.6564  (x, y)
+#&gt; extent      : 12897004, 12973683, 1685995, 1789545  (xmin, xmax, ymin, ymax)
+#&gt; coord. ref. : +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs 
+#&gt; names       : EVIts_test.10, EVIts_test.15 
+#&gt; min values  :          -884,         -1912 
+#&gt; max values  :          9358,          9980 
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -202,8 +228,6 @@ invalid proj4string is found, Default: FALSE</p></td>
     <h2>Author</h2>
     
 Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
-
-Luigi Ranghetti, phD (2017) <a href='mailto:ranghetti.l@irea.cnr.it'>ranghetti.l@irea.cnr.it</a>
 
   </div>
 </div>

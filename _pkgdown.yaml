@@ -12,6 +12,7 @@ reference:
   - title: Raster processing
     desc: ~
     contents:
+      - '`read_rast`'
       - '`aggregate_rast`'
       - '`cast_rast`'
       - '`crop_rast`'
@@ -33,6 +34,7 @@ reference:
       - '`get_rastinfo`'
       - '`get_spatype`'
       - '`get_proj4string`'
+      - '`get_projunits`'
       - '`get_extent`'
   - title: Visualization and plotting
     desc: ~
@@ -49,6 +51,7 @@ reference:
       - '`sprawlext`'
       - '`build_testraster`'
       - '`build_testshape`'
+      - '`check_proj4string`'
       - '`convert_rastdtype`'
       - '`datetodoy`'
       - '`doytodate`'

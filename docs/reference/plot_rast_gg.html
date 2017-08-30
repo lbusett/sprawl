@@ -156,15 +156,15 @@ values or quantiles ranges (args <code>zlims</code>, <code>zlims_type</code>)</p
     <p>See the description of the arguments for details on their use</p>
     
 
-    <pre class="usage"><span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>band_names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>bands_to_plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"vals"</span>, <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"recolor"</span>,
+    <pre class="usage"><span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>, <span class='kw'>band_names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>bands_to_plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"vals"</span>, <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"recolor"</span>,
   <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"grey10"</span>, <span class='st'>"grey90"</span>), <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"gradient"</span>,
   <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>leg_breaks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>no_axis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='kw pkg'>ggplot2</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_bw</a></span>(), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fu'>theme_bw</span>(), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -173,6 +173,13 @@ values or quantiles ranges (args <code>zlims</code>, <code>zlims_type</code>)</p
       <th>in_rast</th>
       <td><p><code>Raster</code> object to be plotted. Both mono- and multi-band
 rasters are supported</p></td>
+    </tr>
+    <tr>
+      <th>maxpixels</th>
+      <td><p><code>numeric</code> maximum number of pixels to be used for plotting <em>for
+each band</em>. Reduce this to speed-up plotting by subsampling the raster (this
+reduces qualitty!). Increase it to improve qualitty (this reduces rendering
+speed!), Default:1e5</p></td>
     </tr>
     <tr>
       <th>band_names</th>
@@ -328,7 +335,7 @@ Default: FALSE</p></td>
     <tr>
       <th>theme</th>
       <td><p><code>theme function</code> ggplot theme to be used
-(e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()</p></td>
+(e.g., theme_light()), Default: theme_bw()</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -376,14 +383,22 @@ Default: TRUE</p></td>
              <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"diverging"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
              <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"gNDVI - 14/03/2016"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"From RapidEye"</span>)</div><div class='img'><img src='plot_rast_gg-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># limits adjusted on the 10th and 99.9th percentile to remove very low</span>
- <span class='co'># values outliers and better use the palette on high values. Note that</span>
- <span class='co'># outliers can be set as transparent!</span>
- <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"osm"</span>,
+ <span class='co'># values outliers and better use the palette on high values (note that</span>
+ <span class='co'># outliers can be set as transparent!) + increase maxpixels to plot at</span>
+ <span class='co'># full resolution.</span>
+ <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"osm"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>100e5</span>,
              <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"diverging"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
              <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.10</span>, <span class='fl'>0.999</span>), <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"percs"</span>,
              <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"gNDVI - 14/03/2016"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"From RapidEye"</span>,
              <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"recolor"</span>,
-             <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"transparent"</span>, <span class='st'>"purple"</span>))</div><div class='output co'>#&gt; <span class='message'>plot_rast_gg --&gt; Reprojecting the input raster to epsg:3857</span></div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-5.png' alt='' width='700' height='432.632880098887' /></div></pre>
+             <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"transparent"</span>, <span class='st'>"purple"</span>))</div><div class='output co'>#&gt; <span class='message'>plot_rast_gg --&gt; Reprojecting the input raster to epsg:3857</span></div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='co'># Adjust `maxpixels` to speed-up rendering by sacrificing quality</span>
+ <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"osm"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e4</span>,
+             <span class='kw'>palette_type</span> <span class='kw'>=</span> <span class='st'>"diverging"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
+             <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.10</span>, <span class='fl'>0.999</span>), <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"percs"</span>,
+             <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"gNDVI - 14/03/2016"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"From RapidEye"</span>,
+             <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"recolor"</span>,
+             <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"transparent"</span>, <span class='st'>"purple"</span>))</div><div class='output co'>#&gt; <span class='message'>plot_rast_gg --&gt; Reprojecting the input raster to epsg:3857</span></div><div class='output co'>#&gt; <span class='message'>Attemping to use geom_osm without coord_map()</span></div><div class='output co'>#&gt; <span class='message'>Audotdetect projection: assuming Google Mercator (epsg 3857)</span></div><div class='img'><img src='plot_rast_gg-6.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
