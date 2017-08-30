@@ -46,9 +46,11 @@ check_proj4string.default  <- function(proj4string,
                                        abort = FALSE) {
   call <- match.call()
   if (abort == TRUE) {
-    stop("check_proj4string --> ", call[[2]], " is not a valid CRS object or proj4string. Aborting!")
+    stop("check_proj4string --> ", call[[2]], " is not a valid CRS object or ",
+         "proj4string. Aborting!")
   } else {
-    warning("check_proj4string --> ", call[[2]], " is not a valid CRS object or proj4string.")
+    warning("check_proj4string --> ", call[[2]], " is not a valid CRS object ",
+            "or proj4string.")
   }
 }
 
@@ -58,6 +60,7 @@ check_proj4string.default  <- function(proj4string,
 #' @rdname check_proj4string
 #' @method check_proj4string character
 #' @export
+#' @importFrom rgdal checkCRSArgs
 check_proj4string.character  <- function(proj4string,
                                          abort = FALSE) {
   if (rgdal::checkCRSArgs(proj4string)[[1]] == FALSE) {

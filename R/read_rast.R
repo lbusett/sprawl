@@ -34,7 +34,6 @@
 read_rast <- function(object,
                       bands_to_read = NULL,
                       verbose = TRUE) {
-
   #   __________________________________________________________________________
   #   check arguments                                                       ####
 

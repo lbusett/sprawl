@@ -160,7 +160,7 @@ See the description of the arguments for details on their use
 \examples{
 \dontrun{
 #single band plot
- in_rast <- raster::stack(system.file("extdata/OLI_test",
+ in_rast <- read_rast(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
  plot_rast_gg(in_rast, basemap = "osm",
                   palette_type = "diverging",

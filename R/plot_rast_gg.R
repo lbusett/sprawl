@@ -102,7 +102,7 @@
 #' @examples
 #' \dontrun{
 #' #single band plot
-#'  in_rast <- raster::stack(system.file("extdata/OLI_test",
+#'  in_rast <- read_rast(system.file("extdata/OLI_test",
 #'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
 #'  plot_rast_gg(in_rast, basemap = "osm",
 #'                   palette_type = "diverging",
@@ -296,6 +296,8 @@ plot_rast_gg <- function(
   rastinfo$fnames <- get_rastinfo(in_rast, verbose = FALSE)$fnames
 
   if (!is.null(basemap)) {
+    #TODO substitute this with call to create_virtrast and
+    #reproj_rast
 
     temp_vrt <- tempfile(fileext = ".vrt")
     tmp_txt <- tempfile(fileext = ".txt")

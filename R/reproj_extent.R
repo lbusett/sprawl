@@ -16,10 +16,9 @@
 #' @rdname reproj_extent
 #' @return An object of class `sprawlext` representing the reprojected extent
 #' @export
-#' @importFrom raster extent
 #' @importFrom rgdal CRSargs
-#' @importFrom sf st_multipoint st_geometry st_set_crs st_transform st_bbox
-#' @importFrom sp SpatialPoints CRS spTransform
+#' @importFrom sf st_polygon st_sfc st_transform
+#' @importFrom sp CRS
 #' @importFrom magrittr %>%
 #' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
@@ -64,7 +63,7 @@ reproj_extent <- function(ext, out_proj, in_proj = NULL, enlarge=TRUE, n_dens=1E
 
   # If in_proj and out_proj differ, reproject the shape extent
 
-  if (CRSargs(CRS(out_proj)) != CRSargs(CRS(ext@proj4string))) {
+  if (rgdal::CRSargs(sp::CRS(out_proj)) != rgdal::CRSargs(sp::CRS(ext@proj4string))) {
 
     if (enlarge) {
       in_ext <- data.frame(
