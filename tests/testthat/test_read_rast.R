@@ -1,6 +1,7 @@
 context("Read a Raster file")
 
 library(testthat)
+skip_on_travis()
 test_that("read_rast works as expected", {
 
 in_file <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
