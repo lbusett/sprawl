@@ -1,9 +1,9 @@
 context("Read a Raster file")
 
 library(testthat)
-skip_on_travis()
-test_that("read_rast works as expected", {
 
+test_that("read_rast works as expected", {
+skip_on_travis()
 in_file <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
                            package = "sprawl.data")
 expect_is(read_rast(in_file), "Raster")
