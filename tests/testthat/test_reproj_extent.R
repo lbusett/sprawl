@@ -6,8 +6,9 @@ testthat::test_that("Test reproj_extent",{
   library(sprawl.data)
   testthat::expect_error(reproj_extent(in_pts))
 
-  in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
-                                        package = "sprawl.data"))
+  in_file  <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+                          package = "sprawl.data")
+  in_rast  <- read_rast(in_file)
   # TODO replace with gird_it for showing the difference between enlarge=TRUE and FALSE
 
   # All ok - reproj from sprawlext

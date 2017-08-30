@@ -58,7 +58,7 @@ read_rast <- function(object,
     if (length(unique(rastinfo$fnames) == 1) & is.null(bands_to_read)) {
       return(raster::brick(object))
     } else {
-      return(raster::stack(object, bands = c(10,15)))
+      return(raster::stack(object, bands = bands_to_read))
     }
   }
 }

@@ -4,12 +4,13 @@ testthat::test_that("Test On polygons extraction", {
   skip_on_travis()
   library(sprawl.data)
   library(testthat)
-  in_polys       <- read_vect(system.file("extdata/shapes","lc_polys.shp",
+  in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
                                           package = "sprawl.data"),
                               stringsAsFactors = T)
-  in_rast        <- raster::stack(system.file(
-    "extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data"))
-  in_rast        <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8),
+  in_file  <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+                                package = "sprawl.data")
+  in_rast  <- read_rast(in_file)
+  in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8),
                                                     year = 2013))
 
   # check errors in input selbands
@@ -83,8 +84,9 @@ testthat::test_that("Test On points extraction", {
   library(testthat)
   in_pts   <- read_vect(system.file("extdata/shapes","randpoints.shp",
                                     package = "sprawl.data"))
-  in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
-                                        package = "sprawl.data"))
+  in_file  <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+                          package = "sprawl.data")
+  in_rast  <- read_rast(in_file)
   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
   out      <- extract_rast(in_rast[[1:3]], in_pts, id_field = "id",
                            verbose = FALSE, keep_null = T)  %>%

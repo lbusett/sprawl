@@ -5,8 +5,9 @@ testthat::test_that("Test On raster cropping", {
   library(testthat)
   library(sprawl.data)
   library(raster)
-  in_rast <- raster::stack(system.file("extdata/OLI_test", "oli_multi_1000.tif",
-                                       package = "sprawl.data"))
+  in_file <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
+                                       package = "sprawl.data")
+  in_rast <- read_rast(in_file)
   in_vect <- create_fishnet(in_rast, pix_for_cell = 60)[50,]
   out_cropped  <- crop_rast(in_rast, in_vect, verbose = FALSE,
                             out_type = "rastobject")

@@ -8,7 +8,7 @@ testthat::test_that("Test retrieval of extent",{
   # extraction of proj4string from raster ----
   in_rast_file <- system.file("extdata/MODIS_test",
                               "EVIts_test.tif", package = "sprawl.data")
-  in_rast      <- raster::raster(in_rast_file)
+  in_rast      <- read_rast(in_rast_file)
 
   ext_file     <- get_extent(in_rast_file)
   expect_is(ext_file, "sprawlext")

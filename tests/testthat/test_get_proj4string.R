@@ -16,7 +16,7 @@ testthat::test_that("Test projection string",{
   )
 
   expect_equal(
-    get_proj4string(raster::raster(in_rast)),
+    get_proj4string(read_rast(in_rast)),
     "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs"  #nolint
   )
 
@@ -34,7 +34,7 @@ testthat::test_that("Test projection string",{
                "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")  #nolint
 
   # warning/abort on wrong proj4string ----
-  rastobj <- raster::raster(in_rast)
+  rastobj <- read_rast(in_rast)
   expect_warning(raster::crs(rastobj) <-
                    "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4")  #nolint
 

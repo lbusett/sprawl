@@ -7,27 +7,27 @@ testthat::test_that("Test On raster masking", {
 
   mask_vect <- system.file("extdata/shapes", "lc_polys.shp",
                            package = "sprawl.data")
-  in_rast   <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+  in_file   <- system.file("extdata/MODIS_test", "EVIts_test.tif",
                            package = "sprawl.data")
   # both raster and mask are "R" objects - check if works and equal to
   # raster::mask ----
   mask_in <- read_vect(mask_vect, stringsAsFactors = T)
-  rast_in <- raster::stack(in_rast)[[5]]
+  in_rast <- read_rast(in_file, bands_to_read = 5)
   # test both with same projection and differenrt projections between in_rast
   #  and mask_vect
-  out_masked   <- mask_rast(rast_in, mask_vect, verbose = FALSE, crop = FALSE)
+  out_masked   <- mask_rast(in_rast, mask_vect, verbose = FALSE, crop = FALSE)
   expect_is(out_masked, "Raster")
-  mask_in_2    <- sf::st_transform(mask_in, get_proj4string(rast_in))
-  out_masked_2 <- mask_rast(rast_in, mask_in_2, verbose = FALSE)
+  mask_in_2    <- sf::st_transform(mask_in, get_proj4string(in_rast))
+  out_masked_2 <- mask_rast(in_rast, mask_in_2, verbose = FALSE)
   expect_is(out_masked_2, "Raster")
   expect_equal(raster::getValues(out_masked),
                raster::getValues(out_masked_2))
 
   # Save to file and crop----
-  masked_file <- mask_rast(rast_in, mask_in,
+  masked_file <- mask_rast(in_rast, mask_in,
                            out_type = "filename", verbose = FALSE, crop = T)
   expect_is(masked_file, "character")
-  masked_file_multi <- mask_rast(rast_in, mask_in, verbose = FALSE, crop = T)
+  masked_file_multi <- mask_rast(in_rast, mask_in, verbose = FALSE, crop = T)
   expect_is(masked_file, "character")
   expect_is(masked_file_multi, "Raster")
 
@@ -35,9 +35,9 @@ testthat::test_that("Test On raster masking", {
   # Check for all zero on the difference of the two since sprawl::mask
   # keeps a bit more pixels
   sp_polys    <- mask_in %>%
-    sf::st_transform(as.character(sp::proj4string(rast_in))) %>%
+    sf::st_transform(as.character(sp::proj4string(in_rast))) %>%
     as("Spatial")
-  out_mask_raster  <- raster::mask(rast_in, sp_polys)
+  out_mask_raster  <- raster::mask(in_rast, sp_polys)
   diff <- unique(raster::getValues(out_masked) - raster::getValues(out_mask_raster))  #nolint
   expect_equal(as.numeric(diff), c(NA, 0))
 
