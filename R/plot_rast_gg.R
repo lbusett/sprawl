@@ -15,6 +15,10 @@
 #' See the description of the arguments for details on their use
 #' @param in_rast `Raster` object to be plotted. Both mono- and multi-band
 #'   rasters are supported
+#' @param maxpixels `numeric` maximum number of pixels to be used for plotting *for
+#'   each band*. Reduce this to speed-up plotting by subsampling the raster (this
+#'   reduces qualitty!). Increase it to improve qualitty (this reduces rendering
+#'   speed!), Default:1e5
 #' @param band_names `character(nbands)`, array of band names. These will used
 #'   to populate the "strips" above each plotted band. If NULL, bnames are
 #'   retrieved from the input raster using `sprawl::get_rastinfo`, Default: NULL
@@ -91,7 +95,7 @@
 #' @param title `character`, Title of the plot, Default: NULL
 #' @param subtitle Subtitle of the plot, Default: NULL
 #' @param theme `theme function` ggplot theme to be used
-#' (e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()
+#' (e.g., theme_light()), Default: theme_bw()
 #' @param verbose `logical`, If FALSE, suppress processing message,
 #'  Default: TRUE
 #' @return a `ggplot`
@@ -134,9 +138,18 @@
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 #'
 #'  # limits adjusted on the 10th and 99.9th percentile to remove very low
-#'  # values outliers and better use the palette on high values. Note that
-#'  # outliers can be set as transparent!
-#'  plot_rast_gg(in_rast, basemap = "osm",
+#'  # values outliers and better use the palette on high values (note that
+#'  # outliers can be set as transparent!) + increase maxpixels to plot at
+#'  # full resolution.
+#'  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 100e5,
+#'              palette_type = "diverging", palette_name = "RdYlBu",
+#'              zlims = c(0.10, 0.999), zlims_type = "percs",
+#'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
+#'              outliers_style = "recolor",
+#'              outliers_colors = c("transparent", "purple"))
+#'
+#'  # Adjust `maxpixels` to speed-up rendering by sacrificing quality
+#'  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 10e4,
 #'              palette_type = "diverging", palette_name = "RdYlBu",
 #'              zlims = c(0.10, 0.999), zlims_type = "percs",
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
@@ -151,19 +164,22 @@
 #' @importFrom dplyr mutate
 #' @importFrom gdalUtils gdalwarp
 #' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous expand_scale
-#' scale_y_continuous ggtitle theme element_blank element_text element_rect
-#' geom_raster aes scale_fill_brewer scale_fill_distiller waiver geom_polygon
-#' scale_colour_manual guides guide_legend scale_color_manual coord_fixed
-#' facet_wrap
+#'  scale_y_continuous ggtitle theme element_blank element_text element_rect
+#'  geom_raster aes facet_wrap scale_fill_brewer scale_fill_distiller waiver
+#'  geom_polygon scale_colour_manual guides guide_legend scale_color_manual
+#'  coord_fixed
 #' @importFrom ggspatial geom_osm
-#' @importFrom raster stack
+#' @importFrom raster stack sampleRegular nlayers
 #' @importFrom RColorBrewer brewer.pal.info
 #' @importFrom rosm osm.types
 #' @importFrom scales squish censor
 #' @importFrom grid unit
+#' @importFrom stats na.omit quantile
+#' @importFrom methods is
 
 plot_rast_gg <- function(
   in_rast,
+  maxpixels    = 1e5,
   band_names   = NULL, bands_to_plot = NULL, facet_rows = NULL,
   xlims        = NULL, ylims = NULL,
   zlims        = NULL, zlims_type = "vals",
@@ -175,25 +191,41 @@ plot_rast_gg <- function(
   palette_type = "gradient", palette_name = NULL,
   leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL,
   no_axis      = FALSE, title = NULL, subtitle = NULL,
-  theme        = ggplot2::theme_bw(),
+  theme        = theme_bw(),
   verbose      = TRUE
 ) {
 
   #TODO find a way to avoid "require"
   #TODO Implement checks on input arguments (e.g., bands_to_plot, band_names)
   #TODO Verify possibility to have a "satellite" basemap
-  #TODO Add MaxPixels
+
   loadNamespace("ggspatial")
   loadNamespace("ggplot2")
   x <- y <- value <- band <- category <- color <- NULL
 
-  assertthat::assert_that(palette_type %in% c("categorical", "gradient", "diverging"), #nolint
-                          msg = "plot_rast_gg --> Invalid palette_type. Aborting!"
+
+  #   __________________________________________________________________________
+  #   check arguments                                                       ####
+
+  assertthat::assert_that(
+    methods::is(in_rast, "Raster"),
+    msg = "plot_rast_gg --> `in_rast` is not a valid `Raster` object. Aborting!"
+  )
+
+  assertthat::assert_that(
+    palette_type %in% c("categorical", "gradient", "diverging"),
+    msg = strwrap(
+      "plot_rast_gg --> Invalid `palette_type`. It must be \"categorical\"
+      \"gradient\" or \"diverging\". Aborting!")
   )
 
   if (!is.null(basemap)) {
-    assertthat::assert_that(basemap %in% rosm::osm.types(),
-                            msg = "plot_rast_gg --> Invalid basemap name. Aborting!")
+    assertthat::assert_that(
+      basemap %in% rosm::osm.types(),
+      msg = strwrap(
+        "plot_rast_gg --> Invalid `basemap`. See `rosm::osm.types()` for
+        valid value. Aborting!")
+    )
   }
   #   __________________________________________________________________________
   #   Set default palettes for different categories                         ####
@@ -203,10 +235,6 @@ plot_rast_gg <- function(
                          "gradient"    = "seq",
                          "diverging"   = "div"
   )
-
-  if (is.null(palette_type)) {
-    stop("plot_rast_gg --> Invalid palette type. Aborting")
-  }
 
   def_palettes  <- list(qual = "Set1",
                         seq  = "Greens",
@@ -226,7 +254,7 @@ plot_rast_gg <- function(
 
     if (!palette_name %in% valid_pals$name) {
       warning("plot_rast_gg --> The selected palette name is not valid.\n",
-              " Reverting to default value for selecter palette type (",
+              "Reverting to default value for selecter palette type (",
               as.character(def_palettes[palette_type]), ")")
       palette_name = as.character(def_palettes[palette_type])
     }
@@ -263,7 +291,7 @@ plot_rast_gg <- function(
 
   if (any(rastinfo$fnames == "")) {
     rastfile <- cast_rast(in_rast, "rastfile")
-    in_rast <- raster::stack(rastfile)
+    in_rast  <- raster::stack(rastfile)
   }
   rastinfo$fnames <- get_rastinfo(in_rast, verbose = FALSE)$fnames
 
@@ -295,11 +323,19 @@ plot_rast_gg <- function(
   }
 
 
+  #   __________________________________________________________________________
+  #   Subsample if needed to speed-up plotting                              ####
+  in_rast <-  raster::sampleRegular(
+    x        = in_rast,
+    size     = maxpixels * ifelse(is.null(bands_to_plot),
+                                  raster::nlayers(in_rast),
+                                  length(bands_to_plot)),
+    asRaster = TRUE)
+
   #   ____________________________________________________________________________
   #   Fortify the raster to allow ggplotting                                  ####
-  # browser()
-  in_rast <-  "sampleRegular"(in_rast, 10e5, asRaster = TRUE)
-  in_rast_fort <- ggplot2::fortify(in_rast, format = "long") %>%
+
+  in_rast_fort <- fortify(in_rast, format = "long") %>%
     data.table::as.data.table()
   names(in_rast_fort)[1:2] <- c("x", "y")
 
@@ -402,31 +438,31 @@ plot_rast_gg <- function(
   }
 
   # Blank plot
-  plot_gg <- ggplot2::ggplot() + theme +
-    ggplot2::scale_x_continuous(xlab,
-                                expand = ggplot2::expand_scale(mult = c(0.005,0.005)),
-                                limits = c(xlims[1], xlims[2])) +
-    ggplot2::scale_y_continuous(ylab,
-                                expand = ggplot2::expand_scale(mult = c(0.005,0.005)),
-                                limits = c(ylims[1], ylims[2])) +
-    ggplot2::ggtitle(title, subtitle = subtitle)
+  plot_gg <- ggplot() + theme +
+    scale_x_continuous(xlab,
+                       expand = expand_scale(mult = c(0.005,0.005)),
+                       limits = c(xlims[1], xlims[2])) +
+    scale_y_continuous(ylab,
+                       expand = expand_scale(mult = c(0.005,0.005)),
+                       limits = c(ylims[1], ylims[2])) +
+    ggtitle(title, subtitle = subtitle)
 
   # Remove axes if no_axis == TRUE
   if (no_axis) {
 
     plot_gg <- plot_gg  +
-      ggplot2::theme(axis.title.x = ggplot2::element_blank(),
-                     axis.text.x  = ggplot2::element_blank(),
-                     axis.ticks.x = ggplot2::element_blank(),
-                     axis.title.y = ggplot2::element_blank(),
-                     axis.text.y  = ggplot2::element_blank(),
-                     axis.ticks.y = ggplot2::element_blank())
+      theme(axis.title.x = element_blank(),
+            axis.text.x  = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.title.y = element_blank(),
+            axis.text.y  = element_blank(),
+            axis.ticks.y = element_blank())
   }
 
   # Center the title - can be overriden in case after plot completion
   plot_gg <- plot_gg +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-                   panel.background = ggplot2::element_rect(fill = "transparent"))
+    theme(plot.title = element_text(hjust = 0.5),
+          panel.background = element_rect(fill = "transparent"))
 
 
   #   __________________________________________________________________________
@@ -444,29 +480,29 @@ plot_rast_gg <- function(
   #   add the raster layer                                                  ####
 
   plot_gg <- plot_gg +
-    ggplot2::geom_raster(data = in_rast_fort, ggplot2::aes(x, y, fill = value),
-                         alpha = 1 - transparency, na.rm = TRUE)
-   if (rastinfo$nbands > 1) {
-    plot_gg <- plot_gg + ggplot2::facet_wrap(~band, nrow = facet_rows, drop = T)
+    geom_raster(data = in_rast_fort, aes(x, y, fill = value),
+                alpha = 1 - transparency, na.rm = TRUE)
+  if (rastinfo$nbands > 1) {
+    plot_gg <- plot_gg + facet_wrap(~band, nrow = facet_rows, drop = T)
   }
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 
   if (palette_type == "categorical") {
     plot_gg <- plot_gg +
-      ggplot2::scale_fill_brewer(type = "qual", palette = palette_name)
+      scale_fill_brewer(type = "qual", palette = palette_name)
   } else {
 
     plot_gg <- plot_gg +
-      ggplot2::scale_fill_distiller(
+      scale_fill_distiller(
         "Value",
         limits = zlims,
         breaks = if (is.null(leg_breaks)) {
-          ggplot2::waiver()
+          waiver()
         } else {
           leg_breaks
         }, labels = if (is.null(leg_labels)) {
-          ggplot2::waiver()
+          waiver()
         } else {
           leg_labels
         }, type = ifelse(palette_type == "sequential", "seq", "div"),
@@ -475,8 +511,8 @@ plot_rast_gg <- function(
                                              scales::squish, scales::censor),
         direction = 1,
         na.value = ifelse(is.null(na.color), "grey50", na.color)) +
-      ggplot2::theme(legend.justification = "center",
-                     legend.box.spacing = grid::unit(0.5,"points"))
+      theme(legend.justification = "center",
+            legend.box.spacing = grid::unit(0.5,"points"))
   }
 
   #   ____________________________________________________________________________
@@ -490,11 +526,11 @@ plot_rast_gg <- function(
         dplyr::mutate(cat = c("Out"),
                       color = c(out_high_color),
                       band = levels(in_rast_fort$band)[1])
-      plot_gg <- plot_gg + ggplot2::geom_polygon(data = dummy_data,
-                                                 ggplot2::aes(x = x,
-                                                              y = y,
-                                                              colour = color))
-      plot_gg <- plot_gg + ggplot2::scale_colour_manual(
+      plot_gg <- plot_gg + geom_polygon(data = dummy_data,
+                                        aes(x = x,
+                                            y = y,
+                                            colour = color))
+      plot_gg <- plot_gg + scale_colour_manual(
         "Outliers",
         values     = out_high_color,
         labels     = paste0("< ", format(zlims[1], digits = 2)
@@ -502,7 +538,7 @@ plot_rast_gg <- function(
       )
 
       plot_gg <- plot_gg +
-        ggplot2::guides(colour = ggplot2::guide_legend(
+        guides(colour = guide_legend(
           title = "Outliers", override.aes = list(fill = out_high_color,
                                                   color = "black")))
     } else {
@@ -511,29 +547,29 @@ plot_rast_gg <- function(
         dplyr::mutate(cat = c("High","Low"),
                       color = c(out_low_color, out_high_color),
                       band = levels(in_rast_fort$band)[1])
-      plot_gg <- plot_gg + ggplot2::geom_polygon(data = dummy_data,
-                                                 ggplot2::aes(x = x, y = y,
-                                                              colour = color))
-      plot_gg <- plot_gg + ggplot2::scale_color_manual(
+      plot_gg <- plot_gg + geom_polygon(data = dummy_data,
+                                        aes(x = x, y = y,
+                                            colour = color))
+      plot_gg <- plot_gg + scale_color_manual(
         "Outliers",
         values     = c(out_low_color, out_high_color),
         labels     = c(paste0("< ", format(zlims[1], digits = 2)),
                        paste0("> ", format(zlims[2], digits = 2)))
       )
       plot_gg <- plot_gg +
-        ggplot2::guides(colour = ggplot2::guide_legend(
+        guides(colour = guide_legend(
           title = "Outliers",
           override.aes = list(fill = c(out_low_color, out_high_color),
                               color = "black")))
     }
 
-    plot_gg <- plot_gg + ggplot2::geom_raster(data = out_high_tbl,
-                                              ggplot2::aes(x = x, y = y),
-                                              fill = out_high_color, na.rm = TRUE)
-    plot_gg <- plot_gg + ggplot2::geom_raster(data = out_low_tbl,
-                                              ggplot2::aes(x = x, y = y),
-                                              fill = out_low_color,
-                                              na.rm = TRUE)
+    plot_gg <- plot_gg + geom_raster(data = out_high_tbl,
+                                     aes(x = x, y = y),
+                                     fill = out_high_color, na.rm = TRUE)
+    plot_gg <- plot_gg + geom_raster(data = out_low_tbl,
+                                     aes(x = x, y = y),
+                                     fill = out_low_color,
+                                     na.rm = TRUE)
 
   }
 
@@ -542,7 +578,7 @@ plot_rast_gg <- function(
   #   Add scalebar                                                          ####
 
   if (scalebar) {
-    # ggplot2::coord_cartesian(xlim = xlims, ylim = ylims) +
+    # coord_cartesian(xlim = xlims, ylim = ylims) +
     plot_gg <- plot_gg +
       sprawl_scalebar(dd2km = FALSE, dist = scalebar_dist,
                       x.min = xlims[1], x.max = xlims[2],
@@ -556,7 +592,7 @@ plot_rast_gg <- function(
   #   Finalize the plot and return it                                       ####
 
   plot_gg <- plot_gg +
-    ggplot2::coord_fixed()
+    coord_fixed()
 
 
   plot_gg

@@ -4,19 +4,24 @@
 \alias{plot_rast_gg}
 \title{Plot a raster object using ggplot}
 \usage{
-plot_rast_gg(in_rast, band_names = NULL, bands_to_plot = NULL,
-  facet_rows = NULL, xlims = NULL, ylims = NULL, zlims = NULL,
-  zlims_type = "vals", outliers_style = "recolor",
+plot_rast_gg(in_rast, maxpixels = 1e+05, band_names = NULL,
+  bands_to_plot = NULL, facet_rows = NULL, xlims = NULL, ylims = NULL,
+  zlims = NULL, zlims_type = "vals", outliers_style = "recolor",
   outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
   scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
   na.color = NULL, na.value = NULL, palette_type = "gradient",
   palette_name = NULL, leg_type = NULL, leg_labels = NULL,
   leg_breaks = NULL, no_axis = FALSE, title = NULL, subtitle = NULL,
-  theme = ggplot2::theme_bw(), verbose = TRUE)
+  theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
 rasters are supported}
+
+\item{maxpixels}{\code{numeric} maximum number of pixels to be used for plotting \emph{for
+each band}. Reduce this to speed-up plotting by subsampling the raster (this
+reduces qualitty!). Increase it to improve qualitty (this reduces rendering
+speed!), Default:1e5}
 
 \item{band_names}{\code{character(nbands)}, array of band names. These will used
 to populate the "strips" above each plotted band. If NULL, bnames are
@@ -126,7 +131,7 @@ Default: FALSE}
 \item{subtitle}{Subtitle of the plot, Default: NULL}
 
 \item{theme}{\code{theme function} ggplot theme to be used
-(e.g., ggplot2::theme_light()), Default: ggplot2::theme_bw()}
+(e.g., theme_light()), Default: theme_bw()}
 
 \item{verbose}{\code{logical}, If FALSE, suppress processing message,
 Default: TRUE}
@@ -191,9 +196,18 @@ See the description of the arguments for details on their use
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 
  # limits adjusted on the 10th and 99.9th percentile to remove very low
- # values outliers and better use the palette on high values. Note that
- # outliers can be set as transparent!
- plot_rast_gg(in_rast, basemap = "osm",
+ # values outliers and better use the palette on high values (note that
+ # outliers can be set as transparent!) + increase maxpixels to plot at
+ # full resolution.
+ plot_rast_gg(in_rast, basemap = "osm", maxpixels = 100e5,
+             palette_type = "diverging", palette_name = "RdYlBu",
+             zlims = c(0.10, 0.999), zlims_type = "percs",
+             title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
+             outliers_style = "recolor",
+             outliers_colors = c("transparent", "purple"))
+
+ # Adjust `maxpixels` to speed-up rendering by sacrificing quality
+ plot_rast_gg(in_rast, basemap = "osm", maxpixels = 10e4,
              palette_type = "diverging", palette_name = "RdYlBu",
              zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
