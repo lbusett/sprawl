@@ -50,9 +50,9 @@ get_proj4string.default  <- function(object, abort = FALSE) {
          "object or filename. Aborting !")
   } else {
     warning("get_proj4string --> `object` is not a valid vector or raster `R` ",
-            "object or filename. Aborting !")
+            "object or filename.")
   }
-  }
+}
 
 #   ____________________________________________________________________________
 #   Method for "character" - find if file exists and is "spatial"           ####
@@ -64,24 +64,49 @@ get_proj4string.default  <- function(object, abort = FALSE) {
 get_proj4string.character <- function(object,
                                       abort = FALSE) {
 
+  call = match.call()
+  #   ____________________________________________________________________________
+  #   return immediately if a valid projstring was passed. Otherwise,         ####
+  #   check if the character string corresponds to a valid spatial object
+  #
+
+  #TODO add assertion for valid filename
+
+  if (!file.exists(object)) {
+    if (check_proj4string(object) != "invalid") {
+      return(object)
+    } else {
+      if (abort == TRUE) {
+        stop("get_proj4string --> ", call[[2]], " is not a valid proj4 string ",
+             "or spatial file name. Aborting!")
+      } else {
+        warning("get_proj4string --> ", call[[2]], " is not a valid proj4 string ",
+             "or spatial file name.")
+        return("invalid")
+      }
+
+    }
+  }
+
   obj_type <- get_spatype(object)
 
   if (obj_type %in% c("rastfile", "vectfile")) {
 
-    proj4string  <- as.character(gdalUtils::gdalsrsinfo(object, as.CRS = TRUE))
-    proj4string <- check_proj4string(proj4string, abort = abort)
+    proj4string  <- as.character(gdalUtils::gdalsrsinfo(object, as.CRS = TRUE)) %>%
+      check_proj4string(abort = abort)
     return(proj4string)
   } else {
+
     if (abort == TRUE) {
-      stop("get_proj4string --> `object` is not a valid raster or vector
-           file, Aborting!")
+      stop("get_proj4string --> ", call[[2]], "is not a valid raster or vector
+           file. Aborting!")
     } else {
-      warning("get_proj4string --> `object` is not a valid raster or vector
+      warning("get_proj4string --> ", call[[2]], "is not a valid raster or vector
               file!")
-      return("none")
+      return("invalid")
     }
   }
-  }
+}
 
 
 #   ____________________________________________________________________________

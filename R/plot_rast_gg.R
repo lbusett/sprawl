@@ -76,6 +76,7 @@
 #'  Note that if a wrong palette name is specified, plot_rast_gg reverts to
 #'  the default values. Run `RColorBrewer::display.brewer.all()` to see a list
 #'  of available palettes, Default: NULL
+#' @param direction DESCRIPTION NEEDEDD
 #' @param leg_type DESCRIPTION NEEDEDD
 #' @param leg_labels `character (n_leg_breaks)` labels to be used in the legend
 #'   - If palette_type is "categorical", the number of labels must correspond to
@@ -188,7 +189,7 @@ plot_rast_gg <- function(
   scalebar     = TRUE, scalebar_dist = NULL,
   transparency = 0,
   na.color     = NULL, na.value = NULL,
-  palette_type = "gradient", palette_name = NULL,
+  palette_type = "gradient", palette_name = NULL, direction = 1,
   leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL,
   no_axis      = FALSE, title = NULL, subtitle = NULL,
   theme        = theme_bw(),
@@ -511,7 +512,7 @@ plot_rast_gg <- function(
         guide = ifelse(leg_type == "qual", "legend", "colourbar"),
         palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
                                              scales::squish, scales::censor),
-        direction = 1,
+        direction = direction,
         na.value = ifelse(is.null(na.color), "grey50", na.color)) +
       theme(legend.justification = "center",
             legend.box.spacing = grid::unit(0.5,"points"))

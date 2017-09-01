@@ -4,16 +4,17 @@
 \alias{reproj_rast}
 \title{reproj_rast}
 \usage{
-reproj_rast(object, out_proj, out_extent = NULL, resamp_meth = "near",
-  out_type = "rastobject", out_format = "GTiff", compression = "LZW",
-  out_filename = NULL, overwrite = FALSE, verbose = TRUE, ...)
+reproj_rast(in_object, outproj_object, out_res = NULL, crop = FALSE,
+  pix_buff = 5, resamp_meth = "near", out_type = "rastobject",
+  out_format = "GTiff", compression = "LZW", out_filename = NULL,
+  warp_args = NULL, overwrite = FALSE, verbose = TRUE, ...)
 }
 \arguments{
-\item{object}{PARAM_DESCRIPTION}
+\item{in_object}{PARAM_DESCRIPTION}
 
-\item{out_proj}{PARAM_DESCRIPTION}
+\item{outproj_object}{PARAM_DESCRIPTION}
 
-\item{out_extent}{PARAM_DESCRIPTION, Default: NULL}
+\item{crop}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{resamp_meth}{PARAM_DESCRIPTION, Default: 'near'}
 
@@ -30,6 +31,8 @@ reproj_rast(object, out_proj, out_extent = NULL, resamp_meth = "near",
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
 
 \item{...}{PARAM_DESCRIPTION}
+
+\item{pixbuff}{PARAM_DESCRIPTION, Default: NULL}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -42,12 +45,28 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
- in_rast <- read_rast(system.file("extdata/OLI_test",
-  "oli_multi_1000_b2.tif", package = "sprawl.data"))
- out_proj <- "+init=epsg=3035"
- reproj_rast(in_rast, out_proj)
- }
+ # reproject a raster based on an output proj4string
+ in_file <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
+                         package = "sprawl.data")
+ out_proj <- "+init=epsg:3035"
+ reproj_rast(in_file, out_proj)
+
+ # reproject on projection of a different spatial object/file
+ in_rast <- read_rast(in_file)
+ my_vect <- get(load(system.file("extdata", "Lake.RData",
+                         package = "sprawl.data")))
+ out_rep <- reproj_rast(in_rast, my_vect)
+ plot_rast_gg(out_rep, palette_name = "Greys", scalebar = FALSE,
+  direction = -1) +
+  geom_sf(data = my_vect, fill = "transparent", color = "red")
+
+ # reproject on projection of a different spatial object/file and crop on
+ # its extent
+
+ out_cropped <- reproj_rast(in_rast, my_vect, crop = TRUE)
+ plot_rast_gg(out_cropped, scalebar = F,  palette_name = "Greys",
+  direction = -1) +
+  geom_sf(data = my_vect, fill = "transparent", color = "red")
 }
 }
 \author{

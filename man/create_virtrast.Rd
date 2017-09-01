@@ -4,16 +4,19 @@
 \alias{create_virtrast}
 \title{create a GDAL vrt file starting from a \code{Raster} object}
 \usage{
-create_virtrast(object, out_vrt_file, out_extent = NULL, rastinfo = NULL)
+create_virtrast(object, out_vrt_file, out_extent = NULL, rastinfo = NULL,
+  verbose = TRUE)
 }
 \arguments{
+\item{object}{PARAM_DESCRIPTION}
+
 \item{out_vrt_file}{PARAM_DESCRIPTION}
 
 \item{out_extent}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{rastinfo}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{in_file}{PARAM_DESCRIPTION}
+\item{verbose}{PARAM_DESCRIPTION, Default: NULL}
 }
 \value{
 OUTPUT_DESCRIPTION

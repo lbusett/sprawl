@@ -10,9 +10,9 @@ plot_rast_gg(in_rast, maxpixels = 1e+05, band_names = NULL,
   outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
   scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
   na.color = NULL, na.value = NULL, palette_type = "gradient",
-  palette_name = NULL, leg_type = NULL, leg_labels = NULL,
-  leg_breaks = NULL, no_axis = FALSE, title = NULL, subtitle = NULL,
-  theme = theme_bw(), verbose = TRUE)
+  palette_name = NULL, direction = 1, leg_type = NULL,
+  leg_labels = NULL, leg_breaks = NULL, no_axis = FALSE, title = NULL,
+  subtitle = NULL, theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
@@ -103,6 +103,8 @@ Note that if a wrong palette name is specified, plot_rast_gg reverts to
 the default values. Run \code{RColorBrewer::display.brewer.all()} to see a list
 of available palettes, Default: NULL
 }}
+
+\item{direction}{DESCRIPTION NEEDEDD}
 
 \item{leg_type}{DESCRIPTION NEEDEDD}
 
