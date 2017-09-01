@@ -2,6 +2,7 @@
 #' @description FUNCTION_DESCRIPTION
 #' @param in_object PARAM_DESCRIPTION
 #' @param outproj_object PARAM_DESCRIPTION
+#' @param out_res PARAM_DESCRIPTION
 #' @param crop PARAM_DESCRIPTION, Default: NULL
 #' @param pix_buff PARAM_DESCRIPTION, Default: NULL
 #' @param resamp_meth PARAM_DESCRIPTION, Default: 'near'
@@ -60,6 +61,7 @@ reproj_rast <- function(in_object,
                         verbose         = TRUE,
                         ...) {
 
+  . <- NULL
   call <- match.call()
   #   ____________________________________________________________________________
   #   Check arguments                                                         ####

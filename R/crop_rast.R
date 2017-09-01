@@ -50,11 +50,7 @@ crop_rast <- function(rast_object,
   #   Create processing objects: rast_file is a filename, rast_object a     ####
   #   raster object used to retrieve extent, resolution, etc
   # rast_file    <- cast_rast(rast_object, to = "rastfile")
-  rast_object  <- if (inherits(rast_object, "Raster")) {
-    rast_object
-  } else {
-    raster::brick(rast_file)
-  }
+  rast_object  <- cast_rast(rast_object, to = "rastobject")
   #   __________________________________________________________________________
   #   Retrieve extent info from `rast_object` and `ext_object`              ####
 
