@@ -16,6 +16,8 @@ reproj_rast(in_object, outproj_object, out_res = NULL, crop = FALSE,
 
 \item{crop}{PARAM_DESCRIPTION, Default: NULL}
 
+\item{pix_buff}{PARAM_DESCRIPTION, Default: NULL}
+
 \item{resamp_meth}{PARAM_DESCRIPTION, Default: 'near'}
 
 \item{out_type}{PARAM_DESCRIPTION, Default: 'rastobject'}
@@ -26,13 +28,13 @@ reproj_rast(in_object, outproj_object, out_res = NULL, crop = FALSE,
 
 \item{out_filename}{PARAM_DESCRIPTION, Default: NULL}
 
+\item{warp_args}{PARAM_DESCRIPTION, Default: FALSE}
+
 \item{overwrite}{PARAM_DESCRIPTION, Default: FALSE}
 
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
 
 \item{...}{PARAM_DESCRIPTION}
-
-\item{pixbuff}{PARAM_DESCRIPTION, Default: NULL}
 }
 \value{
 OUTPUT_DESCRIPTION

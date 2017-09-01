@@ -3,12 +3,13 @@
 #' @param in_object PARAM_DESCRIPTION
 #' @param outproj_object PARAM_DESCRIPTION
 #' @param crop PARAM_DESCRIPTION, Default: NULL
-#' @param pixbuff PARAM_DESCRIPTION, Default: NULL
+#' @param pix_buff PARAM_DESCRIPTION, Default: NULL
 #' @param resamp_meth PARAM_DESCRIPTION, Default: 'near'
 #' @param out_type PARAM_DESCRIPTION, Default: 'rastobject'
 #' @param out_format PARAM_DESCRIPTION, Default: 'Gtiff'
 #' @param compression PARAM_DESCRIPTION, Default: 'LZW'
 #' @param out_filename PARAM_DESCRIPTION, Default: NULL
+#' @param warp_args PARAM_DESCRIPTION, Default: FALSE
 #' @param overwrite PARAM_DESCRIPTION, Default: FALSE
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @param ... PARAM_DESCRIPTION
@@ -60,11 +61,8 @@ reproj_rast <- function(in_object,
                         ...) {
 
   call <- match.call()
-
-
   #   ____________________________________________________________________________
   #   Check arguments                                                         ####
-
 
   in_type <- get_spatype(in_object)
   assert_that(

@@ -23,7 +23,7 @@ dimensions of the desired #' cells in the x and y directions (if only one
 element is provided, the same cellsize is used in each direction),
 Default: NULL}
 
-\item{exact_csize}{PARAM_DESCRIPTION}
+\item{exact_csize}{\code{logical} PARAM_DESCRIPTION}
 
 \item{to_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE}
 
