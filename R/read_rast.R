@@ -44,7 +44,7 @@ read_rast <- function(object,
   )
 
   assertthat::assert_that(
-    system2(find_command("gdalinfo"), args = object, stderr = NULL,
+    system2(file.path(find_gdal(), "gdalinfo"), args = object, stderr = NULL,
             stdout = NULL) != 1,
     msg = strwrap("read_rast --> `object` is not a valid raster file.
                   Aborting!")
