@@ -17,11 +17,13 @@ find_command <- function(command,
                          stop_on_missing = TRUE) {
   #   __________________________________________________________________________
   #   find command on user machine                                          ####
+  call <- match.call()
+
   command_path <- Sys.which(command)
   if ((command_path == "")) {
-    stop("find_command --> `", command, "` was not found on your system. ",
-         "Please install it and/or check your PATH environment variables. ",
-         "Aborting !")
+    stop("find_command --> Command `", call[[2]], "` was not found on your",
+         "system.\nPlease install it and/or check your PATH environment,",
+         "variables. Aborting !")
   } else {
     return(normalizePath(command_path))
   }
