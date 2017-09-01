@@ -2,11 +2,11 @@
 % Please edit documentation in R/create_fishnet.R
 \name{create_fishnet}
 \alias{create_fishnet}
-\title{Create a "fishnet" vector based on cells of a raster}
+\title{Create a "fishnet" vector over the extent of a spatial object}
 \usage{
 create_fishnet(in_rast, pix_for_cell = 1, cellsize = NULL,
-  to_file = FALSE, out_shape = NULL, overwrite = TRUE,
-  crop_layer = NULL)
+  exact_csize = TRUE, to_file = FALSE, out_shape = NULL,
+  overwrite = TRUE, crop_layer = NULL)
 }
 \arguments{
 \item{in_rast}{raster file or object of class \code{raster*} on which the fishnet
@@ -22,6 +22,8 @@ Default: 1}
 dimensions of the desired #' cells in the x and y directions (if only one
 element is provided, the same cellsize is used in each direction),
 Default: NULL}
+
+\item{exact_csize}{\code{logical} PARAM_DESCRIPTION}
 
 \item{to_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE}
 
@@ -55,15 +57,21 @@ DETAILS
   library(sprawl)
   library(rasterVis)
 
-  in_rast  <- build_testraster(20,20,1)
+  in_rast  <- build_testraster(20,40,1)
   fishnet  <- create_fishnet(in_rast)
 
   plot_rast(in_rast, in_poly = fishnet)
 
-  fishnet  <- create_fishnet(in_rast, pix_for_cell = c(2,2))
+  fishnet  <- create_fishnet(in_rast, pix_for_cell = c(4,2))
   plot_rast(in_rast, in_poly = fishnet)
 
-  fishnet  <- create_fishnet(in_rast, cellsize = c(22,50))
+  fishnet  <- create_fishnet(in_rast, cellsize = c(25,25))
+  plot_rast(in_rast, in_poly = fishnet)
+
+  # plotting with `exact_csize` creates a grid that covers the extent with
+  # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
+  fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
+                                  exact_csize = F)
   plot_rast(in_rast, in_poly = fishnet)
  }
 }

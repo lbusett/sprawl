@@ -1,4 +1,4 @@
-#' @title Create a "fishnet" vector based on cells of a raster
+#' @title Create a "fishnet" vector over the extent of a spatial object
 #' @description Function to create a polygon fishnet of specified resolution
 #'  over a raster dataset. By default, the fishnet is built so that
 #'  each cell corresponds to a raster cell. If the `pix_for_cell` argument is
@@ -16,6 +16,7 @@
 #'   dimensions of the desired #' cells in the x and y directions (if only one
 #'   element is provided, the same cellsize is used in each direction),
 #'   Default: NULL
+#' @param exact_csize `logical` PARAM_DESCRIPTION
 #' @param to_file `logical` PARAM_DESCRIPTION, Default: FALSE
 #' @param out_shape `logical` PARAM_DESCRIPTION, Default: FALSE
 #' @param overwrite `logical` PARAM_DESCRIPTION, Default: TRUE
@@ -32,15 +33,21 @@
 #'   library(sprawl)
 #'   library(rasterVis)
 #'
-#'   in_rast  <- build_testraster(20,20,1)
+#'   in_rast  <- build_testraster(20,40,1)
 #'   fishnet  <- create_fishnet(in_rast)
 #'
 #'   plot_rast(in_rast, in_poly = fishnet)
 #'
-#'   fishnet  <- create_fishnet(in_rast, pix_for_cell = c(2,2))
+#'   fishnet  <- create_fishnet(in_rast, pix_for_cell = c(4,2))
 #'   plot_rast(in_rast, in_poly = fishnet)
 #'
-#'   fishnet  <- create_fishnet(in_rast, cellsize = c(22,50))
+#'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25))
+#'   plot_rast(in_rast, in_poly = fishnet)
+#'
+#'   # plotting with `exact_csize` creates a grid that covers the extent with
+#'   # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
+#'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
+#'                                   exact_csize = F)
 #'   plot_rast(in_rast, in_poly = fishnet)
 #'  }
 #' @rdname create_fishnet
@@ -51,6 +58,7 @@
 create_fishnet <- function(in_rast,
                            pix_for_cell = 1,
                            cellsize     = NULL,
+                           exact_csize  = TRUE,
                            to_file      = FALSE,
                            out_shape    = NULL,
                            overwrite    = TRUE,
@@ -69,11 +77,7 @@ create_fishnet <- function(in_rast,
          "file. Aborting !")
   }
 
-  if (in_type == "rastfile") {
-    in_rast <- raster::raster(in_rast)
-  }
 
-  bbox     <- raster::extent(in_rast)
 
   if (is.null(cellsize)) {
     cellsize <- raster::res(in_rast) * pix_for_cell
@@ -83,20 +87,34 @@ create_fishnet <- function(in_rast,
     }
   }
 
-  ext_poly <- sf::st_as_sfc(c(paste0("POLYGON((",
-                                     bbox[1], " ", bbox[3], ", ",
-                                     bbox[1], " ", bbox[4], ", ",
-                                     bbox[2], " ", bbox[4], ", ",
-                                     bbox[2], " ", bbox[3], ", ",
-                                     bbox[1], " ", bbox[3], "",
-                                     "))")),
-                            crs = sp::proj4string(in_rast))
+  #   __________________________________________________________________________
 
+  in_ext <- out_ext <- get_extent(in_rast)
+
+  if (exact_csize) {
+    #   extend the extent so that it contains an integer number of cells      ####
+    x_range <- in_ext@extent[3] - in_ext@extent[1]
+    y_range <- in_ext@extent[4] - in_ext@extent[2]
+
+    fullcells_x <- x_range / cellsize[1]
+    fullcells_y <- y_range / cellsize[2]
+
+    if (!(fullcells_x - floor(fullcells_x)) == 0 ) {
+      out_ext@extent[3] <- out_ext@extent[1] + cellsize[1] * (floor(fullcells_x) + 1)
+    }
+
+    if (!(fullcells_y - floor(fullcells_y)) == 0 ) {
+      out_ext@extent[4] <- out_ext@extent[2] + cellsize[2] * (floor(fullcells_y) + 1)
+    }
+  }
+
+  ext_poly <- as(out_ext, "sfc_POLYGON")
   geometry <- sf::st_make_grid(ext_poly,
                                cellsize,
                                what = "polygons")
   fish <- sf::st_sf(cell_id = seq_len(length(geometry)[1]),
-                    geometry = geometry)
+                    geometry = geometry) %>%
+    crop_vect(in_rast)
   if (!to_file) {
     return(fish)
   } else {

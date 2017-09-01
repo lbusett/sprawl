@@ -33,8 +33,7 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom data.table last
-#' @importFrom raster brick
-#' @importFrom sf st_polygon st_sfc st_transform
+#' @importFrom raster brick setZ
 
 crop_rast <- function(rast_object,
                       ext_object,
@@ -50,12 +49,8 @@ crop_rast <- function(rast_object,
   #   __________________________________________________________________________
   #   Create processing objects: rast_file is a filename, rast_object a     ####
   #   raster object used to retrieve extent, resolution, etc
-  rast_file <- cast_rast(rast_object, to = "rastfile")
-  rast_object  <- if (inherits(rast_object, "Raster")) {
-    rast_object
-  } else {
-    raster::brick(rast_file)
-  }
+  # rast_file    <- cast_rast(rast_object, to = "rastfile")
+  rast_object  <- cast_rast(rast_object, to = "rastobject")
   #   __________________________________________________________________________
   #   Retrieve extent info from `rast_object` and `ext_object`              ####
 
@@ -108,57 +103,17 @@ crop_rast <- function(rast_object,
   }
 
 # TODO: Abort gracefully on incorrect rbbox_ext (e.g., because no intersection)
-
-
+#
   # ____________________________________________________________________________
   # create a temporary vrt file corresponding to the band to be preocessed  ####
-  # This allows flexibility in the case that a stack is passed containing
-  # coming from different files
-  #
-  # If the bands in the original stack are not all coming
-  # from the same on-disk raster, build a txt file to tell gdalbuildvrt
-  # which band comes from where !
+  # Using `create_virtrast~ allows flexibility in the case that a stack is
+  # passed containing coming from different files
 
-  temp_vrt <- tempfile(fileext = ".vrt")
-
-  if (rastinfo$nbands > 1) {
-
-    if (length(unique(rastinfo$fnames)) > 1) {
-    # buildvrt string on multi band rasters with bands coming from different
-    # files: use the "-input-file-list" argument
-      tmp_txt <- tempfile(fileext = ".txt")
-      writeLines(rastinfo$fnames, tmp_txt)
-      buildvrt_string <- paste("-te", paste(rbbox_ext, collapse = " "),
-                               paste(paste("-b ", rastinfo$indbands),
-                                     collapse = " "),
-                               "-separate",
-                               "-input_file_list",
-                               tmp_txt,
-                               temp_vrt)
-    } else {
-    # buildvrt string on multi band rasters with bands coming from the same file
-    buildvrt_string <- paste("-te ", paste(rbbox_ext, collapse = " "),
-                               paste(paste("-b ", rastinfo$indbands),
-                                     collapse = " "),
-                               temp_vrt,
-                               rast_file)
-    }
-
-  } else {
-    # buildvrt string on single band rasters. The paste on the second line is
-    # useful to get the correct band if the call is done on a subset of a stack
-    # (e.g., rast_in[[3]] - see test_mask_rast_R)
-
-    buildvrt_string <- paste("-te ", paste(rbbox_ext, collapse = " "),
-                             paste(paste("-b ", rastinfo$indbands),
-                                   collapse = " "),
-                             temp_vrt,
-                             rast_file)
-  }
-
-  system2(file.path(find_gdal(), "gdalbuildvrt"),
-          args = buildvrt_string,
-          stdout = NULL)
+    temp_vrt <- tempfile(fileext = ".vrt")
+    temp_vrt <- create_virtrast(rast_object,
+                                out_vrt_file = temp_vrt,
+                                out_extent   = rbbox_ext,
+                                rastinfo     = rastinfo)
 
   #   __________________________________________________________________________
   #   save/return the cropped raster according to arguments                 ####

@@ -19,8 +19,8 @@ check_proj4string(proj4string, abort = FALSE)
 \item{proj4string}{\code{character} or \code{\link{CRS}} corresponding to the
 proj4string to be checked}
 
-\item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
-invalid proj4string is found, Default: FALSE}
+\item{abort}{\code{logical} if TRUE, the function aborts in case an invalid invalid
+proj4string is pssed. Otherwise, the function returns "invalid", Default: TRUE}
 }
 \value{
 \code{character} proj4string of the object or file

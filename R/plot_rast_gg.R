@@ -76,6 +76,7 @@
 #'  Note that if a wrong palette name is specified, plot_rast_gg reverts to
 #'  the default values. Run `RColorBrewer::display.brewer.all()` to see a list
 #'  of available palettes, Default: NULL
+#' @param direction DESCRIPTION NEEDEDD
 #' @param leg_type DESCRIPTION NEEDEDD
 #' @param leg_labels `character (n_leg_breaks)` labels to be used in the legend
 #'   - If palette_type is "categorical", the number of labels must correspond to
@@ -102,7 +103,7 @@
 #' @examples
 #' \dontrun{
 #' #single band plot
-#'  in_rast <- raster::stack(system.file("extdata/OLI_test",
+#'  in_rast <- read_rast(system.file("extdata/OLI_test",
 #'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
 #'  plot_rast_gg(in_rast, basemap = "osm",
 #'                   palette_type = "diverging",
@@ -188,7 +189,7 @@ plot_rast_gg <- function(
   scalebar     = TRUE, scalebar_dist = NULL,
   transparency = 0,
   na.color     = NULL, na.value = NULL,
-  palette_type = "gradient", palette_name = NULL,
+  palette_type = "gradient", palette_name = NULL, direction = 1,
   leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL,
   no_axis      = FALSE, title = NULL, subtitle = NULL,
   theme        = theme_bw(),
@@ -296,6 +297,8 @@ plot_rast_gg <- function(
   rastinfo$fnames <- get_rastinfo(in_rast, verbose = FALSE)$fnames
 
   if (!is.null(basemap)) {
+    #TODO substitute this with call to create_virtrast and
+    #reproj_rast
 
     temp_vrt <- tempfile(fileext = ".vrt")
     tmp_txt <- tempfile(fileext = ".txt")
@@ -509,7 +512,7 @@ plot_rast_gg <- function(
         guide = ifelse(leg_type == "qual", "legend", "colourbar"),
         palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
                                              scales::squish, scales::censor),
-        direction = 1,
+        direction = direction,
         na.value = ifelse(is.null(na.color), "grey50", na.color)) +
       theme(legend.justification = "center",
             legend.box.spacing = grid::unit(0.5,"points"))

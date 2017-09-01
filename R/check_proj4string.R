@@ -3,8 +3,8 @@
 #'  is a valid string or a CRS object.
 #' @param proj4string `character` or [`CRS`] corresponding to the
 #'  proj4string to be checked
-#' @param abort `logical` if TRUE, the function aborts in case no proj4string or
-#'   invalid proj4string is found, Default: FALSE
+#' @param abort `logical` if TRUE, the function aborts in case an invalid invalid
+#'  proj4string is pssed. Otherwise, the function returns "invalid", Default: TRUE
 #' @return `character` proj4string of the object or file
 #' @details DETAILS
 #'
@@ -45,11 +45,8 @@ check_proj4string <- function(proj4string,
 check_proj4string.default  <- function(proj4string,
                                        abort = FALSE) {
   call <- match.call()
-  if (abort == TRUE) {
-    stop("check_proj4string --> ", call[[2]], " is not a valid CRS object or proj4string. Aborting!")
-  } else {
-    warning("check_proj4string --> ", call[[2]], " is not a valid CRS object or proj4string.")
-  }
+  stop("check_proj4string --> ", call[[2]], " is not a valid CRS object or ",
+       "proj4string. Aborting!")
 }
 
 #   ____________________________________________________________________________
@@ -58,6 +55,7 @@ check_proj4string.default  <- function(proj4string,
 #' @rdname check_proj4string
 #' @method check_proj4string character
 #' @export
+#' @importFrom rgdal checkCRSArgs
 check_proj4string.character  <- function(proj4string,
                                          abort = FALSE) {
   if (rgdal::checkCRSArgs(proj4string)[[1]] == FALSE) {

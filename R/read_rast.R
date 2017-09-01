@@ -34,7 +34,6 @@
 read_rast <- function(object,
                       bands_to_read = NULL,
                       verbose = TRUE) {
-
   #   __________________________________________________________________________
   #   check arguments                                                       ####
 
@@ -51,7 +50,7 @@ read_rast <- function(object,
                   Aborting!")
   )
 
-  rastinfo <- get_rastinfo(object)
+  rastinfo <- get_rastinfo(object, verbose = FALSE)
   if (rastinfo$nbands == 1) {
     return(raster::raster(object))
   } else {
