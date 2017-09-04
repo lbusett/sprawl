@@ -33,7 +33,7 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom data.table last
-#' @importFrom raster brick setZ
+#' @importFrom raster raster brick setZ
 
 crop_rast <- function(rast_object,
                       ext_object,
@@ -59,14 +59,14 @@ crop_rast <- function(rast_object,
   crop_bbox <- get_extent(ext_object, abort = TRUE)
   dims      <- c(rastinfo$nrows, rastinfo$ncols)
   rbbox_ext <- rast_bbox@extent
-  cbbox_ext <- crop_bbox@extent
 
   #   __________________________________________________________________________
-  #   reproject `ext_rast_file` if necessary                                ####
+  #   reproject `ext_object` extent if necessary                            ####
 
   if (!(rast_bbox@proj4string == crop_bbox@proj4string)) {
-    reproj_bbox <- reproj_extent(crop_bbox, rast_bbox@proj4string)
+    crop_bbox <- reproj_extent(crop_bbox, rast_bbox@proj4string)
   }
+  cbbox_ext <- crop_bbox@extent
 
   #   __________________________________________________________________________
   #   retrieve xy coords of raster                                          ####
@@ -138,8 +138,13 @@ crop_rast <- function(rast_object,
             args = translate_string, stdout = NULL)
 
     if (out_type == "rastobject") {
-      out <- raster::brick(out_filename)
-      names(out) <- paste0(rastinfo$bnames, "_cropped")
+
+      if (rastinfo$nbands == 1) {
+        out <- raster::raster(out_filename)
+      } else {
+        out <- raster::brick(out_filename)
+      }
+      names(out) <- paste0(rastinfo$bnames)
       if (length(rastinfo$Z) == rastinfo$nbands) {
         out <- raster::setZ(out, rastinfo$Z)
       }

@@ -83,16 +83,26 @@ cast_rast.character <- function(object,
   if (check_rast == "rastfile") {
     if (to == "rastfile") return(object)
     if (to == "rastobject") {
+
       if (file_ext(object) == "vrt") {
         return(raster::stack(object))
       } else {
+
+        #TODO change output based on nbands + add layer names to brick/stack
+        #to avoid problems, e.g., on mapview()
         return(raster::brick(object))
+
       }
-    }
-  stop("cast_rast --> `", as.character(call[[3]]), "` is invalid for `to`. It ",
+
+    } else {
+      #TODO substitute with an assertion
+      stop("cast_rast --> `", as.character(call[[3]]), "` is invalid for `to`. It ",
        "should be \"rastobject\" or \"rastfile\"")
-  }
-  stop("cast_vect --> ",  as.character(call[[2]]), " is not a valid raster ",
-       "filename. Aborting !")
+    }
+
+
+}
+stop("cast_rast --> ",  as.character(call[[2]]), " is not a valid raster ",
+     "filename. Aborting !")
 
 }
