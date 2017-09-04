@@ -47,16 +47,15 @@ cast_vect.default <- function(object, to) {
 #'@rdname cast_vect
 
 cast_vect.sf <- function(object, to) {
-  call <- as.list(match.call())
+  checkmate::assert_choice(to, c("spobject", "sfobject", "vectfile"))
   if (to == "sfobject") return(object)
   if (to == "spobject") return(as(object, "Spatial"))
   if (to == "vectfile") {
     temp_shape <- tempfile(fileext = ".shp")
-    write_shape(object, temp_shape)
+    sf::st_as_sf(object) %>%
+      write_shape(object, temp_shape)
     return(temp_shape)
   }
-  stop("cast_vect --> `", as.character(call[[3]]), "` is invalid for `to`. ",
-       "It should be \"sfobject\", \"spobject\" or \"vectfile\"")
 }
 
 #   ____________________________________________________________________________
@@ -67,16 +66,15 @@ cast_vect.sf <- function(object, to) {
 #'@rdname cast_vect
 
 cast_vect.sfc <- function(object, to) {
-  call <- as.list(match.call())
+  checkmate::assert_choice(to, c("spobject", "sfobject", "vectfile"))
   if (to == "sfobject") return(object)
   if (to == "spobject") return(as(object, "Spatial"))
   if (to == "vectfile") {
     temp_shape <- tempfile(fileext = ".shp")
-    write_shape(object, temp_shape)
+    sf::st_as_sf(object) %>%
+      write_shape(object, temp_shape)
     return(temp_shape)
   }
-  stop("cast_vect --> `", as.character(call[[3]]), "` is invalid for `to`. ",
-       "It should be \"sfobject\", \"spobject\" or \"vectfile\"")
 }
 
 #   ____________________________________________________________________________
@@ -87,17 +85,15 @@ cast_vect.sfc <- function(object, to) {
 #'@rdname cast_vect
 
 cast_vect.Spatial <- function(object, to) {
-  call <- as.list(match.call())
+  checkmate::assert_choice(to, c("spobject", "sfobject", "vectfile"))
   if (to == "spobject") return(object)
   if (to == "sfobject") return(sf::st_as_sf(object))
   if (to == "vectfile") {
-    sf::st_as_sf(object)
     temp_shape <- tempfile(fileext = ".shp")
-    write_shape(object, temp_shape)
+    sf::st_as_sf(object) %>%
+      write_shape(object, temp_shape)
     return(temp_shape)
   }
-  stop("cast_vect --> `", as.character(call[[3]]), "` is invalid for `to`. ",
-       "It should be \"sfobject\", \"spobject\" or \"vectfile\"")
 }
 
 #   ____________________________________________________________________________
@@ -108,7 +104,7 @@ cast_vect.Spatial <- function(object, to) {
 #'@rdname cast_vect
 
 cast_vect.character <- function(object, to) {
-  call <- as.list(match.call())
+  call <- match.call()
   check_vec <- get_spatype(object, abort = FALSE)
   if (check_vec == "vectfile") {
     if (to == "vectfile") return(object)
