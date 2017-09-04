@@ -14,6 +14,8 @@ reproj_rast(in_object, outproj_object, out_res = NULL, crop = FALSE,
 
 \item{outproj_object}{PARAM_DESCRIPTION}
 
+\item{out_res}{PARAM_DESCRIPTION}
+
 \item{crop}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{pix_buff}{PARAM_DESCRIPTION, Default: NULL}
