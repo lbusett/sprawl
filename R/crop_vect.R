@@ -67,7 +67,9 @@ crop_vect <- function(in_vect,
     obj_boundaries <- sf::st_transform(obj_boundaries, invect_proj)
   }
 
-  sf::st_agr(in_vect) = "constant"
+  if (inherits(in_vect, "sf")) {
+    sf::st_agr(in_vect) = "constant"
+  }
   cropped_vect <- sf::st_intersection(in_vect, obj_boundaries)
   return(cropped_vect)
 }

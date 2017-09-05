@@ -12,6 +12,7 @@
 #'   polygon of the fishnet (if only one element is provided, the #' same number
 #'   of pixel is aggregated in each direction). Ignored if `cellsize` is not null,
 #'   Default: 1
+#' @param shape `character [\"rect\" \"hex\"`]
 #' @param cellsize `numeric(1/2)` (optional) 1/2 element array specifying the
 #'   dimensions of the desired #' cells in the x and y directions (if only one
 #'   element is provided, the same cellsize is used in each direction),
@@ -49,6 +50,11 @@
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
 #'                                   exact_csize = F)
 #'   plot_rast(in_rast, in_poly = fishnet)
+#'
+#'   # using shape = "hex" gives and hexagonal grid instead
+#'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
+#'                                   exact_csize = T, shape = "hex")
+#'   plot_rast(in_rast, in_poly = fishnet)
 #'  }
 #' @rdname create_fishnet
 #' @export
@@ -57,6 +63,7 @@
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 create_fishnet <- function(in_rast,
                            pix_for_cell = 1,
+                           shape        = "rect",
                            cellsize     = NULL,
                            exact_csize  = TRUE,
                            to_file      = FALSE,
@@ -77,8 +84,6 @@ create_fishnet <- function(in_rast,
          "file. Aborting !")
   }
 
-
-
   if (is.null(cellsize)) {
     cellsize <- raster::res(in_rast) * pix_for_cell
   } else {
@@ -91,8 +96,8 @@ create_fishnet <- function(in_rast,
 
   in_ext <- out_ext <- get_extent(in_rast)
 
-  if (exact_csize) {
-    #   extend the extent so that it contains an integer number of cells      ####
+  if (exact_csize & shape == "rect") {
+    #   extend the extent so that it contains an integer number of cells   ####
     x_range <- in_ext@extent[3] - in_ext@extent[1]
     y_range <- in_ext@extent[4] - in_ext@extent[2]
 
@@ -100,21 +105,33 @@ create_fishnet <- function(in_rast,
     fullcells_y <- y_range / cellsize[2]
 
     if (!(fullcells_x - floor(fullcells_x)) == 0 ) {
-      out_ext@extent[3] <- out_ext@extent[1] + cellsize[1] * (floor(fullcells_x) + 1)
+      out_ext@extent[3] <- out_ext@extent[1] + cellsize[1] * (floor(fullcells_x) + 1) #nolint
     }
 
     if (!(fullcells_y - floor(fullcells_y)) == 0 ) {
-      out_ext@extent[4] <- out_ext@extent[2] + cellsize[2] * (floor(fullcells_y) + 1)
+      out_ext@extent[4] <- out_ext@extent[2] + cellsize[2] * (floor(fullcells_y) + 1) #nolint
     }
   }
 
-  ext_poly <- as(out_ext, "sfc_POLYGON")
-  geometry <- sf::st_make_grid(ext_poly,
-                               cellsize,
-                               what = "polygons")
-  fish <- sf::st_sf(cell_id = seq_len(length(geometry)[1]),
-                    geometry = geometry) %>%
-    crop_vect(in_rast)
+  if (shape == "rect") {
+    ext_poly <- as(out_ext, "sfc_POLYGON")
+    geometry <- sf::st_make_grid(ext_poly,
+                                 cellsize,
+                                 what = "polygons")
+    fish <- sf::st_sf(cell_id = seq_len(length(geometry)[1]),
+                      geometry = geometry) %>%
+      crop_vect(in_rast)
+  } else {
+    ext_poly <- as(out_ext , "sfc_POLYGON")
+    geometry <- sf::st_make_grid(ext_poly,
+                                 cellsize,
+                                 what = "corners")
+    hexes <- sp::spsample(as(geometry,"Spatial"),
+                          type = 'hexagonal',
+                          n = length(geometry), offset = c(0,0.5))
+    fish <- sp::HexPoints2SpatialPolygons(hexes) %>%
+      sf::st_as_sf(hexes)
+  }
   if (!to_file) {
     return(fish)
   } else {
