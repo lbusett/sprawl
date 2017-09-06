@@ -49,8 +49,8 @@ read_rast <- function(object,
     msg = strwrap("read_rast --> `object` is not a valid raster file.
                   Aborting!")
   )
-
-  rastinfo <- get_rastinfo(object, verbose = FALSE)
+   #TODO  find info on nbands and filenames using GDALINFO insted to avoid
+   # circularity in the call !!!!!
   if (rastinfo$nbands == 1) {
     return(raster::raster(object))
   } else {
@@ -60,4 +60,5 @@ read_rast <- function(object,
       return(raster::stack(object, bands = bands_to_read))
     }
   }
+  rastinfo <- get_rastinfo(object, verbose = FALSE)
 }

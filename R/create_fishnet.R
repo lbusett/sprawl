@@ -77,10 +77,8 @@ create_fishnet <- function(in_rast,
   #   Check the arguments                                                   ####
   #
 
-
-
   in_type <- get_rastype(in_rast)
-  if (in_type == "rastobject") {
+  if (in_type == "rastfile") {
     in_rast <- read_rast(in_rast)
   }
 
