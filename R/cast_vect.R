@@ -53,7 +53,7 @@ cast_vect.sf <- function(object, to) {
   if (to == "vectfile") {
     temp_shape <- tempfile(fileext = ".shp")
     sf::st_as_sf(object) %>%
-      write_shape(object, temp_shape)
+      write_shape(temp_shape)
     return(temp_shape)
   }
 }
@@ -72,7 +72,7 @@ cast_vect.sfc <- function(object, to) {
   if (to == "vectfile") {
     temp_shape <- tempfile(fileext = ".shp")
     sf::st_as_sf(object) %>%
-      write_shape(object, temp_shape)
+      write_shape(temp_shape)
     return(temp_shape)
   }
 }
@@ -91,7 +91,7 @@ cast_vect.Spatial <- function(object, to) {
   if (to == "vectfile") {
     temp_shape <- tempfile(fileext = ".shp")
     sf::st_as_sf(object) %>%
-      write_shape(object, temp_shape)
+      write_shape(temp_shape)
     return(temp_shape)
   }
 }
@@ -104,16 +104,11 @@ cast_vect.Spatial <- function(object, to) {
 #'@rdname cast_vect
 
 cast_vect.character <- function(object, to) {
-  call <- match.call()
-  check_vec <- get_spatype(object, abort = FALSE)
+  checkmate::assert_choice(to, c("spobject", "sfobject", "vectfile"))
+  check_vec <- get_vectype(object)
   if (check_vec == "vectfile") {
     if (to == "vectfile") return(object)
     if (to == "sfobject") return(read_vect(object))
     if (to == "spobject") return(as(read_vect(object), "Spatial"))
-    stop("cast_vect --> `", as.character(call[[3]]), "` is invalid for `to`. ",
-         "It should be \"sfobject\", \"spobject\" or \"vectfile\"")
-  } else {
-    stop("cast_vect --> ",  as.character(call[[2]]), " is not a valid vector ",
-         "filename. Aborting !")
   }
 }

@@ -71,17 +71,17 @@ create_fishnet <- function(in_rast,
                            overwrite    = TRUE,
                            crop_layer   = NULL) {
 
-  #TODO modify automatically the extent so that the cellsize is ALWAYS respected,
-  # even if it is not a submultiple of the extent.
+  #TODO modify the out_shape/to_file structure. Only use "out_filename"
 
   #   __________________________________________________________________________
   #   Check the arguments                                                   ####
   #
 
-  in_type <- get_spatype(in_rast)
-  if (!(in_type %in% c("rastobject", "rastfile"))) {
-    stop("create_fishnet --> ", in_rast, "is not an *Raster object or raster ",
-         "file. Aborting !")
+
+
+  in_type <- get_rastype(in_rast)
+  if (in_type == "rastobject") {
+    in_rast <- read_rast(in_rast)
   }
 
   if (is.null(cellsize)) {

@@ -66,32 +66,24 @@ reproj_rast <- function(in_object,
   #   ____________________________________________________________________________
   #   Check arguments                                                         ####
 
-  in_type <- get_spatype(in_object)
-  assert_that(
-    in_type %in% c("rastfile", "rastobject"),
-    msg = paste0("reproj_rast --> `", call[[2]], " is not a valir `Raster*` ",
-                 "object or raster filename. Aborting!")
-  )
-
-
+  in_type <- get_rastype(in_object)
   in_proj <- get_proj4string(in_object, abort = FALSE)
-  assert_that(
-    in_proj != "invalid",
-    msg = paste0("reproj_rast --> Unable to retrieve a valid proj4string from `",
-                 call[[2]], "` . Aborting!")
-  )
+
+  checkmate::expect_set_equal(
+    in_proj == "invalid", FALSE,
+    info = glue::glue("reproj_rast --> Invalid projection detected for ",
+                      call[[2]],". Aborting!"))
 
   out_proj <- get_proj4string(outproj_object, abort = FALSE)
-  assert_that(
-    out_proj != "invalid",
-    msg = paste0("reproj_rast --> Unable to retrieve a valid proj4string from `",
-                 call[[3]], "` . Aborting!")
-  )
+  checkmate::expect_set_equal(
+    out_proj == "invalid", FALSE,
+    info = glue::glue("reproj_rast --> Invalid projection detected in ",
+                      call[[3]],". Aborting!"))
 
-  assert_that(
-    out_type %in% c("rastobject", "rastfile"),
-    msg = paste0("reproj_rast --> `out_type must be \"rastobject\" or ",
-                 "\"rastfile\". Aborting!")
+  checkmate::expect_choice(
+    out_type, c("rastobject", "rastfile"),
+    info = glue::glue("reproj_rast --> `out_type` must be \"rastobject\" or ",
+                      "\"rastfile\". Aborting!")
   )
 
   if (verbose) {
@@ -102,7 +94,7 @@ reproj_rast <- function(in_object,
   #   __________________________________________________________________________
   #   if input is a Raster object use create_virtrast to create a GDAL vrt  ####
   #   representing the object to be passed to gdalwarp. The vrt will inherit
-  #   all "in_object" characteristics (i.e., bands)
+  #   all "in_object" characteristics (i.e., selected bands)
 
   if (in_type == "rastobject") {
     srcfile <- tempfile(fileext = ".vrt")
@@ -111,25 +103,28 @@ reproj_rast <- function(in_object,
     srcfile <- in_object
   }
 
-  if (is.null(out_filename)) {
-    out_filename <- tempfile(fileext = ifelse(out_format == "vrt",
-                                              ".vrt",".tif"))
-  }
-
-  #   ____________________________________________________________________________
-  #   If crop == TRUE, retrieve the extent from outproj_object if possible    ####
+  #   __________________________________________________________________________
+  #   If crop == TRUE, retrieve the extent from outproj_object if possible  ####
   #   The extent is then projected badk to in_proj to gauarantee that all
   #   the area included in the bbox of outproj_object is included in the
   #   output raster
   if (crop & !is(outproj_object, "character")) {
     te = get_extent(outproj_object) %.>%
-       reproj_extent(., out_proj = in_proj, enlarge = TRUE) %.>%
-       (.@extent) %.>%
-       (. + c(-pix_buff*res(in_object)[1], -pix_buff*res(in_object)[2],
-              pix_buff*res(in_object)[1], pix_buff*res(in_object)[2]))
+      reproj_extent(., out_proj = in_proj, enlarge = TRUE) %.>%
+      (.@extent) %.>%
+      (. + c(-pix_buff*res(in_object)[1], -pix_buff*res(in_object)[2],
+             pix_buff*res(in_object)[1], pix_buff*res(in_object)[2]))
   }
 
 
+  #   _________________________________________________________________________
+  #   If no filename is specified, the reprojected raster                   ####
+  #   is saved as a "tif" file in tempdir(), unless out_format is "vrt".
+  #   In the latter case, the output is a reprojected virtual file (very fast)
+  if (is.null(out_filename)) {
+    out_filename <- tempfile(fileext = ifelse(out_format == "vrt",
+                                              ".vrt",".tif"))
+  }
   #   __________________________________________________________________________
   #   Build the gdalwarp call string                                        ####
 
@@ -165,8 +160,8 @@ reproj_rast <- function(in_object,
   #   Return the result as filename or Raster object                        ####
 
   if (out_type == "rastobject") {
-    out <- read_rast(out_filename, verbose = FALSE)
-    rastinfo <- get_rastinfo(in_object, verbose = FALSE)
+    out        <- read_rast(out_filename, verbose = FALSE)
+    rastinfo   <- get_rastinfo(in_object, verbose = FALSE)
     names(out) <- rastinfo$bnames
     if (length(rastinfo$Z) != 0) {
       out <- setZ(out, rastinfo$Z)

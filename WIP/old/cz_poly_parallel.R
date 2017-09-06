@@ -178,7 +178,7 @@ er_poly_parallel <- function(zone_object,
   if (verbose) {
     pb <- txtProgressBar(max = n_selbands, style = 3)
     progress  <- function(n) utils::setTxtProgressBar(pb, n)
-    message("extract_rast--> Extracting data from ", n_selbands, ifelse(date_check, " dates", "bands"),
+    message("extract_rast--> Extracting data from ", n_selbands, ifelse(date_check, " dates", " bands"),
             " - Please wait !")
     pb <- utils::txtProgressBar(max = n_selbands, style = 3)
 
@@ -192,7 +192,7 @@ er_poly_parallel <- function(zone_object,
         {
           # for (band in 1:2) {
           if (verbose) {
-            message("extract_rast--> Extracting data from ", ifelse(date_check, " dates", "bands"), " - Please wait !")
+            message("extract_rast--> Extracting data from ", ifelse(date_check, " dates", " bands"), " - Please wait !")
           }
 
 

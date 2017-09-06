@@ -93,8 +93,8 @@ plot_rast <- function(in_rast,
   x <- NULL
 
   #TODO Reshape to use theme template.
-  if (get_spatype(in_rast) == "rastfile") {
-    in_rastplot <- raster::stack(in_rast)
+  if (get_rastype(in_rast) == "rastfile") {
+    in_rastplot <- read_rast(in_rast)
   } else {
     in_rastplot <- in_rast
   }

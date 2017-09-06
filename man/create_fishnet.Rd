@@ -4,7 +4,7 @@
 \alias{create_fishnet}
 \title{Create a "fishnet" vector over the extent of a spatial object}
 \usage{
-create_fishnet(in_rast, pix_for_cell = 1, cellsize = NULL,
+create_fishnet(in_rast, pix_for_cell = 1, shape = "rect", cellsize = NULL,
   exact_csize = TRUE, to_file = FALSE, out_shape = NULL,
   overwrite = TRUE, crop_layer = NULL)
 }
@@ -17,6 +17,8 @@ specifying how many pixels of the #' raster will be included in each
 polygon of the fishnet (if only one element is provided, the #' same number
 of pixel is aggregated in each direction). Ignored if \code{cellsize} is not null,
 Default: 1}
+
+\item{shape}{\code{character [\"rect\" \"hex\"}]}
 
 \item{cellsize}{\code{numeric(1/2)} (optional) 1/2 element array specifying the
 dimensions of the desired #' cells in the x and y directions (if only one
@@ -72,6 +74,11 @@ DETAILS
   # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
                                   exact_csize = F)
+  plot_rast(in_rast, in_poly = fishnet)
+
+  # using shape = "hex" gives and hexagonal grid instead
+  fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
+                                  exact_csize = T, shape = "hex")
   plot_rast(in_rast, in_poly = fishnet)
  }
 }

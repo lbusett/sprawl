@@ -48,14 +48,15 @@ summarize_data <- function(in_data,
     #   ________________________________________________________________________
     #   Normal use: compute avf, sd, etcetera                               ####
 
-    summ <- in_data[, list(band_n = band_n ,
-                           date   = selband,
-                           N_PIX  = length(is.na(value) == TRUE),
-                           avg    = mean(value, na.rm = TRUE),
-                           med    = as.double(stats::median(value, na.rm = TRUE)), #nolint
-                           sd     = stats::sd(value, na.rm = TRUE),
-                           min    = as.double(min(value, na.rm = TRUE)),
-                           max    = as.double(max(value, na.rm = TRUE))
+    summ <- in_data[, list(band_n    = band_n ,
+                           date      = selband,
+                           n_pix     = length(value),
+                           n_pix_val = length(which(is.na(value) == FALSE)),
+                           avg       = mean(value, na.rm = TRUE),
+                           med       = as.double(stats::median(value, na.rm = TRUE)), #nolint
+                           sd        = stats::sd(value, na.rm = TRUE),
+                           min       = as.double(min(value, na.rm = TRUE)),
+                           max       = as.double(max(value, na.rm = TRUE))
     ) , by = var]
 
     if (comp_quant) {

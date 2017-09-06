@@ -49,10 +49,12 @@ cast_rast.default <- function(object, to) {
 
 cast_rast.Raster <- function(object, to) {
 
-  call <- as.list(match.call())
+  checkmate::assert_choice(to, c("rastobject", "rastfile"))
+
   if (to == "rastobject") return(object)
   if (to == "rastfile") {
-    if (object[[1]]@file@name == "") {
+    info <- get_rastinfo(object)
+    if (info$fnames == "") {
       temprastfile <- tempfile(fileext = ".tif")
       raster::writeRaster(object,
                           filename  = temprastfile,
@@ -60,12 +62,9 @@ cast_rast.Raster <- function(object, to) {
                           overwrite = TRUE)
       return(temprastfile)
     } else {
-      object <- object[[1]]@file@name
-      return(object)
+      return(info$fnames)
     }
   }
-  stop("cast_rast --> `", as.character(call[[3]]), "` is invalid for `to`. It ",
-       "should be \"rastobject\" or \"rastfile\"")
 }
 
 #   ____________________________________________________________________________
@@ -75,34 +74,16 @@ cast_rast.Raster <- function(object, to) {
 #'@method cast_rast character
 #'@rdname cast_rast
 
-cast_rast.character <- function(object,
-                                to) {
+cast_rast.character <- function(object, to) {
 
-  call <- as.list(match.call())
-  check_rast <- get_spatype(object)
-  if (check_rast == "rastfile") {
-    if (to == "rastfile") return(object)
-    if (to == "rastobject") {
+  checkmate::assert_choice(to, c("rastobject", "rastfile"))
+  checkmate::assert_file_exists(object, "r")
 
-      if (file_ext(object) == "vrt") {
-        return(raster::stack(object))
-      } else {
+  check_rast <- get_rastype(object)
+  if (to == "rastfile") {
+    return(object)
+  } else {
+    return(read_rast(object))
 
-        #TODO change output based on nbands + add layer names to brick/stack
-        #to avoid problems, e.g., on mapview()
-        return(raster::brick(object))
-
-      }
-
-    } else {
-      #TODO substitute with an assertion
-      stop("cast_rast --> `", as.character(call[[3]]), "` is invalid for `to`. It ",
-       "should be \"rastobject\" or \"rastfile\"")
-    }
-
-
-}
-stop("cast_rast --> ",  as.character(call[[2]]), " is not a valid raster ",
-     "filename. Aborting !")
-
+  }
 }

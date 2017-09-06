@@ -4,10 +4,10 @@
 \alias{read_vect}
 \title{read a vector spatial file to R}
 \usage{
-read_vect(shp_file, as_sp = FALSE, ...)
+read_vect(in_file, as_sp = FALSE, ...)
 }
 \arguments{
-\item{shp_file}{\code{character} Filename of ESRI shapefile to be opened}
+\item{in_file}{\code{character} Filename of ESRI shapefile to be opened}
 
 \item{as_sp}{\code{logical} If TRUE, the opened object is automatically converted
 to \code{sp} format. Otherwise, an \code{sf} object is returned. Default: FALSE}
@@ -29,14 +29,14 @@ possibility of automatic re-casting to \code{*sp} objects
 \dontrun{
 library(sprawl.data)
 # open a shapefile as a `sf` object
- shp_file = system.file("extdata/shapes","lc_polys.shp",
+ in_file = system.file("extdata/shapes","lc_polys.shp",
                         package = "sprawl.data")
- read_vect(shp_file)
+ read_vect(in_file)
 
 # open a shapefile as a `sp` object
- shp_file = system.file("extdata/shapes","lc_polys.shp",
+ in_file = system.file("extdata/shapes","lc_polys.shp",
                         package = "sprawl.data")
- read_vect(shp_file, as_sp = TRUE)
+ read_vect(in_file, as_sp = TRUE)
 }
 }
 \seealso{

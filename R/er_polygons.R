@@ -24,7 +24,7 @@
 #' @importFrom foreach foreach
 #' @importFrom gdalUtils gdal_translate
 #' @importFrom raster res setZ raster writeRaster getValues extent yFromRow extract xyFromCell
-#' @importFrom sf st_bbox st_as_sf st_geometry st_set_crs
+#' @importFrom sf st_bbox st_as_sf st_geometry st_set_crs st_area
 #' @importFrom sp proj4string
 #' @importFrom tibble as_tibble
 #' @importFrom velox velox
@@ -136,7 +136,7 @@ cl <- sprawl_initcluster(in_rast)
 cl_opts <- cl[[2]]
 if (er_opts$verbose) {
   message("extract_rast --> Extracting data from ", n_selbands,
-          ifelse(date_check, " dates", "bands"),
+          ifelse(date_check, " dates", " bands"),
           " - Please wait !")
   pbar <- utils::txtProgressBar(min = 0, max = n_selbands, initial = 0,
                                 style = 3)
@@ -392,7 +392,7 @@ results <- foreach::foreach(band = 1:cl_opts$n_bands,
     # this computes number of pixels per polygon and gives a sequential
     # number to each pixel in the polygon (https://goo.gl/c83Pfd)
 
-    all_data <- all_data[, c("band_n", "date", "N_PIX", "N") :=
+    all_data <- all_data[, c("band_n", "date", "n_pix", "N") :=
                            list(band, seldates[band], .N, seq_len(.N)),
                          by = mdxtnq]
   }
@@ -457,23 +457,26 @@ if (er_opts$summ_data) {
     }
   }
 
+  # Add a column for area
+  stat_data$area <- sf::st_area(stat_data$geometry)
+
   # define the names and order of the output columns
 
   if (!is.null(er_opts$FUN)) {
-    keep_cols <- c("mdxtnq", "band_n", "date",
-                   "N_PIX", "myfun",
+    keep_cols <- c("mdxtnq", "band_n", "date", "area",
+                   "n_pix", "n_pix_val", "myfun",
                    names_shp,
                    "geometry")
   } else {
 
     if (!er_opts$comp_quant) {
-      keep_cols <- c("mdxtnq", "band_n", "date",
-                     "N_PIX", "avg", "med", "sd", "min", "max",
+      keep_cols <- c("mdxtnq", "band_n", "date", "area",
+                     "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
                      names_shp,
                      "geometry")
     } else {
-      keep_cols <- c("mdxtnq", "band_n", "date",
-                     "N_PIX", "avg", "med", "sd", "min", "max",
+      keep_cols <- c("mdxtnq", "band_n", "date", "area",
+                     "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
                      "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65",
                      "q75", "q85", "q95", "q99",
                      names_shp,
@@ -544,7 +547,7 @@ if (er_opts$full_data) {
   }
 
   # define the order of the output columns
-  keep_cols <- c("mdxtnq", "band_n", "date", "N_PIX", "N",
+  keep_cols <- c("mdxtnq", "band_n", "date", "n_pix", "N",
                  "value",
                  names_shp,
                  "x_coord", "y_coord")

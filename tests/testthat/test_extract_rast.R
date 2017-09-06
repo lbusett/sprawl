@@ -34,7 +34,7 @@ testthat::test_that("Test On polygons extraction", {
   expect_equal(out$stats$avg, out2$stats$avg)
 
   # Check that processing with and without valid id_field are identical
-  out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
+  out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T, add_feat = F,
                          selbands = c(1,2), small = T, id_field = "id")
   out2   <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                          selbands = c(1,2), small = T, id_field = "lc_type",
@@ -111,4 +111,3 @@ testthat::test_that("Test On points extraction", {
   testthat::expect_s3_class(out, "data.frame")
   testthat::expect_error(st_geometry(out))
 })
-
