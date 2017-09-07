@@ -6,7 +6,7 @@ testthat::test_that("Test On raster aggregation", {
 
   in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
                                           package = "sprawl.data")
-  in_rast      <- read_rast(in_file, bands_to_read = 20)
+  in_rast      <- read_rast(in_file, bands = 20)
   tempraster   <- tempfile(fileext = ".tif")
   in_obj_zones <- raster::aggregate(in_rast,
                                       fact      = 4,

@@ -38,9 +38,10 @@ create_virtrast <- function(object,
 
   if (rastinfo$nbands > 1) {
 
-    if (length(unique(rastinfo$fnames)) > 1) {
-      # buildvrt string on multi band rasters with bands coming from different
-      # files: use the "-input-file-list" argument
+    if (length(rastinfo$fnames) > 1) {
+      # buildvrt string on multi band rasters with bands possibly coming from
+      #  differen  files (i.e., rasterStack: use the "-input-file-list" argument
+      # with "-separate"
       tmp_txt <- tempfile(fileext = ".txt")
       writeLines(rastinfo$fnames, tmp_txt)
       buildvrt_string <- paste(
@@ -53,10 +54,10 @@ create_virtrast <- function(object,
         tmp_txt,#   Create a temporary vrt file                                             ####
 
         out_vrt_file)
-    } else {
+     } else {
       # buildvrt string on multi band rasters with bands coming from the same
-      # file
-      buildvrt_string <- paste(if (!is.null(out_extent)) paste0("-te ",
+      # file (i.e., rasterBrick): use just -b with no "-separate
+       buildvrt_string <- paste(if (!is.null(out_extent)) paste0("-te ",
                                          paste(out_extent, collapse = " ")),
                                paste(paste("-b ", rastinfo$indbands),
                                      collapse = " "),
@@ -79,7 +80,8 @@ create_virtrast <- function(object,
 
   system2(file.path(find_gdal(), "gdalbuildvrt"),
           args = buildvrt_string,
-          stdout = NULL)
+          stdout = NULL,
+          stderr = NULL)
   return(out_vrt_file)
 
 }

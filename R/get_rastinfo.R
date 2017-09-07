@@ -38,6 +38,7 @@ get_rastinfo <- function(object, verbose = TRUE) {
   if (verbose) message("get_rastinfo --> Retrieving info from: `",
                      deparse(substitute(call)$object), "`")
   # object <- cast_rast(object, "rastobject")
+   object <- cast_rast(object, "rastobject")
   if (inherits(object, "RasterBrick")) {
     info <- list(nbands      = object@data@nlayers,
                  indbands    = seq(1, object@data@nlayers, 1),
@@ -88,25 +89,25 @@ get_rastinfo <- function(object, verbose = TRUE) {
                  units       = get_projunits(get_proj4string(object)))
     return(info)
   }
-  #TODO Retrieve info forom GDALINFO
-    if (inherits(object, "character")) {
-
-    info <- list(nbands      = length(object@layers),
-                 indbands    = unlist(lapply(object@layers,
-                                             FUN = function(x) {x@data@band})),
-                 ncols       = object@ncols,
-                 nrows       = object@nrows,
-                 ncells      = object@ncols * object@nrows,
-                 res         = raster::res(object),
-                 bnames      = names(object),
-                 fnames      = unlist(lapply(object@layers,
-                                             FUN = function(x) {x@file@name})),
-                 Z           = object@z,
-                 dtype       = unlist(lapply(object@layers,
-                                             FUN = function(x) {x@file@datanotation})), #nolint
-                 proj4string = get_proj4string(object),
-                 units       = get_projunits(get_proj4string(object)))
-    return(info)
-    }
+  # #TODO Retrieve info forom GDALINFO
+  #   if (inherits(object, "character")) {
+  #
+  #   info <- list(nbands      = length(object@layers),
+  #                indbands    = unlist(lapply(object@layers,
+  #                                            FUN = function(x) {x@data@band})),
+  #                ncols       = object@ncols,
+  #                nrows       = object@nrows,
+  #                ncells      = object@ncols * object@nrows,
+  #                res         = raster::res(object),
+  #                bnames      = names(object),
+  #                fnames      = unlist(lapply(object@layers,
+  #                                            FUN = function(x) {x@file@name})),
+  #                Z           = object@z,
+  #                dtype       = unlist(lapply(object@layers,
+  #                                            FUN = function(x) {x@file@datanotation})), #nolint
+  #                proj4string = get_proj4string(object),
+  #                units       = get_projunits(get_proj4string(object)))
+  #   return(info)
+  #   }
 
 }

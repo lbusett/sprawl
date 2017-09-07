@@ -3,8 +3,8 @@
 #'   `RasterBrick`, automatically checking if the input file is valid and is
 #'   a single- or multi-band object.
 #' @param object `character` filename to be read
-#' @param bands_to_read `numeric array` If the input is a multiband raster,
-#'   band numbers to be read (e.g., bands_to_read = c(1,5,7) will read only the
+#' @param bands `numeric array` If the input is a multiband raster,
+#'   band numbers to be read (e.g., bands = c(1,5,7) will read only the
 #'   specified bands in a `RasterStack`)
 #' @param verbose `logical` If FALSE, processing mesasges are suppressed,
 #'  Default: TRUE
@@ -23,42 +23,47 @@
 #'   read_rast(in_file)
 #'
 #'   # read a multiband file selecting specific bands
-#'   read_rast(in_file, bands_to_read = c(1,10))
+#'   read_rast(in_file, bands = c(1,10))
 #'
 #' }
 #' @rdname read_rast
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that is.readable
+#' @importFrom checkmate assertFileExists test_set_equal test_class
 #' @importFrom raster raster brick stack
-read_rast <- function(object,
-                      bands_to_read = NULL,
-                      verbose = TRUE) {
+read_rast    <- function(in_file,
+                         bands = NULL,
+                         verbose       = TRUE) {
   #   __________________________________________________________________________
   #   check arguments                                                       ####
+  #
 
-  assertthat::assert_that(
-    assertthat::is.readable(object),
-    msg = strwrap("read_rast --> `object` is not a valid filename, or is not
-                  readable. Aborting!")
-  )
+  call <- match.call()
+  checkmate::assertFileExists(in_file, "r")
 
-  assertthat::assert_that(
-    system2(file.path(find_gdal(), "gdalinfo"), args = object, stderr = NULL,
-            stdout = NULL) != 1,
-    msg = strwrap("read_rast --> `object` is not a valid raster file.
-                  Aborting!")
-  )
-   #TODO  find info on nbands and filenames using GDALINFO insted to avoid
-   # circularity in the call !!!!!
-  if (rastinfo$nbands == 1) {
-    return(raster::raster(object))
-  } else {
-    if (length(unique(rastinfo$fnames) == 1) & is.null(bands_to_read)) {
-      return(raster::brick(object))
-    } else {
-      return(raster::stack(object, bands = bands_to_read))
-    }
+  info <- try(rgdal::GDALinfo(in_file, silent = TRUE), silent = TRUE)
+  if (!checkmate::test_class(info, "GDALobj")) {
+    stop("read_rast --> `", eval(call[[2]]), "` is not a valid raster file. ",
+         "Aborting!")
   }
-  rastinfo <- get_rastinfo(object, verbose = FALSE)
-}
+
+  if (info[["bands"]] == 1) {
+    # On single band raster, return a RasterLayer
+    return(raster::raster(in_file))
+  } else {
+      # On multi band raster non vrt, return a RasterBrick, unless only
+      # one band is requested
+      if (is.null(bands)) {
+        return(raster::brick(in_file))
+      } else {
+        if (length(bands) == 1) {
+          return(raster::raster(in_file, band = bands))
+        } else {
+          return(raster::stack(in_file, bands = bands))
+        }
+      }
+    }
+
+    # rastinfo     <- get_rastinfo(in_file, verbose = FALSE)
+  }

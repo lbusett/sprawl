@@ -46,6 +46,7 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that
 #' @importFrom wrapr "%.>%"
+#' @export "%.>%"
 reproj_rast <- function(in_object,
                         outproj_object,
                         out_res         = NULL,
@@ -69,16 +70,16 @@ reproj_rast <- function(in_object,
   in_type <- get_rastype(in_object)
   in_proj <- get_proj4string(in_object, abort = FALSE)
 
-  checkmate::expect_set_equal(
-    in_proj == "invalid", FALSE,
-    info = glue::glue("reproj_rast --> Invalid projection detected for ",
-                      call[[2]],". Aborting!"))
+  checkmate::assertSetEqual(
+    (in_proj == "invalid"), FALSE)
+    # info = glue::glue("reproj_rast --> Invalid projection detected for ",
+    #                   call[[2]],". Aborting!"))
 
   out_proj <- get_proj4string(outproj_object, abort = FALSE)
-  checkmate::expect_set_equal(
-    out_proj == "invalid", FALSE,
-    info = glue::glue("reproj_rast --> Invalid projection detected in ",
-                      call[[3]],". Aborting!"))
+  checkmate::assertSetEqual(
+    out_proj == "invalid", FALSE)
+    # info = glue::glue("reproj_rast --> Invalid projection detected in ",
+    #                   call[[3]],". Aborting!"))
 
   checkmate::expect_choice(
     out_type, c("rastobject", "rastfile"),

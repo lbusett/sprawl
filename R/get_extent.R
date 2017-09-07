@@ -135,7 +135,15 @@ get_extent.character <- function(object,
                                  abort = FALSE) {
 
   call     <- match.call()
-  obj_type <- get_spatype(object, abort = abort)
+
+  obj_type <- try(get_rastype(object), silent = T)
+  if (class(obj_type) == "try-error") {
+    obj_type <- try(get_vectype(object), silent = T)
+  }
+  if (class(obj_type) == "try-error") {
+    stop()
+  }
+
 
   if (obj_type %in% c("rastfile", "vectfile")) {
 

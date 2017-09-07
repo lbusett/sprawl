@@ -40,9 +40,11 @@ summarize_data <- function(in_data,
 
     summ <- in_data[, list(band_n = band_n ,
                            date   = selband,
-                           N_PIX  = .N),
+                           n_pix  = .N,
+                           n_pix_val = .N),
                     by = var]
     summ[,"myfun" := myfundata$value]
+
   } else {
 
     #   ________________________________________________________________________

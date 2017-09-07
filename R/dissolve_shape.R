@@ -19,16 +19,18 @@
 #'  \code{\link[tibble]{as_data_frame}}
 #' @rdname dissolve_shape
 #' @export
-#' @importFrom dplyr group_by_ summarize_all first n_distinct
+#' @importFrom dplyr group_by_ first n_distinct summarize_all
+#' @importFrom sf st_as_sf
 #' @importFrom tibble as_data_frame
 
 dissolve_shape <- function(in_object, byvar, var_as_NA = FALSE) {
 
+  #   ____________________________________________________________________________
+  #   Check the inputs                                                        ####
 
-#   ____________________________________________________________________________
-#   Check the inputs                                                        ####
-
-  type <- get_spatype(in_object, abort = TRUE)
+  #TODO find a workaround to avoid this !!!!
+  library("sf")
+  type <- get_vectype(in_object)
   if (type == "spobject") in_object <- as(in_object, "Spatial")
   if (type == "vectfile") in_object <- read_vect(in_object,
                                                  strigsAsFactors = TRUE)
@@ -37,29 +39,31 @@ dissolve_shape <- function(in_object, byvar, var_as_NA = FALSE) {
   if (!(byvar %in% names(in_object))) stop(
     "The selected grouping variable is not present in the columns of the input ", #nolint
     "object. Aborting !")
-#   ____________________________________________________________________________
-#   Perform the dissolve                                                   ####
-#
+  #   ____________________________________________________________________________
+  #   Perform the dissolve                                                   ####
+  #
   out_object <- in_object %>%
     # sf::st_cast("MULTIPOLYGON") %>%
     dplyr::group_by_(byvar) %>%
     dplyr::summarize_all(dplyr::first) %>%
-    mutate_if(is.character, factor)
+    dplyr::mutate_if(is.character, factor)
 
-#   ____________________________________________________________________________
-#   Check the non-grouping columns. If in the input object the different    ####
-#   features that are joined in each group of the output contain different
-#   values, the value of the column in the output is set to "variable".
-#
+  #   ____________________________________________________________________________
+  #   Check the non-grouping columns. If in the input object the different    ####
+  #   features that are joined in each group of the output contain different
+  #   values, the value of the column in the output is set to "variable".
+  #
   check_cols <- tibble::as_data_frame(in_object) %>%
     dplyr::group_by_(byvar) %>%
     dplyr::summarize_all(dplyr::n_distinct)
 
   for (selcol in 2:(length(check_cols) - 1)) {
     out_object[,selcol] <- ifelse((max(check_cols[[selcol]]) != 1),
-        ifelse(var_as_NA, NA, "variable"),
-        out_object[,selcol] )
+                                  ifelse(var_as_NA, NA, "variable"),
+                                  out_object[,selcol] )
   }
+  out_object <- out_object %>%
+    sf::st_as_sf()
 
   return(out_object)
 }

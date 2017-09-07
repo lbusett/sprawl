@@ -29,6 +29,7 @@
 #' @rdname read_vect
 #' @export
 #' @importFrom sf read_sf
+#' @importFrom checkmate assertFileExists
 #'
 read_vect <- function(in_file, as_sp = FALSE, ...){
 

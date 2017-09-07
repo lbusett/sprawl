@@ -4,17 +4,17 @@
 \alias{read_rast}
 \title{read a raster file from disk}
 \usage{
-read_rast(object, bands_to_read = NULL, verbose = TRUE)
+read_rast(in_file, bands = NULL, verbose = TRUE)
 }
 \arguments{
-\item{object}{\code{character} filename to be read}
-
-\item{bands_to_read}{\code{numeric array} If the input is a multiband raster,
-band numbers to be read (e.g., bands_to_read = c(1,5,7) will read only the
+\item{bands}{\code{numeric array} If the input is a multiband raster,
+band numbers to be read (e.g., bands = c(1,5,7) will read only the
 specified bands in a \code{RasterStack})}
 
 \item{verbose}{\code{logical} If FALSE, processing mesasges are suppressed,
 Default: TRUE}
+
+\item{object}{\code{character} filename to be read}
 }
 \value{
 a \code{RasterLayer}, \code{RasterStack} or \code{RasterBrick} object
@@ -40,7 +40,7 @@ DETAILS
   read_rast(in_file)
 
   # read a multiband file selecting specific bands
-  read_rast(in_file, bands_to_read = c(1,10))
+  read_rast(in_file, bands = c(1,10))
 
 }
 }

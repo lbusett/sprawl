@@ -142,6 +142,7 @@ crop_rast <- function(rast_object,
       if (rastinfo$nbands == 1) {
         out <- raster::raster(out_filename)
       } else {
+
         out <- raster::brick(out_filename)
       }
       names(out) <- paste0(rastinfo$bnames)

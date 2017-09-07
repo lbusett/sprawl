@@ -22,10 +22,10 @@ er_getbands <- function(in_rast,
     "2-element array containing starting and ending Dates for the extraction."
   )
   # Check if in_rast is a raster object or file -----
-  if (get_spatype(in_rast) == "rastfile") {
+  if (get_rastype(in_rast) == "rastfile") {
     in_rast <- raster::stack(in_rast)
   }
-  if (get_spatype(in_rast) != "rastobject") {
+  if (get_rastype(in_rast) != "rastobject") {
     stop("`in_rast` is not a valid *raster object or raster file ! Aborting !")
   }
   nbands <- raster::nlayers(in_rast)

@@ -333,7 +333,6 @@ results <- foreach::foreach(band = 1:cl_opts$n_bands,
   if (er_opts$summ_data) {
     stat_data <- data.table::rbindlist(stat_data) %>%
       data.table::setkey("mdxtnq")
-
   }
 
   #   ______________________________________________________________________

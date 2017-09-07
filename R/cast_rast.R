@@ -54,7 +54,7 @@ cast_rast.Raster <- function(object, to) {
   if (to == "rastobject") return(object)
   if (to == "rastfile") {
     info <- get_rastinfo(object)
-    if (info$fnames == "") {
+    if (is.null(info$fnames)) {
       temprastfile <- tempfile(fileext = ".tif")
       raster::writeRaster(object,
                           filename  = temprastfile,

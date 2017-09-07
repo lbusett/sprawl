@@ -37,7 +37,7 @@ aggregate_rast <- function(in_rast_values,
                            verbose  = TRUE ){
 
   geometry <- myfun <- NULL
-browser()
+
   #TODO recheck this function. Seek to remove the "method" argument
 
   #   __________________________________________________________________________
