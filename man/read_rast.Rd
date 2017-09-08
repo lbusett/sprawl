@@ -7,14 +7,14 @@
 read_rast(in_file, bands = NULL, verbose = TRUE)
 }
 \arguments{
+\item{in_file}{\code{character} filename to be read}
+
 \item{bands}{\code{numeric array} If the input is a multiband raster,
 band numbers to be read (e.g., bands = c(1,5,7) will read only the
 specified bands in a \code{RasterStack})}
 
 \item{verbose}{\code{logical} If FALSE, processing mesasges are suppressed,
 Default: TRUE}
-
-\item{object}{\code{character} filename to be read}
 }
 \value{
 a \code{RasterLayer}, \code{RasterStack} or \code{RasterBrick} object

@@ -218,8 +218,7 @@ extract_rast <- function(in_rast,
     # Now crop the raster on the vector extent. This speeds-up consistently the
     # processing in case the vectors cover only a small part of the raster
 
-    in_rast_proc <- crop_rast(in_rast, in_vect_crop, out_type = "rastobject") %>%
-      raster::stack()
+    in_rast_proc <- crop_rast(in_rast, in_vect_crop, out_type = "rastobject")
 
     # reset some useful info as that of the original file
     # TODO change "crop_rast" behaviour to keep this info from the original !

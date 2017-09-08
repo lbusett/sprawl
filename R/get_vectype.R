@@ -1,8 +1,8 @@
 #' @title check the "spatial type" of a vector object or file
 #' @description accessory function to check if an object passed to the function
 #'   corresponds to a `*Spatial` Object, a `sf` object, or a valid vector file
-#' @param object either a `R` object or a `character` string pointing to a vector
-#'   or raster layer
+#' @param in_object either a `R` object or a `character` string pointing to a vector
+#'   layer
 #' @return character vector equal to *spobject*, *sfobject*, *rastobject*, *vectfile* or *rastfile*
 #' @rdname get_vectype
 #' @export
@@ -24,7 +24,7 @@
 #' }
 #'
 
-get_vectype  <- function(object) {
+get_vectype  <- function(in_object) {
   UseMethod("get_vectype")
 }
 
@@ -69,7 +69,7 @@ get_vectype.character <- function(in_object) {
 #' @rdname get_vectype
 #' @method get_vectype sf
 #' @export
-get_vectype.sf <- function(object) {
+get_vectype.sf <- function(in_object) {
   "sfobject"
 }
 
@@ -79,7 +79,7 @@ get_vectype.sf <- function(object) {
 #' @rdname get_vectype
 #' @method get_vectype sfc
 #' @export
-get_vectype.sfc  <- function(object) {
+get_vectype.sfc  <- function(in_object) {
   "sfobject"
 }
 
@@ -90,7 +90,7 @@ get_vectype.sfc  <- function(object) {
 #' @rdname get_vectype
 #' @method get_vectype Spatial
 #' @export
-get_vectype.Spatial <- function(object) {
+get_vectype.Spatial <- function(in_object) {
   "spobject"
 }
 
@@ -100,7 +100,7 @@ get_vectype.Spatial <- function(object) {
 #' @rdname get_vectype
 #' @method get_vectype Spatial
 #' @export
-get_vectype.sprawlext <- function(object) {
+get_vectype.sprawlext <- function(in_object) {
   "sprawlext"
 }
 

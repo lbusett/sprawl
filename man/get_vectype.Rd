@@ -10,23 +10,23 @@
 \alias{get_vectype.sprawlext}
 \title{check the "spatial type" of a vector object or file}
 \usage{
-get_vectype(object)
+get_vectype(in_object)
 
 \method{get_vectype}{default}(in_object)
 
 \method{get_vectype}{character}(in_object)
 
-\method{get_vectype}{sf}(object)
+\method{get_vectype}{sf}(in_object)
 
-\method{get_vectype}{sfc}(object)
+\method{get_vectype}{sfc}(in_object)
 
-\method{get_vectype}{Spatial}(object)
+\method{get_vectype}{Spatial}(in_object)
 
-\method{get_vectype}{Spatial}(object)
+\method{get_vectype}{Spatial}(in_object)
 }
 \arguments{
-\item{object}{either a \code{R} object or a \code{character} string pointing to a vector
-or raster layer}
+\item{in_object}{either a \code{R} object or a \code{character} string pointing to a vector
+layer}
 }
 \value{
 character vector equal to \emph{spobject}, \emph{sfobject}, \emph{rastobject}, \emph{vectfile} or \emph{rastfile}

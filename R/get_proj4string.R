@@ -81,14 +81,20 @@ get_proj4string.character <- function(object,
              "or spatial file name. Aborting!")
       } else {
         warning("get_proj4string --> ", call[[2]], " is not a valid proj4 string ",
-             "or spatial file name.")
+                "or spatial file name.")
         return("invalid")
       }
 
     }
   }
 
-  obj_type <- get_spatype(object)
+  obj_type <- try(get_rastype(object), silent = T)
+  if (class(obj_type) == "try-error") {
+    obj_type <- try(get_vectype(object), silent = T)
+  }
+  if (class(obj_type) == "try-error") {
+    stop()
+  }
 
   if (obj_type %in% c("rastfile", "vectfile")) {
 

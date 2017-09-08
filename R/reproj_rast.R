@@ -46,7 +46,7 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that
 #' @importFrom wrapr "%.>%"
-#' @export "%.>%"
+
 reproj_rast <- function(in_object,
                         outproj_object,
                         out_res         = NULL,

@@ -44,8 +44,15 @@ crop_vect <- function(in_vect,
 
   #   __________________________________________________________________________
   #   Check arguments                                                       ####
-  vectype <- get_spatype(in_vect)
-  objtype <- get_spatype(in_obj)
+  vectype <- get_vectype(in_vect)
+
+  objtype <- try(get_rastype(in_obj), silent = T)
+  if (class(objtype) == "try-error") {
+    objtype <- try(get_vectype(in_obj), silent = T)
+  }
+  if (class(objtype) == "try-error") {
+    stop()
+  }
   if (!vectype %in% c("sfobject", "spobject", "vectfile")) {
     stop("crop_vect --> in_vect is not a valid vector object (sp, sf or ",
          "vector file")
@@ -59,7 +66,7 @@ crop_vect <- function(in_vect,
   } else {
     in_vect <- cast_vect(in_vect, "sfobject")
   }
-  obj_bbox  <- get_extent(in_obj)
+  obj_bbox    <- get_extent(in_obj)
   invect_proj <- get_proj4string(in_vect)
   inobj_proj  <- get_proj4string(in_obj)
   obj_boundaries <- as(obj_bbox, "sfc_POLYGON")

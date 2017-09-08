@@ -2,7 +2,7 @@
 #' @description reads a raster file to a `RasterLayer`, `RasterStack` or
 #'   `RasterBrick`, automatically checking if the input file is valid and is
 #'   a single- or multi-band object.
-#' @param object `character` filename to be read
+#' @param in_file `character` filename to be read
 #' @param bands `numeric array` If the input is a multiband raster,
 #'   band numbers to be read (e.g., bands = c(1,5,7) will read only the
 #'   specified bands in a `RasterStack`)

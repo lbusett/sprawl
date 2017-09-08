@@ -1,8 +1,6 @@
 context("Extract data from raster - on polygons")
 library(sprawl.data)
 library(testthat)
-
-testthat::test_that("Basic test on polygons extraction", {
   in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
                                     package = "sprawl.data"),
                         stringsAsFactors = T)
@@ -11,6 +9,8 @@ testthat::test_that("Basic test on polygons extraction", {
   in_rast  <- read_rast(in_file)
   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8),
                                               year = 2013))
+testthat::test_that("Basic test on polygons extraction", {
+
   # skip_on_cran()
   skip_on_travis()
 
@@ -37,14 +37,6 @@ testthat::test_that("Basic test on polygons extraction", {
 
 testthat::test_that(
   "Polygons extraction with and without valid id_field are identical", {
-    in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
-                                      package = "sprawl.data"),
-                          stringsAsFactors = T)
-    in_file  <- system.file("extdata/MODIS_test", "EVIts_test.tif",
-                            package = "sprawl.data")
-    in_rast  <- read_rast(in_file)
-    in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8),
-                                                year = 2013))
     # Check that processing with and without valid id_field are identical
     out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                            selbands = c(1,2), small = T, id_field = "id")
@@ -69,7 +61,7 @@ testthat::test_that(
     # variable
     out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                            selbands = c(1,2), small = T, id_field = "id")
-    out2  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
+    out2  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                           selbands = c(1,2), small = T, comp_quant = TRUE)
     expect_equal(out$stats$avg, out2$stats$avg)
     expect_equal(out$stats$sd, out2$stats$sd)
