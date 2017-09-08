@@ -1,14 +1,33 @@
 context("Extract data from raster - on polygons")
 library(sprawl.data)
 library(testthat)
-  in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
-                                    package = "sprawl.data"),
-                        stringsAsFactors = T)
-  in_file  <- system.file("extdata/MODIS_test", "EVIts_test.tif",
-                          package = "sprawl.data")
-  in_rast  <- read_rast(in_file)
-  in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8),
-                                              year = 2013))
+library(sf)
+
+set.seed(1)
+in_rast  <- build_testraster(100,100,4)
+in_polys <- create_fishnet(in_rast, pix_for_cell = 5) %>%
+  dplyr::sample_n(10) %>%
+  dplyr::mutate(id = seq(1,10),
+                field_1 = sample(letters, 10),
+                field_2 = sample(1:10, 10))
+cut_ext <- c(-100, -85, 100, 81)
+names(cut_ext) <- c("xmin", "ymin", "xmax", "ymax")
+in_rast  <- raster::setZ(in_rast,
+                         doytodate(seq(1,32, by = 8), year = 2013)) %>%
+  crop_rast(methods::new("sprawlext",
+                         extent = cut_ext,
+                         proj4string = "+init=epsg:4326"),
+            verbose = FALSE)
+
+
+# in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
+#                                   package = "sprawl.data"),
+#                       stringsAsFactors = T)
+# in_file  <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+#                         package = "sprawl.data")
+# in_rast  <- read_rast(in_file)
+# in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8),
+#                                             year = 2013))
 testthat::test_that("Basic test on polygons extraction", {
 
   # skip_on_cran()
@@ -22,13 +41,16 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-20","2013-01-08"))) #nolint
 
   out <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
-                      verbose = FALSE)
+                      verbose = FALSE, addfeat = T)
+  out2 <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
+                      verbose = FALSE, addfeat = F, addgeom = F)
   expect_is(out, "list")
+  expect_equal(out$stats$avg, out2$stats$avg)
   out <- extract_rast(in_rast, in_polys, selbands = c(2,3), verbose = FALSE)
   expect_is(out, "list")
   # Check that chunked and non-chunked processing yields the same results
   out  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
-                       selbands = c(1,2), small = F)
+                       selbands = c(1,2), small = F, addgeom = F)
   out2 <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                        selbands = c(1,2), maxchunk = 30000,  small = F)
   expect_equal(out$alldata$value, out2$alldata$value)
@@ -37,11 +59,12 @@ testthat::test_that("Basic test on polygons extraction", {
 
 testthat::test_that(
   "Polygons extraction with and without valid id_field are identical", {
+    skip_on_travis()
     # Check that processing with and without valid id_field are identical
     out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                            selbands = c(1,2), small = T, id_field = "id")
     out2   <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
-                           selbands = c(1,2), small = T, id_field = "lc_type",
+                           selbands = c(1,2), small = T, id_field = "field_1",
                            addfeat = FALSE)
 
     out3  <- expect_warning(extract_rast(in_rast, in_polys, verbose = F,
@@ -70,14 +93,15 @@ testthat::test_that(
 testthat::test_that(
   "Polygons extraction results are coherent with `raster::extract`", {
     # Check that results are coherent with `raster::extract` on the test dataset
+    skip_on_travis()
     out_extract_rast  <- extract_rast(in_rast, in_polys, selbands = c(1,2),
                                       verbose = F, keep_null = T, addgeom = F,
                                       full_data = F, small = T,
                                       comp_quant = FALSE)
     outcomp <- out_extract_rast$stats$avg
-    expect_warning(out_extract <- raster::extract(in_rast[[1:2]],
-                                                  as(in_polys, "Spatial"),
-                                                  fun = "mean", na.rm = T))
+    out_extract <- raster::extract(in_rast[[1:2]],
+                                   as(in_polys, "Spatial"),
+                                   fun = "mean", na.rm = T)
     expect_equal(mean(as.numeric(out_extract), na.rm = TRUE),
                  mean(outcomp, na.rm = TRUE))
     outcustom <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = F,

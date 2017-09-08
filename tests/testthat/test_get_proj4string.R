@@ -43,7 +43,7 @@ testthat::test_that("Test projection string",{
   expect_error(get_proj4string(rastobj, abort = TRUE))
 
   # warning/abort on invalid filename or object ----
-  expect_warning(out <- get_proj4string("pippo.shp"))
+  expect_error(out <- get_proj4string("pippo.shp"))
   expect_equal(out, "invalid")
   expect_error(get_proj4string(123, abort = TRUE))
 

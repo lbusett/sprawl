@@ -89,7 +89,7 @@ get_extent.Extent  <- function(object,
                                abort = FALSE) {
   assertthat::assert_that(class("proj4string") == "character")
   coords        <- object[c(1,3,2,4)]
-  proj4string   <- check_proj4string(proj4string, abort = abort)
+  proj4string   <- check_proj4string(proj4string, abort = TRUE)
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   outext        <- methods::new("sprawlext",
                                 extent      = coords,
@@ -116,7 +116,7 @@ get_extent.matrix  <- function(object,
     }
   }
   coords        <- as.numeric(object)
-  proj4string   <- check_proj4string(proj4string, abort = abort)
+  proj4string   <- check_proj4string(proj4string, abort = TRUE)
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
   outext        <- methods::new("sprawlext",
                                 extent      = coords,
@@ -183,7 +183,7 @@ get_extent.Raster <- function(object,
 
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-  proj4string   <- get_proj4string.Raster(object, abort = abort)
+  proj4string   <- get_proj4string.Raster(object)
   outext        <- methods::new("sprawlext",
                                 extent     = coords,
                                 proj4string = proj4string)
@@ -246,7 +246,7 @@ get_extent.Spatial <- function(object,
 
   coords        <- raster::extent(object)[c(1,3,2,4)]
   names(coords) <- c("xmin", "ymin", "xmax", "ymax")
-  proj4string   <- get_proj4string.Spatial(object, abort = abort)
+  proj4string   <- get_proj4string.Spatial(object)
   outext        <- methods::new("sprawlext",
                                 extent     = coords,
                                 proj4string = proj4string)

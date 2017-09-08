@@ -3,7 +3,6 @@
 #' @param object PARAM_DESCRIPTION
 #' @param out_vrt_file PARAM_DESCRIPTION
 #' @param out_extent PARAM_DESCRIPTION, Default: NULL
-#' @param rastinfo PARAM_DESCRIPTION, Default: NULL
 #' @param verbose PARAM_DESCRIPTION, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
@@ -21,18 +20,22 @@
 create_virtrast <- function(object,
                             out_vrt_file,
                             out_extent = NULL,
-                            rastinfo = NULL,
-                            verbose = TRUE) {
+                            verbose    = TRUE) {
 
   call <- match.call()
   if (verbose) {
     message("create_virtrast --> Creating virtual file from ", call[[2]])
   }
 
-  rast_file <- cast_rast(object, "rastfile")
-  if (is.null(rastinfo)) {
-    rastinfo <- get_rastinfo(object, verbose = verbose)
+  if (get_rastype(object) == "rastobject") {
+    rast_file <- cast_rast(object, "rastfile")
   }
+
+  rastinfo <- get_rastinfo(object, verbose = FALSE)
+  if (any(rastinfo$fnames == "")) {
+    rastinfo <- get_rastinfo(rast_file, verbose = FALSE)
+  }
+
 
   # if (is.null(out_extent)) out_extent <- get_extent(object)@extent
 
@@ -54,11 +57,11 @@ create_virtrast <- function(object,
         tmp_txt,#   Create a temporary vrt file                                             ####
 
         out_vrt_file)
-     } else {
+    } else {
       # buildvrt string on multi band rasters with bands coming from the same
       # file (i.e., rasterBrick): use just -b with no "-separate
-       buildvrt_string <- paste(if (!is.null(out_extent)) paste0("-te ",
-                                         paste(out_extent, collapse = " ")),
+      buildvrt_string <- paste(if (!is.null(out_extent)) paste0("-te ",
+                                                                paste(out_extent, collapse = " ")),
                                paste(paste("-b ", rastinfo$indbands),
                                      collapse = " "),
                                out_vrt_file,

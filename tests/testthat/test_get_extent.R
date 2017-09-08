@@ -31,7 +31,7 @@ testthat::test_that("Test retrieval of extent",{
 
   # warning/abort on wrong proj4string ----
   wrong_file <- "/tttt/wrong.tif"
-  expect_error(get_extent(wrong_file, abort = TRUE))
+  expect_error(get_extent(wrong_file))
   # expect_warning(get_extent(wrong_file, abort = FALSE))
 
 
@@ -44,7 +44,7 @@ testthat::test_that("Test retrieval of extent",{
   ext_from_extent <- get_extent(in_extent, proj4string = in_proj4)
   expect_is(ext_from_bbox, "sprawlext")
   expect_equal(ext_from_bbox, ext_from_extent)
-  expect_error(get_extent(in_bbox, abort = TRUE))
-  expect_error(get_extent(in_extent, abort = FALSE))
+  expect_error(get_extent(in_bbox))
+  # expect_error(get_extent(in_extent, abort = FALSE))
 
 })

@@ -126,7 +126,7 @@ extract_rast <- function(in_rast,
   #   Cast the inputs to "correct" types and do some reshuffling            ####
 
   in_rast   <- cast_rast(in_rast, "rastobject")
-  rast_proj <- get_proj4string(in_rast, abort = TRUE)
+  rast_proj <- get_proj4string(in_rast)
 
   #   __________________________________________________________________________
   #   Identify the bands/dates to be processed                              ####

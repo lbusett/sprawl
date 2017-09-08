@@ -43,8 +43,9 @@ crop_rast <- function(rast_object,
                       verbose      = TRUE){
 
   call <- match.call()
-  message("crop_rast --> Cropping: ", deparse(substitute(call)$rast_object),
-          " on extent of: ", deparse(substitute(call)$ext_object))
+  if (verbose) {
+    message("crop_rast --> Cropping: ", call[[2]], " on extent of: ", call[[3]])
+  }
 
   #   __________________________________________________________________________
   #   Create processing objects: rast_file is a filename, rast_object a     ####
@@ -54,7 +55,7 @@ crop_rast <- function(rast_object,
   #   __________________________________________________________________________
   #   Retrieve extent info from `rast_object` and `ext_object`              ####
 
-  rastinfo  <- get_rastinfo(rast_object)
+  rastinfo  <- get_rastinfo(rast_object, verbose = FALSE)
   rast_bbox <- get_extent(rast_object, abort = TRUE)
   crop_bbox <- get_extent(ext_object, abort = TRUE)
   dims      <- c(rastinfo$nrows, rastinfo$ncols)
@@ -102,18 +103,18 @@ crop_rast <- function(rast_object,
     rbbox_ext[4] <- row_coords[last_row + 1]
   }
 
-# TODO: Abort gracefully on incorrect rbbox_ext (e.g., because no intersection)
-#
+  # TODO: Abort gracefully on incorrect rbbox_ext (e.g., because no intersection)
+  #
   # ____________________________________________________________________________
   # create a temporary vrt file corresponding to the band to be preocessed  ####
   # Using `create_virtrast~ allows flexibility in the case that a stack is
   # passed containing coming from different files
 
-    temp_vrt <- tempfile(fileext = ".vrt")
-    temp_vrt <- create_virtrast(rast_object,
-                                out_vrt_file = temp_vrt,
-                                out_extent   = rbbox_ext,
-                                rastinfo     = rastinfo)
+  temp_vrt <- tempfile(fileext = ".vrt")
+  temp_vrt <- create_virtrast(rast_object,
+                              out_vrt_file = temp_vrt,
+                              out_extent   = rbbox_ext,
+                              verbose      = FALSE)
 
   #   __________________________________________________________________________
   #   save/return the cropped raster according to arguments                 ####
@@ -126,7 +127,7 @@ crop_rast <- function(rast_object,
     # Save and return filename or rastobject
     if (is.null(out_filename)) {
       out_filename <- tempfile(fileext = ".tif",
-                              tmpdir = file.path(tempdir(), "sprawlcrop"))
+                               tmpdir = file.path(tempdir(), "sprawlcrop"))
     }
     make_folder(out_filename, type = "filename")
     translate_string <- paste("-of GTiff",
@@ -146,8 +147,8 @@ crop_rast <- function(rast_object,
         out <- raster::brick(out_filename)
       }
       names(out) <- paste0(rastinfo$bnames)
-      if (length(rastinfo$Z) == rastinfo$nbands) {
-        out <- raster::setZ(out, rastinfo$Z)
+      if (length(rastinfo$Z$time) == rastinfo$nbands) {
+        out <- raster::setZ(out, rastinfo$Z$time)
       }
       return(out)
     } else {

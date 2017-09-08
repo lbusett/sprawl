@@ -92,7 +92,7 @@ mask_rast <- function(in_rast,
 
   in_rast   <- cast_rast(in_rast, "rastobject")
   rastinfo  <- get_rastinfo(in_rast)
-  rast_proj <- get_proj4string(in_rast, abort = TRUE)
+  rast_proj <- get_proj4string(in_rast)
   bnames_in <- names(in_rast)
   times_in  <- raster::getZ(in_rast)
   if (is.null(out_dtype)) {
