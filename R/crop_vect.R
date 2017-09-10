@@ -46,21 +46,22 @@ crop_vect <- function(in_vect,
   #   Check arguments                                                       ####
   vectype <- get_vectype(in_vect)
 
-  objtype <- try(get_rastype(in_obj), silent = T)
-  if (class(objtype) == "try-error") {
-    objtype <- try(get_vectype(in_obj), silent = T)
-  }
-  if (class(objtype) == "try-error") {
-    stop()
-  }
-  if (!vectype %in% c("sfobject", "spobject", "vectfile")) {
-    stop("crop_vect --> in_vect is not a valid vector object (sp, sf or ",
-         "vector file")
-  }
-  if (objtype == "none") {
-    stop("crop_vect --> in_obj is not a valid spatial object (sp, sf, vector ",
-         "file, raster or raster file name) or sprawlext object")
-  }
+  objtype <- get_spatype(in_obj, abort = TRUE)
+  # objtype <- try(get_rastype(in_obj), silent = T)
+  # if (class(objtype) == "try-error") {
+  #   objtype <- try(get_vectype(in_obj), silent = T)
+  # }
+  # if (class(objtype) == "try-error") {
+  #   stop()
+  # }
+  # if (!vectype %in% c("sfobject", "spobject", "vectfile")) {
+  #   stop("crop_vect --> in_vect is not a valid vector object (sp, sf or ",
+  #        "vector file")
+  # }
+  # if (objtype == "none") {
+  #   stop("crop_vect --> in_obj is not a valid spatial object (sp, sf, vector ",
+  #        "file, raster or raster file name) or sprawlext object")
+  # }
   if (vectype == "sprawlext") {
     in_vect <- as(in_vect, "sfc_POLYGON")
   } else {

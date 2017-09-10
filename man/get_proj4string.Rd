@@ -12,7 +12,7 @@
 \usage{
 get_proj4string(object)
 
-\method{get_proj4string}{default}(object, abort = FALSE)
+\method{get_proj4string}{default}(object)
 
 \method{get_proj4string}{character}(object)
 
@@ -27,9 +27,6 @@ get_proj4string(object)
 \arguments{
 \item{object}{\code{character} corresponding to the name of a R object, or a filename
 (full path)}
-
-\item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
-invalid proj4string is found, Default: FALSE}
 }
 \value{
 \code{character} proj4string of the object or file

@@ -37,7 +37,7 @@ get_rastinfo <- function(object, verbose = TRUE) {
     call <- match.call()
   if (verbose) message("get_rastinfo --> Retrieving info from: `",
                      deparse(substitute(call)$object), "`")
-  # object <- cast_rast(object, "rastobject")
+
    object <- cast_rast(object, "rastobject")
   if (inherits(object, "RasterBrick")) {
     info <- list(nbands      = object@data@nlayers,

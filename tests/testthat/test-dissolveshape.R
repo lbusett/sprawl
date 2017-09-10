@@ -9,9 +9,9 @@ testthat::test_that("Test dissolve shapefile",{
   byvar <- "category"
 
   # correct processing: no error and output is "sf" object
-  expect_silent(out <- dissolve_shape(indata, byvar))
+  expect_is(dissolve_shape(indata, byvar), "sf")
   # expect_false(is.null(st_geometry(dissolve_shape(indata, byvar))))
-  expect_silent(out <- dissolve_shape(indata, "sup_catego"))
+
 
 
   # various errors
@@ -20,6 +20,7 @@ testthat::test_that("Test dissolve shapefile",{
   expect_error(dissolve_shape(bad_in, byvar))  # input is not a sf or sp object
 
   # dissolve on supercategory
+  out <- dissolve_shape(indata, "sup_catego")
   expect_equal(length(unique(out$id)),1)
   expect_gt(length(unique(out$sup_catego)),1)
 })

@@ -1,9 +1,10 @@
 #' @title check the "spatial type" of an object or file
 #' @rdname get_spatype
 #' @export
+#' @importFrom checkmate assert_file_exists
 #' @importFrom rgdal GDALinfo
 
-get_rastype  <- function(in_object) {
+get_rastype  <- function(in_object, abort = TRUE) {
   UseMethod("get_rastype")
 }
 
@@ -13,19 +14,23 @@ get_rastype  <- function(in_object) {
 
 #' @method get_rastype default
 #' @export
-get_rastype.default <- function(in_object) {
+get_rastype.default <- function(in_object, abort = TRUE) {
 
-  stop("get_vectype --> ", deparse(substitute(in_object)),
-       " is not a R object or filename. ",
-       "Aborting!")
+  stop_message <- paste0("\"", deparse(substitute(in_object)),
+                         "\" is not a recognised raster object or filename.")
+  if (abort) {
+    stop(stop_message)
+  } else {
+    warning(stop_message)
+    return(NA)
+  }
 }
-
 #   ____________________________________________________________________________
 #   Method for "character" - find if file exists and is "spatial"           ####
 
 #' @method get_rastype character
 #' @export
-get_rastype.character <- function(in_object) {
+get_rastype.character <- function(in_object, abort = TRUE) {
 
   checkmate::assert_file_exists(in_object, access = "r")
 
@@ -34,17 +39,21 @@ get_rastype.character <- function(in_object) {
   if (!is(rastry, "try-error")) {
     return("rastfile")
   } else {
-    stop("get_vectype --> ", deparse(substitute(in_object)),
-         " is not a valid vector file. ",
-         "Aborting!")
+    stop_message <- paste0("\"", deparse(substitute(in_object)),
+                           "\" is not a recognised raster filename.")
+    if (abort) {
+      stop(stop_message)
+    } else {
+      warning(stop_message)
+      return(NA)
+    }
   }
 }
-
-#   ____________________________________________________________________________
-#   Method for "Raster"                                                     ####
+#   __________________________________________________________________________
+#   Method for "Raster"                                                  ####
 
 #' @method get_rastype Raster
 #' @export
-get_rastype.Raster <- function(in_object) {
+get_rastype.Raster <- function(in_object, abort = TRUE) {
   "rastobject"
 }

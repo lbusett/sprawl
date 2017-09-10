@@ -136,14 +136,14 @@ get_extent.character <- function(object,
 
   call     <- match.call()
 
-  obj_type <- try(get_rastype(object), silent = T)
-  if (class(obj_type) == "try-error") {
-    obj_type <- try(get_vectype(object), silent = T)
-  }
-  if (class(obj_type) == "try-error") {
-    stop()
-  }
-
+  # obj_type <- try(get_rastype(object), silent = T)
+  # if (class(obj_type) == "try-error") {
+  #   obj_type <- try(get_vectype(object), silent = T)
+  # }
+  # if (class(obj_type) == "try-error") {
+  #   stop()
+  # }
+obj_type <- get_spatype(object, abort = TRUE)
 
   if (obj_type %in% c("rastfile", "vectfile")) {
 
@@ -159,16 +159,17 @@ get_extent.character <- function(object,
                                   extent     = coords,
                                   proj4string = proj4string)
     return(outext)
-  } else {
-    if (abort == TRUE) {
-      stop("get_extent --> `", call[[2]], "` is not a valid vector ",
-           "or raster `R` object or filename! Aborting!")
-    } else {
-      warning("get_extent --> `", call[[2]], "` is not a valid ",
-              "vector or raster `R` object or filename! ")
-      return("none")
-    }
   }
+# else {
+#     if (abort == TRUE) {
+#       stop("get_extent --> `", call[[2]], "` is not a valid vector ",
+#            "or raster `R` object or filename! Aborting!")
+#     } else {
+#       warning("get_extent --> `", call[[2]], "` is not a valid ",
+#               "vector or raster `R` object or filename! ")
+#       return("none")
+#     }
+#   }
   }
 
 #   ____________________________________________________________________________

@@ -26,7 +26,7 @@ Imports: data.table, raster, sf, sp, stats, tibble, rgdal, dplyr, glue,
          assertthat, methods, stringr, tools, tcltk, ggspatial, RColorBrewer, 
          rosm, scales, grid, latticeExtra, rasterVis, grDevices, checkmate,
          mapedit, mapview, doParallel, ggplot2, maptools, magrittr, wrapr, 
-         sprawl.data
+         sprawl.data, geosphere, maps
 Remotes: lbusett/sprawl.data, tidyverse/ggplot2
 Suggests: testthat,
           knitr,

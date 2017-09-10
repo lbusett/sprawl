@@ -38,14 +38,14 @@ testthat::test_that("Test projection string",{
   expect_warning(raster::crs(rastobj) <-
                    "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4")  #nolint
 
-  expect_warning(out <- get_proj4string(rastobj))
-  expect_equal(out, "invalid")
-  expect_error(get_proj4string(rastobj, abort = TRUE))
+  expect_error(out <- get_proj4string(rastobj))
+  # expect_equal(out, "invalid")
+  expect_error(get_proj4string(rastobj))
 
   # warning/abort on invalid filename or object ----
-  expect_error(out <- get_proj4string("pippo.shp"))
-  expect_equal(out, "invalid")
-  expect_error(get_proj4string(123, abort = TRUE))
+  expect_error(expect_warning(out <- get_proj4string("pippo.shp")))
+  # expect_equal(out, "invalid")
+  expect_error(get_proj4string(123))
 
 }
 )

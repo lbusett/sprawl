@@ -107,11 +107,11 @@ er_points <- function(in_vect_crop,
     } else {
       names(tserie)[3] <- "id_feat"
     }
-    if (!er_opts$addgeom) {
+    if (!er_opts$join_geom) {
       sf::st_geometry(tserie) <- NULL
     }
 
-    if (!er_opts$addfeat) {
+    if (!er_opts$join_feat_tbl) {
       sf::st_geometry(tserie) <- NULL
       tserie <- tserie[c(1:4),]
     }

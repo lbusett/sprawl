@@ -41,9 +41,9 @@
 #' @param na.rm `logical` If TRUE, NA values are removed while computing statistics,
 #'   Default: TRUE
 #' @param maxchunk Maximum chunk size (provisional), Default: 5e+06
-#' @param addfeat `logical` If TRUE, columns of the attribute table of the
+#' @param join_feat_tbl `logical` If TRUE, columns of the attribute table of the
 #'  `in_vect` layer are joined to results of the computation, Default: TRUE
-#' @param addgeom `logical`, If TRUE, the output sent out as an `sf` object,
+#' @param join_geom `logical`, If TRUE, the output sent out as an `sf` object,
 #'   preserving the geometry of `in_vect`. Note that this leads to duplication
 #'   of geometries, and may be very slow for large datasets. Default: FALSE
 #' @param keep_null `logical` If TRUE, the output preserves features of `in_vect`
@@ -96,8 +96,8 @@ extract_rast <- function(in_rast,
                          small       = TRUE,
                          na.rm       = TRUE,
                          maxchunk    = 50E6,
-                         addfeat     = TRUE,
-                         addgeom     = TRUE,
+                         join_feat_tbl = TRUE,
+                         join_geom     = TRUE,
                          keep_null   = FALSE,
                          verbose     = TRUE,
                          ncores      = NULL
@@ -109,7 +109,7 @@ extract_rast <- function(in_rast,
     selbands = selbands, rastres = rastres, id_field = id_field,
     summ_data = summ_data, full_data = full_data, comp_quant = comp_quant,
     FUN = FUN,  small = small, na.rm = na.rm, maxchunk = maxchunk,
-    addfeat = addfeat, addgeom = addgeom, keep_null = keep_null,
+    join_feat_tbl = join_feat_tbl, join_geom = join_geom, keep_null = keep_null,
     verbose   = verbose, ncores = ncores, long_format = long_format
   )
 

@@ -242,7 +242,7 @@ er_polygons <- function(in_vect_crop,
       if (dim(out_data)[1] > 0) {
         if (er_opts$full_data) {
 
-          if (er_opts$addgeom & er_opts$addfeat) {
+          if (er_opts$join_geom) {
             # Here we create a temporary "velox" raster, allowing to quickly
             # compute coordinates and save coordinates for the chunk in the
             # "coords" list
@@ -358,7 +358,7 @@ er_polygons <- function(in_vect_crop,
         miss_feat_data  <- data.table::data.table(value = data_feat[,3],
                                                   cell =  cell,
                                                   mdxtnq = mfeat)
-        if (er_opts$addgeom & er_opts$addfeat ) {
+        if (er_opts$join_geom) {
           coords <- raster::xyFromCell(in_band, cell)
           miss_feat_data <- miss_feat_data[, c("cell", "x_coord", "y_coord") := #nolint
                                              list(NULL, coords[,1], coords[,2])] #nolint
@@ -434,36 +434,38 @@ er_polygons <- function(in_vect_crop,
   #   Reshuffle output to build the stats output list                       ####
 
   if (er_opts$summ_data) {
-
+    # browser()
     # "bind" the different bands
     stat_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 2))) %>%
       data.table::setkey("mdxtnq")
 
-    # if er_opts$addfeat, merge the extracted data with the missing shapefile
+    # if er_opts$join_feat_tbl, merge the extracted data with the missing shapefile
     # features
-    if (er_opts$addfeat) {
+    if (er_opts$join_feat_tbl) {
       stat_data <- stat_data[{data.table::as.data.table(in_vect_crop) %>%
           data.table::setkey("mdxtnq")}]
       # Add a column for area
-
-
-    } else {
-      if (!is.null(er_opts$id_field)) {
-
-        stat_data <- stat_data[{
-          data.table::as.data.table(
-            in_vect_crop[,c(eval(er_opts$id_field), "mdxtnq")]
-          ) %>%
-            data.table::setkey("mdxtnq")
-        }]
+      if (!er_opts$join_geom) {
+        stat_data <- stat_data[, geometry:=NULL]
       }
-      # Add dummy for area TODO maybe change
-      # stat_data$area <- NA
-    }
 
-    if (!er_opts$addgeom) {
-      stat_data <- stat_data[, geometry := NULL]
     } else {
+      join_cols <- "mdxtnq"
+      if (!is.null(er_opts$id_field)) {
+        join_cols <- c(join_cols, eval(er_opts$id_field))
+      }
+      if (er_opts$join_geom) {
+        join_cols <- c(join_cols,"geometry")
+      }
+
+      stat_data <- stat_data[{
+        data.table::as.data.table(in_vect_crop)[, join_cols, with = FALSE] %>%
+          data.table::setkey("mdxtnq")}]
+
+    }
+    # }
+
+    if (er_opts$join_geom) {
       stat_data$area <- sf::st_area(stat_data$geometry)
     }
 
@@ -489,26 +491,15 @@ er_polygons <- function(in_vect_crop,
                        names_shp,
                        "geometry")
       }
-
     }
 
-    if (!er_opts$addfeat) {
-       if (!er_opts$addgeom) {comp_cols <- names_shp} else {comp_cols <- c(names_shp, "area")}
-      if (is.null(er_opts$id_field)) {
-
-        keep_cols <- keep_cols[which(!keep_cols %in% comp_cols)]
-      } else {
-        keep_cols <- keep_cols[which((!keep_cols %in% comp_cols) &
-                                       (keep_cols != er_opts$id_field))]
-      }
+    if (!er_opts$join_geom) {
+      keep_cols <- keep_cols[which(!keep_cols %in% c("area", "geometry"))]
+      # if (!er_opts$join_feat_tbl) stat_data <- stat_data[, geometry := NULL]
     }
 
-    # if addgeom is FALSE, remove area column
-    if (!er_opts$addgeom ) {
-
-      keep_cols <- keep_cols[-length(keep_cols)]
-      if (!er_opts$addfeat) stat_data <- stat_data[, area := NULL]
-
+    if (!er_opts$join_feat_tbl) {
+      keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
     }
 
     if (!is.null(er_opts$id_field)) {
@@ -517,17 +508,29 @@ er_polygons <- function(in_vect_crop,
       keep_cols[1] <- eval(er_opts$id_field)
     }
 
+    # if join_geom is FALSE, remove area column
+    # if (!er_opts$join_geom ) {
+    #   keep_cols <- keep_cols[-length(keep_cols)]
+    #   # if (!er_opts$join_feat_tbl) stat_data <- stat_data[, area := NULL]
+    # }
+    #
+    #     if (!is.null(er_opts$id_field)) {
+    #       stat_data <- stat_data[, mdxtnq := NULL]
+    #       keep_cols <- keep_cols[which(keep_cols != er_opts$id_field)]
+    #       keep_cols[1] <- eval(er_opts$id_field)
+    #     }
+
 
     #   ________________________________________________________________________
     #   Build the final output and convert to tibble                        ####
-    browser()
+    # browser()
     stat_data <- data.table::setcolorder(stat_data, keep_cols) %>%
       as_tibble()
 
     if (is.null(er_opts$id_field)) names(stat_data)[1] <- "id_feat"
 
-    # If er_opts$addgeom, convert to a sf object - consider removing
-    if (er_opts$addgeom & er_opts$addfeat) {
+    # If er_opts$join_geom, convert to a sf object - consider removing
+    if (er_opts$join_geom & er_opts$join_feat_tbl) {
       stat_data <- sf::st_as_sf(stat_data)
     }
   }
@@ -543,9 +546,9 @@ er_polygons <- function(in_vect_crop,
       data.table::setkey("mdxtnq")
     sf::st_geometry(in_vect_crop) <- NULL
 
-    # if er_opts$addfeat, merge the extracted data with the missing shapefile
+    # if er_opts$join_feat_tbl, merge the extracted data with the missing shapefile
     # features
-    if (er_opts$addfeat) {
+    if (er_opts$join_feat_tbl) {
       all_data <- merge(all_data, in_vect_crop, by = "mdxtnq", all.y = TRUE)
     } else {
       if (!is.null(er_opts$id_field)) {
@@ -562,7 +565,7 @@ er_polygons <- function(in_vect_crop,
                    names_shp,
                    "x_coord", "y_coord")
 
-    if (!er_opts$addfeat) {
+    if (!er_opts$join_feat_tbl) {
       if (is.null(er_opts$id_field)) {
         keep_cols <- keep_cols[which(!keep_cols %in% names_shp)]
       } else {
@@ -570,8 +573,8 @@ er_polygons <- function(in_vect_crop,
                                        (keep_cols != er_opts$id_field))]
       }
     }
-    # if addgeom is FALSE, remove coordinates
-    if (!er_opts$addgeom) {
+    # if join_geom is FALSE, remove coordinates
+    if (!er_opts$join_geom) {
       keep_cols <- keep_cols[which(!keep_cols %in% c("x_coord", "y_coord"))]
     }
     if (!is.null(er_opts$id_field)) {
@@ -583,8 +586,8 @@ er_polygons <- function(in_vect_crop,
     all_data  <- all_data[ , .SD, .SDcols = keep_cols] %>%
       tibble::as_tibble()
 
-    # If er_opts$addgeom, convert to a sf object
-    if (er_opts$addgeom) {
+    # If er_opts$join_geom, convert to a sf object
+    if (er_opts$join_geom) {
       all_data  <- sf::st_as_sf(all_data, coords = c("x_coord", "y_coord"),
                                 na.fail = FALSE) %>%
         sf::st_set_crs(get_proj4string(in_rast))

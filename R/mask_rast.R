@@ -117,7 +117,7 @@ mask_rast <- function(in_rast,
 
   # checks on mask ----
   mask      <- cast_vect(mask, "sfobject")
-  mask_proj <- get_proj4string(mask, abort = TRUE)
+  mask_proj <- get_proj4string(mask)
 
   #   __________________________________________________________________________
   #   set the output folder (in tempdir if out_filename == NULL)            ####

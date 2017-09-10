@@ -68,14 +68,14 @@ reproj_rast <- function(in_object,
   #   Check arguments                                                         ####
 
   in_type <- get_rastype(in_object)
-  in_proj <- get_proj4string(in_object, abort = FALSE)
+  in_proj <- get_proj4string(in_object)
 
   checkmate::assertSetEqual(
     (in_proj == "invalid"), FALSE)
     # info = glue::glue("reproj_rast --> Invalid projection detected for ",
     #                   call[[2]],". Aborting!"))
 
-  out_proj <- get_proj4string(outproj_object, abort = FALSE)
+  out_proj <- get_proj4string(outproj_object)
   checkmate::assertSetEqual(
     out_proj == "invalid", FALSE)
     # info = glue::glue("reproj_rast --> Invalid projection detected in ",
@@ -129,18 +129,19 @@ reproj_rast <- function(in_object,
   #   __________________________________________________________________________
   #   Build the gdalwarp call string                                        ####
 
-  warp_string <- paste(
-    "-s_srs '" , in_proj, "'",
-    " -t_srs '", out_proj, "'",
+  warp_string <- paste0(
+    "-s_srs \"" , in_proj, "\"",
+    " -t_srs \"", out_proj, "\"",
     if (crop) paste0(" -te ", paste(te, collapse = " "),""),
-    if (crop) paste0(" -te_srs '", in_proj, "'"),
+     if (crop) paste0(" -te_srs \"", in_proj, "\""),
     if (!is.null(out_res)) paste0(" -tr ", paste(out_res, collapse = " ")),
     " -r "    , resamp_meth,
     " -multi",
     " -of ", out_format,
     if (out_format == "GTiff") paste0(" -to COMPRESS=", compression),
-    if (overwrite) " -overwrite",
+    if (overwrite) " -overwrite ",
     if (!is.null(warp_args)) warp_args,
+    " ",
     srcfile, " ",
     out_filename
   )

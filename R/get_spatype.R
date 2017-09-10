@@ -1,11 +1,17 @@
 #' @title check the "spatial type" of an object or file
-#' @description accessory function to check if an object passed to the function corresponds to
-#'   a `*Spatial` Object, a `sf` object, a R `raster` object, a file corresponding to a vector,
-#'   or a file corresponding to a raster
-#' @param in_object either a `R` object or a `character` string pointing to a vector or raster layer
-#' @param abort (only in `get_spatype`) `logical` if TRUE the function aborts if `object` is not recognized as an
-#'   R spatial file or valid vector or raster file; if FALSE, a warning is shown.
-#' @return character vector equal to *spobject*, *sfobject*, *rastobject*, *vectfile*, *rastfile* or *sprawlext*
+#' @description accessory function to check if an object passed to the function
+#'  corresponds to a `*Spatial` Object, a `sf` object, a R `raster` object, a
+#'  file corresponding to a vector, or a file corresponding to a raster.
+#'  NOTE: to check only for vector or raster types, the associated functions
+#'  `get_vectype` and `get_rastype` can be used, with the same syntax.
+#' @param in_object either a `R` object or a `character` string pointing to a
+#'  vector or raster layer
+#' @param abort `logical` if TRUE the function aborts if `object` is not
+#' recognized as an R spatial file or valid vector or raster file; if FALSE,
+#' a warning is shown and NA is returned.
+#' @return character (\"*spobject*\" | \"*sfobject*\" | \"*rastobject* | \"
+#' *vectfile*\" | *rastfile* \" | *sprawlext*), or "NA" if the input does not
+#' belong to any spatial category and abort == FALSE
 #' @name get_spatype
 #' @rdname get_spatype
 #' @export
@@ -48,19 +54,22 @@
 #
 #
 
-get_spatype  <- function(in_object,
-                         abort = TRUE) {
+get_spatype <- function(in_object,
+                        abort = TRUE) {
+  obj_type <- suppressWarnings(
+    get_rastype(in_object, abort = FALSE)
+  )
 
-  obj_type <- try(get_rastype(in_object), silent = TRUE)
-  if (class(obj_type) == "try-error") {
-    obj_type <- try(get_vectype(in_object), silent = TRUE)
+  if (is.na(obj_type)) {
+    obj_type <-  suppressWarnings(
+      get_vectype(in_object, abort = FALSE)
+    )
   }
-
-  if (class(obj_type) == "try-error") {
+  if (is.na(obj_type)) {
     stop_message <- paste0(
-      "\"",deparse(substitute(in_object)),
-      "\" is not a recognised spatial file.")
-    if (abort==TRUE) {
+      "\"", deparse(substitute(in_object)),
+      "\" is not a recognised vector/raster object or filename")
+    if (abort) {
       stop(stop_message)
     } else {
       warning(stop_message)
@@ -69,5 +78,4 @@ get_spatype  <- function(in_object,
   }
 
   return(obj_type)
-
 }

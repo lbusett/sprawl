@@ -3,8 +3,6 @@
 #'   or of raster or vector files
 #' @param object `character` corresponding to the name of a R object, or a filename
 #' (full path)
-#' @param abort `logical` if TRUE, the function aborts in case no proj4string or
-#'   invalid proj4string is found, Default: FALSE
 #' @return `character` proj4string of the object or file
 #' @details DETAILS
 #' @importFrom dplyr case_when
@@ -43,7 +41,7 @@ get_proj4string <- function(object) {
 #' @rdname get_proj4string
 #' @method get_proj4string default
 #' @export
-get_proj4string.default  <- function(object, abort = FALSE) {
+get_proj4string.default  <- function(object) {
   stop("get_proj4string --> `object` is not a valid vector or raster `R` ",
        "object or filename. Aborting !")
 }
@@ -74,14 +72,7 @@ get_proj4string.character <- function(object) {
     }
   }
 
-  obj_type <- try(get_rastype(object), silent = T)
-  if (class(obj_type) == "try-error") {
-    obj_type <- try(get_vectype(object), silent = T)
-  }
-  if (class(obj_type) == "try-error") {
-    stop()
-  }
-
+obj_type <- get_spatype(object, abort = TRUE)
   if (obj_type %in% c("rastfile", "vectfile")) {
 
     proj4string  <- as.character(gdalUtils::gdalsrsinfo(object, as.CRS = TRUE)) %>%

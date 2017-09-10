@@ -7,8 +7,8 @@
 extract_rast(in_rast, in_vect, selbands = NULL, rastres = NULL,
   id_field = NULL, summ_data = TRUE, full_data = TRUE,
   comp_quant = FALSE, long_format = FALSE, FUN = NULL, small = TRUE,
-  na.rm = TRUE, maxchunk = 5e+07, addfeat = TRUE, addgeom = TRUE,
-  keep_null = FALSE, verbose = TRUE, ncores = NULL)
+  na.rm = TRUE, maxchunk = 5e+07, join_feat_tbl = TRUE,
+  join_geom = TRUE, keep_null = FALSE, verbose = TRUE, ncores = NULL)
 }
 \arguments{
 \item{in_rast}{input raster. Can be wither:
@@ -68,10 +68,10 @@ Default: TRUE}
 
 \item{maxchunk}{Maximum chunk size (provisional), Default: 5e+06}
 
-\item{addfeat}{\code{logical} If TRUE, columns of the attribute table of the
+\item{join_feat_tbl}{\code{logical} If TRUE, columns of the attribute table of the
 \code{in_vect} layer are joined to results of the computation, Default: TRUE}
 
-\item{addgeom}{\code{logical}, If TRUE, the output sent out as an \code{sf} object,
+\item{join_geom}{\code{logical}, If TRUE, the output sent out as an \code{sf} object,
 preserving the geometry of \code{in_vect}. Note that this leads to duplication
 of geometries, and may be very slow for large datasets. Default: FALSE}
 

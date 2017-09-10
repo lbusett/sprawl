@@ -6,25 +6,31 @@
 \alias{get_vectype}
 \title{check the "spatial type" of an object or file}
 \usage{
-get_rastype(in_object)
+get_rastype(in_object, abort = TRUE)
 
 get_spatype(in_object, abort = TRUE)
 
-get_vectype(in_object)
+get_vectype(in_object, abort = TRUE)
 }
 \arguments{
-\item{in_object}{either a \code{R} object or a \code{character} string pointing to a vector or raster layer}
+\item{in_object}{either a \code{R} object or a \code{character} string pointing to a
+vector or raster layer}
 
-\item{abort}{(only in \code{get_spatype}) \code{logical} if TRUE the function aborts if \code{object} is not recognized as an
-R spatial file or valid vector or raster file; if FALSE, a warning is shown.}
+\item{abort}{\code{logical} if TRUE the function aborts if \code{object} is not
+recognized as an R spatial file or valid vector or raster file; if FALSE,
+a warning is shown and NA is returned.}
 }
 \value{
-character vector equal to \emph{spobject}, \emph{sfobject}, \emph{rastobject}, \emph{vectfile}, \emph{rastfile} or \emph{sprawlext}
+character ("\emph{spobject}" | "\emph{sfobject}" | "\emph{rastobject} | "
+\emph{vectfile}" | \emph{rastfile} " | \emph{sprawlext}), or "NA" if the input does not
+belong to any spatial category and abort == FALSE
 }
 \description{
-accessory function to check if an object passed to the function corresponds to
-a \code{*Spatial} Object, a \code{sf} object, a R \code{raster} object, a file corresponding to a vector,
-or a file corresponding to a raster
+accessory function to check if an object passed to the function
+corresponds to a \code{*Spatial} Object, a \code{sf} object, a R \code{raster} object, a
+file corresponding to a vector, or a file corresponding to a raster.
+NOTE: to check only for vector or raster types, the associated functions
+\code{get_vectype} and \code{get_rastype} can be used, with the same syntax.
 }
 \examples{
 \dontrun{

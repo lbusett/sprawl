@@ -3,6 +3,8 @@ library(sprawl.data)
 library(testthat)
 library(sf)
 
+# This builds a test raster and polygon shape with variable conditions:
+# polygons inside, outside and partially inside the raster !
 set.seed(1)
 in_rast  <- build_testraster(100,100,4)
 in_polys <- create_fishnet(in_rast, pix_for_cell = 5) %>%
@@ -41,16 +43,16 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-20","2013-01-08"))) #nolint
 
   out <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
-                      verbose = FALSE, addfeat = T)
+                      verbose = FALSE, join_feat_tbl = T)
   out2 <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
-                      verbose = FALSE, addfeat = F, addgeom = F)
+                      verbose = FALSE, join_feat_tbl = F, join_geom = F)
   expect_is(out, "list")
   expect_equal(out$stats$avg, out2$stats$avg)
   out <- extract_rast(in_rast, in_polys, selbands = c(2,3), verbose = FALSE)
   expect_is(out, "list")
   # Check that chunked and non-chunked processing yields the same results
   out  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
-                       selbands = c(1,2), small = F, addgeom = F)
+                       selbands = c(1,2), small = F, join_geom = F)
   out2 <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                        selbands = c(1,2), maxchunk = 30000,  small = F)
   expect_equal(out$alldata$value, out2$alldata$value)
@@ -65,7 +67,7 @@ testthat::test_that(
                            selbands = c(1,2), small = T, id_field = "id")
     out2   <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                            selbands = c(1,2), small = T, id_field = "field_1",
-                           addfeat = FALSE)
+                           join_feat_tbl = FALSE)
 
     out3  <- expect_warning(extract_rast(in_rast, in_polys, verbose = F,
                                          keep_null = T, selbands = c(1,2),
@@ -95,7 +97,7 @@ testthat::test_that(
     # Check that results are coherent with `raster::extract` on the test dataset
     skip_on_travis()
     out_extract_rast  <- extract_rast(in_rast, in_polys, selbands = c(1,2),
-                                      verbose = F, keep_null = T, addgeom = F,
+                                      verbose = F, keep_null = T, join_geom = F,
                                       full_data = F, small = T,
                                       comp_quant = FALSE)
     outcomp <- out_extract_rast$stats$avg
@@ -105,7 +107,7 @@ testthat::test_that(
     expect_equal(mean(as.numeric(out_extract), na.rm = TRUE),
                  mean(outcomp, na.rm = TRUE))
     outcustom <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = F,
-                              keep_null = T, addgeom = F, full_data = F, small = T, #nolint
+                              keep_null = T, join_geom = F, full_data = F, small = T, #nolint
                               comp_quant = FALSE, FUN = mean)
     outcomp <- outcustom$stats$myfun
     expect_equal(mean(as.numeric(out_extract), na.rm = TRUE),
@@ -125,26 +127,26 @@ testthat::test_that("Test On points extraction", {
                           package = "sprawl.data")
   in_rast  <- read_rast(in_file)
   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
-  out      <- extract_rast(in_rast[[1:3]], in_pts, id_field = "id",
+  out      <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
                            verbose = FALSE, keep_null = T)  %>%
     tibble::as_tibble()
 
   # Output is a data frame
   testthat::expect_is(out, "data.frame")
-  out_extract <- raster::extract(in_rast[[1:3]], as(in_pts, "Spatial")) %>%
+  out_extract <- raster::extract(in_rast[[1:2]], as(in_pts, "Spatial")) %>%
     tibble::as_tibble()
   # Output is equal to raster::extract
   testthat::expect_equal(as.numeric(t(as.matrix(out[,3:103]))),
                          as.numeric(as.matrix(out_extract)))
 
-  out <- extract_rast(in_rast[[1:3]], in_pts, id_field = "id",
+  out <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
                       verbose = F, keep_null = T, long_format = T)
   # On `long = TRUE` output is `sf`
   testthat::expect_is(out, "sf")
 
   # On `long = TRUE` but add_geom = FALSE output is not a `sf`
-  out <- extract_rast(in_rast[[1:3]], in_pts, id_field = "id",
-                      verbose = F, addgeom = F)
+  out <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
+                      verbose = F, join_geom = F)
   testthat::expect_s3_class(out, "data.frame")
   testthat::expect_error(st_geometry(out))
 })
