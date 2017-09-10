@@ -1,7 +1,7 @@
 context("get_projunits")
 
 test_that("get_projunits works as expected", {
-
+skip_on_travis()
   # latlong projection
   proj_string <- "+init=epsg:4326"
   expect_equal(get_projunits(proj_string), "dec.degrees")

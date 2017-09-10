@@ -1,4 +1,5 @@
 context("Extract data from raster - on polygons")
+skip_on_travis()
 library(sprawl.data)
 library(testthat)
 library(sf)
@@ -82,6 +83,7 @@ testthat::test_that(
 
 testthat::test_that(
   "Polygons extraction with and without comp_quant are equal", {
+    skip_on_travis()
     # Check that processing with and without comp_quant are equal for a common
     # variable
     out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
