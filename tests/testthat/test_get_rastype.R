@@ -16,10 +16,10 @@ testthat::test_that("get_rastype",{
   testthat::expect_error(get_rastype(obj))
 
   # input is a valid filename but not a spatial file
-  obj <- system.file("news.md", package = "sprawl")
+  obj <- system.file("NEWS.md", package = "sprawl")
   expect_error(out   <- get_rastype(obj))
   expect_error(out   <- get_spatype(obj))
-  expect_warning(out <- get_rastype(obj, abort = F))
+  expect_warning(out <- get_rastype(obj, abort = FALSE))
   expect_equal(out, NA)
 })
 
