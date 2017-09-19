@@ -148,7 +148,7 @@ er_polygons <- function(in_vect_crop,
   results <- foreach::foreach(band = 1:cl_opts$n_bands,
                               .packages = c("gdalUtils", "raster", "dplyr",
                                             "tibble", "data.table", "sf",
-                                            "velox"),
+                                            "velox", "sprawl"),
                               .verbose      = verb_foreach
   ) %dopar%
   {
@@ -299,7 +299,7 @@ er_polygons <- function(in_vect_crop,
             data_for_summary  <- subset(temp_outdata, mdxtnq %in%
                                           unique(complete_polys$mdxtnq)) %>%
               data.table::setkey("mdxtnq")
-            stat_data[[chunk_n_summ]] <- summarize_data(data_for_summary,
+            stat_data[[chunk_n_summ]] <- sprawl::summarize_data(data_for_summary,
                                                         "mdxtnq",
                                                         er_opts$comp_quant,
                                                         er_opts$FUN,
