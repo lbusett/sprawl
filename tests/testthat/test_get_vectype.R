@@ -22,8 +22,8 @@ test_that("get_vectype works as expected", {
   testthat::expect_error(get_vectype(obj))
 
   # input is a valid filename but not a spatial file
-  obj <- system.file("news.md", package = "sprawl")
-  obj <- system.file("news.md", package = "sprawl")
+  obj <- system.file("NEWS.md", package = "sprawl")
+  obj <- system.file("NEWS.md", package = "sprawl")
   expect_error(out   <- get_vectype(obj))
   expect_error(out   <- get_spatype(obj))
   expect_warning(out <- get_vectype(obj, abort = FALSE))

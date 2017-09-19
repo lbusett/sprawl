@@ -175,7 +175,7 @@
 #' @importFrom rosm osm.types
 #' @importFrom scales squish censor
 #' @importFrom grid unit
-#' @importFrom stats na.omit quantile
+#' @importFrom stats na.omit
 #' @importFrom methods is
 
 plot_rast_gg <- function(
