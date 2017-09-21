@@ -1,10 +1,12 @@
-#' @title Check the validity of the input proj4string
-#' @description helper function used to check that the input proj4string object
-#'  is a valid string or a CRS object.
-#' @param proj4string `character` or [`CRS`] corresponding to the
-#'  proj4string to be checked
+#' @title Check the validity of the input projection
+#' @description helper function used to check that the input projection
+#'  (passed as UTM zone, EPSG code, PROJ4 string or [CRS] object)
+#'  is a valid string or CRS.
+#' @param projection `character` or `integer` corresponding to the
+#'  proj4string to be checked, the EPSG code or a numeric UTM zone; alternatively,
+#'  a [CRS] object is accepted.
 #' @param abort `logical` if TRUE, the function aborts in case an invalid invalid
-#'  proj4string is pssed. Otherwise, the function returns "invalid", Default: TRUE
+#'  projection is passed. Otherwise, the function returns "invalid", Default: TRUE
 #' @return `character` proj4string of the object or file
 #' @details DETAILS
 #'
@@ -19,6 +21,12 @@
 #' @examples
 #' check_proj4string("+init=epsg:32632")
 #'
+#' check_proj4string("32631")
+#'
+#' check_proj4string(32633)
+#'
+#' check_proj4string(30)
+#'
 #' check_proj4string("example of invalid string")
 #'
 #' library(sp)
@@ -31,7 +39,7 @@
 #' check_proj4string(in_rast@crs)
 #' }
 
-check_proj4string <- function(proj4string,
+check_proj4string <- function(projection,
                               abort = FALSE) {
   UseMethod("check_proj4string")
 }
@@ -42,11 +50,44 @@ check_proj4string <- function(proj4string,
 #' @rdname check_proj4string
 #' @method check_proj4string default
 #' @export
-check_proj4string.default  <- function(proj4string,
+check_proj4string.default  <- function(projection,
                                        abort = FALSE) {
   call <- match.call()
   stop("check_proj4string --> ", call[[2]], " is not a valid CRS object or ",
        "proj4string. Aborting!")
+}
+
+#   ____________________________________________________________________________
+#   Method for integer - check if it is a valid EPSG code or UTM zone       ####
+
+#' @rdname check_proj4string
+#' @method check_proj4string numeric
+#' @export
+#' @importFrom rgdal checkCRSArgs
+check_proj4string.numeric  <- function(projection,
+                                       abort = FALSE) {
+
+  # if it is 0<proj4string<=60, interpret as UTM zone
+  if (projection > 0 & projection <= 60) {
+    proj4string <- paste0("+proj=utm ",
+                          "+zone=",projection," ",
+                          "+datum=WGS84 +units=m +no_defs ",
+                          "+ellps=WGS84 +towgs84=0,0,0")
+    return(rgdal::checkCRSArgs(proj4string)[[2]])
+  }
+
+  # else, try to interpret as EPSG code
+  proj4string <- paste0("+init=epsg:",projection)
+  if (rgdal::checkCRSArgs(proj4string)[[1]] == FALSE) {
+    if (abort == TRUE) {
+      stop("check_proj4string --> Invalid EPSG code detected! Aborting!")
+    } else {
+      warning("check_proj4string --> Invalid EPSG code detected!")
+      return("invalid")
+    }
+  } else {
+    return(rgdal::checkCRSArgs(proj4string)[[2]])
+  }
 }
 
 #   ____________________________________________________________________________
@@ -56,17 +97,23 @@ check_proj4string.default  <- function(proj4string,
 #' @method check_proj4string character
 #' @export
 #' @importFrom rgdal checkCRSArgs
-check_proj4string.character  <- function(proj4string,
+check_proj4string.character  <- function(projection,
                                          abort = FALSE) {
-  if (rgdal::checkCRSArgs(proj4string)[[1]] == FALSE) {
+
+  # if it is a number, use check_proj4string.integer method
+  if (suppressWarnings(!is.na(as.numeric(projection)))) {
+    return(check_proj4string.numeric(as.integer(projection)))
+  }
+
+  if (rgdal::checkCRSArgs(projection)[[1]] == FALSE) {
     if (abort == TRUE) {
-      stop("check_proj4string --> Invalid proj4string detected! Aborting!")
+      stop("check_proj4string --> Invalid projection detected! Aborting!")
     } else {
-      warning("check_proj4string --> Invalid proj4string detected!")
+      warning("check_proj4string --> Invalid projection detected!")
       return("invalid")
     }
   } else {
-    return(rgdal::checkCRSArgs(proj4string)[[2]])
+    return(rgdal::checkCRSArgs(projection)[[2]])
   }
 }
 
@@ -76,7 +123,7 @@ check_proj4string.character  <- function(proj4string,
 #' @rdname check_proj4string
 #' @method check_proj4string CRS
 #' @export
-check_proj4string.CRS  <- function(proj4string,
+check_proj4string.CRS  <- function(projection,
                                    abort = FALSE) {
-  return(CRSargs(proj4string))
+  return(CRSargs(projection))
 }
