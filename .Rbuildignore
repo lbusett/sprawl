@@ -15,3 +15,4 @@
 ^docs$
 ^index\.md$
 ^rosm.cache$
+^codemeta\.json$

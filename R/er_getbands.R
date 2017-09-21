@@ -26,7 +26,7 @@ er_getbands <- function(in_rast,
     in_rast <- raster::stack(in_rast)
   }
   if (get_rastype(in_rast) != "rastobject") {
-    stop("`in_rast` is not a valid *raster object or raster file ! Aborting !")
+    stop("`in_rast` is not a valid *raster object or raster file! Aborting !")
   }
   nbands <- raster::nlayers(in_rast)
 
@@ -63,25 +63,45 @@ er_getbands <- function(in_rast,
         seldates <- try(as.Date(selbands), silent = TRUE)
         if (class(seldates) == "try-error") stop(banderr_msg)
         if (length(seldates[!is.na(seldates)]) != 2) stop(banderr_msg)
+        if (seldates[2] < seldates[1]) {
+          stop("extract_rast --> Ending band/date is lower than Starting band/date. ",
+               "Aborting !")
+        }
         # dates <- seldates
       }
     }
 
   }
 
+
+
   # Input raster contains valid date information AND dates are passed as
   # argument
 
   if (date_chk & lubridate::is.timepoint(seldates)) {
-    selbands_out    <- c(NA,NA)
-    selbands_out[1] <- min(which(dates >= seldates[1]))
-    selbands_out[2] <- min(which(dates >  seldates[2])) - 1
+    selbands_out <- c(NA,NA)
+
+    dates_post_start <- which(dates >= seldates[1])
+    dates_pre_end    <- which(dates > seldates[2])
+    if (length(dates_post_start) != 0) {
+      selbands_out[1] <- min(dates_post_start)
+    } else {
+    stop("extract_rast --> Start band/date (selbands[1]) greater than number ",
+         "of available bands/later than first available date. Aborting!")
+    }
+    if (length(dates_pre_end) != 0) {
+      selbands_out[2] <- min(dates_pre_end) - 1
+    } else {
+      selbands_out[2] <- nbands
+      # stop("extract_rast --> End band/date (selbands[2]) lower than number ",
+      #      "of available bands/later than first available date. Aborting!")
+    }
   } else {
     # selbands provided as dates, but no dates in input raster --> aborting
     if (lubridate::is.timepoint(seldates) & !date_chk) {
       stop("extract_rast --> Input raster doesn't contain valid dates in its",
            "'Z' attribute.\nPlease specify the layers to be processed using",
-           "a numeric array (e.g., selbands = c(1,5)). Aborting. ")
+           "a numeric array (e.g., selbands = c(1,5)). Aborting!")
     }
   }
 

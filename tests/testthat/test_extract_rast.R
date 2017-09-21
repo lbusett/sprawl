@@ -1,4 +1,4 @@
-context("Extract data from raster - on polygons")
+context("Extract data from raster - on polygons") #----
 skip_on_travis()
 library(sprawl.data)
 library(testthat)
@@ -6,20 +6,20 @@ library(sf)
 
 # This builds a test raster and polygon shape with variable conditions:
 # polygons inside, outside and partially inside the raster !
+
+in_rast  <- build_testraster(100,100,2)
 set.seed(1)
-in_rast  <- build_testraster(100,100,4)
 in_polys <- create_fishnet(in_rast, pix_for_cell = 5) %>%
-  dplyr::sample_n(10) %>%
+  dplyr::sample_n(size = 10) %>%
   dplyr::mutate(id = seq(1,10),
                 field_1 = sample(letters, 10),
                 field_2 = sample(1:10, 10))
 cut_ext <- c(-100, -85, 100, 81)
 names(cut_ext) <- c("xmin", "ymin", "xmax", "ymax")
 in_rast  <- raster::setZ(in_rast,
-                         doytodate(seq(1,32, by = 8), year = 2013)) %>%
+                         doytodate(seq(1,16, by = 8), year = 2013)) %>%
   crop_rast(methods::new("sprawlext",
-                         extent = cut_ext,
-                         proj4string = "+init=epsg:4326"),
+                         extent = cut_ext, proj4string = "+init=epsg:4326"),
             verbose = FALSE)
 
 
@@ -37,8 +37,8 @@ testthat::test_that("Basic test on polygons extraction", {
   skip_on_travis()
 
   # check errors in input selbands
-  expect_error(extract_rast(in_rast, in_polys, selbands = c(3,1)))
-  expect_error(extract_rast(in_rast, in_polys, selbands = c(3,NA)))
+  expect_error(extract_rast(in_rast, in_polys, selbands = c(2,1)))
+  expect_error(extract_rast(in_rast, in_polys, selbands = c(2,NA)))
   expect_error(extract_rast(in_rast, in_polys, selbands = 1))
   expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-01",3)))
   expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-20","2013-01-08"))) #nolint
@@ -46,10 +46,10 @@ testthat::test_that("Basic test on polygons extraction", {
   out <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
                       verbose = FALSE, join_feat_tbl = T)
   out2 <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
-                      verbose = FALSE, join_feat_tbl = F, join_geom = F)
+                       verbose = FALSE, join_feat_tbl = F, join_geom = F)
   expect_is(out, "list")
   expect_equal(out$stats$avg, out2$stats$avg)
-  out <- extract_rast(in_rast, in_polys, selbands = c(2,3), verbose = FALSE)
+  out <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = FALSE)
   expect_is(out, "list")
   # Check that chunked and non-chunked processing yields the same results
   out  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
@@ -116,6 +116,25 @@ testthat::test_that(
                  mean(outcustom$stats$myfun, na.rm = TRUE))
   })
 
+context("Extract data from categorical raster - on polygons")
+testthat::test_that("Test On points extraction", {
+  # skip_on_cran()
+  skip_on_travis()
+  library(sprawl.data)
+  library(testthat)
+
+  in_cat_rast <- in_rast[[1]] %>%
+    raster::cut(breaks = c(1,10,20,30,40,50))
+  out <- extract_rast(in_cat_rast, in_polys, id_field = "id",
+                      verbose = FALSE, keep_null = TRUE,
+                      rast_type = "categorical",
+                      comp_freq = T)
+  # Output is a list
+  testthat::expect_is(out, "list")
+  expect_equal(length(unique(out$stats$mode)), 4)
+  expect_equal(length(unique(out$alldata$value)), 6)
+
+})
 
 context("Extract data from raster - on points")
 testthat::test_that("Test On points extraction", {
@@ -152,3 +171,5 @@ testthat::test_that("Test On points extraction", {
   testthat::expect_s3_class(out, "data.frame")
   testthat::expect_error(st_geometry(out))
 })
+
+

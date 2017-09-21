@@ -10,6 +10,9 @@
 #'   Can be either:
 #'   1. A `file name` corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 #'   2. An `R` `+sp` or `sf` object
+#' @param rast_type `character` ["continuous" | "categorical] specifies if the
+#'   values passed in `in_data` represent a continuous or categorical variable.
+#'  (see @description)
 #' @param selbands `2-element numeric array` defining starting and ending raster
 #'   bands to be processed (e.g., c(1, 10). Default: NULL, meaning that all bands
 #'   will be processed
@@ -30,7 +33,10 @@
 #'   idea for large datasets), Default: TRUE
 #' @param comp_quant `logical` if TRUE, also quantiles of the distributions of
 #'   values are computed for each zone and returned in  `out$ts_summ`,
-#'   Default: FALSE
+#'   Default: FALSE (Ignored if rast_type == "categorical")
+#' @param comp_freq `logical` if TRUE, also requencies of the the different classes
+#'   of a categorical raster present in each polygon are returned, in `out$ts_summ`
+#'   Default = FALSE (Ignored if rast_type == "continuous")
 #' @param long_format `logical` if TRUE, extraction **on points** provides data
 #'   in long format (i.e., only one "value" column, with an "id" column)
 #'   allowing to select specific points, Default: TRUE
@@ -85,29 +91,33 @@
 #'
 extract_rast <- function(in_rast,
                          in_vect,
-                         selbands    = NULL,
-                         rastres     = NULL,
-                         id_field    = NULL,
-                         summ_data   = TRUE,
-                         full_data   = TRUE,
-                         comp_quant  = FALSE,
-                         long_format = FALSE,
-                         FUN         = NULL,
-                         small       = TRUE,
-                         na.rm       = TRUE,
-                         maxchunk    = 50E6,
+                         rast_type     = "continuous",
+                         selbands      = NULL,
+                         rastres       = NULL,
+                         id_field      = NULL,
+                         summ_data     = TRUE,
+                         full_data     = TRUE,
+                         comp_quant    = FALSE,
+                         comp_freq     = FALSE,
+                         long_format   = FALSE,
+                         FUN           = NULL,
+                         small         = TRUE,
+                         na.rm         = TRUE,
+                         maxchunk      = 50E6,
                          join_feat_tbl = TRUE,
                          join_geom     = TRUE,
-                         keep_null   = FALSE,
-                         verbose     = TRUE,
-                         ncores      = NULL
+                         keep_null     = FALSE,
+                         verbose       = TRUE,
+                         ncores        = NULL
 )
 {
   # create a list containing processing parameters (used to facilitate passing
   # options to  accessory funcrtions)
   er_opts <- list(
+    rast_type = rast_type,
     selbands = selbands, rastres = rastres, id_field = id_field,
     summ_data = summ_data, full_data = full_data, comp_quant = comp_quant,
+    comp_freq = comp_freq,
     FUN = FUN,  small = small, na.rm = na.rm, maxchunk = maxchunk,
     join_feat_tbl = join_feat_tbl, join_geom = join_geom, keep_null = keep_null,
     verbose   = verbose, ncores = ncores, long_format = long_format

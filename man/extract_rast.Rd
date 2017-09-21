@@ -4,11 +4,12 @@
 \alias{extract_rast}
 \title{extract raster values on features of a vector}
 \usage{
-extract_rast(in_rast, in_vect, selbands = NULL, rastres = NULL,
-  id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, long_format = FALSE, FUN = NULL, small = TRUE,
-  na.rm = TRUE, maxchunk = 5e+07, join_feat_tbl = TRUE,
-  join_geom = TRUE, keep_null = FALSE, verbose = TRUE, ncores = NULL)
+extract_rast(in_rast, in_vect, rast_type = "continuous", selbands = NULL,
+  rastres = NULL, id_field = NULL, summ_data = TRUE, full_data = TRUE,
+  comp_quant = FALSE, comp_freq = FALSE, long_format = FALSE,
+  FUN = NULL, small = TRUE, na.rm = TRUE, maxchunk = 5e+07,
+  join_feat_tbl = TRUE, join_geom = TRUE, keep_null = FALSE,
+  verbose = TRUE, ncores = NULL)
 }
 \arguments{
 \item{in_rast}{input raster. Can be wither:
@@ -25,6 +26,10 @@ Can be either:
 \item A \code{file name} corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 \item An \code{R} \code{+sp} or \code{sf} object
 }}
+
+\item{rast_type}{\code{character} \link{"continuous" | "categorical} specifies if the
+values passed in \code{in_data} represent a continuous or categorical variable.
+(see @description)}
 
 \item{selbands}{\code{2-element numeric array} defining starting and ending raster
 bands to be processed (e.g., c(1, 10). Default: NULL, meaning that all bands
@@ -51,7 +56,11 @@ idea for large datasets), Default: TRUE}
 
 \item{comp_quant}{\code{logical} if TRUE, also quantiles of the distributions of
 values are computed for each zone and returned in  \code{out$ts_summ},
-Default: FALSE}
+Default: FALSE (Ignored if rast_type == "categorical")}
+
+\item{comp_freq}{\code{logical} if TRUE, also requencies of the the different classes
+of a categorical raster present in each polygon are returned, in \code{out$ts_summ}
+Default = FALSE (Ignored if rast_type == "continuous")}
 
 \item{long_format}{\code{logical} if TRUE, extraction \strong{on points} provides data
 in long format (i.e., only one "value" column, with an "id" column)

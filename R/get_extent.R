@@ -58,10 +58,10 @@ get_extent.default  <- function(object,
                                 abort = FALSE) {
   call <- match.call()
   if (abort == TRUE) {
-    stop("get_extent --> ", call[[2]], " is not a valid vector or ",
+    stop("get_extent -> ", call[[2]], " is not a valid vector or ",
          "raster `R` object or filename. Aborting!")
   } else {
-    warning("get_extent --> ", call[[2]], " is not a valid vector ",
+    warning("get_extent -> ", call[[2]], " is not a valid vector ",
             "or raster `R` object or filename!")
   }
 }
@@ -72,7 +72,7 @@ get_extent.default  <- function(object,
 #' @rdname get_extent
 #' @method get_extent sprawlext
 #' @export
-get_extent.sprawlext  <- function(object,
+get_extent.sprawlext <- function(object,
                                   proj4string = NULL,
                                   abort = FALSE) {
   return(object)
@@ -107,11 +107,11 @@ get_extent.matrix  <- function(object,
                                proj4string,
                                abort = FALSE) {
   # check matrix
-  if (any(dim(object)!=c(2,2))) {
+  if (any(dim(object) != c(2,2))) {
     if (abort == TRUE) {
-      stop("get_extent --> `", call[[2]], "` is not a valid bbox! Aborting!")
+      stop("get_extent -> `", call[[2]], "` is not a valid bbox! Aborting!")
     } else {
-      warning("get_extent --> `", call[[2]], "` is not a valid bbox! ")
+      warning("get_extent -> `", call[[2]], "` is not a valid bbox! ")
       return("none")
     }
   }
@@ -136,14 +136,14 @@ get_extent.character <- function(object,
 
   call     <- match.call()
 
-  # obj_type <- try(get_rastype(object), silent = T)
-  # if (class(obj_type) == "try-error") {
-  #   obj_type <- try(get_vectype(object), silent = T)
-  # }
-  # if (class(obj_type) == "try-error") {
-  #   stop()
-  # }
-obj_type <- get_spatype(object, abort = TRUE)
+  obj_type <- try(get_rastype(object), silent = T)
+  if (class(obj_type) == "try-error") {
+    obj_type <- try(get_vectype(object), silent = T)
+  }
+  if (class(obj_type) == "try-error") {
+    stop()
+  }
+
 
   if (obj_type %in% c("rastfile", "vectfile")) {
 
@@ -159,17 +159,16 @@ obj_type <- get_spatype(object, abort = TRUE)
                                   extent     = coords,
                                   proj4string = proj4string)
     return(outext)
+  } else {
+    if (abort == TRUE) {
+      stop("get_extent -> `", call[[2]], "` is not a valid vector ",
+           "or raster `R` object or filename! Aborting!")
+    } else {
+      warning("get_extent -> `", call[[2]], "` is not a valid ",
+              "vector or raster `R` object or filename! ")
+      return("none")
+    }
   }
-# else {
-#     if (abort == TRUE) {
-#       stop("get_extent --> `", call[[2]], "` is not a valid vector ",
-#            "or raster `R` object or filename! Aborting!")
-#     } else {
-#       warning("get_extent --> `", call[[2]], "` is not a valid ",
-#               "vector or raster `R` object or filename! ")
-#       return("none")
-#     }
-#   }
   }
 
 #   ____________________________________________________________________________
@@ -256,7 +255,7 @@ get_extent.Spatial <- function(object,
 }
 
 #   ____________________________________________________________________________
-#   Method for "sprawlext" object - do nothing                              s####
+#   Method for "sprawlext" object - do nothing                              ####
 #
 
 #' @rdname get_extent

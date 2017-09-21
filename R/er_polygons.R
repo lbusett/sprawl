@@ -296,15 +296,20 @@ er_polygons <- function(in_vect_crop,
 
           if (length(complete_polys$mdxtnq) != 0) {
 
-            data_for_summary  <- subset(temp_outdata, mdxtnq %in%
-                                          unique(complete_polys$mdxtnq)) %>%
+            data_for_summary <- subset(temp_outdata, mdxtnq %in%
+                                         unique(complete_polys$mdxtnq)) %>%
               data.table::setkey("mdxtnq")
-            stat_data[[chunk_n_summ]] <- sprawl::summarize_data(data_for_summary,
-                                                        "mdxtnq",
-                                                        er_opts$comp_quant,
-                                                        er_opts$FUN,
-                                                        selbands[band],
-                                                        selband)
+
+            stat_data[[chunk_n_summ]] <- sprawl::summarize_data(
+              data_for_summary,
+              er_opts$rast_type,
+              "mdxtnq",
+              er_opts$comp_quant,
+              er_opts$comp_freq,
+              er_opts$FUN,
+              er_opts$na.rm,
+              selbands[band],
+              selband)
 
             temp_outdata  <- temp_outdata[!(mdxtnq %in%
                                               unique(complete_polys$mdxtnq))]
@@ -325,8 +330,15 @@ er_polygons <- function(in_vect_crop,
     #   bind data from all chunks in `all_data`  and 'stat_data'          ####
     if (er_opts$full_data) {
 
+      # if er_opts$na.rm == TRUE, remove nodata pixels from the out_data
+      # table before storing it in all_data of the current chunk (useful
+      # to reduce memory footprint on large areas with many NODATA)
+
       all_data <- data.table::rbindlist(all_data) %>%
         data.table::setkey("mdxtnq")
+      if (er_opts$na.rm) {
+        all_data <- na.omit(all_data, "value")
+      }
 
     }
 
@@ -372,11 +384,15 @@ er_polygons <- function(in_vect_crop,
         if (er_opts$summ_data) {
 
           miss_feat_stats <- summarize_data(miss_feat_data,
+                                            er_opts$rast_type,
                                             "mdxtnq",
                                             er_opts$comp_quant,
+                                            er_opts$comp_freq,
                                             er_opts$FUN,
+                                            er_opts$na.rm,
                                             selbands[band],
                                             selband)
+
           stat_data       <- rbind(stat_data, miss_feat_stats)
         }
       }
@@ -434,7 +450,7 @@ er_polygons <- function(in_vect_crop,
   #   Reshuffle output to build the stats output list                       ####
 
   if (er_opts$summ_data) {
-    # browser()
+
     # "bind" the different bands
     stat_data <- data.table::rbindlist(do.call(c,lapply(results, "[", 2))) %>%
       data.table::setkey("mdxtnq")
@@ -446,7 +462,7 @@ er_polygons <- function(in_vect_crop,
           data.table::setkey("mdxtnq")}]
       # Add a column for area
       if (!er_opts$join_geom) {
-        stat_data <- stat_data[, geometry:=NULL]
+        stat_data <- stat_data[, geometry := NULL]
       }
 
     } else {
@@ -471,25 +487,46 @@ er_polygons <- function(in_vect_crop,
 
     # define the names and order of the output columns
 
-    if (!is.null(er_opts$FUN)) {
-      keep_cols <- c("mdxtnq", "band_n", "date", "area",
-                     "n_pix", "n_pix_val", "myfun",
-                     names_shp,
-                     "geometry")
-    } else {
+    if (er_opts$rast_type == "continuous") {
 
-      if (!er_opts$comp_quant) {
+      if (!is.null(er_opts$FUN)) {
         keep_cols <- c("mdxtnq", "band_n", "date", "area",
-                       "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
+                       "n_pix", "n_pix_val", "myfun",
                        names_shp,
                        "geometry")
       } else {
+
+        if (!er_opts$comp_quant) {
+          keep_cols <- c("mdxtnq", "band_n", "date", "area",
+                         "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
+                         names_shp,
+                         "geometry")
+        } else {
+          keep_cols <- c("mdxtnq", "band_n", "date", "area",
+                         "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
+                         "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65",
+                         "q75", "q85", "q95", "q99",
+                         names_shp,
+                         "geometry")
+        }
+      }
+    } else {
+      if (!er_opts$comp_freq) {
         keep_cols <- c("mdxtnq", "band_n", "date", "area",
-                       "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
-                       "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65",
-                       "q75", "q85", "q95", "q99",
+                       "n_pix", "n_pix_val", "mode",
                        names_shp,
                        "geometry")
+      } else {
+
+        which_freqs <- grep("mdtxtnQ_", names(stat_data))
+        keep_cols <- c(
+          "mdxtnq", "band_n", "date", "area",
+          "n_pix", "n_pix_val", "mode",
+          gsub("mdtxtnQ_", "", names(stat_data)[which_freqs]), #nolint
+          names_shp,
+          "geometry")
+        names(stat_data)[which_freqs] <-
+          gsub("mdtxtnQ_", "", names(stat_data)[which_freqs])
       }
     }
 
@@ -508,24 +545,11 @@ er_polygons <- function(in_vect_crop,
       keep_cols[1] <- eval(er_opts$id_field)
     }
 
-    # if join_geom is FALSE, remove area column
-    # if (!er_opts$join_geom ) {
-    #   keep_cols <- keep_cols[-length(keep_cols)]
-    #   # if (!er_opts$join_feat_tbl) stat_data <- stat_data[, area := NULL]
-    # }
-    #
-    #     if (!is.null(er_opts$id_field)) {
-    #       stat_data <- stat_data[, mdxtnq := NULL]
-    #       keep_cols <- keep_cols[which(keep_cols != er_opts$id_field)]
-    #       keep_cols[1] <- eval(er_opts$id_field)
-    #     }
-
-
     #   ________________________________________________________________________
     #   Build the final output and convert to tibble                        ####
-    # browser()
+
     stat_data <- data.table::setcolorder(stat_data, keep_cols) %>%
-      as_tibble()
+      tibble::as_tibble()
 
     if (is.null(er_opts$id_field)) names(stat_data)[1] <- "id_feat"
 
@@ -548,6 +572,7 @@ er_polygons <- function(in_vect_crop,
 
     # if er_opts$join_feat_tbl, merge the extracted data with the missing shapefile
     # features
+
     if (er_opts$join_feat_tbl) {
       all_data <- merge(all_data, in_vect_crop, by = "mdxtnq", all.y = TRUE)
     } else {
