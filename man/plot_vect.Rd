@@ -2,25 +2,56 @@
 % Please edit documentation in R/plot_vect.R
 \name{plot_vect}
 \alias{plot_vect}
-\title{plot a vector}
+\title{plot a map based on an sf object}
 \usage{
-plot_vect(in_data, fill_var, borders, xlims = NULL, ylims = NULL,
-  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+plot_vect(in_data, fill_var, facet_rows = NULL, borders_layer = NULL,
+  borders_color = "grey15", borders_size = 0.2, xlims = NULL,
+  ylims = NULL, zlims = NULL, zlims_type = "vals",
+  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
+  scalebar = TRUE, scalebar_dist = NULL, na.color = NULL,
+  na.value = NULL, palette_type = "gradient", palette_name = NULL,
+  direction = 1, leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
   no_axis = FALSE, title = "Vector Plot", subtitle = NULL,
-  scalebar = TRUE, scalebar_dist = NULL, palette_type = "diverging",
-  palette_name = NULL, direction = 1, theme = theme_bw(),
-  verbose = TRUE)
+  theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_data}{PARAM_DESCRIPTION}
 
 \item{fill_var}{PARAM_DESCRIPTION}
 
-\item{borders}{PARAM_DESCRIPTION}
+\item{facet_rows}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{borders_layer}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{borders_color}{PARAM_DESCRIPTION, Default: 'grey15'}
+
+\item{borders_size}{PARAM_DESCRIPTION, Default: 0.2}
 
 \item{xlims}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{ylims}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{zlims}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{zlims_type}{PARAM_DESCRIPTION, Default: 'vals'}
+
+\item{outliers_style}{PARAM_DESCRIPTION, Default: 'recolor'}
+
+\item{outliers_colors}{PARAM_DESCRIPTION, Default: c("grey10", "grey90")}
+
+\item{scalebar}{PARAM_DESCRIPTION, Default: TRUE}
+
+\item{scalebar_dist}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{na.color}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{na.value}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{palette_type}{PARAM_DESCRIPTION, Default: 'gradient'}
+
+\item{palette_name}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{direction}{PARAM_DESCRIPTION, Default: 1}
 
 \item{leg_type}{PARAM_DESCRIPTION, Default: NULL}
 
@@ -33,16 +64,6 @@ plot_vect(in_data, fill_var, borders, xlims = NULL, ylims = NULL,
 \item{title}{PARAM_DESCRIPTION, Default: 'Vector Plot'}
 
 \item{subtitle}{PARAM_DESCRIPTION, Default: NULL}
-
-\item{scalebar}{PARAM_DESCRIPTION, Default: TRUE}
-
-\item{scalebar_dist}{PARAM_DESCRIPTION, Default: NULL}
-
-\item{palette_type}{PARAM_DESCRIPTION, Default: 'diverging'}
-
-\item{palette_name}{PARAM_DESCRIPTION, Default: NULL}
-
-\item{direction}{PARAM_DESCRIPTION, Default: 1}
 
 \item{theme}{PARAM_DESCRIPTION, Default: theme_bw()}
 

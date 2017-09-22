@@ -1,7 +1,7 @@
 context("DOY to date conversion")
 testthat::test_that("Test dates conversions", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # convert date to doy OK
   expect_equal(doytodate(100, 2015), as.Date("2015-04-10"))
   expect_equal(doytodate(100, 2016), as.Date("2016-04-09"))
@@ -21,7 +21,7 @@ testthat::test_that("Test dates conversions", {
 context("Date to DOY conversions")
 testthat::test_that("Test datesconversions", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # convert date to doy OK
   expect_equal(datetodoy("2001-04-01"), 91)
   expect_equal(datetodoy("2004/04/01"), 92)

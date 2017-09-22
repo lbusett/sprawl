@@ -1,21 +1,30 @@
-#' @title plot a vector
+#' @title plot a map based on an sf object
 #' @description FUNCTION_DESCRIPTION
 #' @param in_data PARAM_DESCRIPTION
 #' @param fill_var PARAM_DESCRIPTION
-#' @param borders PARAM_DESCRIPTION
+#' @param facet_rows PARAM_DESCRIPTION, Default: NULL
+#' @param borders_layer PARAM_DESCRIPTION, Default: NULL
+#' @param borders_color PARAM_DESCRIPTION, Default: 'grey15'
+#' @param borders_size PARAM_DESCRIPTION, Default: 0.2
 #' @param xlims PARAM_DESCRIPTION, Default: NULL
 #' @param ylims PARAM_DESCRIPTION, Default: NULL
+#' @param zlims PARAM_DESCRIPTION, Default: NULL
+#' @param zlims_type PARAM_DESCRIPTION, Default: 'vals'
+#' @param outliers_style PARAM_DESCRIPTION, Default: 'recolor'
+#' @param outliers_colors PARAM_DESCRIPTION, Default: c("grey10", "grey90")
+#' @param scalebar PARAM_DESCRIPTION, Default: TRUE
+#' @param scalebar_dist PARAM_DESCRIPTION, Default: NULL
+#' @param na.color PARAM_DESCRIPTION, Default: NULL
+#' @param na.value PARAM_DESCRIPTION, Default: NULL
+#' @param palette_type PARAM_DESCRIPTION, Default: 'gradient'
+#' @param palette_name PARAM_DESCRIPTION, Default: NULL
+#' @param direction PARAM_DESCRIPTION, Default: 1
 #' @param leg_type PARAM_DESCRIPTION, Default: NULL
 #' @param leg_labels PARAM_DESCRIPTION, Default: NULL
 #' @param leg_breaks PARAM_DESCRIPTION, Default: NULL
 #' @param no_axis PARAM_DESCRIPTION, Default: FALSE
 #' @param title PARAM_DESCRIPTION, Default: 'Vector Plot'
 #' @param subtitle PARAM_DESCRIPTION, Default: NULL
-#' @param scalebar PARAM_DESCRIPTION, Default: TRUE
-#' @param scalebar_dist PARAM_DESCRIPTION, Default: NULL
-#' @param palette_type PARAM_DESCRIPTION, Default: 'diverging'
-#' @param palette_name PARAM_DESCRIPTION, Default: NULL
-#' @param direction PARAM_DESCRIPTION, Default: 1
 #' @param theme PARAM_DESCRIPTION, Default: theme_bw()
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @return OUTPUT_DESCRIPTION
@@ -30,24 +39,27 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that
-#' @importFrom ggplot2 theme_bw theme guides guide_colourbar geom_sf aes_string
-#'   xlim ylim margin element_line labs
+#' @importFrom ggplot2 theme_bw theme guides guide_colourbar geom_sf
 #' @importFrom RColorBrewer brewer.pal.info
 #' @importFrom scales squish
 #' @importFrom sf st_transform
 #' @importFrom methods is
-plot_vect <- function(in_data,
-                      fill_var,
-                      borders,
-                      xlims = NULL,
-                      ylims = NULL,
-                      leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL,
-                      no_axis      = FALSE, title = "Vector Plot", subtitle = NULL,
-                      scalebar     = TRUE,
-                      scalebar_dist = NULL,
-                      palette_type = "diverging", palette_name = NULL, direction = 1,
-                      theme        = theme_bw(),
-                      verbose      = TRUE) {
+plot_vect <- function(
+  in_data,
+  fill_var,
+  facet_rows = NULL,
+  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  xlims      = NULL, ylims = NULL,
+  zlims      = NULL, zlims_type = "vals",
+  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
+  scalebar     = TRUE, scalebar_dist = NULL,
+  na.color     = NULL, na.value = NULL,
+  palette_type = "gradient", palette_name = NULL, direction = 1,
+  leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL,
+  no_axis      = FALSE, title = "Vector Plot", subtitle = NULL,
+  theme        = theme_bw(),
+  verbose      = TRUE
+) {
 
   . <- N <- perc <- category <- NULL
   assertthat::assert_that(
