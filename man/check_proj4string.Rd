@@ -3,31 +3,36 @@
 \name{check_proj4string}
 \alias{check_proj4string}
 \alias{check_proj4string.default}
+\alias{check_proj4string.numeric}
 \alias{check_proj4string.character}
 \alias{check_proj4string.CRS}
-\title{Check the validity of the input proj4string}
+\title{Check the validity of the input projection}
 \usage{
-check_proj4string(proj4string, abort = FALSE)
+check_proj4string(projection, abort = FALSE)
 
-\method{check_proj4string}{default}(proj4string, abort = FALSE)
+\method{check_proj4string}{default}(projection, abort = FALSE)
 
-\method{check_proj4string}{character}(proj4string, abort = FALSE)
+\method{check_proj4string}{numeric}(projection, abort = FALSE)
 
-\method{check_proj4string}{CRS}(proj4string, abort = FALSE)
+\method{check_proj4string}{character}(projection, abort = FALSE)
+
+\method{check_proj4string}{CRS}(projection, abort = FALSE)
 }
 \arguments{
-\item{proj4string}{\code{character} or \code{\link{CRS}} corresponding to the
-proj4string to be checked}
+\item{projection}{\code{character} or \code{integer} corresponding to the
+proj4string to be checked, the EPSG code or a numeric UTM zone; alternatively,
+a \link{CRS} object is accepted.}
 
 \item{abort}{\code{logical} if TRUE, the function aborts in case an invalid invalid
-proj4string is pssed. Otherwise, the function returns "invalid", Default: TRUE}
+projection is passed. Otherwise, the function returns "invalid", Default: TRUE}
 }
 \value{
 \code{character} proj4string of the object or file
 }
 \description{
-helper function used to check that the input proj4string object
-is a valid string or a CRS object.
+helper function used to check that the input projection
+(passed as UTM zone, EPSG code, PROJ4 string or \link{CRS} object)
+is a valid string or CRS.
 }
 \details{
 DETAILS
@@ -35,6 +40,12 @@ DETAILS
 \examples{
 \dontrun{
 check_proj4string("+init=epsg:32632")
+
+check_proj4string("32631")
+
+check_proj4string(32633)
+
+check_proj4string(30)
 
 check_proj4string("example of invalid string")
 
