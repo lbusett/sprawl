@@ -50,7 +50,6 @@ cast_rast.default <- function(object, to) {
 cast_rast.Raster <- function(object, to) {
 
   checkmate::assert_choice(to, c("rastobject", "rastfile"))
-
   if (to == "rastobject") return(object)
   if (to == "rastfile") {
     info <- get_rastinfo(object, verbose = FALSE)

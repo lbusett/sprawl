@@ -5,7 +5,8 @@
 \title{crop a raster file/rast_file on a given extent}
 \usage{
 crop_rast(rast_object, ext_object, out_type = "rastobject",
-  out_filename = NULL, compress = "None", verbose = TRUE)
+  out_filename = NULL, out_dtype = NULL, compress = "None",
+  verbose = TRUE)
 }
 \arguments{
 \item{rast_object}{either an \code{R} object of class \code{Raster}, or a character string
@@ -29,6 +30,11 @@ the input raster (no saving to disk is performed)
 
 \item{out_filename}{\code{character} filename to be used to save the cropped
 raster.}
+
+\item{out_dtype}{\code{character} data type of the output masked files, according
+to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+"Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
+If NULL, the data type is retrieved from the input, Default: NULL}
 
 \item{compress}{\code{character} compression option to be used to saved the cropped
 raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"}

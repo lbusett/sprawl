@@ -186,15 +186,17 @@ mask_rast <- function(in_rast,
   }
 
   if (!parallel) {
+
     masked_out <- raster::mask(
       in_rast,
       raster::brick(temp_rastermask),
       filename    = out_filename,
       options     = paste0("COMPRESS=", compress),
       overwrite   = TRUE,
-      data_type   = dtype[["raster"]],
+      datatype    = dtype[["raster"]],
       updatevalue = ifelse(is.null(out_nodata), -Inf, out_nodata)
     )
+
   } else {
     raster::beginCluster()
     masked_out <- raster::clusterR(
@@ -204,7 +206,7 @@ mask_rast <- function(in_rast,
       filename  = out_filename,
       options   = paste0("COMPRESS=", compress),
       overwrite = TRUE,
-      data_type = dtype[["raster"]],
+      datatype  = dtype[["raster"]],
       NAflag    = ifelse(is.null(out_nodata), -Inf, out_nodata)
     )
     raster::endCluster()

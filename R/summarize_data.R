@@ -5,7 +5,7 @@
 #'  passed as input to `extract_rast`
 #' @param in_data `data.table` containing raster values (for a full file or a
 #'  "chunk")
-#' @param rast_type `character` ["continuous" | "categorical] specifies if the
+#' @param rast_type `character` ("continuous" | "categorical) specifies if the
 #'   values passed in `in_data` represent a continuous or categorical variable.
 #'  (see @description)
 #' @param group_var `character` name of the group_variable (i.e., column) to be
@@ -43,7 +43,7 @@ summarize_data <- function(in_data,
                            band_n,
                            selband) {
 
-  .N <- .SD <- value <- NULL
+  .N <- N <- perc <- . <- .SD <- value <- NULL
 
 
   #   __________________________________________________________________________

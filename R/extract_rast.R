@@ -10,7 +10,7 @@
 #'   Can be either:
 #'   1. A `file name` corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 #'   2. An `R` `+sp` or `sf` object
-#' @param rast_type `character` ["continuous" | "categorical] specifies if the
+#' @param rast_type `character` ("continuous" | "categorical) specifies if the
 #'   values passed in `in_data` represent a continuous or categorical variable.
 #'  (see @description)
 #' @param selbands `2-element numeric array` defining starting and ending raster

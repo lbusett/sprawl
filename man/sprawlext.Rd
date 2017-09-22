@@ -18,9 +18,8 @@ associated with its proj4string.
 }}
 
 \examples{
-showClass("sprawlext")
-
 \dontrun{
+showClass("sprawlext")
 library(raster)
 
 in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",

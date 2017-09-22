@@ -32,8 +32,8 @@ matrix:
       dist: trusty
       env:
       global:
-      - R_BUILD_ARGS=" "
-      - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings --no-tests"
+      - R_BUILD_ARGS="--no-multiarch --with-keep.source "
+      - R_CHECK_ARGS="--no-manual --timings --no-tests"
       - R_CHECK_TIMINGS_="0"
     #  - BOOTSTRAP_LATEX="1"
       addons:

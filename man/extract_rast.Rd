@@ -12,7 +12,7 @@ extract_rast(in_rast, in_vect, rast_type = "continuous", selbands = NULL,
   verbose = TRUE, ncores = NULL)
 }
 \arguments{
-\item{in_rast}{input raster. Can be wither:
+\item{in_rast}{input raster. Can be either:
 \enumerate{
 \item A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 All \code{gdal} raster formats are supported
@@ -27,7 +27,7 @@ Can be either:
 \item An \code{R} \code{+sp} or \code{sf} object
 }}
 
-\item{rast_type}{\code{character} \link{"continuous" | "categorical} specifies if the
+\item{rast_type}{\code{character} ("continuous" | "categorical) specifies if the
 values passed in \code{in_data} represent a continuous or categorical variable.
 (see @description)}
 

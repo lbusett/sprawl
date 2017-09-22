@@ -20,6 +20,10 @@
 #' , Default: "rastobject"
 #' @param out_filename `character` filename to be used to save the cropped
 #'   raster.
+#' @param out_dtype `character` data type of the output masked files, according
+#'   to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+#'   "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
+#'   If NULL, the data type is retrieved from the input, Default: NULL
 #' @param compress `character` compression option to be used to saved the cropped
 #'   raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"
 #' @param verbose `logical` if FALSE, suppress processing messages, Default: TRUE
@@ -39,6 +43,7 @@ crop_rast <- function(rast_object,
                       ext_object,
                       out_type     = "rastobject",
                       out_filename = NULL,
+                      out_dtype    = NULL,
                       compress     = "None",
                       verbose      = TRUE){
 
@@ -60,6 +65,12 @@ crop_rast <- function(rast_object,
   crop_bbox <- get_extent(ext_object, abort = TRUE)
   dims      <- c(rastinfo$nrows, rastinfo$ncols)
   rbbox_ext <- rast_bbox@extent
+  if (is.null(out_dtype)) {
+    in_dtype <- rastinfo$dtype
+    dtype    <- convert_rastdtype(in_dtype, "raster")
+  } else {
+    dtype    <- convert_rastdtype(out_dtype, "gdal")
+  }
 
   #   __________________________________________________________________________
   #   reproject `ext_object` extent if necessary                            ####
@@ -136,6 +147,7 @@ crop_rast <- function(rast_object,
     make_folder(out_filename, type = "filename")
     translate_string <- paste("-of GTiff",
                               "-co", paste0("COMPRESS=", compress),
+                              "-ot", dtype["gdal"][1,],
                               temp_vrt,
                               out_filename)
 

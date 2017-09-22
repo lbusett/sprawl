@@ -10,10 +10,8 @@
 #' @importFrom sp CRS
 #' @importFrom sf st_polygon st_point
 #' @importFrom magrittr %>%
-#' @examples
+#' @examples \dontrun{
 #' showClass("sprawlext")
-#'
-#' \dontrun{
 #' library(raster)
 #'
 #' in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",

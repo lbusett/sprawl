@@ -39,9 +39,11 @@ convert_rastdtype <- function(dtype_string, type){
   # "CFloat64",   "1"
   # )
   if (type == "raster") {
-    line <- which(dtype_table$raster == dtype_string)
-    if (length(line) != 0 ){
-      return(dtype_table[line,])
+    lines <- sapply(dtype_string,
+                    FUN = function(x){which(dtype_table$raster == x)},
+                    simplify = "array", USE.NAMES = FALSE)
+    if (length(line) != 0 ) {
+      return(dtype_table[lines,])
 
     } else {
       stop("get_rast_dtype --> ", call[[2]], " is not a recognized ", call[[3]],

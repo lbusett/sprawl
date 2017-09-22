@@ -12,7 +12,7 @@ summarize_data(in_data, rast_type, group_var, comp_quant, comp_freq, FUN,
 \item{in_data}{\code{data.table} containing raster values (for a full file or a
 "chunk")}
 
-\item{rast_type}{\code{character} \link{"continuous" | "categorical} specifies if the
+\item{rast_type}{\code{character} ("continuous" | "categorical) specifies if the
 values passed in \code{in_data} represent a continuous or categorical variable.
 (see @description)}
 
