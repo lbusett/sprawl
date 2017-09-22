@@ -5,12 +5,13 @@
 \title{plot a map based on an sf object}
 \usage{
 plot_vect(in_data, fill_var, facet_rows = NULL, borders_layer = NULL,
-  borders_color = "grey15", borders_size = 0.2, xlims = NULL,
-  ylims = NULL, zlims = NULL, zlims_type = "vals",
-  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
-  scalebar = TRUE, scalebar_dist = NULL, na.color = NULL,
-  na.value = NULL, palette_type = "gradient", palette_name = NULL,
-  direction = 1, leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  borders_color = "grey15", borders_size = 0.2, basemap = NULL,
+  zoomin = 0, xlims = NULL, ylims = NULL, zlims = NULL,
+  zlims_type = "vals", outliers_style = "recolor",
+  outliers_colors = c("grey10", "grey90"), scalebar = TRUE,
+  scalebar_dist = NULL, na.color = NULL, na.value = NULL,
+  palette_type = "gradient", palette_name = NULL, direction = 1,
+  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
   no_axis = FALSE, title = "Vector Plot", subtitle = NULL,
   theme = theme_bw(), verbose = TRUE)
 }
@@ -26,6 +27,12 @@ plot_vect(in_data, fill_var, facet_rows = NULL, borders_layer = NULL,
 \item{borders_color}{PARAM_DESCRIPTION, Default: 'grey15'}
 
 \item{borders_size}{PARAM_DESCRIPTION, Default: 0.2}
+
+\item{basemap}{\code{character} If not NULL and valid, the selected basemap is
+used as background. For a list of valid values, see \code{rosm::osm.types()},
+Default: NULL}
+
+\item{zoomin}{PARAM_DESCRIPTION, Default: 0}
 
 \item{xlims}{PARAM_DESCRIPTION, Default: NULL}
 

@@ -15,7 +15,7 @@ testthat::test_that("Test dates conversions", {
 
   # convert date to doy outside 0 365
   expect_message(doytodate(400, 2001, verbose = TRUE))
-  })
+})
 
 
 context("Date to DOY conversions")

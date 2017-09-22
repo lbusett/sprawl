@@ -214,7 +214,8 @@ See the description of the arguments for details on their use
              zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
              outliers_style = "recolor",
-             outliers_colors = c("transparent", "purple"))
+             outliers_colors = c("transparent", "purple"),
+             leg_type = "discrete")
 }
 }
 \author{

@@ -155,7 +155,8 @@
 #'              zlims = c(0.10, 0.999), zlims_type = "percs",
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
 #'              outliers_style = "recolor",
-#'              outliers_colors = c("transparent", "purple"))
+#'              outliers_colors = c("transparent", "purple"),
+#'              leg_type = "discrete")
 #' }
 #' @rdname plot_rast_gg
 #' @export
@@ -242,9 +243,9 @@ plot_rast_gg <- function(
                         div  = "RdYlGn")
 
 
-  def_legtypes  <- list(qual = "discrete",
-                        seq  = "continuous",
-                        div  = "continuous")
+  def_legtypes  <- list(qual = "legend",
+                        seq  = "colourbar",
+                        div  = "colourbar")
 
   if (!is.null(palette_name)) {
     # Check validity of palette_name.
@@ -265,6 +266,17 @@ plot_rast_gg <- function(
 
   if (is.null(leg_type)) {
     leg_type <- as.character(def_legtypes[palette_type])
+  } else {
+    assertthat::assert_that(
+      leg_type %in% c("discrete", "continuous"),
+      msg = strwrap(
+        "plot_rast_gg --> Invalid `palette_type`. It must be \"discrete\" or
+      \"continuous\". Aborting!")
+    )
+    leg_type <- switch(leg_type,
+                       "discrete" = "legend",
+                       "continuous"    = "colourbar"
+    )
   }
 
   if (!is.null(bands_to_plot)) {
@@ -297,34 +309,11 @@ plot_rast_gg <- function(
   rastinfo$fnames <- get_rastinfo(in_rast, verbose = FALSE)$fnames
 
   if (!is.null(basemap)) {
-    #TODO substitute this with call to create_virtrast and
-    #reproj_rast
-
-    temp_vrt <- tempfile(fileext = ".vrt")
-    tmp_txt <- tempfile(fileext = ".txt")
-    writeLines(rastinfo$fnames, tmp_txt)
-    buildvrt_string <- paste(paste(paste("-b ", rastinfo$indbands),
-                                   collapse = " "),
-                             "-input_file_list",
-                             tmp_txt,
-                             temp_vrt)
-
-    system2(file.path(find_gdal(), "gdalbuildvrt"),
-            args = buildvrt_string,
-            stdout = NULL)
-
     if (verbose) {
       message("plot_rast_gg --> Reprojecting the input raster to epsg:3857")
     }
-    in_rast <- gdalUtils::gdalwarp(temp_vrt,
-                                   tempfile(fileext = ".tif"),
-                                   s_srs = rastinfo$proj4string,
-                                   t_srs = "+init=epsg:3857",
-                                   output_Raster = TRUE,
-                                   tr = rastinfo$res,
-                                   overwrite = T)
+    in_rast <- reproj_rast(in_rast, "+init=epsg:3857")
   }
-
 
   #   __________________________________________________________________________
   #   Subsample if needed to speed-up plotting                              ####
@@ -509,7 +498,7 @@ plot_rast_gg <- function(
         } else {
           leg_labels
         }, type = ifelse(palette_type == "sequential", "seq", "div"),
-        guide = ifelse(leg_type == "qual", "legend", "colourbar"),
+        guide = leg_type,
         palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
                                              scales::squish, scales::censor),
         direction = direction,
