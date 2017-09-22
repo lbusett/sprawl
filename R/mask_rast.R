@@ -161,7 +161,7 @@ mask_rast <- function(in_rast,
   #   create the rasterized shapefile much faster and save as Byte
 
   if (verbose) {
-    message("mask_rast --> Rasterizing the vector mask to a temporary TIFF",
+    message("mask_rast --> Rasterizing the vector mask to a temporary TIFF ",
             "file")
   }
   temp_rastermask  <- tempfile(tmpdir = tempdir(), fileext = ".tif")

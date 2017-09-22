@@ -1,7 +1,7 @@
 #' @title extract raster values on features of a vector
 #' @description Function used to extract values of a single- or multi- band raster
 #'   for pixels corresponding to the features of a vector (Polygon, Point or Line)
-#' @param in_rast input raster. Can be wither:
+#' @param in_rast input raster. Can be either:
 #'   1. A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 #'   All `gdal` raster formats are supported
 #'   2. An `raster`, `rasterStack` or `rasterBrick` object

@@ -121,6 +121,10 @@ crop_rast <- function(rast_object,
 
   if (out_type == "vrtfile") {
     # Just return the vrt
+    if (!is.null(out_filename)) {
+      file.copy(temp_vrt, out_filename)
+      temp_vrt <- out_filename
+    }
     return(temp_vrt)
 
   } else {
