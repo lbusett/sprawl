@@ -44,7 +44,7 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that
 #' @importFrom ggplot2 theme_bw theme guides guide_colourbar geom_sf aes_string
-#'   xlim ylim margin element_line labs
+#'   xlim ylim margin element_line labs coord_sf
 #' @importFrom RColorBrewer brewer.pal.info
 #' @importFrom scales squish
 #' @importFrom sf st_transform
@@ -67,7 +67,7 @@ plot_vect <- function(
   verbose        = TRUE
 ) {
 
-  . <- N <- perc <- category <- NULL
+  category <- NULL
   assertthat::assert_that(
     methods::is(in_data, "sf"),
     msg = "plot_vect --> `in_data` is not a valid `sf` object. Aborting!"
@@ -115,7 +115,7 @@ plot_vect <- function(
     valid_pals <- subset(all_pals, category == palette_type)
 
     if (!palette_name %in% valid_pals$name) {
-      warning("plot_rast_gg --> The selected palette name is not valid.\n",
+      warning("plot_vect --> The selected palette name is not valid.\n",
               "Reverting to default value for selecter palette type (",
               as.character(def_palettes[palette_type]), ")")
       palette_name = as.character(def_palettes[palette_type])
@@ -130,7 +130,7 @@ plot_vect <- function(
     assertthat::assert_that(
       leg_type %in% c("discrete", "continuous"),
       msg = strwrap(
-        "plot_rast_gg --> Invalid `palette_type`. It must be \"discrete\" or
+        "plot_vect --> Invalid `legend_type`. It must be \"discrete\" or
       \"continuous\". Aborting!")
     )
     leg_type <- switch(leg_type,
@@ -171,25 +171,25 @@ plot_vect <- function(
   #   if additional NA value passed, convert corresponding values of
   #   fill_var column to NA ####
   if (!is.null(na.value)) {
-    in_data <- in_data[which(in_data[[fill_var]] == na.value),][[fill_var]] = NA
+    in_data[which(in_data[fill_var] == na.value),][fill_var] <- NA
   }
 
   #   _________________________________________________________________________
   #   if transparent NA, remove the NAs from the data to speed-up rendering ####
   if (!is.null(na.color)) {
     if (na.color == "transparent")  {
-      in_data[!is.na(in_data[[fill_var]]),]
+      in_data <- in_data[!is.na(in_data[fill_var]),]
     }
   }
 
-  if (!is.null(zlims) & zlims_type == "percs") {
-
-    all_lims <- in_rast_fort[,  as.list(stats::quantile(value, zlims,
-                                                        na.rm = TRUE)),
-                             by = band]
-    zlims <- c(min(all_lims[,2]), max(all_lims[,3]))
-
-  }
+  # if (!is.null(zlims) & zlims_type == "percs") {
+  #
+  #   all_lims <- in_rast_fort[,  as.list(stats::quantile(value, zlims,
+  #                                                       na.rm = TRUE)),
+  #                            by = band]
+  #   zlims <- c(min(all_lims[,2]), max(all_lims[,3]))
+  #
+  # }
 
 
   if (!is.null(zlims)) {
@@ -198,17 +198,15 @@ plot_vect <- function(
     #   containing only values above / below limits
     if (outliers_style == "recolor") {
 
-      out_low_tbl  <- subset(in_rast_fort, value < zlims[1])
-      out_high_tbl <- subset(in_rast_fort, value > zlims[2])
+      out_low_tbl  <- in_data[which(in_data[[fill_var]] < zlims[1]),]
+      out_high_tbl <- in_data[which(in_data[[fill_var]] > zlims[2]),]
 
       if (out_high_color == "transparent") {
-        in_rast_fort <- subset(in_rast_fort,
-                               value < zlims[2] | is.na(value) == TRUE)
+        in_data <- in_data[which(in_data[[fill_var]] < zlims[2]),]
       }
 
       if (out_low_color == "transparent") {
-        in_rast_fort <- subset(in_rast_fort,
-                               value > zlims[1] | is.na(value) == TRUE)
+        in_data <- in_data[which(in_data[[fill_var]] > zlims[1]),]
       }
 
     }
@@ -220,15 +218,15 @@ plot_vect <- function(
     km_extent     <- round(diff(xlims)/1000)
     scalebar_dist <- round(km_extent/100*10)
   }
- browser()
- # Blank plot
+  browser()
+  # Blank plot
   plot <- ggplot() + theme +
     scale_x_continuous(
-                       expand = expand_scale(mult = c(0.005,0.005)),
-                       limits = c(xlims[1], xlims[2])) +
+      expand = expand_scale(mult = c(0.005,0.005)),
+      limits = c(xlims[1], xlims[2])) +
     scale_y_continuous(
-                       expand = expand_scale(mult = c(0.005,0.005)),
-                       limits = c(ylims[1], ylims[2])) +
+      expand = expand_scale(mult = c(0.005,0.005)),
+      limits = c(ylims[1], ylims[2])) +
     ggtitle(title, subtitle = subtitle)
 
   # Remove axes if no_axis == TRUE
@@ -286,30 +284,30 @@ plot_vect <- function(
 
 
   scale_fill_distiller(type = ifelse(palette_type == "sequential", "seq", "div"),
-                         guide = ifelse(leg_type == "qual", "legend", "colourbar"),
-                         palette = palette_name,
-                         # labels = waiver(),
-                         # limits = waiver(),
-                         oob = scales::squish,
-                         breaks = waiver(),
-                         direction = 1,
-                         na.value = "transparent") +
+                       guide = ifelse(leg_type == "qual", "legend", "colourbar"),
+                       palette = palette_name,
+                       # labels = waiver(),
+                       # limits = waiver(),
+                       oob = scales::squish,
+                       breaks = waiver(),
+                       direction = 1,
+                       na.value = "transparent") +
     theme(plot.margin   = margin(0.1,0.1,0.1,0.1, unit = "cm"),
           panel.ontop = T,
           panel.background = element_rect(fill = "transparent",
                                           color = "grey30"))
 
-    # ggplot2::theme(legend.position = "bottom") +
-    # ggplot2::guides(
-    #   fill = ggplot2::guide_colourbar(title = "",
-    #                                   title.position = "bottom",
-    #                                   title.hjust = 0.5,
-    #                                   label.position = "top",
-    #                                   label.hjust = 0.5,
-    #                                   barwidth = unit(0.5, "npc"))) +
-    # geom_text(data = borders, aes(label = NAME_1, x = lon, y = lat), size = 2) +
-    #
-    #     theme(panel.ontop = T, panel.background = element_rect(fill = "transparent",
+  # ggplot2::theme(legend.position = "bottom") +
+  # ggplot2::guides(
+  #   fill = ggplot2::guide_colourbar(title = "",
+  #                                   title.position = "bottom",
+  #                                   title.hjust = 0.5,
+  #                                   label.position = "top",
+  #                                   label.hjust = 0.5,
+  #                                   barwidth = unit(0.5, "npc"))) +
+  # geom_text(data = borders, aes(label = NAME_1, x = lon, y = lat), size = 2) +
+  #
+  #     theme(panel.ontop = T, panel.background = element_rect(fill = "transparent",
   #                                                            color = "grey30"))  +
   #     theme(panel.grid.major = element_line(color = "grey45", size = 0.5))
   #     # theme(legend.margin = margin(0.2,0.2,0.2,0.2, unit = "cm")) +

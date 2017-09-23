@@ -1,7 +1,7 @@
 context("Crop raster on a given extent")
 testthat::test_that("Test On raster cropping", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   library(testthat)
   library(sprawl.data)
   library(raster)
