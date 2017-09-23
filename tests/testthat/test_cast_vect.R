@@ -3,7 +3,7 @@ context("Cast vector to other type")
 test_that("cast_vect works as expected", {
   library(testthat)
   skip_on_travis()
-  # skip_on_cran()
+  skip_on_cran()
   library(sprawl.data)
 
   # input is a shapefile
