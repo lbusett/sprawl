@@ -1,7 +1,7 @@
 context("check_proj4string")
 
 testthat::test_that("check_proj4string works as expected", {
-  # skip_on_travis()
+  skip_on_travis()
   library(sp)
 
   # invalid proj4
