@@ -13,7 +13,8 @@ test_that("create_fishnet works as expected", {
   fishnet  <- create_fishnet(in_rast, cellsize = c(70,70))
   expect_lt(max(diff(unique(sf::st_area(fishnet)))), 0)
 
-  # unless using also `exact_csize`
+  # unless using also `exact_csize == FALSE` since sf creates a regular grid
+  # with a step "similar" to the provided cellsize
   fishnet  <- create_fishnet(in_rast, cellsize = c(70,70), exact_csize = FALSE)
   expect_equal(max(diff(unique(sf::st_area(fishnet)))), 0)
 
