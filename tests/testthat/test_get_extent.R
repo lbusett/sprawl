@@ -1,7 +1,7 @@
 context("Get extent of a spatial object/file")
 testthat::test_that("Test retrieval of extent",{
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # no proj set
   library(sprawl.data)
 
@@ -27,7 +27,6 @@ testthat::test_that("Test retrieval of extent",{
   expect_is(ext_file, "sprawlext")
   expect_equal(ext_file, ext_sf)
   expect_equal(ext_sf@extent, ext_sp@extent)
-
 
   # warning/abort on wrong proj4string ----
   wrong_file <- "/tttt/wrong.tif"

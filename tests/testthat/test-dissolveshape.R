@@ -2,7 +2,7 @@ context("Dissolve vector object")
 testthat::test_that("Test dissolve shapefile",{
   library(testthat)
   # skip_on_cran()
-  # skip_on_travis()
+  skip_on_travis()
   library(sprawl.data)
   indata <- read_vect(system.file("extdata/shapes","lc_polys.shp",
                                   package = "sprawl.data"))
