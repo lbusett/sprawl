@@ -34,7 +34,7 @@ in_rast  <- raster::setZ(in_rast,
 testthat::test_that("Basic test on polygons extraction", {
 
   # skip_on_cran()
-  # skip_on_travis()
+  skip_on_travis()
 
   # check errors in input selbands
   expect_error(extract_rast(in_rast, in_polys, selbands = c(2,1)))
