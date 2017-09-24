@@ -2,7 +2,7 @@ context("Mask a raster on features of a vector")
 testthat::test_that("Test On raster masking", {
   # skip_on_cran()
   skip_on_travis()
-  library(testthat)
+  # library(testthat)
   library(sprawl.data)
 
   mask_vect <- system.file("extdata/shapes", "lc_polys.shp",

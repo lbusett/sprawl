@@ -1,7 +1,7 @@
 context("Extract data from raster - on polygons") #----
 skip_on_travis()
 library(sprawl.data)
-library(testthat)
+# library(testthat)
 library(sf)
 
 # This builds a test raster and polygon shape with variable conditions:

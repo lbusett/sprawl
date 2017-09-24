@@ -1,7 +1,7 @@
 context("Add info attribute to a raster object")
 
 test_that("setinfo_rast works as expected", {
-  library(testthat)
+  # library(testthat)
   skip_on_travis()
   #' If passing a RasterStack, we get correct info
   getinfo_obj <- raster::brick(system.file("extdata/OLI_test", "oli_multi_1000.tif",  #nolint
