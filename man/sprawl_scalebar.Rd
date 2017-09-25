@@ -4,7 +4,7 @@
 \alias{sprawl_scalebar}
 \title{sprawl_scalebar}
 \usage{
-sprawl_scalebar(data = NULL, location = "bottomright", dist,
+sprawl_scalebar(data = NULL, location = "bottomright", dist = NULL,
   height = 0.02, st.dist = 0.025, st.bottom = TRUE, st.size = 3.5,
   st.color = "black", box.fill = c("black", "white"), box.color = "black",
   dd2km = FALSE, model, x.min, x.max, y.min, y.max, anchor = NULL,

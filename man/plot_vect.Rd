@@ -2,23 +2,27 @@
 % Please edit documentation in R/plot_vect.R
 \name{plot_vect}
 \alias{plot_vect}
-\title{plot a map based on an sf object}
+\title{FUNCTION_TITLE}
 \usage{
-plot_vect(in_data, fill_var, facet_rows = NULL, borders_layer = NULL,
-  borders_color = "grey15", borders_size = 0.2, basemap = NULL,
-  zoomin = 0, xlims = NULL, ylims = NULL, zlims = NULL,
-  zlims_type = "vals", outliers_style = "recolor",
-  outliers_colors = c("grey10", "grey90"), scalebar = FALSE,
-  scalebar_dist = NULL, na.color = NULL, na.value = NULL,
-  palette_type = "gradient", palette_name = NULL, direction = 1,
-  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
-  no_axis = FALSE, title = "Vector Plot", subtitle = NULL,
-  theme = theme_bw(), verbose = TRUE)
+plot_vect(in_data, fill_var = NULL, fill_transparency = 0,
+  polys_color = "black", polys_size = 0.2, facet_var = NULL,
+  facet_rows = NULL, borders_layer = NULL, borders_color = "grey15",
+  borders_size = 0.2, borders_txt_fiels = NULL, borders_txt_size = 1,
+  borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
+  xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
+  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
+  scalebar = FALSE, scalebar_dist = NULL, na.color = NULL,
+  na.value = NULL, palette_type = "gradient", palette_name = NULL,
+  direction = 1, leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  leg_position = "right", no_axis = FALSE, title = "Vector Plot",
+  subtitle = NULL, theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_data}{PARAM_DESCRIPTION}
 
 \item{fill_var}{PARAM_DESCRIPTION}
+
+\item{facet_var}{PARAM_DESCRIPTION}
 
 \item{facet_rows}{PARAM_DESCRIPTION, Default: NULL}
 
@@ -28,9 +32,13 @@ plot_vect(in_data, fill_var, facet_rows = NULL, borders_layer = NULL,
 
 \item{borders_size}{PARAM_DESCRIPTION, Default: 0.2}
 
-\item{basemap}{\code{character} If not NULL and valid, the selected basemap is
-used as background. For a list of valid values, see \code{rosm::osm.types()},
-Default: NULL}
+\item{borders_txt_fiels}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{borders_txt_size}{PARAM_DESCRIPTION, Default: 1}
+
+\item{borders_txt_color}{PARAM_DESCRIPTION, Default: 'grey15'}
+
+\item{basemap}{Yet to be implemented !!!!!, Default: NULL}
 
 \item{zoomin}{PARAM_DESCRIPTION, Default: 0}
 
@@ -46,7 +54,7 @@ Default: NULL}
 
 \item{outliers_colors}{PARAM_DESCRIPTION, Default: c("grey10", "grey90")}
 
-\item{scalebar}{PARAM_DESCRIPTION, Default: TRUE}
+\item{scalebar}{PARAM_DESCRIPTION, Default: FALSE}
 
 \item{scalebar_dist}{PARAM_DESCRIPTION, Default: NULL}
 
@@ -88,7 +96,24 @@ DETAILS
 \examples{
 \dontrun{
 if(interactive()){
- #EXAMPLE1
+ in_vect <- get_boundaries("ITA", level = 3) \%>\%
+    dplyr::filter(NAME_1 == "Lombardia")
+ geom <- in_vect \%>\%
+   select(NAME_1, NAME_2, NAME_3)
+ st_geometry(in_vect) <- NULL
+ in_data <- in_vect  \%>\%
+    dplyr::select(NAME_1, NAME_2, NAME_3) \%>\%
+    dplyr::mutate(population_2003 = sample(dim(.)[1]),
+                  population_2016 = sample(dim(.)[1])) \%>\%
+    tidyr::gather(population, value, -NAME_1, -NAME_2, -NAME_3)
+ in_vect <- dplyr::left_join(in_data, geom) \%>\%
+   sf::st_as_sf()
+ plot_vect(in_vect,
+           fill_var = "NAME_2",
+           facet_var = "population",
+           scalebar = TRUE,
+           scalebar_dist = 30,
+           theme = theme_light())
  }
 }
 }

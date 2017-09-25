@@ -4,13 +4,14 @@ library(doSNOW)
 library(sp)
 library(dplyr)
 library(anytime)
+library(sprawl)
 #   ____________________________________________________________________________
 #   get the two LAI hdf images and convert to raster, then mosaic them     ####
 
 in_folds <- list.files("/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/VGT/Raw_data",
                        pattern = "[0-9]", full.names = T)
 in_folds <- in_folds[2:length(in_folds)]
-in_folds <- in_folds [19:20]
+in_folds <- in_folds[21:25]
 in_ERMES_LAI_ex <- "/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EP_R3_LAI/2017/MOD/IT_LAI_MOD_2017_009.tif" %>%
   raster::raster()
 
@@ -36,7 +37,7 @@ if (!file.exists(in_lc_proba_file)) {
                                    to_file = TRUE,
                                    out_file = in_lc_proba_file,
                                    verbose = TRUE,
-                                   maxchunk = 50E6)
+                                   maxchunk = 5E6)
   Sys.time() - t1
 }
 
@@ -109,9 +110,9 @@ results <- foreach::foreach(folder = seq_along(in_folds),
                                                                      in_proj = sp::proj4string(in_ERMES_LAI_ex),
                                                                      out_proj = sp::proj4string(lai_tot))
 
-                              lai_cropped  <- raster::crop(lai_tot, extent_ERMES + 0.12)
-                              qual_cropped <- raster::crop(qual_tot, extent_ERMES + 0.12)
-                              rmse_cropped <- raster::crop(rmse_tot, extent_ERMES + 0.12)
+                              lai_cropped  <- raster::crop(lai_tot, extent_ERMES@extent + 0.12)
+                              qual_cropped <- raster::crop(qual_tot, extent_ERMES@extent + 0.12)
+                              rmse_cropped <- raster::crop(rmse_tot, extent_ERMES@extent + 0.12)
 
                               #   ____________________________________________________________________________
                               #   build a mask based on quality values                                    ####
@@ -146,7 +147,7 @@ results <- foreach::foreach(folder = seq_along(in_folds),
                               #   build final mask and apply it to lai values                             ####
 
                               # mask_rast <- mask_rast * rmse_cropped * fc_proba_mask
-                              mask_rast <- mask_rast * fc_proba_mask
+                              mask_rast   <- mask_rast * fc_proba_mask
                               lai_cropped <- (lai_cropped * mask_rast) / 30
 
                               #   ____________________________________________________________________________

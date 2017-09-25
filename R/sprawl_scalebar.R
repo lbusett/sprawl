@@ -53,7 +53,7 @@
 #' @importFrom utils tail
 
 sprawl_scalebar <- function(
-  data = NULL, location = "bottomright", dist, height = 0.02,
+  data = NULL, location = "bottomright", dist = NULL, height = 0.02,
   st.dist = 0.025, st.bottom = TRUE, st.size = 3.5, st.color = "black",
   box.fill = c("black", "white"), box.color = "black", dd2km = FALSE,
   model, x.min, x.max, y.min, y.max, anchor = NULL, facet.var = NULL,
@@ -66,8 +66,8 @@ sprawl_scalebar <- function(
         is.null(y.max)) {
       stop("If data is not defined, x.min, x.max, y.min and y.max must be.")
     }
-    data <- data.frame(long = c(x.min, x.max), lat = c(y.min,
-                                                       y.max))
+    data <- data.frame(long = c(x.min, x.max),
+                       lat  = c(y.min, y.max))
   }
   if (is.null(dd2km)) {
     stop("dd2km should be logical.")
@@ -128,6 +128,7 @@ sprawl_scalebar <- function(
     }
     direction <- -1
   }
+
   if (!st.bottom) {
     st.dist <- y + (ymax - ymin) * (height + st.dist)
   }
@@ -135,13 +136,19 @@ sprawl_scalebar <- function(
     st.dist <- y - (ymax - ymin) * st.dist
   }
   height <- y + (ymax - ymin) * height
+
+
   if (dd2km) {
     break1 <- maptools::gcDestination(lon = x, lat = y, bearing = 90 *
-                                        direction, dist = dist, dist.units = "km", model = model)[1,
-                                                                                                  1]
-    break2 <- maptools::gcDestination(lon = x, lat = y, bearing = 90 *
-                                        direction, dist = dist * 2, dist.units = "km", model = model)[1,
-                                                                                                      1]
+                                      direction,
+                                      dist = dist,
+                                      dist.units = "km",
+                                      model = model)[1,1]
+    break2 <- maptools::gcDestination(lon = x, lat = y,
+                                      bearing = 90 * direction,
+                                      dist = dist * 2,
+                                      dist.units = "km",
+                                      model = model)[1,1]
   }
   else {
     if (location == "bottomleft" | location == "topleft") {
@@ -167,10 +174,10 @@ sprawl_scalebar <- function(
       }
     }
   }
-  box1 <- data.frame(x = c(x, x, rep(break1, 2), x), y = c(y,
-                                                           height, height, y, y), group = 1)
-  box2 <- data.frame(x = c(rep(break1, 2), rep(break2, 2),
-                           break1), y = c(y, rep(height, 2), y, y), group = 1)
+  box1 <- data.frame(x = c(x, x, rep(break1, 2), x),
+                     y = c(y, height, height, y, y), group = 1)
+  box2 <- data.frame(x = c(rep(break1, 2), rep(break2, 2), break1),
+                     y = c(y, rep(height, 2), y, y), group = 1)
   if (!is.null(facet.var) & !is.null(facet.lev)) {
     for (i in 1:length(facet.var)) {
       box1[, facet.var[i]] <- facet.lev[i]
@@ -190,7 +197,8 @@ sprawl_scalebar <- function(
   }
 
   legend2 <- cbind(data[1:3, ], x = x.st.pos, y = st.dist,
-                   label = legend[, "text"])
+                   label = format(legend[, "text"], digits = 3),
+                   stringsAsFactors = FALSE)
   legend2$label[3] <- paste(legend2$label[3], "km")
 
   if (!is.null(facet.var) & !is.null(facet.lev)) {

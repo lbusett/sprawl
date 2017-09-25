@@ -54,14 +54,16 @@ aggregate_rast <- function(in_rast_values,
                             cellsize = raster::res(zones_rast)[1])
   if (verbose) message("aggregate_raster --> Aggregating values of in_rast_values", #nolint
                        "on cells of zones_rast")
-
+browser()
   agg_values   <- extract_rast(in_rast_values,
                                in_fish,
                                full_data = FALSE,
                                verbose   = verbose,
                                maxchunk  = maxchunk,
                                FUN       = FUN,
-                               id_field  = "cell_id")$stats
+                               id_field  = "cell_id",
+                               join_feat_tbl = FALSE,
+                               join_geom = FALSE)$stats
   if (nodata_out != -Inf) {
     where_na <- which(is.na(agg_values$myfun))
     agg_values$myfun[where_na] <- nodata_out
