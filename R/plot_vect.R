@@ -86,7 +86,7 @@ plot_vect <- function(
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   scalebar       = FALSE, scalebar_dist = NULL,
   na.color       = NULL, na.value = NULL,
-  palette_type   = "gradient", palette_name = NULL, direction = 1,
+  palette_name   = "Greens", direction = 1,
   leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL,
   leg_position   = "right",
   no_axis        = FALSE, title = "Vector Plot", subtitle = NULL,
@@ -98,13 +98,6 @@ plot_vect <- function(
   assertthat::assert_that(
     methods::is(in_data, "sf"),
     msg = "plot_vect --> `in_data` is not a valid `sf` object. Aborting!"
-  )
-
-  assertthat::assert_that(
-    palette_type %in% c("categorical", "gradient", "diverging"),
-    msg = strwrap(
-      "plot_vect --> Invalid `palette_type`. It must be \"categorical\"
-      \"gradient\" or \"diverging\". Aborting!")
   )
 
   if (!is.null(facet_var)) {
@@ -130,52 +123,57 @@ plot_vect <- function(
   #   On NULL fill_var, just the geometry will be plotted                   ####
 
   if (is.null(fill_var)) {
+    warning("`fill_var` not specified. Only the geometry will be plotted!")
     fill_var <- names(in_data)[1]
     in_data[[fill_var]] <- NA
     na.color <- "transparent"
   } else {
     # check the class of fill_var. If it is a factoror a character, palette_type
-    # is reset to "categorical" regardless of user specification
+    # is set to "qual", otherwise to "cont".
     cls_fill_var <- class(in_data[[fill_var]])
     if (cls_fill_var %in% c("factor", "character")) {
-      palette_type <- "categorical"
+      palette_type <- "qual"
+    } else {
+      palette_type <- "cont"
     }
   }
 
   #   __________________________________________________________________________
   #   Set default palettes for different categories                         ####
 
-  palette_type <- switch(palette_type,
-                         "categorical" = "qual",
-                         "gradient"    = "seq",
-                         "diverging"   = "div"
-  )
-
   def_palettes  <- list(qual = "Set3",
-                        seq  = "Greens",
-                        div  = "RdYlGn")
+                        cont  = "Greens")
 
 
   def_legtypes  <- list(qual = "legend",
-                        seq  = "colourbar",
-                        div  = "colourbar")
+                        cont  = "colourbar")
 
+  # Check validity of palette_name.
+  # reset to default if palette_name not valid for selected palette_type
   if (!is.null(palette_name)) {
-    # Check validity of palette_name.
-    # reset to default if palette_name not valid for selected palette_type
-    all_pals <- cbind(name = row.names(RColorBrewer::brewer.pal.info),
-                      RColorBrewer::brewer.pal.info)
-    valid_pals <- subset(all_pals, category == palette_type)
+
+    all_pals   <- rbind(
+      cbind(name = row.names(RColorBrewer::brewer.pal.info),
+            RColorBrewer::brewer.pal.info, source = "brewer"),
+      data.frame(name = "hue", maxcolors = 1000, category = "qual",
+                 colorblind = FALSE, source = "ggplot"),
+      make.row.names = FALSE)
+    all_pals$category   <- as.character(all_pals$category)
+    all_pals$category_2 <- "qual"
+    all_pals$category_2[all_pals$category %in% c("div", "seq")] <- "cont"
+
+    valid_pals <- subset(all_pals, category_2 == palette_type)
 
     if (!palette_name %in% valid_pals$name) {
       warning("plot_vect --> The selected palette name is not valid.\n",
-              "Reverting to default value for selecter palette type (",
+              "Reverting to default value for the variable of interest (",
               as.character(def_palettes[palette_type]), ")")
       palette_name = as.character(def_palettes[palette_type])
     }
   } else {
-    palette_name <- as.character(def_palettes[palette_type])
+    palette <- valid_pals[which(valid_pals$name == palette_name),]
   }
+
 
   if (is.null(leg_type)) {
     leg_type <- as.character(def_legtypes[palette_type])
@@ -187,8 +185,8 @@ plot_vect <- function(
       \"continuous\". Aborting!")
     )
     leg_type <- switch(leg_type,
-                       "discrete" = "legend",
-                       "continuous"    = "colourbar"
+                       "discrete"   = "legend",
+                       "continuous" = "colourbar"
     )
   }
 
@@ -196,7 +194,7 @@ plot_vect <- function(
     out_high_color <- out_low_color <- outliers_colors
   } else {
     out_high_color = outliers_colors[2]
-    out_low_color = outliers_colors[1]
+    out_low_color  = outliers_colors[1]
   }
 
   #   __________________________________________________________________________
@@ -228,12 +226,16 @@ plot_vect <- function(
   }
 
   #   _________________________________________________________________________
-  #   if transparent NA, remove the NAs from the data to speed-up rendering ####
+  #   if transparent NA, we can remove the NAs from the data to speed-up   ####
+  #   rendering
   if (!is.null(na.color)) {
     if (na.color == "transparent")  {
       in_data <- in_data[!is.na(in_data[fill_var]),]
     }
   }
+
+  #   _________________________________________________________________________
+  #   if zlims is of type "percs" compute the reqauired quantiles   ####
 
   if (!is.null(zlims) & zlims_type == "percs") {
 
@@ -242,8 +244,8 @@ plot_vect <- function(
 
   }
 
-  # On continuous variables, perform processing to get the legends for outliers
-  # "right"
+  # On continuous variables, perform processing to create the legends for
+  # outliers "right"
   if (palette_type != "categorical") {
     if (!is.null(zlims)) {
       #   ____________________________________________________________________________
@@ -340,46 +342,20 @@ plot_vect <- function(
     coord_sf(xlim = xlims, ylim = ylims)
 
   #   __________________________________________________________________________
+  #   Add the fill             ####
+
+  #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 
-  if (palette_type == "qual") {
-    if (!palette_name == "hue") {
-      plot <- plot +
-        scale_fill_brewer(type = "qual", palette = palette_name,
-                          na.value = ifelse(is.null(na.color),
-                                            "grey50", na.color)) +
-        theme(legend.justification = "center",
-              legend.box.spacing = grid::unit(0.5,"points"))
-    } else {
-      plot <- plot +
-        scale_fill_hue(na.value = ifelse(is.null(na.color),
-                                         "grey50", na.color)) +
-        theme(legend.justification = "center",
-              legend.box.spacing = grid::unit(0.5,"points"))
-    }
-  } else {
-
-    plot <- plot +
-      scale_fill_distiller(
-        "Value",
-        limits = zlims,
-        breaks = if (is.null(leg_breaks)) {
-          waiver()
-        } else {
-          leg_breaks
-        }, labels = if (is.null(leg_labels)) {
-          waiver()
-        } else {
-          leg_labels
-        }, type = ifelse(palette_type == "sequential", "seq", "div"),
-        guide = leg_type,
-        palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
-                                             scales::squish, scales::censor),
-        direction = direction,
-        na.value = ifelse(is.null(na.color), "grey50", na.color)) +
-      theme(legend.justification = "center",
-            legend.box.spacing = grid::unit(0.5,"points"))
-  }
+  plot <- plot + make_scale_fill(palette,
+                                 palette_type,
+                                 na.color,
+                                 zlims,
+                                 leg_breaks,
+                                 leg_labels,
+                                 leg_type,
+                                 outliers_style,
+                                 direction)
 
 
 

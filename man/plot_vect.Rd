@@ -12,8 +12,8 @@ plot_vect(in_data, fill_var = NULL, fill_transparency = 0,
   xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   scalebar = FALSE, scalebar_dist = NULL, na.color = NULL,
-  na.value = NULL, palette_type = "gradient", palette_name = NULL,
-  direction = 1, leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  na.value = NULL, palette_name = "Greens", direction = 1,
+  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
   leg_position = "right", no_axis = FALSE, title = "Vector Plot",
   subtitle = NULL, theme = theme_bw(), verbose = TRUE)
 }
@@ -62,8 +62,6 @@ plot_vect(in_data, fill_var = NULL, fill_transparency = 0,
 
 \item{na.value}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{palette_type}{PARAM_DESCRIPTION, Default: 'gradient'}
-
 \item{palette_name}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{direction}{PARAM_DESCRIPTION, Default: 1}
@@ -83,6 +81,8 @@ plot_vect(in_data, fill_var = NULL, fill_transparency = 0,
 \item{theme}{PARAM_DESCRIPTION, Default: theme_bw()}
 
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
+
+\item{palette_type}{PARAM_DESCRIPTION, Default: 'gradient'}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -103,14 +103,14 @@ if(interactive()){
  st_geometry(in_vect) <- NULL
  in_data <- in_vect  \%>\%
     dplyr::select(NAME_1, NAME_2, NAME_3) \%>\%
-    dplyr::mutate(population_2003 = sample(dim(.)[1]),
-                  population_2016 = sample(dim(.)[1])) \%>\%
-    tidyr::gather(population, value, -NAME_1, -NAME_2, -NAME_3)
+    dplyr::mutate(y_2003 = sample(dim(.)[1]),
+                  y_2016 = 3*sample(dim(.)[1])) \%>\%
+    tidyr::gather(year, population, -NAME_1, -NAME_2, -NAME_3)
  in_vect <- dplyr::left_join(in_data, geom) \%>\%
    sf::st_as_sf()
  plot_vect(in_vect,
-           fill_var = "NAME_2",
-           facet_var = "population",
+           fill_var = "population",
+           facet_var = "year",
            scalebar = TRUE,
            scalebar_dist = 30,
            theme = theme_light())

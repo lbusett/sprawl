@@ -83,8 +83,8 @@ crop_rast <- function(rast_object,
   #   __________________________________________________________________________
   #   retrieve xy coords of raster                                          ####
 
-  col_coords <- rbbox_ext[1] + rastinfo$res[1] * seq_len(dims[2])
-  row_coords <- rbbox_ext[2] + rastinfo$res[2] * seq_len(dims[1])
+  col_coords <- rbbox_ext[1] + rastinfo$res[1] * (seq_len(dims[2]) - 1)
+  row_coords <- rbbox_ext[2] + rastinfo$res[2] * (seq_len(dims[1]) - 1)
 
   #   __________________________________________________________________________
   #   compute a correct bounding box for the cropped raster, to avoid       ####
@@ -92,30 +92,50 @@ crop_rast <- function(rast_object,
 
   # xmin
   if (rbbox_ext[1] < cbbox_ext[1]) {
-    first_col    <- data.table::last(which(col_coords <= cbbox_ext[1]))
-    rbbox_ext[1] <- col_coords[first_col - 1]
+    which_lower    <- which(col_coords <= cbbox_ext[1])
+    if (length(which_lower) != 0) {
+      first_col    <- data.table::last(which_lower)
+      rbbox_ext[1] <- col_coords[first_col]
+    } else {
+      first_col <- 1
+    }
   }
 
   # ymin
   if (rbbox_ext[2] < cbbox_ext[2]) {
-    first_row    <- data.table::last(which(row_coords <= cbbox_ext[2]))
-    rbbox_ext[2] <- row_coords[first_row - 1]
+    which_lower    <- which(row_coords <= cbbox_ext[2])
+    if (length(which_lower) != 0) {
+      first_row    <- data.table::last(which_lower)
+      rbbox_ext[2] <- row_coords[first_row]
+    } else {
+      first_row <- 1
+    }
   }
 
   # xmax
   if (rbbox_ext[3] > cbbox_ext[3]) {
-    last_col     <- data.table::last(which(col_coords <= cbbox_ext[3]))
-    rbbox_ext[3] <- col_coords[last_col + 1]
+    which_lower  <- which(col_coords <= cbbox_ext[3])
+    if (length(which_lower) != 0) {
+    last_col     <- data.table::last(which_lower)
+    rbbox_ext[3] <- col_coords[last_col]
+    } else {
+      last_col <- dims[2]
+    }
   }
 
   # ymax
   if (rbbox_ext[4] > cbbox_ext[4]) {
+    which_lower  <- which(row_coords <= cbbox_ext[4])
+    if (length(which_lower) != 0) {
     last_row     <- data.table::last(which(row_coords <= cbbox_ext[4]))
-    rbbox_ext[4] <- row_coords[last_row + 1]
+    rbbox_ext[4] <- row_coords[last_row]
+    } else {
+      last_row <- dims[1]
+    }
   }
 
   # TODO: Abort gracefully on incorrect rbbox_ext (e.g., because no intersection)
-  #
+
   # ____________________________________________________________________________
   # create a temporary vrt file corresponding to the band to be preocessed  ####
   # Using `create_virtrast~ allows flexibility in the case that a stack is

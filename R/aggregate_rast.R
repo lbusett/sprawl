@@ -54,7 +54,7 @@ aggregate_rast <- function(in_rast_values,
                             cellsize = raster::res(zones_rast)[1])
   if (verbose) message("aggregate_raster --> Aggregating values of in_rast_values", #nolint
                        "on cells of zones_rast")
-browser()
+
   agg_values   <- extract_rast(in_rast_values,
                                in_fish,
                                full_data = FALSE,
