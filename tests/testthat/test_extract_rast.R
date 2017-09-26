@@ -86,7 +86,7 @@ testthat::test_that(
     skip_on_travis()
     # Check that processing with and without comp_quant are equal for a common
     # variable
-    out    <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
+    out   <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                            selbands = c(1,2), small = T, id_field = "id")
     out2  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                           selbands = c(1,2), small = T, comp_quant = TRUE)
@@ -117,7 +117,7 @@ testthat::test_that(
   })
 
 context("Extract data from categorical raster - on polygons")
-testthat::test_that("Test On points extraction", {
+testthat::test_that("Test On categorical raster extraction", {
   # skip_on_cran()
   skip_on_travis()
   library(sprawl.data)

@@ -153,7 +153,7 @@ extract_rast <- function(in_rast,
 
   # Extract bands to be processed from the original raster
 
-  in_rast <- in_rast[[selbands]]
+  in_rast        <- in_rast[[selbands]]
   in_vect$mdxtnq <- seq(1:dim(in_vect)[1])
 
   #   __________________________________________________________________________

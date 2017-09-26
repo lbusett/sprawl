@@ -4,21 +4,25 @@
 \alias{plot_vect}
 \title{FUNCTION_TITLE}
 \usage{
-plot_vect(in_data, fill_var = NULL, fill_transparency = 0,
-  polys_color = "black", polys_size = 0.2, facet_var = NULL,
-  facet_rows = NULL, borders_layer = NULL, borders_color = "grey15",
-  borders_size = 0.2, borders_txt_fiels = NULL, borders_txt_size = 1,
+plot_vect(in_data, line_color = "black", line_size = 0.2, fill_var = NULL,
+  fill_transparency = 0, facet_var = NULL, facet_rows = NULL,
+  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  borders_txt_fiels = NULL, borders_txt_size = 1,
   borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
   xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   scalebar = FALSE, scalebar_dist = NULL, na.color = NULL,
-  na.value = NULL, palette_name = "Greens", direction = 1,
-  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
-  leg_position = "right", no_axis = FALSE, title = "Vector Plot",
-  subtitle = NULL, theme = theme_bw(), verbose = TRUE)
+  na.value = NULL, palette_name = NULL, direction = 1, leg_type = NULL,
+  leg_labels = NULL, leg_breaks = NULL, leg_position = "right",
+  no_axis = FALSE, title = "Vector Plot", subtitle = NULL,
+  theme = theme_bw(), grid = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{in_data}{PARAM_DESCRIPTION}
+
+\item{line_color}{PARAM_DESCRIPTION}
+
+\item{line_size}{PARAM_DESCRIPTION}
 
 \item{fill_var}{PARAM_DESCRIPTION}
 
@@ -62,8 +66,6 @@ plot_vect(in_data, fill_var = NULL, fill_transparency = 0,
 
 \item{na.value}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{palette_name}{PARAM_DESCRIPTION, Default: NULL}
-
 \item{direction}{PARAM_DESCRIPTION, Default: 1}
 
 \item{leg_type}{PARAM_DESCRIPTION, Default: NULL}
@@ -83,6 +85,8 @@ plot_vect(in_data, fill_var = NULL, fill_transparency = 0,
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
 
 \item{palette_type}{PARAM_DESCRIPTION, Default: 'gradient'}
+
+\item{palette}{PARAM_DESCRIPTION, Default: NULL}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -96,24 +100,26 @@ DETAILS
 \examples{
 \dontrun{
 if(interactive()){
- in_vect <- get_boundaries("ITA", level = 3) \%>\%
-    dplyr::filter(NAME_1 == "Lombardia")
- geom <- in_vect \%>\%
-   select(NAME_1, NAME_2, NAME_3)
- st_geometry(in_vect) <- NULL
- in_data <- in_vect  \%>\%
-    dplyr::select(NAME_1, NAME_2, NAME_3) \%>\%
-    dplyr::mutate(y_2003 = sample(dim(.)[1]),
-                  y_2016 = 3*sample(dim(.)[1])) \%>\%
-    tidyr::gather(year, population, -NAME_1, -NAME_2, -NAME_3)
- in_vect <- dplyr::left_join(in_data, geom) \%>\%
-   sf::st_as_sf()
- plot_vect(in_vect,
-           fill_var = "population",
-           facet_var = "year",
-           scalebar = TRUE,
-           scalebar_dist = 30,
-           theme = theme_light())
+ library(ggplot2)
+ in_vect <- get(load(system.file("extdata/shapes", "poly_lomb.RData",
+                                 package = "sprawl.data")))
+ # plot only geometry
+ plot_vect(in_vect)
+ plot_vect(in_vect, line_color = "blue", line_size = 1.5)
+
+ # plot with a fill on a cartegorical variable with a single "level"
+ plot_vect(in_vect, fill_var = "NAME_2")
+
+ # change the palette, add a scalebar and remove the grid
+ plot_vect(in_vect, fill_var = "NAME_2",no_axis = F, palette_name = "Set3",
+           scalebar = TRUE, grid = FALSE)
+
+
+ # plot with a fill on a continuous variable with two "levels", using facets
+ # and a diverging palette
+ plot_vect(in_vect, fill_var = "population", facet_var = "year",
+           palette = "RdYlBu")
+
  }
 }
 }
