@@ -106,13 +106,13 @@ results <- foreach::foreach(folder = seq_along(in_folds),
                               #   ____________________________________________________________________________
                               #   Resize both based on ERMES extent                                       ####
 
-                              extent_ERMES  <- sprawl::reproj_extent(raster::extent(in_ERMES_LAI_ex),
-                                                                     in_proj = sp::proj4string(in_ERMES_LAI_ex),
-                                                                     out_proj = sp::proj4string(lai_tot))
-
-                              lai_cropped  <- raster::crop(lai_tot, extent_ERMES@extent + 0.12)
-                              qual_cropped <- raster::crop(qual_tot, extent_ERMES@extent + 0.12)
-                              rmse_cropped <- raster::crop(rmse_tot, extent_ERMES@extent + 0.12)
+                              extent_ERMES  <- sprawl::reproj_extent(get_extent(in_ERMES_LAI_ex),
+                                                                     in_proj = get_proj4string(in_ERMES_LAI_ex),
+                                                                     out_proj = get_proj4string(lai_tot))
+                              extent_ERMES@extent <- extent_ERMES@extent + c(-0.06, -0.06, 0.06, 0.06)
+                              lai_cropped  <- crop_rast(lai_tot, extent_ERMES)
+                              qual_cropped <- crop_rast(qual_tot, extent_ERMES)
+                              rmse_cropped <- crop_rast(rmse_tot, extent_ERMES)
 
                               #   ____________________________________________________________________________
                               #   build a mask based on quality values                                    ####

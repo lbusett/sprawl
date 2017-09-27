@@ -1,12 +1,8 @@
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 #' @param in_data PARAM_DESCRIPTION
-#' @param line_color `character` color used to plot the polygon borders of
-#'   in_data
-#' @param line_size `numeric` size of lines used to plot the polygons borders of
-#'   in_data, Default: 0.2
-#' @param fill_var PARAM_DESCRIPTION, Default: NULL
-#' @param facet_var PARAM_DESCRIPTION, Default: NULL
+#' @param fill_var PARAM_DESCRIPTION
+#' @param facet_var PARAM_DESCRIPTION
 #' @param facet_rows PARAM_DESCRIPTION, Default: NULL
 #' @param borders_layer PARAM_DESCRIPTION, Default: NULL
 #' @param borders_color PARAM_DESCRIPTION, Default: 'grey15'
@@ -14,7 +10,7 @@
 #' @param borders_txt_fiels PARAM_DESCRIPTION, Default: NULL
 #' @param borders_txt_size PARAM_DESCRIPTION, Default: 1
 #' @param borders_txt_color PARAM_DESCRIPTION, Default: 'grey15'
-#' @param basemap Still to be implemented !!!!!, Default: NULL
+#' @param basemap Yet to be implemented !!!!!, Default: NULL
 #' @param zoomin PARAM_DESCRIPTION, Default: 0
 #' @param xlims PARAM_DESCRIPTION, Default: NULL
 #' @param ylims PARAM_DESCRIPTION, Default: NULL
@@ -27,7 +23,7 @@
 #' @param na.color PARAM_DESCRIPTION, Default: NULL
 #' @param na.value PARAM_DESCRIPTION, Default: NULL
 #' @param palette_type PARAM_DESCRIPTION, Default: 'gradient'
-#' @param palette PARAM_DESCRIPTION, Default: NULL
+#' @param palette_name PARAM_DESCRIPTION, Default: NULL
 #' @param direction PARAM_DESCRIPTION, Default: 1
 #' @param leg_type PARAM_DESCRIPTION, Default: NULL
 #' @param leg_labels PARAM_DESCRIPTION, Default: NULL
@@ -42,27 +38,24 @@
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  library(ggplot2)
-#'  in_vect <- get(load(system.file("extdata/shapes", "poly_lomb.RData",
-#'                                  package = "sprawl.data")))
-#'  # plot only geometry
-#'  plot_vect(in_vect)
-#'  plot_vect(in_vect, line_color = "blue", line_size = 1.5)
-#'
-#'  # plot with a fill on a cartegorical variable with a single "level"
-#'  plot_vect(in_vect, fill_var = "NAME_2")
-#'
-#'  # change the palette, add a scalebar and remove the grid
-#'  plot_vect(in_vect, fill_var = "NAME_2",no_axis = F, palette_name = "Set3",
-#'            scalebar = TRUE, grid = FALSE)
-#'
-#'
-#'  # plot with a fill on a continuous variable with two "levels", using facets
-#'  # and a diverging palette
-#'  plot_vect(in_vect, fill_var = "population", facet_var = "year",
-#'            palette = "RdYlBu", scalebar = T, scalebar_dist = 50,
-#'            grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"))
-#'
+#'  in_vect <- get_boundaries("ITA", level = 3) %>%
+#'     dplyr::filter(NAME_1 == "Lombardia")
+#'  geom <- in_vect %>%
+#'    select(NAME_1, NAME_2, NAME_3)
+#'  st_geometry(in_vect) <- NULL
+#'  in_data <- in_vect  %>%
+#'     dplyr::select(NAME_1, NAME_2, NAME_3) %>%
+#'     dplyr::mutate(y_2003 = sample(dim(.)[1]),
+#'                   y_2016 = 3*sample(dim(.)[1])) %>%
+#'     tidyr::gather(year, population, -NAME_1, -NAME_2, -NAME_3)
+#'  in_vect <- dplyr::left_join(in_data, geom) %>%
+#'    sf::st_as_sf()
+#'  plot_vect(in_vect,
+#'            fill_var = "population",
+#'            facet_var = "year",
+#'            scalebar = TRUE,
+#'            scalebar_dist = 30,
+#'            theme = theme_light())
 #'  }
 #' }
 #' @rdname plot_vect
@@ -79,13 +72,13 @@
 #'  scale_y_continuous ggtitle theme element_blank element_text element_rect
 #'  geom_raster aes facet_wrap scale_fill_brewer scale_fill_distiller waiver
 #'  geom_polygon scale_colour_manual guides guide_legend scale_color_manual
-#'  coord_fixed geom_sf aes_string coord_sf margin
-plot_vect <- function(
+#'  coord_fixed
+plot_vect_old <- function(
   in_data,
-  line_color    = "black", line_size     = 0.2,
-  fill_var      = NULL, fill_transparency = 0,
-  facet_var     = NULL, facet_rows     = NULL,
-  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  fill_var       = NULL, fill_transparency = 0,
+  polys_color    = "black", polys_size = 0.2,
+  facet_var      = NULL, facet_rows     = NULL,
+  borders_layer  = NULL, borders_color = "grey15", borders_size = 0.2,
   borders_txt_fiels = NULL, borders_txt_size = 1, borders_txt_color = "grey15",
   basemap        = NULL, zoomin = 0,
   xlims          = NULL, ylims = NULL,
@@ -93,11 +86,11 @@ plot_vect <- function(
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   scalebar       = FALSE, scalebar_dist = NULL,
   na.color       = NULL, na.value = NULL,
-  palette_name   = NULL, direction = 1,
+  palette_type   = "gradient", palette_name = NULL, direction = 1,
   leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL,
   leg_position   = "right",
   no_axis        = FALSE, title = "Vector Plot", subtitle = NULL,
-  theme          = theme_bw(), grid = FALSE,
+  theme          = theme_bw(),
   verbose        = TRUE
 ) {
 
@@ -105,6 +98,13 @@ plot_vect <- function(
   assertthat::assert_that(
     methods::is(in_data, "sf"),
     msg = "plot_vect --> `in_data` is not a valid `sf` object. Aborting!"
+  )
+
+  assertthat::assert_that(
+    palette_type %in% c("categorical", "gradient", "diverging"),
+    msg = strwrap(
+      "plot_vect --> Invalid `palette_type`. It must be \"categorical\"
+      \"gradient\" or \"diverging\". Aborting!")
   )
 
   if (!is.null(facet_var)) {
@@ -130,63 +130,53 @@ plot_vect <- function(
   #   On NULL fill_var, just the geometry will be plotted                   ####
 
   if (is.null(fill_var)) {
-    warning("`fill_var` not specified. Only the geometry will be plotted!")
-    fill_var     <- names(in_data)[1]
-    na.color     <- "transparent"
-    palette_type <- "qual"
-    no_fill <- TRUE
+    fill_var <- names(in_data)[1]
+    in_data[[fill_var]] <- NA
+    na.color <- "transparent"
   } else {
     # check the class of fill_var. If it is a factoror a character, palette_type
-    # is set to "qual", otherwise to "cont".
+    # is reset to "categorical" regardless of user specification
     cls_fill_var <- class(in_data[[fill_var]])
     if (cls_fill_var %in% c("factor", "character")) {
-      palette_type <- "qual"
-    } else {
-      palette_type <- "cont"
+      palette_type <- "categorical"
     }
-    no_fill <- FALSE
   }
 
-  # -----------------------------------------------------------
-  # Create list of valide palette names and chars
-
-  all_pals   <- rbind(
-    cbind(name = row.names(RColorBrewer::brewer.pal.info),
-          RColorBrewer::brewer.pal.info, source = "brewer"),
-    data.frame(name = "hue", maxcolors = 1000, category = "qual",
-               colorblind = FALSE, source = "ggplot"),
-    make.row.names = FALSE)
-  all_pals$category   <- as.character(all_pals$category)
-  all_pals$category_2 <- "qual"
-  all_pals$category_2[all_pals$category %in% c("div", "seq")] <- "cont"
-
-  valid_pals <- all_pals[all_pals$category_2 == palette_type,]
   #   __________________________________________________________________________
   #   Set default palettes for different categories                         ####
 
+  palette_type <- switch(palette_type,
+                         "categorical" = "qual",
+                         "gradient"    = "seq",
+                         "diverging"   = "div"
+  )
+
   def_palettes  <- list(qual = "Set3",
-                        cont  = "Greens")
+                        seq  = "Greens",
+                        div  = "RdYlGn")
 
 
   def_legtypes  <- list(qual = "legend",
-                        cont  = "colourbar")
+                        seq  = "colourbar",
+                        div  = "colourbar")
 
-
-  # Check validity of palette.
-  # reset to default if palette not valid for selected palette_type
   if (!is.null(palette_name)) {
+    # Check validity of palette_name.
+    # reset to default if palette_name not valid for selected palette_type
+    all_pals <- cbind(name = row.names(RColorBrewer::brewer.pal.info),
+                      RColorBrewer::brewer.pal.info)
+    valid_pals <- subset(all_pals, category == palette_type)
 
     if (!palette_name %in% valid_pals$name) {
       warning("plot_vect --> The selected palette name is not valid.\n",
-              "Reverting to default value for the variable of interest (",
+              "Reverting to default value for selecter palette type (",
               as.character(def_palettes[palette_type]), ")")
-      palette_name <- as.character(def_palettes[palette_type])
+      palette_name = as.character(def_palettes[palette_type])
     }
   } else {
-    palette_name <-   as.character(def_palettes[palette_type])
+    palette_name <- as.character(def_palettes[palette_type])
   }
 
-  palette <- valid_pals[which(valid_pals$name == palette_name),]
   if (is.null(leg_type)) {
     leg_type <- as.character(def_legtypes[palette_type])
   } else {
@@ -197,8 +187,8 @@ plot_vect <- function(
       \"continuous\". Aborting!")
     )
     leg_type <- switch(leg_type,
-                       "discrete"   = "legend",
-                       "continuous" = "colourbar"
+                       "discrete" = "legend",
+                       "continuous"    = "colourbar"
     )
   }
 
@@ -206,7 +196,7 @@ plot_vect <- function(
     out_high_color <- out_low_color <- outliers_colors
   } else {
     out_high_color = outliers_colors[2]
-    out_low_color  = outliers_colors[1]
+    out_low_color = outliers_colors[1]
   }
 
   #   __________________________________________________________________________
@@ -238,16 +228,12 @@ plot_vect <- function(
   }
 
   #   _________________________________________________________________________
-  #   if transparent NA, we can remove the NAs from the data to speed-up   ####
-  #   rendering
+  #   if transparent NA, remove the NAs from the data to speed-up rendering ####
   if (!is.null(na.color)) {
     if (na.color == "transparent")  {
-      in_data <- in_data[!is.na(in_data[[fill_var]]),]
+      in_data <- in_data[!is.na(in_data[fill_var]),]
     }
   }
-
-  #   _________________________________________________________________________
-  #   if zlims is of type "percs" compute the reqauired quantiles   ####
 
   if (!is.null(zlims) & zlims_type == "percs") {
 
@@ -256,9 +242,9 @@ plot_vect <- function(
 
   }
 
-  # On continuous variables, perform processing to create the legends for
-  # outliers "right"
-  if (palette_type != "qual") {
+  # On continuous variables, perform processing to get the legends for outliers
+  # "right"
+  if (palette_type != "categorical") {
     if (!is.null(zlims)) {
       #   ____________________________________________________________________________
       #   If oob_style == "recolor" create additional data tables                 ####
@@ -285,7 +271,7 @@ plot_vect <- function(
   if (is.null(scalebar_dist)) {
     if (get_projunits(get_proj4string(in_data)) != "dec.degrees") {
       km_extent     <- round(diff(xlims)/1000)
-      scalebar_dist <- round(round(km_extent/10) / 5) * 5
+      scalebar_dist <- round(km_extent/100*10)
     } else {
       deg2rad <- function(deg) {(deg * pi) / (180)}
       a <- sin(0.5 * (deg2rad(ylims[2]) - deg2rad(ylims[1])))
@@ -293,14 +279,13 @@ plot_vect <- function(
       km_extent     <- 12742 * asin(sqrt(a * a +
                                            cos(deg2rad(ylims[1])) *
                                            cos(deg2rad(ylims[2])) * b * b))
-      scalebar_dist <- round(round(km_extent/10) / 5) * 5
+      scalebar_dist <- round(km_extent/100*10)
       # scalebar_dist <- round(km_extent/100*10)
     }
   }
 
   # Blank plot
-  plot <- ggplot(data = in_data) +
-    theme +
+  plot <- ggplot() + theme +
     scale_x_continuous(
       expand = expand_scale(mult = c(0.005,0.005)),
       limits = c(xlims[1], xlims[2])) +
@@ -308,6 +293,18 @@ plot_vect <- function(
       expand = expand_scale(mult = c(0.005,0.005)),
       limits = c(ylims[1], ylims[2])) +
     ggtitle(title, subtitle = subtitle)
+
+  # Remove axes if no_axis == TRUE
+  if (no_axis) {
+
+    plot <- plot  +
+      theme(axis.title.x = element_blank(),
+            axis.text.x  = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.title.y = element_blank(),
+            axis.text.y  = element_blank(),
+            axis.ticks.y = element_blank())
+  }
 
   #   __________________________________________________________________________
   #   add background map - need to do this here to prevent "shadowing"      ####
@@ -328,37 +325,76 @@ plot_vect <- function(
   #     plot <- plot + ggmap(bmap)
   #   }
 
+
+  # Center the title - can be overriden in case after plot completion
+  plot <- plot +
+    theme(plot.title = element_text(hjust = 0.5),
+          panel.background = element_rect(fill = "transparent"))
+
+  # Add the sf layer
+  plot <- plot + geom_sf(data = in_data,
+                         aes_string(fill = fill_var),
+                         size = polys_size,
+                         color = polys_color,
+                         alpha = 1 - fill_transparency) +
+    coord_sf(xlim = xlims, ylim = ylims)
+
   #   __________________________________________________________________________
-  #   Add the fill                                                          ####
-  if (no_fill) {
-    plot <- plot + geom_sf(fill  = "transparent",
-                           color = line_color,
-                           size  = line_size) +
-      coord_sf(xlim = xlims, ylim = ylims)
+  #   Modify the palette according to variable type and palette             ####
+
+  if (palette_type == "qual") {
+    if (!palette_name == "hue") {
+      plot <- plot +
+        scale_fill_brewer(type = "qual", palette = palette_name,
+                          na.value = ifelse(is.null(na.color),
+                                            "grey50", na.color)) +
+        theme(legend.justification = "center",
+              legend.box.spacing = grid::unit(0.5,"points"))
+    } else {
+      plot <- plot +
+        scale_fill_hue(na.value = ifelse(is.null(na.color),
+                                         "grey50", na.color)) +
+        theme(legend.justification = "center",
+              legend.box.spacing = grid::unit(0.5,"points"))
+    }
   } else {
 
-    plot <- plot + geom_sf(aes_string(fill = fill_var),
-                           size  = line_size,
-                           color = line_color,
-                           alpha = 1 - fill_transparency) +
-      coord_sf(xlim = xlims, ylim = ylims)
-
-    #   __________________________________________________________________________
-    #   Modify the palette according to variable type and palette             ####
-
-    plot <- add_scale_fill(plot,
-                           palette,
-                           title = fill_var,
-                           na.color,
-                           zlims,
-                           leg_breaks,
-                           leg_labels,
-                           leg_type,
-                           outliers_style,
-                           direction)
-    plot <- plot + theme(legend.justification = "center",
-                         legend.box.spacing = grid::unit(0.5,"points"))
+    plot <- plot +
+      scale_fill_distiller(
+        "Value",
+        limits = zlims,
+        breaks = if (is.null(leg_breaks)) {
+          waiver()
+        } else {
+          leg_breaks
+        }, labels = if (is.null(leg_labels)) {
+          waiver()
+        } else {
+          leg_labels
+        }, type = ifelse(palette_type == "sequential", "seq", "div"),
+        guide = leg_type,
+        palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
+                                             scales::squish, scales::censor),
+        direction = direction,
+        na.value = ifelse(is.null(na.color), "grey50", na.color)) +
+      theme(legend.justification = "center",
+            legend.box.spacing = grid::unit(0.5,"points"))
   }
+
+
+
+  # scale_fill_distiller(type = ifelse(palette_type == "sequential", "seq", "div"),
+  #                      guide = ifelse(leg_type == "qual", "legend", "colourbar"),
+  #                      palette = palette_name,
+  #                      # labels = waiver(),
+  #                      # limits = waiver(),
+  #                      oob = scales::squish,
+  #                      breaks = waiver(),
+  #                      direction = 1,
+  #                      na.value = "transparent") +
+  plot <- plot + theme(plot.margin   = margin(0.1,0.1,0.1,0.1, unit = "cm"),
+                       panel.ontop = T,
+                       panel.background = element_rect(fill = "transparent"))
 
   if (leg_position == "bottom") {
     plot <- plot + theme(legend.position = "bottom")
@@ -378,10 +414,10 @@ plot_vect <- function(
   if (!is.null(borders_layer)) {
     borders <- sf::st_transform(borders_layer, get_proj4string(in_data)) %>%
       crop_vect(in_data)
-    plot    <- plot + geom_sf(data  = borders,
-                              fill  = "transparent",
-                              color = borders_color,
-                              size  = borders_size)
+    plot    <- plot + geom_sf(data = borders,
+                              fill    = "transparent",
+                              color   = borders_color,
+                              size    = borders_size)
     if (!is.null(borders_txt_fiels)) {
       if(borders_txt_fiels %in% names(borders)) {
         borders <- borders %>%
@@ -462,7 +498,7 @@ plot_vect <- function(
                               color = "black")))
     }
 
-    plot <- plot + geom_sf(data = out_high_tbl,
+    plot <- plot + geom_sf(data  = out_high_tbl,
                            fill  = out_high_color,
                            na.rm = TRUE)
     plot <- plot + geom_sf(data  = out_low_tbl,
@@ -470,18 +506,10 @@ plot_vect <- function(
                            na.rm = TRUE)
 
   }
-
-  # _________________________________________________________________________
-  # Final adjustements on margins, etc.                                  ####
-  plot <- plot + theme(plot.margin = margin(0.1,0.1,0.1,0.1, unit = "cm"),
-                       panel.ontop = T,
-                       panel.background = element_rect(fill = "transparent"))
-
   #   _________________________________________________________________________
   #   Add scalebar                                                          ####
 
   if (scalebar) {
-
     # coord_cartesian(xlim = xlims, ylim = ylims) +
     plot <- plot +
       sprawl_scalebar(dd2km = TRUE, dist = scalebar_dist,
@@ -489,34 +517,7 @@ plot_vect <- function(
                       y.min = ylims[1], y.max = ylims[2],
                       location = "bottomright", st.size = 3.5,
                       st.bottom = FALSE, model = NULL,
-                      st.dist = 0.025, units = "km") +
-      theme(axis.title.x = element_blank(),
-            axis.ticks.x = element_blank(),
-            axis.title.y = element_blank(),
-            axis.ticks.y = element_blank())
-
-    #   _________________________________________________________________________
-    # Center the title - can be overriden in case after plot completion      ####
-    plot <- plot +
-      theme(plot.title = element_text(hjust = 0.5),
-            panel.background = element_rect(fill = "transparent"))
-
-    if (!grid) {
-      plot <- plot + theme(
-        panel.grid.major = element_line(size = 0, color = "transparent"))
-    }
-
-    # Remove axes if no_axis == TRUE
-    if (no_axis) {
-
-      plot <- plot  +
-        theme(axis.title.x = element_blank(),
-              axis.text.x  = element_blank(),
-              axis.ticks.x = element_blank(),
-              axis.title.y = element_blank(),
-              axis.text.y  = element_blank(),
-              axis.ticks.y = element_blank())
-    }
+                      st.dist = 0.025, units = "km")
   }
 
   plot
