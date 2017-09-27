@@ -299,7 +299,7 @@ plot_vect <- function(
   }
 
   # Blank plot
-  plot <- ggplot(data = in_data) +
+  plot <- ggplot() +
     theme +
     scale_x_continuous(
       expand = expand_scale(mult = c(0.005,0.005)),
@@ -331,13 +331,15 @@ plot_vect <- function(
   #   __________________________________________________________________________
   #   Add the fill                                                          ####
   if (no_fill) {
-    plot <- plot + geom_sf(fill  = "transparent",
+    plot <- plot + geom_sf(data = in_data,
+                           fill  = "transparent",
                            color = line_color,
                            size  = line_size) +
       coord_sf(xlim = xlims, ylim = ylims)
   } else {
 
-    plot <- plot + geom_sf(aes_string(fill = fill_var),
+    plot <- plot + geom_sf(data = in_data,
+                           aes_string(fill = fill_var),
                            size  = line_size,
                            color = line_color,
                            alpha = 1 - fill_transparency) +
