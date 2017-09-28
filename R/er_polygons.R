@@ -43,9 +43,8 @@ er_polygons <- function(in_vect_crop,
                         outside_feat,
                         verb_foreach = FALSE) {
 
-  geometry <- mdxtnq <- min_y <- .N <- .SD <- band <- area <- NULL
+  geometry <- mdxtnq <- min_y <- .N <- .SD <- band <- area <- . <- NULL
 
-  #   __________________________________________________________________________
   #   crop in_vect to in_rast extent if necessary and identify "removed"    ####
   #   features + Find names of the attribute fields of the original shapefile
 
@@ -153,7 +152,7 @@ er_polygons <- function(in_vect_crop,
   ) %dopar%
   {
 
-    # for(band in 1:2){
+    # for(band in 1:1){
 
     all_data     <- list()
     coords       <- list()
@@ -164,7 +163,6 @@ er_polygons <- function(in_vect_crop,
     chunk_n_summ <- 1 # Counter for non-empty chunks for all_data
     start_cell   <- 1
     in_band      <- in_rast[[band]]
-    tempvrt      <- tempfile(fileext = ".vrt")
 
     if (in_band@file@name == "") {
       temprastfile <- tempfile(fileext = ".tif")
@@ -177,7 +175,6 @@ er_polygons <- function(in_vect_crop,
 
     #TODO implement and test supersampling
 
-
     #   ____________________________________________________________________________
     #   if extraction needs to be done on chunks, identify the bboxes          ####
     #   bboxes of each polygon in the input (to be able to check if all
@@ -189,11 +186,24 @@ er_polygons <- function(in_vect_crop,
         message("extract_rast --> Computing bounding boxes of input polygons")
       }
 
-      bboxes <- in_vect_crop[c("mdxtnq", "geometry")] %>%
-        data.table::data.table()
-      bboxes <- bboxes[, list(min_y = sf::st_bbox(geometry)[2],
-                              max_y = sf::st_bbox(geometry)[4]),
-                       by = "mdxtnq"]
+      bboxes <- lapply(sf::st_geometry(in_vect_crop),
+                       FUN = function(x) {
+                         bb <- sf::st_bbox(x)
+                         data.frame(y_min = bb[2], y_max = bb[4])
+                         }) %>%
+        data.table::rbindlist() %>%
+        .[, "mdxtnq" := seq_len(dim(.)[1])] %>%
+        data.table::setkey("mdxtnq")
+
+      #
+      #
+      #
+      # bboxes <- in_vect_crop[c("mdxtnq", "geometry")] %>%
+      #   data.table::data.table() %>%
+      #   sf::st_as_sf()
+      # bboxes <- bboxes[, list(min_y = sf::st_bbox(geometry)[2],
+      #                         max_y = sf::st_bbox(geometry)[4]),
+      #                  by = "mdxtnq"]
     } else {
       bboxes <- in_vect_crop[c("mdxtnq", "geometry")]
     }
@@ -204,8 +214,9 @@ er_polygons <- function(in_vect_crop,
 
     for (chunk in seq_len(cl_opts$n_chunks)) {
 
-      # if (er_opts$verbose) message("Working on chunk: ", chunk,
-      #                              " of: ", n_chunks, " of band: ", selband)
+      if (er_opts$verbose) message("Working on chunk: ", chunk,
+                                   " of: ", cl_opts$n_chunks,
+                                   " of band: ", selband)
 
       # Identify row numbers of the current "chunk" ----
       startrow   <- ifelse(chunk == 1,
@@ -268,9 +279,10 @@ er_polygons <- function(in_vect_crop,
             out_data <- out_data[, cell := NULL]
           }
 
-          all_data[[chunk_n_all]] <- out_data
-          chunk_n_all             <- chunk_n_all + 1
-
+          if (er_opts$full_data) {
+            all_data[[chunk_n_all]] <- out_data
+            chunk_n_all             <- chunk_n_all + 1
+          }
         }
         if (er_opts$summ_data) {
           # __________________________________________________________________
@@ -289,7 +301,7 @@ er_polygons <- function(in_vect_crop,
           temp_outdata   <- data.table::rbindlist(list(temp_outdata,out_data))
 
           if (cl_opts$n_chunks > 1) {
-            complete_polys <- bboxes[min_y >= tot_ext_y$y_min]
+            complete_polys <- bboxes[y_min >= tot_ext_y$y_min]
           } else {
             complete_polys <- bboxes
           }
@@ -313,7 +325,7 @@ er_polygons <- function(in_vect_crop,
 
             temp_outdata  <- temp_outdata[!(mdxtnq %in%
                                               unique(complete_polys$mdxtnq))]
-
+            message(dim(temp_outdata))
             # If something was computed for stat_data, add 1 to the counter
             chunk_n_summ  <- chunk_n_summ + 1
 
@@ -553,8 +565,8 @@ er_polygons <- function(in_vect_crop,
 
     if (is.null(er_opts$id_field)) names(stat_data)[1] <- "id_feat"
 
-    # If er_opts$join_geom, convert to a sf object - consider removing
-    if (er_opts$join_geom & er_opts$join_feat_tbl) {
+    # If er_opts$join_geom, convert to a sf object
+    if (er_opts$join_geom) {
       stat_data <- sf::st_as_sf(stat_data)
     }
   }

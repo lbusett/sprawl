@@ -226,15 +226,15 @@ extract_rast <- function(in_rast,
     }
 
     # Now crop the raster on the vector extent. This speeds-up consistently the
-    # processing in case the vectors cover only a small part of the raster
+    # processing in case the vectors cover only a part of the raster
 
-    in_rast_proc <- crop_rast(in_rast, in_vect_crop, out_type = "rastobject")
+    in_rast_crop <- crop_rast(in_rast, in_vect_crop, out_type = "rastobject")
 
     # reset some useful info as that of the original file
     # TODO change "crop_rast" behaviour to keep this info from the original !
-    names(in_rast_proc) <- names(in_rast)
-    if (date_check) in_rast_proc <- raster::setZ(in_rast_proc,
-                                                 raster::getZ(in_rast))
+    # names(in_rast_crop) <- names(in_rast)
+    # if (date_check) in_rast_crop <- raster::setZ(in_rast_crop,
+    #                                              raster::getZ(in_rast))
 
     #   ________________________________________________________________________
     #   Extract values if the zone pbject is a point shapefile              ####
@@ -244,7 +244,7 @@ extract_rast <- function(in_rast,
       # Convert the zone object to *Spatial to allow use of "raster::extract"
       out_list <- er_points(in_vect_crop,
                             in_vect,
-                            in_rast,
+                            in_rast_crop,
                             seldates,
                             selbands,
                             n_selbands,
@@ -260,7 +260,7 @@ extract_rast <- function(in_rast,
       #   Extract values if the zone object is a polygon                    ####
       out_list <- er_polygons(in_vect_crop,
                               in_vect,
-                              in_rast,
+                              in_rast_crop,
                               seldates,
                               selbands,
                               n_selbands,

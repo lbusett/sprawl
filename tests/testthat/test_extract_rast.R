@@ -43,8 +43,8 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-01",3)))
   expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-20","2013-01-08"))) #nolint
 
-  out <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
-                      verbose = FALSE, join_feat_tbl = T)
+  out  <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
+                       verbose = FALSE, join_feat_tbl = T)
   out2 <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
                        verbose = FALSE, join_feat_tbl = F, join_geom = F)
   expect_is(out, "list")
@@ -82,12 +82,13 @@ testthat::test_that(
   })
 
 testthat::test_that(
-  "Polygons extraction with and without comp_quant are equal", {
+  "Polygons extraction with and without comp_quant are equal on common
+  variables", {
     skip_on_travis()
     # Check that processing with and without comp_quant are equal for a common
     # variable
     out   <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
-                           selbands = c(1,2), small = T, id_field = "id")
+                          selbands = c(1,2), small = T, id_field = "id")
     out2  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                           selbands = c(1,2), small = T, comp_quant = TRUE)
     expect_equal(out$stats$avg, out2$stats$avg)
@@ -102,8 +103,8 @@ testthat::test_that(
                                       verbose = F, keep_null = T, join_geom = F,
                                       full_data = F, small = T,
                                       comp_quant = FALSE)
-    outcomp <- out_extract_rast$stats$avg
-    out_extract <- raster::extract(in_rast[[1:2]],
+    outcomp     <- out_extract_rast$stats$avg
+    out_extract <- raster::extract(in_rast,
                                    as(in_polys, "Spatial"),
                                    fun = "mean", na.rm = T)
     expect_equal(mean(as.numeric(out_extract), na.rm = TRUE),
@@ -149,7 +150,7 @@ testthat::test_that("Test On points extraction", {
   in_rast  <- read_rast(in_file)
   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
   out      <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
-                           verbose = FALSE, keep_null = T)  %>%
+                           verbose = FALSE, keep_null = F)  %>%
     tibble::as_tibble()
 
   # Output is a data frame

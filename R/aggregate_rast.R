@@ -51,7 +51,8 @@ aggregate_rast <- function(in_rast_values,
   if (verbose) message("aggregate_raster --> Creating Fishnet on zones_rast")
 
   in_fish <- create_fishnet(zones_rast,
-                            cellsize = raster::res(zones_rast)[1])
+                            cellsize = raster::res(zones_rast),
+                            exact_csize = TRUE)
   if (verbose) message("aggregate_raster --> Aggregating values of in_rast_values", #nolint
                        "on cells of zones_rast")
 
@@ -63,7 +64,8 @@ aggregate_rast <- function(in_rast_values,
                                FUN       = FUN,
                                id_field  = "cell_id",
                                join_feat_tbl = FALSE,
-                               join_geom = FALSE)$stats
+                               join_geom = TRUE)$stats
+
   if (nodata_out != -Inf) {
     where_na <- which(is.na(agg_values$myfun))
     agg_values$myfun[where_na] <- nodata_out

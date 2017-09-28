@@ -36,14 +36,11 @@ create_virtrast <- function(object,
     rastinfo <- get_rastinfo(rast_file, verbose = FALSE)
   }
 
-
-  # if (is.null(out_extent)) out_extent <- get_extent(object)@extent
-
   if (rastinfo$nbands > 1) {
 
-    if (length(rastinfo$fnames) > 1) {
-      # buildvrt string on multi band rasters with bands possibly coming from
-      #  differen  files (i.e., rasterStack: use the "-input-file-list" argument
+    if (length(unique(rastinfo$fnames)) > 1) {
+      # buildvrt string on multi band rasters with bands coming from
+      # different  files (i.e., rasterStack: use the "-input-file-list" argument
       # with "-separate"
       tmp_txt <- tempfile(fileext = ".txt")
       writeLines(rastinfo$fnames, tmp_txt)
@@ -65,7 +62,7 @@ create_virtrast <- function(object,
                                paste(paste("-b ", rastinfo$indbands),
                                      collapse = " "),
                                out_vrt_file,
-                               rast_file)
+                               rast_file[1])
     }
 
   } else {
@@ -81,10 +78,18 @@ create_virtrast <- function(object,
       rast_file)
   }
 
-  system2(file.path(find_gdal(), "gdalbuildvrt"),
+  vrt_build <- suppressWarnings(try(system2(file.path(find_gdal(), "gdalbuildvrt"),
           args = buildvrt_string,
           stdout = NULL,
-          stderr = NULL)
+          stderr = TRUE)))
+
+  if (!is.null(attr(vrt_build, "status"))) {
+
+    stop("creat_virtrast --> An error occurred while creating the vrt file.",
+         " The call to gdalbuildvrt was: gdalbuildvrt ", buildvrt_string)
+
+  }
+
   return(out_vrt_file)
 
 }

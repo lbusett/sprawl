@@ -174,6 +174,7 @@ sprawl_scalebar <- function(
       }
     }
   }
+
   box1 <- data.frame(x = c(x, x, rep(break1, 2), x),
                      y = c(y, height, height, y, y), group = 1)
   box2 <- data.frame(x = c(rep(break1, 2), rep(break2, 2), break1),

@@ -60,6 +60,7 @@ build_testraster <- function(nrows       = 100,
       }
     } else {
       # if band != 1, create new layers as multiples of layer 1
+      set.seed(1)
       layer_new <- layer * sample(5, 1)
       # change to NA 1 out of each 500 cells random cells in each new layer (so
       # that NA is not always on the same cells and we have both cells with

@@ -8,11 +8,12 @@ plot_rast_gg(in_rast, maxpixels = 1e+05, band_names = NULL,
   bands_to_plot = NULL, facet_rows = NULL, xlims = NULL, ylims = NULL,
   zlims = NULL, zlims_type = "vals", outliers_style = "recolor",
   outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
-  scalebar = TRUE, scalebar_dist = NULL, transparency = 0,
-  na.color = NULL, na.value = NULL, palette_type = "gradient",
-  palette_name = NULL, direction = 1, leg_type = NULL,
-  leg_labels = NULL, leg_breaks = NULL, no_axis = FALSE, title = NULL,
-  subtitle = NULL, theme = theme_bw(), verbose = TRUE)
+  scalebar = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.3,
+  transparency = 0, na.color = NULL, na.value = NULL,
+  palette_type = "gradient", palette_name = NULL, direction = 1,
+  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  no_axis = FALSE, title = NULL, subtitle = NULL, theme = theme_bw(),
+  verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
@@ -81,6 +82,9 @@ Default: TRUE}
 \item{scalebar_dist}{\code{numeric} Width of the scale bar (in km). If NULL, it
 is computed automatically on the basis of the range in x direction,
 Default: NULL}
+
+\item{scalebar_txt_dist}{\code{numeric} Distance between scalebar and its labels.
+Adjust this in case of overlap, Default: 0.30}
 
 \item{transparency}{\code{numeric [0,1]}, transparency of the raster layer. Higer
 values lead to higher transparency, Default: 0 (ignored if basemap == NULL)}

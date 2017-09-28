@@ -61,6 +61,8 @@
 #' @param scalebar_dist `numeric` Width of the scale bar (in km). If NULL, it
 #'   is computed automatically on the basis of the range in x direction,
 #'   Default: NULL
+#' @param scalebar_txt_dist `numeric` Distance between scalebar and its labels.
+#'   Adjust this in case of overlap, Default: 0.30
 #' @param transparency `numeric [0,1]`, transparency of the raster layer. Higer
 #'   values lead to higher transparency, Default: 0 (ignored if basemap == NULL)
 #' @param na.color `character`, color to be used to plot NA values,
@@ -169,7 +171,7 @@
 #'  scale_y_continuous ggtitle theme element_blank element_text element_rect
 #'  geom_raster aes facet_wrap scale_fill_brewer scale_fill_distiller waiver
 #'  geom_polygon scale_colour_manual guides guide_legend scale_color_manual
-#'  coord_fixed
+#'  coord_fixed ggplot
 #' @importFrom ggspatial geom_osm
 #' @importFrom raster stack sampleRegular nlayers
 #' @importFrom RColorBrewer brewer.pal.info
@@ -187,7 +189,7 @@ plot_rast_gg <- function(
   zlims        = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   basemap      = NULL, zoomin = 0,
-  scalebar     = TRUE, scalebar_dist = NULL,
+  scalebar     = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.30,
   transparency = 0,
   na.color     = NULL, na.value = NULL,
   palette_type = "gradient", palette_name = NULL, direction = 1,
@@ -327,7 +329,7 @@ plot_rast_gg <- function(
   #   ____________________________________________________________________________
   #   Fortify the raster to allow ggplotting                                  ####
 
-  in_rast_fort <- fortify(in_rast, format = "long") %>%
+  in_rast_fort <- ggplot2::fortify(in_rast, format = "long") %>%
     data.table::as.data.table()
   names(in_rast_fort)[1:2] <- c("x", "y")
 
@@ -396,11 +398,23 @@ plot_rast_gg <- function(
 
 
   #   __________________________________________________________________________
-  #   If no scalebar dist passed, compute automatically from lonfgitude     ####
+  #   If no scalebar dist passed, compute automatically from longitude     ####
   #   range
+  units <- get_projunits(get_proj4string(in_rast))
   if (is.null(scalebar_dist)) {
-    km_extent     <- round(diff(xlims)/1000)
-    scalebar_dist <- round(km_extent/100*10)
+    if (units != "dec.degrees") {
+      km_extent     <- round(diff(xlims)/1000)
+      scalebar_dist <- round(round(km_extent/10) / 5) * 5
+    } else {
+      deg2rad <- function(deg) {(deg * pi) / (180)}
+      a <- sin(0.5 * (deg2rad(ylims[2]) - deg2rad(ylims[1])))
+      b <- sin(0.5 * (deg2rad(xlims[2]) - deg2rad(xlims[1])))
+      km_extent     <- 12742 * asin(sqrt(a * a +
+                                           cos(deg2rad(ylims[1])) *
+                                           cos(deg2rad(ylims[2])) * b * b))
+      scalebar_dist <- round(round(km_extent/10) / 5) * 5
+      # scalebar_dist <- round(km_extent/100*10)
+    }
   }
 
   #   __________________________________________________________________________
@@ -431,12 +445,6 @@ plot_rast_gg <- function(
 
   # Blank plot
   plot_gg <- ggplot() + theme +
-    scale_x_continuous(xlab,
-                       expand = expand_scale(mult = c(0.005,0.005)),
-                       limits = c(xlims[1], xlims[2])) +
-    scale_y_continuous(ylab,
-                       expand = expand_scale(mult = c(0.005,0.005)),
-                       limits = c(ylims[1], ylims[2])) +
     ggtitle(title, subtitle = subtitle)
 
   # Remove axes if no_axis == TRUE
@@ -562,7 +570,13 @@ plot_rast_gg <- function(
                                      aes(x = x, y = y),
                                      fill = out_low_color,
                                      na.rm = TRUE)
-
+    # +
+    #   scale_x_continuous(xlab,
+    #                      expand = expand_scale(mult = c(0.005,0.005)),
+    #                      limits = c(xlims[1], xlims[2])) +
+    #   scale_y_continuous(ylab,
+    #                      expand = expand_scale(mult = c(0.005,0.005)),
+    #                      limits = c(ylims[1], ylims[2]))
   }
 
 
@@ -572,19 +586,22 @@ plot_rast_gg <- function(
   if (scalebar) {
     # coord_cartesian(xlim = xlims, ylim = ylims) +
     plot_gg <- plot_gg +
-      sprawl_scalebar(dd2km = FALSE, dist = scalebar_dist,
+      sprawl_scalebar(dd2km = ifelse(units == "dec.degrees", TRUE, FALSE),
+                      dist = scalebar_dist,
                       x.min = xlims[1], x.max = xlims[2],
                       y.min = ylims[1], y.max = ylims[2],
                       location = "bottomright", st.size = 3.5,
                       st.bottom = FALSE, model = NULL,
-                      st.dist = 0.025, units = rastinfo$units)
+                      st.dist = scalebar_txt_dist, units = rastinfo$units)
   }
 
   #   __________________________________________________________________________
   #   Finalize the plot and return it                                       ####
 
   plot_gg <- plot_gg +
-    coord_fixed()
+    coord_fixed() +
+    scale_x_continuous(expand = expand_scale(mult = .01)) +
+    scale_y_continuous(expand = expand_scale(mult = .01))
 
 
   plot_gg

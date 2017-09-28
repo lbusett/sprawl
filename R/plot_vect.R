@@ -486,16 +486,18 @@ plot_vect <- function(
 
     # coord_cartesian(xlim = xlims, ylim = ylims) +
     plot <- plot +
-      sprawl_scalebar(dd2km = TRUE, dist = scalebar_dist,
-                      x.min = xlims[1], x.max = xlims[2],
-                      y.min = ylims[1], y.max = ylims[2],
-                      location = "bottomright", st.size = 3.5,
-                      st.bottom = FALSE, model = NULL,
-                      st.dist = 0.025, units = "km") +
-      theme(axis.title.x = element_blank(),
-            axis.ticks.x = element_blank(),
-            axis.title.y = element_blank(),
-            axis.ticks.y = element_blank())
+      sprawl_scalebar(
+        dd2km = ifelse(units == "dec.degrees", TRUE, FALSE),
+        dist = scalebar_dist,
+        x.min = xlims[1], x.max = xlims[2],
+        y.min = ylims[1], y.max = ylims[2],
+        location = "bottomright", st.size = 3.5,
+        st.bottom = FALSE, model = NULL,
+        st.dist = 0.025, units = "km"
+      ) + theme(axis.title.x = element_blank(),
+                axis.ticks.x = element_blank(),
+                axis.title.y = element_blank(),
+                axis.ticks.y = element_blank())
 
     #   _________________________________________________________________________
     # Center the title - can be overriden in case after plot completion      ####

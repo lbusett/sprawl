@@ -136,6 +136,7 @@ create_fishnet <- function(in_rast,
     if (is.null(out_shape)) {
       out_shape <- tempfile(fileext = ".shp")
     }
+
     write_shape(fish, out_shape, overwrite = TRUE)
   }
 }

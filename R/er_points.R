@@ -52,6 +52,7 @@ er_points <- function(in_vect_crop,
               ifelse(date_check, "date: ", "band: "),
               seldates[band])
     }
+
     tserie[band,] <- in_rast[[selband]] %>%
       raster::extract(as(in_vect_crop, "Spatial"))
   }
