@@ -4,7 +4,7 @@
 \alias{crop_rast}
 \title{crop a raster file/rast_file on a given extent}
 \usage{
-crop_rast(rast_object, ext_object, out_type = "rastobject",
+crop_rast(rast_object, ext_object, pad = 1, out_type = "rastobject",
   out_filename = NULL, out_dtype = NULL, compress = "None",
   verbose = TRUE)
 }
@@ -16,15 +16,19 @@ corresponding to a raster filename (with full path)}
 filename from which an object of class \code{sprawlext} can be obtained (see
 \code{sprawl::get_extent()})}
 
-\item{out_type}{\code{character} indicating to which type of rast_file the input should be
-re-cropped.
+\item{pad}{\code{numeric} extent of a "padding area" to be kept with respect to
+\code{crop_extent} (in number of pixels). Useful to be sure not to crop "too much"
+for example when cropping before extracting freatures suche as in \code{extract_rast},
+Default: 1}
+
+\item{out_type}{\code{character} indicates the type of object to be returned:
 \enumerate{
 \item "rastobject" return a \code{raster} rast_file accessing the saved cropped file
 \item "rastfile" return the filename of the GTiff file corresponding to the
 cropped GTiff file. If \code{out_filename == NULL}, this corresponds to a file
 saved in \code{R} temporary folder.
 \item "vrtfile" return the filename of the vrt file built for cropping
-the input raster (no saving to disk is performed)
+the input raster (\strong{no saving to disk is performed})
 , Default: "rastobject"
 }}
 
@@ -46,12 +50,12 @@ either a \code{Raster} object containing the cropped raster, or a gdal vrt
 or GTiff filename corresponding to it, depending on \code{out_type}.
 }
 \description{
-function to crop a raster file/rast_file on a given extent. The extent
-can be:
+function to crop a raster file/rast_file on a given extent.
+The cropping extent can be:
 \enumerate{
-\item directly passed (as a \code{sprawlext} rast_file or numeric array);
-\item derived from a different rast_file (raster of vector file/rast_file) passed to
-the function (see details)
+\item directly passed (as a \code{sprawlext} object or numeric array);
+\item derived from a different object from which a \code{sprawlext} object object
+can be derived (see details)
 }
 }
 \examples{

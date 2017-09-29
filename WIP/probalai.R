@@ -37,7 +37,7 @@ if (!file.exists(in_lc_proba_file)) {
                                    to_file = TRUE,
                                    out_file = in_lc_proba_file,
                                    verbose = TRUE,
-                                   maxchunk = 5E6)
+                                   maxchunk = 10E6)
   Sys.time() - t1
 }
 

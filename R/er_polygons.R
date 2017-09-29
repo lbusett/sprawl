@@ -43,7 +43,7 @@ er_polygons <- function(in_vect_crop,
                         outside_feat,
                         verb_foreach = FALSE) {
 
-  geometry <- mdxtnq <- min_y <- .N <- .SD <- band <- area <- . <- NULL
+  geometry <- mdxtnq <- y_min <- .N <- .SD <- band <- area <- . <- NULL
 
   #   crop in_vect to in_rast extent if necessary and identify "removed"    ####
   #   features + Find names of the attribute fields of the original shapefile

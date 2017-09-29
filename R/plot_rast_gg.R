@@ -189,7 +189,7 @@ plot_rast_gg <- function(
   zlims        = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   basemap      = NULL, zoomin = 0,
-  scalebar     = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.30,
+  scalebar     = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
   transparency = 0,
   na.color     = NULL, na.value = NULL,
   palette_type = "gradient", palette_name = NULL, direction = 1,
@@ -569,14 +569,13 @@ plot_rast_gg <- function(
     plot_gg <- plot_gg + geom_raster(data = out_low_tbl,
                                      aes(x = x, y = y),
                                      fill = out_low_color,
-                                     na.rm = TRUE)
-    # +
-    #   scale_x_continuous(xlab,
-    #                      expand = expand_scale(mult = c(0.005,0.005)),
-    #                      limits = c(xlims[1], xlims[2])) +
-    #   scale_y_continuous(ylab,
-    #                      expand = expand_scale(mult = c(0.005,0.005)),
-    #                      limits = c(ylims[1], ylims[2]))
+                                     na.rm = TRUE) +
+      scale_x_continuous(xlab,
+                         expand = expand_scale(mult = c(0.005,0.005)),
+                         limits = c(xlims[1], xlims[2])) +
+      scale_y_continuous(ylab,
+                         expand = expand_scale(mult = c(0.005,0.005)),
+                         limits = c(ylims[1], ylims[2]))
   }
 
 

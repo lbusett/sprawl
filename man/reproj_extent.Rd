@@ -5,7 +5,7 @@
 \title{reproject the extent of a spatial object}
 \usage{
 reproj_extent(ext, out_proj, in_proj = NULL, enlarge = TRUE,
-  n_dens = 1000)
+  n_dens = 1000, verbose = TRUE)
 }
 \arguments{
 \item{ext}{object of class \code{sprawlext}, or any other object or
@@ -23,6 +23,8 @@ the one obtained by reprojecting the upper-left and the lower-right corners.}
 
 \item{n_dens}{\code{numeric} Densification ratio used in the case enlarge is TRUE.
 reprojected extent}
+
+\item{verbose}{\code{logical} If FALSE, suppress processing messages, Default: TRUE}
 }
 \value{
 An object of class \code{sprawlext} representing the reprojected extent

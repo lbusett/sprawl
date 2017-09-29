@@ -1,6 +1,8 @@
-#' @title add_scale_fill
+#' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
+#' @param plot PARAM_DESCRIPTION
 #' @param palette PARAM_DESCRIPTION
+#' @param title PARAM_DESCRIPTION
 #' @param na.color PARAM_DESCRIPTION
 #' @param zlims PARAM_DESCRIPTION
 #' @param leg_breaks PARAM_DESCRIPTION
@@ -8,19 +10,19 @@
 #' @param leg_type PARAM_DESCRIPTION
 #' @param outliers_style PARAM_DESCRIPTION
 #' @param direction PARAM_DESCRIPTION
-#' @param ...	Other arguments passed on to [`ggplot2::discrete_scale()`] or
-#'   [`ggplot2::continuous_scale] to control name, scale transformation ecc.
+#' @param ... PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' #EXAMPLE1
+#' if(interactive()){
+#'  #EXAMPLE1
 #'  }
+#' }
 #' @rdname add_scale_fill
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom scales squish censor
-#' @importFrom grid unit
 #' @importFrom ggplot2 aes_string scale_fill_brewer scale_fill_hue
 #'   scale_fill_distiller
 

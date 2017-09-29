@@ -6,10 +6,9 @@
 \usage{
 extract_rast(in_rast, in_vect, rast_type = "continuous", selbands = NULL,
   rastres = NULL, id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, comp_freq = FALSE, long_format = FALSE,
-  FUN = NULL, small = TRUE, na.rm = TRUE, maxchunk = 5e+07,
-  join_feat_tbl = TRUE, join_geom = TRUE, keep_null = FALSE,
-  verbose = TRUE, ncores = NULL)
+  comp_quant = FALSE, comp_freq = FALSE, long_format = TRUE, FUN = NULL,
+  small = TRUE, na.rm = TRUE, maxchunk = 5e+07, join_feat_tbl = TRUE,
+  join_geom = TRUE, keep_null = FALSE, verbose = TRUE, ncores = NULL)
 }
 \arguments{
 \item{in_rast}{input raster. Can be either:

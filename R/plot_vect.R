@@ -6,6 +6,7 @@
 #' @param line_size `numeric` size of lines used to plot the polygons borders of
 #'   in_data, Default: 0.2
 #' @param fill_var PARAM_DESCRIPTION, Default: NULL
+#' @param fill_transparency PARAM_DESCRIPTION, Default: 0
 #' @param facet_var PARAM_DESCRIPTION, Default: NULL
 #' @param facet_rows PARAM_DESCRIPTION, Default: NULL
 #' @param borders_layer PARAM_DESCRIPTION, Default: NULL
@@ -14,7 +15,7 @@
 #' @param borders_txt_fiels PARAM_DESCRIPTION, Default: NULL
 #' @param borders_txt_size PARAM_DESCRIPTION, Default: 1
 #' @param borders_txt_color PARAM_DESCRIPTION, Default: 'grey15'
-#' @param basemap Still to be implemented !!!!!, Default: NULL
+#' @param basemap PARAM_DESCRIPTION, Default: NULL
 #' @param zoomin PARAM_DESCRIPTION, Default: 0
 #' @param xlims PARAM_DESCRIPTION, Default: NULL
 #' @param ylims PARAM_DESCRIPTION, Default: NULL
@@ -26,16 +27,17 @@
 #' @param scalebar_dist PARAM_DESCRIPTION, Default: NULL
 #' @param na.color PARAM_DESCRIPTION, Default: NULL
 #' @param na.value PARAM_DESCRIPTION, Default: NULL
-#' @param palette_type PARAM_DESCRIPTION, Default: 'gradient'
-#' @param palette PARAM_DESCRIPTION, Default: NULL
+#' @param palette_name PARAM_DESCRIPTION, Default: NULL
 #' @param direction PARAM_DESCRIPTION, Default: 1
 #' @param leg_type PARAM_DESCRIPTION, Default: NULL
 #' @param leg_labels PARAM_DESCRIPTION, Default: NULL
 #' @param leg_breaks PARAM_DESCRIPTION, Default: NULL
+#' @param leg_position PARAM_DESCRIPTION, Default: 'right'
 #' @param no_axis PARAM_DESCRIPTION, Default: FALSE
 #' @param title PARAM_DESCRIPTION, Default: 'Vector Plot'
 #' @param subtitle PARAM_DESCRIPTION, Default: NULL
 #' @param theme PARAM_DESCRIPTION, Default: theme_bw()
+#' @param grid PARAM_DESCRIPTION, Default: FALSE
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
@@ -75,11 +77,13 @@
 #' @importFrom sf st_transform
 #' @importFrom grid unit
 #' @importFrom methods is
+#' @importFrom stats as.formula
+#' @importFrom purrr map_dbl
 #' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous expand_scale
 #'  scale_y_continuous ggtitle theme element_blank element_text element_rect
 #'  geom_raster aes facet_wrap scale_fill_brewer scale_fill_distiller waiver
 #'  geom_polygon scale_colour_manual guides guide_legend scale_color_manual
-#'  coord_fixed geom_sf aes_string coord_sf margin
+#'  coord_fixed geom_sf aes_string coord_sf margin guide_colourbar element_line
 plot_vect <- function(
   in_data,
   line_color    = "black", line_size     = 0.2,
@@ -101,6 +105,7 @@ plot_vect <- function(
   verbose        = TRUE
 ) {
 
+  geometry <- NULL
   category <- NULL
   assertthat::assert_that(
     methods::is(in_data, "sf"),
@@ -282,8 +287,9 @@ plot_vect <- function(
   #   __________________________________________________________________________
   #   If no scalebar dist passed, compute automatically from longitude     ####
   #   range
+  units <- get_projunits(get_proj4string(in_data))
   if (is.null(scalebar_dist)) {
-    if (get_projunits(get_proj4string(in_data)) != "dec.degrees") {
+      if (units != "dec.degrees") {
       km_extent     <- round(diff(xlims)/1000)
       scalebar_dist <- round(round(km_extent/10) / 5) * 5
     } else {

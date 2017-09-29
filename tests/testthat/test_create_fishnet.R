@@ -2,7 +2,7 @@ context("create_fishnet")
 
 
 test_that("create_fishnet works as expected", {
-  # skip_on_travis()
+  skip_on_travis()
   in_rast  <-  build_testraster(30,30, crs = "+init=epsg:3857",
                               ext = raster::extent(c(0, 2000, 0, 2000)))
   # output of a fishnet is "sf"

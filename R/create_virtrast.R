@@ -86,7 +86,7 @@ create_virtrast <- function(object,
   if (!is.null(attr(vrt_build, "status"))) {
 
     stop("creat_virtrast --> An error occurred while creating the vrt file.",
-         " The call to gdalbuildvrt was: gdalbuildvrt ", buildvrt_string)
+         " The call to gdalbuildvrt was: gdalbuildvrt ", deparse(substitute(buildvrt_string)))
 
   }
 

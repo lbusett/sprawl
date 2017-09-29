@@ -31,6 +31,8 @@ in_rast  <- raster::setZ(in_rast,
 # in_rast  <- read_rast(in_file)
 # in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8),
 #                                             year = 2013))
+
+# Basic test on polygons extraction ####
 testthat::test_that("Basic test on polygons extraction", {
 
   # skip_on_cran()
@@ -60,6 +62,7 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_equal(out$stats$avg, out2$stats$avg)
 })
 
+# Polygons extraction with and without valid id_field ####
 testthat::test_that(
   "Polygons extraction with and without valid id_field are identical", {
     skip_on_travis()
@@ -81,6 +84,7 @@ testthat::test_that(
     expect_equal(out$alldata$value, out4$alldata$value)
   })
 
+# extraction with and without comp_quant are equal ####
 testthat::test_that(
   "Polygons extraction with and without comp_quant are equal on common
   variables", {
@@ -95,6 +99,7 @@ testthat::test_that(
     expect_equal(out$stats$sd, out2$stats$sd)
   })
 
+# results are coherent with `raster::extract` ####
 testthat::test_that(
   "Polygons extraction results are coherent with `raster::extract`", {
     # Check that results are coherent with `raster::extract` on the test dataset
@@ -117,6 +122,7 @@ testthat::test_that(
                  mean(outcustom$stats$myfun, na.rm = TRUE))
   })
 
+# Extract data from categorical raster ####
 context("Extract data from categorical raster - on polygons")
 testthat::test_that("Test On categorical raster extraction", {
   # skip_on_cran()
@@ -132,11 +138,16 @@ testthat::test_that("Test On categorical raster extraction", {
                       comp_freq = T)
   # Output is a list
   testthat::expect_is(out, "list")
-  expect_equal(length(unique(out$stats$mode)), 4)
   expect_equal(length(unique(out$alldata$value)), 6)
+
+  out <- extract_rast(in_cat_rast, in_polys, id_field = "id",
+                      verbose = FALSE, keep_null = TRUE,
+                      rast_type = "categorical",
+                      comp_freq = T)
 
 })
 
+# Test On Points ####
 context("Extract data from raster - on points")
 testthat::test_that("Test On points extraction", {
   # skip_on_cran()
@@ -149,22 +160,23 @@ testthat::test_that("Test On points extraction", {
                           package = "sprawl.data")
   in_rast  <- read_rast(in_file)
   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
-  out      <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
-                           verbose = FALSE, keep_null = F)  %>%
-    tibble::as_tibble()
+  out <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
+                      verbose = F, keep_null = T, long_format = T)
+  # On `long = TRUE` (Default) output is `sf`
+  testthat::expect_is(out, "sf")
 
-  # Output is a data frame
-  testthat::expect_is(out, "data.frame")
-  out_extract <- raster::extract(in_rast[[1:2]], as(in_pts, "Spatial")) %>%
-    tibble::as_tibble()
   # Output is equal to raster::extract
-  testthat::expect_equal(as.numeric(t(as.matrix(out[,3:103]))),
-                         as.numeric(as.matrix(out_extract)))
+  out_extract <- raster::extract(in_rast[[1:2]], as(in_pts, "Spatial"),
+                                 sp = TRUE)@data
+  out2 <- out %>%
+    dplyr::select(-band_n) %>%
+    tidyr::spread(band_name, value)
+  sf::st_geometry(out2) <- NULL
+
+  testthat::expect_equal(out2[,3:4], out_extract[,3:4])
 
   out <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
                       verbose = F, keep_null = T, long_format = T)
-  # On `long = TRUE` output is `sf`
-  testthat::expect_is(out, "sf")
 
   # On `long = TRUE` but add_geom = FALSE output is not a `sf`
   out <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",

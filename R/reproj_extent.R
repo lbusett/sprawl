@@ -12,6 +12,7 @@
 #' the one obtained by reprojecting the upper-left and the lower-right corners.
 #' @param n_dens `numeric` Densification ratio used in the case enlarge is TRUE.
 #'  reprojected extent
+#' @param verbose `logical` If FALSE, suppress processing messages, Default: TRUE
 #' @name reproj_extent
 #' @rdname reproj_extent
 #' @return An object of class `sprawlext` representing the reprojected extent
@@ -50,8 +51,18 @@
 #' }
 
 
-reproj_extent <- function(ext, out_proj, in_proj = NULL, enlarge=TRUE, n_dens=1E3) {
+reproj_extent <- function(ext,
+                          out_proj,
+                          in_proj = NULL,
+                          enlarge=TRUE,
+                          n_dens=1E3,
+                          verbose = TRUE) {
 
+  if (verbose) {
+    call <- match.call()
+    message("crop_rast --> Reprojecting extent of: ", call[[2]],
+            " to: ", call[[3]])
+  }
   # Checks on projections
   out_proj <- check_proj4string(out_proj, abort = TRUE)
   if (!is.null(in_proj)) {
@@ -93,14 +104,10 @@ reproj_extent <- function(ext, out_proj, in_proj = NULL, enlarge=TRUE, n_dens=1E
       get_extent()
 
   } else {
-    message("Input and output projection are identical! Doing Nothing!")
+    if (verbose) message("Input and output projection are identical! ",
+                         "Doing Nothing!")
     out_ext_rep <- ext
   }
   return(out_ext_rep)
 
 }
-
-
-
-
-

@@ -1,22 +1,25 @@
 #' @title crop a raster file/rast_file on a given extent
-#' @description function to crop a raster file/rast_file on a given extent. The extent
-#'   can be:
-#'  1. directly passed (as a `sprawlext` rast_file or numeric array);
-#'  1. derived from a different rast_file (raster of vector file/rast_file) passed to
-#'    the function (see details)
+#' @description function to crop a raster file/rast_file on a given extent.
+#'  The cropping extent can be:
+#'  1. directly passed (as a `sprawlext` object or numeric array);
+#'  2. derived from a different object from which a `sprawlext` object object
+#'     can be derived (see details)
 #' @param rast_object either an `R` object of class `Raster`, or a character string
 #'   corresponding to a raster filename (with full path)
 #' @param ext_object either an object of class `sprawlext`, or an `R` object or
 #'   filename from which an object of class `sprawlext` can be obtained (see
 #'    `sprawl::get_extent()`)
-#' @param out_type `character` indicating to which type of rast_file the input should be
-#'  re-cropped.
+#'@param pad `numeric` extent of a "padding area" to be kept with respect to
+#'   `crop_extent` (in number of pixels). Useful to be sure not to crop "too much"
+#'  for example when cropping before extracting freatures suche as in `extract_rast`,
+#'  Default: 1
+#' @param out_type `character` indicates the type of object to be returned:
 #'   1. "rastobject" return a `raster` rast_file accessing the saved cropped file
 #'   2. "rastfile" return the filename of the GTiff file corresponding to the
 #'     cropped GTiff file. If `out_filename == NULL`, this corresponds to a file
 #'     saved in `R` temporary folder.
 #'   3. "vrtfile" return the filename of the vrt file built for cropping
-#'     the input raster (no saving to disk is performed)
+#'     the input raster (**no saving to disk is performed**)
 #' , Default: "rastobject"
 #' @param out_filename `character` filename to be used to save the cropped
 #'   raster.
@@ -38,9 +41,10 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom data.table last
 #' @importFrom raster raster brick setZ
-
+#' @importFrom sf st_intersects
 crop_rast <- function(rast_object,
                       ext_object,
+                      pad          = 1,
                       out_type     = "rastobject",
                       out_filename = NULL,
                       out_dtype    = NULL,
@@ -63,21 +67,30 @@ crop_rast <- function(rast_object,
   rastinfo  <- get_rastinfo(rast_object, verbose = FALSE)
   rast_bbox <- get_extent(rast_object, abort = TRUE)
   crop_bbox <- get_extent(ext_object, abort = TRUE)
-  dims      <- c(rastinfo$nrows, rastinfo$ncols)
-  rbbox_ext <- rast_bbox@extent
-  if (is.null(out_dtype)) {
-    in_dtype <- rastinfo$dtype
-    dtype    <- convert_rastdtype(in_dtype, "raster")
-  } else {
-    dtype    <- convert_rastdtype(out_dtype, "gdal")
-  }
 
   #   __________________________________________________________________________
   #   reproject `ext_object` extent if necessary                            ####
 
   if (!(rast_bbox@proj4string == crop_bbox@proj4string)) {
-    crop_bbox <- reproj_extent(crop_bbox, rast_bbox@proj4string)
+    crop_bbox <- reproj_extent(crop_bbox, rast_bbox@proj4string,
+                               verbose = FALSE)
   }
+
+  # Abort gracefully if not intersecting (TODO: Add test) ####
+  test_intersect <- suppressMessages(
+    sf::st_intersects(as(rast_bbox, "sfc_POLYGON"),
+                      as(crop_bbox, "sfc_POLYGON"))[[1]]
+  )
+  if (length(test_intersect) == 0) {
+
+    stop("crop_rast --> ", deparse(substitute(call)[[3]]),
+         " does not intersect with ", deparse(substitute(call)[[2]]),
+         ". Aborting!")
+
+  }
+
+  dims      <- c(rastinfo$nrows, rastinfo$ncols)
+  rbbox_ext <- rast_bbox@extent
   cbbox_ext <- crop_bbox@extent
 
   #   __________________________________________________________________________
@@ -88,13 +101,16 @@ crop_rast <- function(rast_object,
 
   #   __________________________________________________________________________
   #   compute a correct bounding box for the cropped raster, to avoid       ####
-  #   moving around corners
+  #   moving around corners (add pad if requested and possible)
 
   # xmin
   if (rbbox_ext[1] < cbbox_ext[1]) {
     which_lower    <- which(col_coords < cbbox_ext[1])
     if (length(which_lower) != 0) {
       first_col    <- data.table::last(which_lower)
+      if (first_col != 1) {
+        first_col <- ifelse((first_col - pad) <= 1, 1, (first_col - pad))
+      }
       rbbox_ext[1] <- col_coords[first_col + 1]
     }
   }
@@ -104,6 +120,9 @@ crop_rast <- function(rast_object,
     which_lower    <- which(row_coords < cbbox_ext[2])
     if (length(which_lower) != 0) {
       first_row    <- data.table::last(which_lower) + 1
+      if (first_row != 1) {
+        first_row <- ifelse((first_row - pad) <= 1, 1, (first_row - pad))
+      }
       rbbox_ext[2] <- row_coords[first_row]
     }
   }
@@ -111,24 +130,28 @@ crop_rast <- function(rast_object,
   # xmax
   if (rbbox_ext[3] > cbbox_ext[3]) {
     which_higher  <- which(col_coords > cbbox_ext[3])
-    if (length(which_lower) != 0) {
+    if (length(which_higher) != 0) {
       last_col     <- data.table::first(which_higher)
+      if (last_col != dims[2]) {
+        last_col <- ifelse((last_col + pad) >= dims[2], dims[2],
+                           (last_col + pad))
+      }
       rbbox_ext[3] <- col_coords[last_col]
-    } else {
-      last_col <- dims[2]
     }
   }
 
   # ymax
   if (rbbox_ext[4] > cbbox_ext[4]) {
-    which_lower  <- which(row_coords < cbbox_ext[4])
-    if (length(which_lower) != dims[1]) {
-    last_row     <- data.table::last(which_lower)
-    rbbox_ext[4] <- row_coords[last_row]
+    which_higher  <- which(row_coords > cbbox_ext[4])
+    if (length(which_higher) != 0) {
+      last_row     <- data.table::first(which_higher)
+      if (last_row != dims[1]) {
+        last_row <- ifelse((last_row + pad) >= dims[1], dims[1],
+                           (last_row + pad))
+      }
+      rbbox_ext[4] <- row_coords[last_row]
     }
   }
-
-  # TODO: Abort gracefully on incorrect rbbox_ext (e.g., because no intersection)
 
   # ____________________________________________________________________________
   # create a temporary vrt file corresponding to the band to be preocessed  ####
@@ -153,6 +176,13 @@ crop_rast <- function(rast_object,
     return(temp_vrt)
 
   } else {
+    if (is.null(out_dtype)) {
+      in_dtype <- rastinfo$dtype
+      dtype    <- convert_rastdtype(in_dtype, "raster")
+    } else {
+      dtype    <- convert_rastdtype(out_dtype, "gdal")
+    }
+
     # Save and return filename or rastobject
     if (is.null(out_filename)) {
       out_filename <- tempfile(fileext = ".tif",
