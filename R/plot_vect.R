@@ -105,8 +105,8 @@ plot_vect <- function(
   verbose        = TRUE
 ) {
 
-  geometry <- NULL
-  category <- NULL
+  geometry <- category <- color <- NULL
+
   assertthat::assert_that(
     methods::is(in_data, "sf"),
     msg = "plot_vect --> `in_data` is not a valid `sf` object. Aborting!"

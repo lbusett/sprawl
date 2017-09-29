@@ -37,6 +37,7 @@ add_scale_fill <- function(plot,
                            outliers_style,
                            direction,
                            ...) {
+  trans <- NULL
 
   # ____________________________________________________________________________
   # Qualitative palette: use scal_fill_hue or scale_fill_brewer             ####
