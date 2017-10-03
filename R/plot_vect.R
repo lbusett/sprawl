@@ -153,31 +153,18 @@ plot_vect <- function(
   }
 
   # -----------------------------------------------------------
-  # Create list of valide palette names and chars
+  # Set default palettes for different categories and get info
+  # on valid pals
 
-  all_pals   <- rbind(
-    cbind(name = row.names(RColorBrewer::brewer.pal.info),
-          RColorBrewer::brewer.pal.info, source = "brewer"),
-    data.frame(name = "hue", maxcolors = 1000, category = "qual",
-               colorblind = FALSE, source = "ggplot"),
-    make.row.names = FALSE)
-  all_pals$category   <- as.character(all_pals$category)
-  all_pals$category_2 <- "qual"
-  all_pals$category_2[all_pals$category %in% c("div", "seq")] <- "cont"
-
-  valid_pals <- all_pals[all_pals$category_2 == palette_type,]
-  #   __________________________________________________________________________
-  #   Set default palettes for different categories                         ####
-
-  def_palettes  <- list(qual = "Set3",
-                        cont  = "Greens")
+  def_palettes = list(qual = "Set3",
+                      cont  = "Greens")
+  def_legtypes = list(qual = "legend",
+                      cont  = "colourbar")
+  fill_pals   <- sprawl_fillpals()
+  valid_pals  <- fill_pals[fill_pals$cont_qual == palette_type,]
 
 
-  def_legtypes  <- list(qual = "legend",
-                        cont  = "colourbar")
-
-
-  # Check validity of palette.
+  # Check validity of palette name.
   # reset to default if palette not valid for selected palette_type
   if (!is.null(palette_name)) {
 

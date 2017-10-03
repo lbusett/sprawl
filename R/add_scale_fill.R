@@ -13,14 +13,7 @@
 #' @param ... PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
 #' @rdname add_scale_fill
-#' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom scales squish censor
 #' @importFrom ggplot2 aes_string scale_fill_brewer scale_fill_hue
@@ -37,12 +30,11 @@ add_scale_fill <- function(plot,
                            outliers_style,
                            direction,
                            ...) {
-  trans <- NULL
 
   # ____________________________________________________________________________
   # Qualitative palette: use scal_fill_hue or scale_fill_brewer             ####
   # TODO add support for manual categorical fill scale
-  if (palette$category_2 == "qual") {
+  if (palette$cont_qual == "qual") {
     if (palette$source == "brewer") {
       plot <- plot + scale_fill_brewer(type = "qual",
                                        palette = as.character(palette$name),
@@ -54,6 +46,7 @@ add_scale_fill <- function(plot,
                                                       "grey50", na.color))
     }
   } else {
+
     # ____________________________________________________________________________
     # Continuous palette: use scal_fill_brewer                                ####
     # TODO add support for scale_fill_gradient and scale_fill_viridis
@@ -74,5 +67,6 @@ add_scale_fill <- function(plot,
       )
     }
   }
+
   plot
 }

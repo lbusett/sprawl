@@ -15,6 +15,10 @@
 #' See the description of the arguments for details on their use
 #' @param in_rast `Raster` object to be plotted. Both mono- and multi-band
 #'   rasters are supported
+#' @param rast_type `character` ("continuous" | "categorical"). Specifies if the
+#'   data in `in_rast` correspond to a continuousor categorical (i.e., low number
+#'   of levels) variable. If NULL, the function tries to devise the correct type
+#'   from the data, Default: NULL
 #' @param maxpixels `numeric` maximum number of pixels to be used for plotting *for
 #'   each band*. Reduce this to speed-up plotting by subsampling the raster (this
 #'   reduces qualitty!). Increase it to improve qualitty (this reduces rendering
@@ -108,13 +112,11 @@
 #'  in_rast <- read_rast(system.file("extdata/OLI_test",
 #'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
 #'  plot_rast_gg(in_rast, basemap = "osm",
-#'                   palette_type = "diverging",
 #'                   na.value = 0, na.color = "transparent",
 #'                   title = "OLI", subtitle = "Band 2")
 #'
 #'  #Change basemap and transparency
 #'  plot_rast_gg(in_rast, basemap = "stamenbw",
-#'                   palette_type = "diverging",
 #'                   palette_name = "RdYlBu",
 #'                   no_axis = T,
 #'                   na.value = 0, na.color = "transparent",
@@ -183,6 +185,7 @@
 
 plot_rast_gg <- function(
   in_rast,
+  rast_type    = NULL,
   maxpixels    = 1e5,
   band_names   = NULL, bands_to_plot = NULL, facet_rows = NULL,
   xlims        = NULL, ylims = NULL,
@@ -192,7 +195,7 @@ plot_rast_gg <- function(
   scalebar     = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
   transparency = 0,
   na.color     = NULL, na.value = NULL,
-  palette_type = "gradient", palette_name = NULL, direction = 1,
+  palette_name = NULL, direction = 1,
   leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL,
   no_axis      = FALSE, title = NULL, subtitle = NULL,
   theme        = theme_bw(),
@@ -216,13 +219,6 @@ plot_rast_gg <- function(
     msg = "plot_rast_gg --> `in_rast` is not a valid `Raster` object. Aborting!"
   )
 
-  assertthat::assert_that(
-    palette_type %in% c("categorical", "gradient", "diverging"),
-    msg = strwrap(
-      "plot_rast_gg --> Invalid `palette_type`. It must be \"categorical\"
-      \"gradient\" or \"diverging\". Aborting!")
-  )
-
   if (!is.null(basemap)) {
     assertthat::assert_that(
       basemap %in% rosm::osm.types(),
@@ -231,53 +227,53 @@ plot_rast_gg <- function(
         valid value. Aborting!")
     )
   }
-  #   __________________________________________________________________________
-  #   Set default palettes for different categories                         ####
+  # -----------------------------------------------------------
+  # Set default palettes for different categories and get info
+  # on valid pals
 
-  palette_type <- switch(palette_type,
-                         "categorical" = "qual",
-                         "gradient"    = "seq",
-                         "diverging"   = "div"
-  )
+  if (is.null(rast_type)) {
+    if (length(unique(sampleRegular(in_rast, size = 500000))) > 25) {
+      palette_type = "cont"
+    } else {
+      palette_type = "qual"
+    }
+  }
+  def_palettes = list(qual = "Set3",
+                      cont  = "Greens")
+  def_legtypes = list(qual = "legend",
+                       cont  = "colourbar")
 
-  def_palettes  <- list(qual = "Set1",
-                        seq  = "Greens",
-                        div  = "RdYlGn")
+  fill_pals   <- sprawl_fillpals()
+  valid_pals  <- fill_pals[fill_pals$cont_qual == palette_type,]
 
-
-  def_legtypes  <- list(qual = "legend",
-                        seq  = "colourbar",
-                        div  = "colourbar")
-
+  # -----------------------------------------------------------
+  # Check validity of palette name.
+  # reset to default if palette not valid for selected palette_type
   if (!is.null(palette_name)) {
-    # Check validity of palette_name.
-    # reset to default if palette_name not valid for selected palette_type
-    all_pals <- cbind(name = row.names(RColorBrewer::brewer.pal.info),
-                      RColorBrewer::brewer.pal.info)
-    valid_pals <- subset(all_pals, category == palette_type)
 
     if (!palette_name %in% valid_pals$name) {
-      warning("plot_rast_gg --> The selected palette name is not valid.\n",
-              "Reverting to default value for selecter palette type (",
+      warning("plot_vect --> The selected palette name is not valid.\n",
+              "Reverting to default value for the variable of interest (",
               as.character(def_palettes[palette_type]), ")")
-      palette_name = as.character(def_palettes[palette_type])
+      palette_name <- as.character(def_palettes[palette_type])
     }
   } else {
-    palette_name <- as.character(def_palettes[palette_type])
+    palette_name <-   as.character(def_palettes[palette_type])
   }
 
+  palette <- valid_pals[which(valid_pals$name == palette_name),]
   if (is.null(leg_type)) {
     leg_type <- as.character(def_legtypes[palette_type])
   } else {
     assertthat::assert_that(
       leg_type %in% c("discrete", "continuous"),
       msg = strwrap(
-        "plot_rast_gg --> Invalid `palette_type`. It must be \"discrete\" or
+        "plot_vect --> Invalid `leg_type`. It must be \"discrete\" or
       \"continuous\". Aborting!")
     )
     leg_type <- switch(leg_type,
-                       "discrete" = "legend",
-                       "continuous"    = "colourbar"
+                       "discrete"   = "legend",
+                       "continuous" = "colourbar"
     )
   }
 
@@ -444,13 +440,13 @@ plot_rast_gg <- function(
   }
 
   # Blank plot
-  plot_gg <- ggplot() + theme +
+  plot <- ggplot() + theme +
     ggtitle(title, subtitle = subtitle)
 
   # Remove axes if no_axis == TRUE
   if (no_axis) {
 
-    plot_gg <- plot_gg  +
+    plot <- plot  +
       theme(axis.title.x = element_blank(),
             axis.text.x  = element_blank(),
             axis.ticks.x = element_blank(),
@@ -460,7 +456,7 @@ plot_rast_gg <- function(
   }
 
   # Center the title - can be overriden in case after plot completion
-  plot_gg <- plot_gg +
+  plot <- plot +
     theme(plot.title = element_text(hjust = 0.5),
           panel.background = element_rect(fill = "transparent"))
 
@@ -473,48 +469,59 @@ plot_rast_gg <- function(
     osm_plot <- suppressMessages(
       ggspatial::geom_osm(zoomin = zoomin, type   = basemap, progress = "none")
     )
-    plot_gg <- plot_gg + osm_plot
+    plot <- plot + osm_plot
   }
 
   #   __________________________________________________________________________
   #   add the raster layer                                                  ####
 
-  plot_gg <- plot_gg +
+  plot <- plot +
     geom_raster(data = in_rast_fort, aes(x, y, fill = value),
                 alpha = 1 - transparency, na.rm = TRUE)
   if (rastinfo$nbands > 1) {
-    plot_gg <- plot_gg + facet_wrap(~band, nrow = facet_rows, drop = T)
+    plot <- plot + facet_wrap(~band, nrow = facet_rows, drop = T)
   }
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 
-  if (palette_type == "qual") {
-    plot_gg <- plot_gg +
-      scale_fill_brewer(type = "qual", palette = palette_name)
-  } else {
-
-    plot_gg <- plot_gg +
-      scale_fill_distiller(
-        "Value",
-        limits = zlims,
-        breaks = if (is.null(leg_breaks)) {
-          waiver()
-        } else {
-          leg_breaks
-        }, labels = if (is.null(leg_labels)) {
-          waiver()
-        } else {
-          leg_labels
-        }, type = ifelse(palette_type == "sequential", "seq", "div"),
-        guide = leg_type,
-        palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
-                                             scales::squish, scales::censor),
-        direction = direction,
-        na.value = ifelse(is.null(na.color), "grey50", na.color)) +
-      theme(legend.justification = "center",
-            legend.box.spacing = grid::unit(0.5,"points"))
-  }
-
+  # if (palette_type == "qual") {
+  #   plot <- plot +
+  #     scale_fill_brewer(type = "qual", palette = palette_name)
+  # } else {
+  #
+  #   plot <- plot +
+  #     scale_fill_distiller(
+  #       "Value",
+  #       limits = zlims,
+  #       breaks = if (is.null(leg_breaks)) {
+  #         waiver()
+  #       } else {
+  #         leg_breaks
+  #       }, labels = if (is.null(leg_labels)) {
+  #         waiver()
+  #       } else {
+  #         leg_labels
+  #       }, type = ifelse(palette_type == "sequential", "seq", "div"),
+  #       guide = leg_type,
+  #       palette = palette_name, oob = ifelse((outliers_style == "to_minmax"),
+  #                                            scales::squish, scales::censor),
+  #       direction = direction,
+  #       na.value = ifelse(is.null(na.color), "grey50", na.color)) +
+  #     theme(legend.justification = "center",
+  #           legend.box.spacing = grid::unit(0.5,"points"))
+  # }
+  plot <- add_scale_fill(plot,
+                         palette,
+                         title = "Value",
+                         na.color,
+                         zlims,
+                         leg_breaks,
+                         leg_labels,
+                         leg_type,
+                         outliers_style,
+                         direction)
+  plot <- plot + theme(legend.justification = "center",
+                       legend.box.spacing = grid::unit(0.5,"points"))
   #   ____________________________________________________________________________
   #   if oob_style = recolor, add "layers" corresponding to oob data          ####
 
@@ -526,18 +533,18 @@ plot_rast_gg <- function(
         dplyr::mutate(cat = c("Out"),
                       color = c(out_high_color),
                       band = levels(in_rast_fort$band)[1])
-      plot_gg <- plot_gg + geom_polygon(data = dummy_data,
+      plot <- plot + geom_polygon(data = dummy_data,
                                         aes(x = x,
                                             y = y,
                                             colour = color))
-      plot_gg <- plot_gg + scale_colour_manual(
+      plot <- plot + scale_colour_manual(
         "Outliers",
         values     = out_high_color,
         labels     = paste0("< ", format(zlims[1], digits = 2)
                             , " OR ", "> ", format(zlims[2], digits = 2))
       )
 
-      plot_gg <- plot_gg +
+      plot <- plot +
         guides(colour = guide_legend(
           title = "Outliers", override.aes = list(fill = out_high_color,
                                                   color = "black")))
@@ -547,26 +554,26 @@ plot_rast_gg <- function(
         dplyr::mutate(cat = c("High","Low"),
                       color = c(out_low_color, out_high_color),
                       band = levels(in_rast_fort$band)[1])
-      plot_gg <- plot_gg + geom_polygon(data = dummy_data,
+      plot <- plot + geom_polygon(data = dummy_data,
                                         aes(x = x, y = y,
                                             colour = color))
-      plot_gg <- plot_gg + scale_color_manual(
+      plot <- plot + scale_color_manual(
         "Outliers",
         values     = c(out_low_color, out_high_color),
         labels     = c(paste0("< ", format(zlims[1], digits = 2)),
                        paste0("> ", format(zlims[2], digits = 2)))
       )
-      plot_gg <- plot_gg +
+      plot <- plot +
         guides(colour = guide_legend(
           title = "Outliers",
           override.aes = list(fill = c(out_low_color, out_high_color),
                               color = "black")))
     }
 
-    plot_gg <- plot_gg + geom_raster(data = out_high_tbl,
+    plot <- plot + geom_raster(data = out_high_tbl,
                                      aes(x = x, y = y),
                                      fill = out_high_color, na.rm = TRUE)
-    plot_gg <- plot_gg + geom_raster(data = out_low_tbl,
+    plot <- plot + geom_raster(data = out_low_tbl,
                                      aes(x = x, y = y),
                                      fill = out_low_color,
                                      na.rm = TRUE) +
@@ -584,7 +591,7 @@ plot_rast_gg <- function(
 
   if (scalebar) {
     # coord_cartesian(xlim = xlims, ylim = ylims) +
-    plot_gg <- plot_gg +
+    plot <- plot +
       sprawl_scalebar(dd2km = ifelse(units == "dec.degrees", TRUE, FALSE),
                       dist = scalebar_dist,
                       x.min = xlims[1], x.max = xlims[2],
@@ -597,12 +604,12 @@ plot_rast_gg <- function(
   #   __________________________________________________________________________
   #   Finalize the plot and return it                                       ####
 
-  plot_gg <- plot_gg +
+  plot <- plot +
     coord_fixed() +
     scale_x_continuous(expand = expand_scale(mult = .01)) +
     scale_y_continuous(expand = expand_scale(mult = .01))
 
 
-  plot_gg
+  plot
 }
 

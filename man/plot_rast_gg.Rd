@@ -4,20 +4,21 @@
 \alias{plot_rast_gg}
 \title{Plot a raster object using ggplot}
 \usage{
-plot_rast_gg(in_rast, maxpixels = 1e+05, band_names = NULL,
-  bands_to_plot = NULL, facet_rows = NULL, xlims = NULL, ylims = NULL,
-  zlims = NULL, zlims_type = "vals", outliers_style = "recolor",
-  outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
-  scalebar = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
-  transparency = 0, na.color = NULL, na.value = NULL,
-  palette_type = "gradient", palette_name = NULL, direction = 1,
-  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
-  no_axis = FALSE, title = NULL, subtitle = NULL, theme = theme_bw(),
-  verbose = TRUE)
+plot_rast_gg(in_rast, rast_type = "continuous", maxpixels = 1e+05,
+  band_names = NULL, bands_to_plot = NULL, facet_rows = NULL,
+  xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
+  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
+  basemap = NULL, zoomin = 0, scalebar = TRUE, scalebar_dist = NULL,
+  scalebar_txt_dist = 0.03, transparency = 0, na.color = NULL,
+  na.value = NULL, palette_name = NULL, direction = 1, leg_type = NULL,
+  leg_labels = NULL, leg_breaks = NULL, no_axis = FALSE, title = NULL,
+  subtitle = NULL, theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
 rasters are supported}
+
+\item{rast_type}{\code{character} ("continuous" | "categorical")}
 
 \item{maxpixels}{\code{numeric} maximum number of pixels to be used for plotting \emph{for
 each band}. Reduce this to speed-up plotting by subsampling the raster (this
@@ -94,9 +95,6 @@ Default: 'grey50'. TO set to "invisible" use na.color = "transparent"}
 
 \item{na.value}{\code{numeric}, Additional values to be treated as NA, Default: NA}
 
-\item{palette_type}{\code{character} Type of brewer color ramp to be used. Possible
-values are \code{gradient}, \code{diverging} and \code{categorical}, Default: 'gradient'}
-
 \item{palette_name}{name of the palette to be used. If NULL, the following
 defaults are used as a function of palette_type:
 \itemize{
@@ -141,6 +139,9 @@ Default: FALSE}
 
 \item{verbose}{\code{logical}, If FALSE, suppress processing message,
 Default: TRUE}
+
+\item{palette_type}{\code{character} Type of brewer color ramp to be used. Possible
+values are \code{gradient}, \code{diverging} and \code{categorical}, Default: 'gradient'}
 }
 \value{
 a \code{ggplot}
