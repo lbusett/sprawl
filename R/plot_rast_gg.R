@@ -488,7 +488,7 @@ plot_rast_gg <- function(
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 
-  if (palette_type == "categorical") {
+  if (palette_type == "qual") {
     plot_gg <- plot_gg +
       scale_fill_brewer(type = "qual", palette = palette_name)
   } else {
