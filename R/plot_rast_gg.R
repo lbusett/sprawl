@@ -42,7 +42,7 @@
 #'   - "percs": zlims indicates the range of percentiles to be plotted (e.g.,
 #'      specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
 #'      values between the 2nd to 98th percentile)
-#' @param outliers_style `character ["as_na" / "recolor" / "to_minmax"]` specifies how
+#' @param outliers_style `character ["censor" | "to_minmax"]` specifies how
 #'   the values outside of the zlims range will be plotted.
 #'   - If == "as_na" (the default), out of bounds values are plotted using the
 #'     color specified for na.color;
@@ -58,6 +58,12 @@
 #' @param basemap `character` If not NULL and valid, the selected basemap is
 #'   used as background. For a list of valid values, see `rosm::osm.types()`,
 #'   Default: NULL
+#' @param borders_layer PARAM_DESCRIPTION, Default: NULL
+#' @param borders_color PARAM_DESCRIPTION, Default: 'grey15'
+#' @param borders_size PARAM_DESCRIPTION, Default: 0.2
+#' @param borders_txt_field PARAM_DESCRIPTION, Default: NULL
+#' @param borders_txt_size PARAM_DESCRIPTION, Default: 1
+#' @param borders_txt_color PARAM_DESCRIPTION, Default: 'grey15'
 #' @param zoomin `numeric`, Adjustment factor for basemap zoom. Negative values
 #'   lead to less detailed basemap, but larger text. Default: 0
 #' @param scalebar `logical` If TRUE, add a scalebar on the bottom right corner,
@@ -128,7 +134,6 @@
 #'  in_rast <- raster::stack(system.file("extdata/OLI_test",
 #'   "oli_multi_1000.tif", package = "sprawl.data"))
 #'  plot_rast_gg(in_rast, basemap = "osm", bands_to_plot = c(1,4),
-#'                   palette_type = "diverging",
 #'                   na.value = 0, na.color = "transparent",
 #'                   title = "OLI", subtitle = "Band 2 vs band 4",
 #'                   facet_row = 1)
@@ -139,7 +144,7 @@
 #'                           package = "sprawl.data"))
 #'  #vanilla
 #'  plot_rast_gg(in_rast,
-#'              palette_type = "diverging", palette_name = "RdYlBu",
+#'              palette_name = "RdYlBu",
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 #'
 #'  # limits adjusted on the 10th and 99.9th percentile to remove very low
@@ -147,7 +152,7 @@
 #'  # outliers can be set as transparent!) + increase maxpixels to plot at
 #'  # full resolution.
 #'  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 100e5,
-#'              palette_type = "diverging", palette_name = "RdYlBu",
+#'              palette_name = "RdYlBu",
 #'              zlims = c(0.10, 0.999), zlims_type = "percs",
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
 #'              outliers_style = "recolor",
@@ -155,7 +160,7 @@
 #'
 #'  # Adjust `maxpixels` to speed-up rendering by sacrificing quality
 #'  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 10e4,
-#'              palette_type = "diverging", palette_name = "RdYlBu",
+#'              palette_name = "RdYlBu",
 #'              zlims = c(0.10, 0.999), zlims_type = "percs",
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
 #'              outliers_style = "recolor",
@@ -192,6 +197,8 @@ plot_rast_gg <- function(
   zlims        = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   basemap      = NULL, zoomin = 0,
+  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  borders_txt_field = NULL, borders_txt_size = 1, borders_txt_color = "grey15",
   scalebar     = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
   transparency = 0,
   na.color     = NULL, na.value = NULL,
@@ -232,16 +239,18 @@ plot_rast_gg <- function(
   # on valid pals
 
   if (is.null(rast_type)) {
-    if (length(unique(sampleRegular(in_rast, size = 500000))) > 25) {
+    if (length(unique(raster::sampleRegular(in_rast, size = 500000))) > 25) {
       palette_type = "cont"
     } else {
       palette_type = "qual"
     }
+  } else {
+    palette_type <- ifelse(rast_type == "continuous", "cont", "qual")
   }
   def_palettes = list(qual = "Set3",
                       cont  = "Greens")
   def_legtypes = list(qual = "legend",
-                       cont  = "colourbar")
+                      cont  = "colourbar")
 
   fill_pals   <- sprawl_fillpals()
   valid_pals  <- fill_pals[fill_pals$cont_qual == palette_type,]
@@ -351,10 +360,11 @@ plot_rast_gg <- function(
       in_rast_fort <- stats::na.omit(in_rast_fort, "value")
     }
   }
+
   if (!is.null(zlims) & zlims_type == "percs") {
 
-    all_lims <- in_rast_fort[,  as.list(stats::quantile(value, zlims,
-                                                        na.rm = TRUE)),
+    all_lims <- in_rast_fort[, as.list(stats::quantile(value, zlims,
+                                                       na.rm = TRUE)),
                              by = band]
     zlims <- c(min(all_lims[,2]), max(all_lims[,3]))
 
@@ -534,9 +544,9 @@ plot_rast_gg <- function(
                       color = c(out_high_color),
                       band = levels(in_rast_fort$band)[1])
       plot <- plot + geom_polygon(data = dummy_data,
-                                        aes(x = x,
-                                            y = y,
-                                            colour = color))
+                                  aes(x = x,
+                                      y = y,
+                                      colour = color))
       plot <- plot + scale_colour_manual(
         "Outliers",
         values     = out_high_color,
@@ -555,8 +565,8 @@ plot_rast_gg <- function(
                       color = c(out_low_color, out_high_color),
                       band = levels(in_rast_fort$band)[1])
       plot <- plot + geom_polygon(data = dummy_data,
-                                        aes(x = x, y = y,
-                                            colour = color))
+                                  aes(x = x, y = y,
+                                      colour = color))
       plot <- plot + scale_color_manual(
         "Outliers",
         values     = c(out_low_color, out_high_color),
@@ -571,12 +581,12 @@ plot_rast_gg <- function(
     }
 
     plot <- plot + geom_raster(data = out_high_tbl,
-                                     aes(x = x, y = y),
-                                     fill = out_high_color, na.rm = TRUE)
+                               aes(x = x, y = y),
+                               fill = out_high_color, na.rm = TRUE)
     plot <- plot + geom_raster(data = out_low_tbl,
-                                     aes(x = x, y = y),
-                                     fill = out_low_color,
-                                     na.rm = TRUE) +
+                               aes(x = x, y = y),
+                               fill = out_low_color,
+                               na.rm = TRUE) +
       scale_x_continuous(xlab,
                          expand = expand_scale(mult = c(0.005,0.005)),
                          limits = c(xlims[1], xlims[2])) +
@@ -600,6 +610,36 @@ plot_rast_gg <- function(
                       st.bottom = FALSE, model = NULL,
                       st.dist = scalebar_txt_dist, units = rastinfo$units)
   }
+
+
+  #   __________________________________________________________________________
+  ##  If borders passed, add a "borders" layer                              ####
+
+  if (!is.null(borders_layer)) {
+    borders <- sf::st_transform(borders_layer, get_proj4string(in_rast))
+    # %>%
+    #   crop_vect(in_rast)
+    plot    <- plot + geom_sf(data  = borders,
+                              fill  = "transparent",
+                              color = borders_color,
+                              size  = borders_size)
+    if (!is.null(borders_txt_field)) {
+      if(borders_txt_field %in% names(borders)) {
+        borders <- borders %>%
+          dplyr::mutate(lon = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[1]]),
+                        lat = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[2]])
+          ) %>%
+          sf::st_as_sf()
+        plot <- plot + geom_text(data = borders,
+                                 aes_string(label = borders_txt_field,
+                                            x = "lon", y = "lat"),
+                                 size = borders_txt_size,
+                                 color = borders_txt_color)
+      }
+    }
+  }
+
+
 
   #   __________________________________________________________________________
   #   Finalize the plot and return it                                       ####

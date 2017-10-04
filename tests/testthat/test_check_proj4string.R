@@ -8,6 +8,10 @@ testthat::test_that("check_proj4string works as expected", {
   expect_error(check_proj4string("+init=epsg:montemario", abort = TRUE))
   expect_warning(check_proj4string("+init=epsg:montemario"))
 
+  expect_equal(
+    check_proj4string("32"),
+    "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0")
+
   # valid proj4
   expect_equal(
     check_proj4string(sp::CRS("+init=epsg:32632")),

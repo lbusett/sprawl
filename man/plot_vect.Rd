@@ -5,9 +5,9 @@
 \title{FUNCTION_TITLE}
 \usage{
 plot_vect(in_data, line_color = "black", line_size = 0.2, fill_var = NULL,
-  fill_transparency = 0, facet_var = NULL, facet_rows = NULL,
+  transparency = 0, facet_var = NULL, facet_rows = NULL,
   borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
-  borders_txt_fiels = NULL, borders_txt_size = 1,
+  borders_txt_field = NULL, borders_txt_size = 2.5,
   borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
   xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
@@ -28,7 +28,7 @@ in_data, Default: 0.2}
 
 \item{fill_var}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{fill_transparency}{PARAM_DESCRIPTION, Default: 0}
+\item{transparency}{PARAM_DESCRIPTION, Default: 0}
 
 \item{facet_var}{PARAM_DESCRIPTION, Default: NULL}
 
@@ -40,7 +40,7 @@ in_data, Default: 0.2}
 
 \item{borders_size}{PARAM_DESCRIPTION, Default: 0.2}
 
-\item{borders_txt_fiels}{PARAM_DESCRIPTION, Default: NULL}
+\item{borders_txt_field}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{borders_txt_size}{PARAM_DESCRIPTION, Default: 1}
 
@@ -122,10 +122,13 @@ if(interactive()){
 
 
  # plot with a fill on a continuous variable with two "levels", using facets
- # and a diverging palette
+ # and a diverging palette. also add a "borders" layer with a different
+ #plot color
  plot_vect(in_vect, fill_var = "population", facet_var = "year",
            palette = "RdYlBu", scalebar = T, scalebar_dist = 50,
-           grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"))
+           grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"),
+           borders_layer = get_boundaries("ITA", level = 0),
+           borders_color = "red")
 
  }
 }

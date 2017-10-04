@@ -4,21 +4,27 @@
 \alias{plot_rast_gg}
 \title{Plot a raster object using ggplot}
 \usage{
-plot_rast_gg(in_rast, rast_type = "continuous", maxpixels = 1e+05,
+plot_rast_gg(in_rast, rast_type = NULL, maxpixels = 1e+05,
   band_names = NULL, bands_to_plot = NULL, facet_rows = NULL,
   xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
-  basemap = NULL, zoomin = 0, scalebar = TRUE, scalebar_dist = NULL,
-  scalebar_txt_dist = 0.03, transparency = 0, na.color = NULL,
-  na.value = NULL, palette_name = NULL, direction = 1, leg_type = NULL,
-  leg_labels = NULL, leg_breaks = NULL, no_axis = FALSE, title = NULL,
-  subtitle = NULL, theme = theme_bw(), verbose = TRUE)
+  basemap = NULL, zoomin = 0, borders_layer = NULL,
+  borders_color = "grey15", borders_size = 0.2, borders_txt_field = NULL,
+  borders_txt_size = 1, borders_txt_color = "grey15", scalebar = TRUE,
+  scalebar_dist = NULL, scalebar_txt_dist = 0.03, transparency = 0,
+  na.color = NULL, na.value = NULL, palette_name = NULL, direction = 1,
+  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  no_axis = FALSE, title = NULL, subtitle = NULL, theme = theme_bw(),
+  verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
 rasters are supported}
 
-\item{rast_type}{\code{character} ("continuous" | "categorical")}
+\item{rast_type}{\code{character} ("continuous" | "categorical"). Specifies if the
+data in \code{in_rast} correspond to a continuousor categorical (i.e., low number
+of levels) variable. If NULL, the function tries to devise the correct type
+from the data, Default: NULL}
 
 \item{maxpixels}{\code{numeric} maximum number of pixels to be used for plotting \emph{for
 each band}. Reduce this to speed-up plotting by subsampling the raster (this
@@ -53,7 +59,7 @@ specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
 values between the 2nd to 98th percentile)
 }}
 
-\item{outliers_style}{\code{character ["as_na" / "recolor" / "to_minmax"]} specifies how
+\item{outliers_style}{\code{character ["censor" | "to_minmax"]} specifies how
 the values outside of the zlims range will be plotted.
 \itemize{
 \item If == "as_na" (the default), out of bounds values are plotted using the
@@ -76,6 +82,18 @@ Default: NULL}
 
 \item{zoomin}{\code{numeric}, Adjustment factor for basemap zoom. Negative values
 lead to less detailed basemap, but larger text. Default: 0}
+
+\item{borders_layer}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{borders_color}{PARAM_DESCRIPTION, Default: 'grey15'}
+
+\item{borders_size}{PARAM_DESCRIPTION, Default: 0.2}
+
+\item{borders_txt_field}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{borders_txt_size}{PARAM_DESCRIPTION, Default: 1}
+
+\item{borders_txt_color}{PARAM_DESCRIPTION, Default: 'grey15'}
 
 \item{scalebar}{\code{logical} If TRUE, add a scalebar on the bottom right corner,
 Default: TRUE}
@@ -170,13 +188,11 @@ See the description of the arguments for details on their use
  in_rast <- read_rast(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
  plot_rast_gg(in_rast, basemap = "osm",
-                  palette_type = "diverging",
                   na.value = 0, na.color = "transparent",
                   title = "OLI", subtitle = "Band 2")
 
  #Change basemap and transparency
  plot_rast_gg(in_rast, basemap = "stamenbw",
-                  palette_type = "diverging",
                   palette_name = "RdYlBu",
                   no_axis = T,
                   na.value = 0, na.color = "transparent",
@@ -188,7 +204,6 @@ See the description of the arguments for details on their use
  in_rast <- raster::stack(system.file("extdata/OLI_test",
   "oli_multi_1000.tif", package = "sprawl.data"))
  plot_rast_gg(in_rast, basemap = "osm", bands_to_plot = c(1,4),
-                  palette_type = "diverging",
                   na.value = 0, na.color = "transparent",
                   title = "OLI", subtitle = "Band 2 vs band 4",
                   facet_row = 1)
@@ -199,7 +214,7 @@ See the description of the arguments for details on their use
                           package = "sprawl.data"))
  #vanilla
  plot_rast_gg(in_rast,
-             palette_type = "diverging", palette_name = "RdYlBu",
+             palette_name = "RdYlBu",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
 
  # limits adjusted on the 10th and 99.9th percentile to remove very low
@@ -207,7 +222,7 @@ See the description of the arguments for details on their use
  # outliers can be set as transparent!) + increase maxpixels to plot at
  # full resolution.
  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 100e5,
-             palette_type = "diverging", palette_name = "RdYlBu",
+             palette_name = "RdYlBu",
              zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
              outliers_style = "recolor",
@@ -215,7 +230,7 @@ See the description of the arguments for details on their use
 
  # Adjust `maxpixels` to speed-up rendering by sacrificing quality
  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 10e4,
-             palette_type = "diverging", palette_name = "RdYlBu",
+             palette_name = "RdYlBu",
              zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
              outliers_style = "recolor",

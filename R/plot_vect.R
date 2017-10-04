@@ -1,4 +1,4 @@
-#' @title FUNCTION_TITLE
+#' @title plot a map based on a 'vector' object
 #' @description FUNCTION_DESCRIPTION
 #' @param in_data PARAM_DESCRIPTION
 #' @param line_color `character` color used to plot the polygon borders of
@@ -6,13 +6,13 @@
 #' @param line_size `numeric` size of lines used to plot the polygons borders of
 #'   in_data, Default: 0.2
 #' @param fill_var PARAM_DESCRIPTION, Default: NULL
-#' @param fill_transparency PARAM_DESCRIPTION, Default: 0
+#' @param transparency PARAM_DESCRIPTION, Default: 0
 #' @param facet_var PARAM_DESCRIPTION, Default: NULL
 #' @param facet_rows PARAM_DESCRIPTION, Default: NULL
 #' @param borders_layer PARAM_DESCRIPTION, Default: NULL
 #' @param borders_color PARAM_DESCRIPTION, Default: 'grey15'
 #' @param borders_size PARAM_DESCRIPTION, Default: 0.2
-#' @param borders_txt_fiels PARAM_DESCRIPTION, Default: NULL
+#' @param borders_txt_field PARAM_DESCRIPTION, Default: NULL
 #' @param borders_txt_size PARAM_DESCRIPTION, Default: 1
 #' @param borders_txt_color PARAM_DESCRIPTION, Default: 'grey15'
 #' @param basemap PARAM_DESCRIPTION, Default: NULL
@@ -60,10 +60,13 @@
 #'
 #'
 #'  # plot with a fill on a continuous variable with two "levels", using facets
-#'  # and a diverging palette
+#'  # and a diverging palette. also add a "borders" layer with a different
+#'  #plot color
 #'  plot_vect(in_vect, fill_var = "population", facet_var = "year",
 #'            palette = "RdYlBu", scalebar = T, scalebar_dist = 50,
-#'            grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"))
+#'            grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"),
+#'            borders_layer = get_boundaries("ITA", level = 0),
+#'            borders_color = "red")
 #'
 #'  }
 #' }
@@ -87,18 +90,18 @@
 plot_vect <- function(
   in_data,
   line_color    = "black", line_size     = 0.2,
-  fill_var      = NULL, fill_transparency = 0,
+  fill_var      = NULL, transparency = 0,
   facet_var     = NULL, facet_rows     = NULL,
   borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
-  borders_txt_fiels = NULL, borders_txt_size = 1, borders_txt_color = "grey15",
+  borders_txt_field = NULL, borders_txt_size = 2.5, borders_txt_color = "grey15",
   basemap        = NULL, zoomin = 0,
   xlims          = NULL, ylims = NULL,
   zlims          = NULL, zlims_type = "vals",
   outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
   scalebar       = FALSE, scalebar_dist = NULL,
-  na.color       = NULL, na.value = NULL,
-  palette_name   = NULL, direction = 1,
-  leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL,
+  na.color       = NULL,  na.value = NULL,
+  palette_name   = NULL,  direction = 1,
+  leg_type       = NULL,  leg_labels = NULL, leg_breaks = NULL,
   leg_position   = "right",
   no_axis        = FALSE, title = "Vector Plot", subtitle = NULL,
   theme          = theme_bw(), grid = FALSE,
@@ -335,7 +338,7 @@ plot_vect <- function(
                            aes_string(fill = fill_var),
                            size  = line_size,
                            color = line_color,
-                           alpha = 1 - fill_transparency) +
+                           alpha = 1 - transparency) +
       coord_sf(xlim = xlims, ylim = ylims)
 
     #   __________________________________________________________________________
@@ -364,32 +367,6 @@ plot_vect <- function(
       plot <- plot + guides(
         fill = guide_colourbar(title.position = "bottom",
                                title.hjust = 0.5))
-    }
-  }
-
-  #   __________________________________________________________________________
-  ##  If borders passed, add a "borders" layer                              ####
-
-  if (!is.null(borders_layer)) {
-    borders <- sf::st_transform(borders_layer, get_proj4string(in_data)) %>%
-      crop_vect(in_data)
-    plot    <- plot + geom_sf(data  = borders,
-                              fill  = "transparent",
-                              color = borders_color,
-                              size  = borders_size)
-    if (!is.null(borders_txt_fiels)) {
-      if(borders_txt_fiels %in% names(borders)) {
-        borders <- borders %>%
-          dplyr::mutate(lon = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[1]]),
-                        lat = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[2]])
-          ) %>%
-          sf::st_as_sf()
-        plot <- plot + geom_text(data = borders,
-                                 aes_string(label = borders_txt_fiels,
-                                            x = "lon", y = "lat"),
-                                 size = borders_txt_size,
-                                 color = borders_txt_color)
-      }
     }
   }
 
@@ -465,6 +442,34 @@ plot_vect <- function(
                            na.rm = TRUE)
 
   }
+
+  #   __________________________________________________________________________
+  ##  If borders passed, add a "borders" layer                              ####
+
+  if (!is.null(borders_layer)) {
+    borders <- sf::st_transform(borders_layer, get_proj4string(in_data))
+    # %>%
+    #   crop_vect(in_data)
+    plot    <- plot + geom_sf(data  = borders,
+                              fill  = "transparent",
+                              color = borders_color,
+                              size  = borders_size)
+    if (!is.null(borders_txt_field)) {
+      if(borders_txt_field %in% names(borders)) {
+        borders <- borders %>%
+          dplyr::mutate(lon = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[1]]),
+                        lat = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[2]])
+          ) %>%
+          sf::st_as_sf()
+        plot <- plot + geom_text(data = borders,
+                                 aes_string(label = borders_txt_field,
+                                            x = "lon", y = "lat"),
+                                 size = borders_txt_size,
+                                 color = borders_txt_color)
+      }
+    }
+  }
+
 
   # _________________________________________________________________________
   # Final adjustements on margins, etc.                                  ####

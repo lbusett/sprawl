@@ -22,7 +22,7 @@ Description: Simplify execution of **frequently performed spatial processing tas
 Depends:
     R (>= 3.3.2)
 Imports: ggplot2, scales, data.table, raster, sf, sp, stats, tibble, checkmate, rgdal, dplyr, glue,
-         lubridate, tidyr, foreach, gdalUtils, velox, parallel, utils, assertthat,
+         lubridate, tidyr, foreach, gdalUtils, velox, utils, assertthat,
          methods, stringr, tcltk, tools, ggspatial, RColorBrewer, rosm, grid,
          latticeExtra, rasterVis, grDevices, purrr, mapedit, mapview, doParallel, maptools, 
          wrapr, magrittr
