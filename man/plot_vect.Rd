@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_vect.R
 \name{plot_vect}
 \alias{plot_vect}
-\title{FUNCTION_TITLE}
+\title{plot a map based on a 'vector' object}
 \usage{
 plot_vect(in_data, line_color = "black", line_size = 0.2, fill_var = NULL,
   transparency = 0, facet_var = NULL, facet_rows = NULL,
