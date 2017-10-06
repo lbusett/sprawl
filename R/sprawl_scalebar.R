@@ -3,7 +3,7 @@
 #' @param data `Raster` object passed to `plot_rast_gg` to plot the map
 #' @param location `character` indicating the symbol's location in the plot. Possible
 #'   options: "topright" (default), "bottomright", "bottomleft" and "topleft".
-#' @param dist `numeric` distance in to represent with each segment of the scale bar.
+#' @param scalebar_dist `numeric` distance in to represent with each segment of the scale bar.
 #' @param height `numeric` value between 0 and 1 to indicate the height of the
 #'   scale bar, as a proportion of the y axis, Default: 0.02
 #' @param st.dist `numeric` value between 0 and 1 to indicate the distance
@@ -42,10 +42,11 @@
 #'  Scale Bars for Maps Created with 'ggplot2' or 'ggmap'. R package version
 #'  0.4.3. https://github.com/oswaldosantos/ggsn
 #'  - Slight modifications to adapt it to `sprawl` needs by Lorenzo Busetto:
-#'    - Removed measure units text from all but the last numeric label
+#'    - Removed measure units text from all but the last numeric label;
 #'    - Added support for non-metric (e.g., feet) projetions by adding the `units`
-#'      argument and changing the text accordingly
-#'    - fontface to bold in the scalebar to improve visibility.
+#'      argument and changing the text accordingly;
+#'    - fontface to bold in the scalebar to improve visibility;
+#'    - automatic computation of distance if `dist` is not passed
 #' @export
 #' @importFrom ggplot2 geom_polygon geom_text
 #' @importFrom maptools gcDestination
@@ -53,7 +54,7 @@
 #' @importFrom utils tail
 
 sprawl_scalebar <- function(
-  data = NULL, location = "bottomright", dist = NULL, height = 0.02,
+  in_obj, location = "bottomright", scalebar_dist = NULL, height = 0.02,
   st.dist = 0.025, st.bottom = TRUE, st.size = 3.5, st.color = "black",
   box.fill = c("black", "white"), box.color = "black", dd2km = FALSE,
   model, x.min, x.max, y.min, y.max, anchor = NULL, facet.var = NULL,
@@ -61,33 +62,57 @@ sprawl_scalebar <- function(
 {
 
   label <- NULL
-  if (is.null(data)) {
-    if (is.null(x.min) | is.null(x.max) | is.null(y.min) |
-        is.null(y.max)) {
-      stop("If data is not defined, x.min, x.max, y.min and y.max must be.")
-    }
-    data <- data.frame(long = c(x.min, x.max),
-                       lat  = c(y.min, y.max))
+
+  # Get useful coordinates to place the scalebar
+  coords_bar <- data.frame(long = c(x.min, x.max),
+                           lat  = c(y.min, y.max))
+  #   __________________________________________________________________________
+  #   If no scalebar dist passed, compute automatically from longitude     ####
+  #   range
+  units <- get_projunits(get_proj4string(in_obj))
+
+  dd2km <- ifelse(units == "dec.degrees", TRUE, FALSE)
+
+  if (is.null(scalebar_dist)) {
+    if (units != "dec.degrees") {
+      km_extent  <- round(x.max - x.min) / 1000
+      dist <- round(round(km_extent / 10) / 5) * 5
+      if (dist == 0) {
+        dist <- ((km_extent/10) / 5) * 5
+      }
+    } else {
+      deg2rad <- function(deg) {(deg * pi) / (180)}
+      a <- sin(0.5 * (deg2rad(y.max) - deg2rad(y.min)))
+      b <- sin(0.5 * (deg2rad(x.max) - deg2rad(x.min)))
+      km_extent     <- 12742 * asin(sqrt(a * a +
+                                           cos(deg2rad(y.min)) *
+                                           cos(deg2rad(y.max)) * b * b))
+      dist <- round(round(km_extent / 10) / 5) * 5
+      }
+  } else {
+    dist <- scalebar_dist
   }
+
   if (is.null(dd2km)) {
     stop("dd2km should be logical.")
   }
-  if (any(class(data) %in% "sf")) {
-    xmin <- sf::st_bbox(data)["xmin"]
-    xmax <- sf::st_bbox(data)["xmax"]
-    ymin <- sf::st_bbox(data)["ymin"]
-    ymax <- sf::st_bbox(data)["ymax"]
-  }
-  else {
-    xmin <- min(data$long)
-    xmax <- max(data$long)
-    ymin <- min(data$lat)
-    ymax <- max(data$lat)
-  }
+
+  # if (any(class(in_obj) %in% "sf")) {
+  #   x.min <- sf::st_bbox(in_obj)["x.min"]
+  #   x.max <- sf::st_bbox(in_obj)["x.max"]
+  #   y.min <- sf::st_bbox(in_obj)["y.min"]
+  #   y.max <- sf::st_bbox(in_obj)["y.max"]
+  # }
+  # else {
+  #   x.min <- min(in_obj$long)
+  #   x.max <- max(in_obj$long)
+  #   y.min <- min(in_obj$lat)
+  #   y.max <- max(in_obj$lat)
+  # }
   if (location == "bottomleft") {
     if (is.null(anchor)) {
-      x <- xmin
-      y <- ymin
+      x <- x.min + (x.max - x.min) / 20
+      y <- y.min
     }
     else {
       x <- as.numeric(anchor["x"])
@@ -97,8 +122,8 @@ sprawl_scalebar <- function(
   }
   if (location == "bottomright") {
     if (is.null(anchor)) {
-      x <- xmax - 0.055 * (xmax - xmin)
-      y <- ymin + 0.008 * (ymax - ymin)
+      x <- x.max - (x.max - x.min) / 15
+      y <- y.min + (y.max - y.min) / 40
     }
     else {
       x <- as.numeric(anchor["x"])
@@ -108,8 +133,8 @@ sprawl_scalebar <- function(
   }
   if (location == "topleft") {
     if (is.null(anchor)) {
-      x <- xmin
-      y <- ymax
+      x <- x.min
+      y <- y.max
     }
     else {
       x <- as.numeric(anchor["x"])
@@ -119,8 +144,8 @@ sprawl_scalebar <- function(
   }
   if (location == "topright") {
     if (is.null(anchor)) {
-      x <- xmax
-      y <- ymax
+      x <- x.max
+      y <- y.max
     }
     else {
       x <- as.numeric(anchor["x"])
@@ -130,12 +155,12 @@ sprawl_scalebar <- function(
   }
 
   if (!st.bottom) {
-    st.dist <- y + (ymax - ymin) * (height + st.dist)
+    st.dist <- y + (y.max - y.min) * (height + st.dist)
   }
   else {
-    st.dist <- y - (ymax - ymin) * st.dist
+    st.dist <- y - (y.max - y.min) * st.dist
   }
-  height <- y + (ymax - ymin) * height
+  height <- y + (y.max - y.min) * height
 
 
   if (dd2km) {
@@ -197,7 +222,7 @@ sprawl_scalebar <- function(
     x.st.pos <- rev(x.st.pos)
   }
 
-  legend2 <- cbind(data[1:3, ], x = x.st.pos, y = st.dist,
+  legend2 <- cbind(coords_bar[1:3, ], x = x.st.pos, y = st.dist,
                    label = format(legend[, "text"], digits = 3),
                    stringsAsFactors = FALSE)
   legend2$label[3] <- paste(legend2$label[3], "km")

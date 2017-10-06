@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_vect.R
 \name{plot_vect}
 \alias{plot_vect}
-\title{plot a map based on a 'vector' object}
+\title{plot a map based on a \code{vector} object using `ggplot::geom_sf``}
 \usage{
 plot_vect(in_data, line_color = "black", line_size = 0.2, fill_var = NULL,
   transparency = 0, facet_var = NULL, facet_rows = NULL,
@@ -10,95 +10,194 @@ plot_vect(in_data, line_color = "black", line_size = 0.2, fill_var = NULL,
   borders_txt_field = NULL, borders_txt_size = 2.5,
   borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
   xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
-  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
-  scalebar = FALSE, scalebar_dist = NULL, na.color = NULL,
-  na.value = NULL, palette_name = NULL, direction = 1, leg_type = NULL,
-  leg_labels = NULL, leg_breaks = NULL, leg_position = "right",
-  no_axis = FALSE, title = "Vector Plot", subtitle = NULL,
-  theme = theme_bw(), grid = FALSE, verbose = TRUE)
+  outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
+  scalebar = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
+  na.color = NULL, na.value = NULL, palette_name = NULL, direction = 1,
+  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  leg_position = "right", show_axis = FALSE, show_grid = TRUE,
+  grid_color = "grey15", title = "Vector Plot", subtitle = NULL,
+  theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
-\item{in_data}{PARAM_DESCRIPTION}
+\item{in_data}{object of class \code{sfc_POLYGON} (or coercible to it using
+`sprawl::cast_vect)}
 
 \item{line_color}{\code{character} color used to plot the polygon borders of
-in_data}
+\code{in_data}}
 
 \item{line_size}{\code{numeric} size of lines used to plot the polygons borders of
 in_data, Default: 0.2}
 
-\item{fill_var}{PARAM_DESCRIPTION, Default: NULL}
+\item{fill_var}{\code{character} name of the column of \code{in_data} to be used for
+coloring the different polygons. If NULL, only the goemetry is plotted,
+Default: NULL}
 
-\item{transparency}{PARAM_DESCRIPTION, Default: 0}
+\item{transparency}{\code{numeric [0, 1]}transparency of the filled polygons. Higher
+values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)}
 
-\item{facet_var}{PARAM_DESCRIPTION, Default: NULL}
+\item{facet_var}{\code{character} name of a column of \code{in_data} to be used for
+making different facets of the plot. Useful in case multiple values of \code{fill_var}
+are available for each polygon, according to a grouping variable.
+If NULL, multiple values of \code{fill_var} for the same polygon are ignored
+(the first value found is used), Default: NULL (see examples)}
 
-\item{facet_rows}{PARAM_DESCRIPTION, Default: NULL}
+\item{facet_rows}{\code{numeric}, number of rows used for plotting multiple bands,
+in faceted plots, Default: 2 (Ignored if \code{fill_var} == NULL)}
 
-\item{borders_layer}{PARAM_DESCRIPTION, Default: NULL}
+\item{borders_layer}{\code{character} object of class \code{sf_POLYGON} or \code{sfc_polygon},
+(or cohercible to it using \code{sprawl::cast_vect}) to be overlayed to the plot,
+Default: NULL (no overlay)}
 
-\item{borders_color}{PARAM_DESCRIPTION, Default: 'grey15'}
+\item{borders_color}{color used to plot the boundaries of \code{borders_layer}
+(if provided), Default: 'grey15'}
 
-\item{borders_size}{PARAM_DESCRIPTION, Default: 0.2}
+\item{borders_size}{size used to plot the boundaries lines of \code{borders_layer}
+(if provided), Default: 0.2}
 
-\item{borders_txt_field}{PARAM_DESCRIPTION, Default: NULL}
+\item{borders_txt_field}{name of the column of \code{borders_layer} to be used to
+add text labels to \code{borders_layer} (if provided), Default: NULL (no labels)}
 
-\item{borders_txt_size}{PARAM_DESCRIPTION, Default: 1}
+\item{borders_txt_size}{size of the txt labels derived from \code{borders_layer},
+Default: 2}
 
-\item{borders_txt_color}{PARAM_DESCRIPTION, Default: 'grey15'}
+\item{borders_txt_color}{color of the txt labels derived from \code{borders_layer},
+Default: "grey15"}
 
-\item{basemap}{PARAM_DESCRIPTION, Default: NULL}
+\item{basemap}{\code{character} If not NULL and valid, the selected basemap is
+used as background. For a list of valid basemaps, see \code{rosm::osm.types()},
+Default: NULL (Currently not yet supported!)}
 
-\item{zoomin}{PARAM_DESCRIPTION, Default: 0}
+\item{zoomin}{\code{numeric}, Adjustment factor for basemap zoom. Negative values
+lead to less detailed basemap, but larger text. Default: 0 (Currently not
+yet supported!)}
 
-\item{xlims}{PARAM_DESCRIPTION, Default: NULL}
+\item{zlims}{\code{numeric array [2]} limits governing the range of
+values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
 
-\item{ylims}{PARAM_DESCRIPTION, Default: NULL}
+\item{zlims_type}{\code{character ["vals" | "percs"]} type of zlims specified.
+\itemize{
+\item "vals": zlims indicates the range of values to be plotted
+\item "percs": zlims indicates the range of percentiles to be plotted (e.g.,
+specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
+values between the 2nd and 98th percentile). Ignored if \code{zlims} is not
+set, Default: "vals"
+}}
 
-\item{zlims}{PARAM_DESCRIPTION, Default: NULL}
+\item{outliers_style}{\code{character ["censor" | "to_minmax"]} specifies how
+the values outside of the zlims range will be plotted.
+\itemize{
+\item If == "censor", they are plotted using the colors(s) specified in \code{outliers_color}
+\item If == "to_minmax", outliers are forced to the colors used for the maximum
+and minum values specified in \code{zlims} (using \code{scales::squish}), Default:
+\code{censor}.
+}}
 
-\item{zlims_type}{PARAM_DESCRIPTION, Default: 'vals'}
+\item{outliers_colors}{\code{character array (length 1 or 2)} specifies colors to be
+used to plot values outside zlims if `outliers_style == "censor".
+If only one color is passed, both values above max(zlims) and below min(zlims)
+are plotted with the same color. If two colors are passed, the first color
+is used to plot values < min(zlims) and the second to plot colors > max(zlims),
+Default: c("grey10", "grey90")}
 
-\item{outliers_style}{PARAM_DESCRIPTION, Default: 'recolor'}
+\item{scalebar}{\code{logical} If TRUE, add a scalebar on the bottom right corner,
+Default: TRUE}
 
-\item{outliers_colors}{PARAM_DESCRIPTION, Default: c("grey10", "grey90")}
+\item{scalebar_dist}{\code{numeric} Width of the scale bar (in km). If NULL, it
+is computed automatically on the basis of the range in x direction,
+Default: NULL}
 
-\item{scalebar}{PARAM_DESCRIPTION, Default: FALSE}
+\item{scalebar_txt_dist}{\code{numeric} Distance between scalebar and its labels.
+Adjust this in case of overlap, Default: 0.30}
 
-\item{scalebar_dist}{PARAM_DESCRIPTION, Default: NULL}
+\item{na.color}{\code{character}, color to be used to plot NA values,
+Default: 'transparent'.}
 
-\item{na.color}{PARAM_DESCRIPTION, Default: NULL}
+\item{na.value}{\code{numeric}, Additional values of \code{fill_var} to be treated as
+NA, Default: NULL}
 
-\item{na.value}{PARAM_DESCRIPTION, Default: NULL}
+\item{palette_name}{\code{character} name of the palette to be used to "color" the raster.
+If NULL, the following defaults are used as a function of variable type:
+\itemize{
+\item categorical --> "hue"
+\item continuous  --> "Greys"
+Note that if a wrong palette name is specified, plot_rast_gg reverts to
+the default values. Run \code{sprawl::fillpals()} to see a list
+of available palettes, Default: NULL
+}}
 
-\item{palette_name}{PARAM_DESCRIPTION, Default: NULL}
+\item{direction}{\code{character [0 | 1]} direction of the color legend. Chenge this
+to invert the color gradient, Default: 1}
 
-\item{direction}{PARAM_DESCRIPTION, Default: 1}
+\item{leg_type}{\code{character ["continuous", "discrete"]} type of legend to be used
+on continuous variables. If "continuous" , a colourbar is used. If "discrete",
+a discretized version is used (see examples).#'}
 
-\item{leg_type}{PARAM_DESCRIPTION, Default: NULL}
+\item{leg_labels}{\code{character (n_leg_breaks)} labels to be used for the legend
+\itemize{
+\item If \code{rast_type} == "categorical", the number of labels must correspond to
+the number of unique values of the raster to be plotted. If NULL or not valid,
+the legend will use the unique raster values in the legend (see examples)
+\item If \code{rast_type} ==  "continuous" the number of labels must be
+equal to the number of breaks specified by "leg_breaks". If this is not
+TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()} (TBD),
+Default: NULL (the default ggplot2 \code{labels = waiver()} is used)
+}}
 
-\item{leg_labels}{PARAM_DESCRIPTION, Default: NULL}
+\item{leg_breaks}{\code{numeric (n_leg_labels)} Values in the scale at which
+leg_labels must be placed (if rast_type != "categorical"). The number
+of breaks must be equal to the number of labels specified by "leg_labels".
+If this is not TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()}
+(TBD)  Default: NULL (the default ggplot2 \code{labels = waiver()} is used)}
 
-\item{leg_breaks}{PARAM_DESCRIPTION, Default: NULL}
+\item{leg_position}{\code{character ["right" | "bottom"]} Specifies if plotting
+the legend on the right or on the bottom. Default: "right"}
 
-\item{leg_position}{PARAM_DESCRIPTION, Default: 'right'}
+\item{show_axis}{\code{logical}, If FALSE, axis names and labels are suppressed,
+Default: TRUE}
 
-\item{no_axis}{PARAM_DESCRIPTION, Default: FALSE}
+\item{show_grid}{\code{logical}, If FALSE, graticule lines are suppressed,
+Default: TRUE}
 
-\item{title}{PARAM_DESCRIPTION, Default: 'Vector Plot'}
+\item{grid_color}{\code{character} color to be used to plot grid lines,
+Default: grey15"}
 
-\item{subtitle}{PARAM_DESCRIPTION, Default: NULL}
+\item{title}{\code{character}, Title of the plot, Default: "Vector Plot"}
 
-\item{theme}{PARAM_DESCRIPTION, Default: theme_bw()}
+\item{subtitle}{Subtitle of the plot, Default: NULL}
 
-\item{grid}{PARAM_DESCRIPTION, Default: FALSE}
+\item{theme}{\code{theme function} ggplot theme to be used
+(e.g., theme_light()), Default: theme_bw()}
 
-\item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
+\item{verbose}{\code{logical}, If FALSE, suppress processing message,
+Default: TRUE}
 }
 \value{
-OUTPUT_DESCRIPTION
+a \code{gg} plot. It is plotted immeditely. If the call includes
+an assignment operator (e.g., \code{plot <- plot_vect(in_vect))}, the plot is
+saved to the specified variable. Otherwise, it is plotted immediately.
 }
 \description{
-FUNCTION_DESCRIPTION
+Plot a raster object using ggplot witn an (optional) basemap.
+The function allows to:
+\itemize{
+\item Plot either only the geometry of \code{in_vect}, or a map with different
+fill colors based on a column of \code{in_vect};
+\item Plot a single- or multi-band image using facet_wrap (args \code{facet_var},
+\code{facet_rows});
+\item "Easily" select different palettes (arg \code{palette_name}) for the fill
+variable;
+\item Easily control plotting limits on the z-dimension, specifying either
+values or quantiles ranges (args \code{zlims}, \code{zlims_type}), as well as how
+the outlier values are represented (args \code{outliers_style} and
+\code{outliers_color})
+\item Easily control breaks and labels in legends (args \code{leg_type}, \code{leg_breaks},
+\code{leg_labels}, \code{leg_position})
+\item Automatically add a scalebar to the plot (args\code{scalebar}, \code{scalebar_dist},
+\code{scalebar_txt_dist}, \code{scalebar_txt_size})
+\item Easily add an additional "vector" layer (e.g., administrative boundaries)
+(args \code{borders_layer}, \code{borders_color}, \code{borders_....})
+See the description of the arguments for details on their use
+}
 }
 \details{
 DETAILS
@@ -117,7 +216,7 @@ if(interactive()){
  plot_vect(in_vect, fill_var = "NAME_2")
 
  # change the palette, add a scalebar and remove the grid
- plot_vect(in_vect, fill_var = "NAME_2",no_axis = F, palette_name = "Set3",
+ plot_vect(in_vect, fill_var = "NAME_2",show_axis = F, palette_name = "Set3",
            scalebar = TRUE, grid = FALSE)
 
 
@@ -127,8 +226,8 @@ if(interactive()){
  plot_vect(in_vect, fill_var = "population", facet_var = "year",
            palette = "RdYlBu", scalebar = T, scalebar_dist = 50,
            grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"),
-           borders_layer = get_boundaries("ITA", level = 0),
-           borders_color = "red")
+           borders_layer = get_boundaries("ITA", level = 2),
+           borders_color = "red", borders_txt_field = "NAME_2")
 
  }
 }

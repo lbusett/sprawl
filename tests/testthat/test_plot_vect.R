@@ -16,21 +16,26 @@ test_that("plot_vect works as expected", {
   expect_is(p, "gg")
 
   # change the palette, add a scalebar and remove the grid
-  expect_is(plot_vect(in_vect, fill_var = "NAME_2",no_axis = F, palette_name = "Set3",
-            scalebar = TRUE, grid = FALSE), "gg")
+  expect_is(plot_vect(in_vect, fill_var = "NAME_2", show_axis = F,
+                      palette_name = "Set3",
+                      scalebar = TRUE, show_grid = FALSE), "gg")
 
 
   # plot with a fill on a continuous variable with two "levels", using facets
   # and a diverging palette. also add a "borders" layer with a different
   #plot color
-  expect_is(plot_vect(in_vect, fill_var = "population", facet_var = "year",
-            palette = "RdYlBu", scalebar = T, scalebar_dist = 50,
-            grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"),
-            borders_layer = get_boundaries("ITA", level = 0),
-            borders_color = "red"), "gg")
+  expect_is(plot_vect(in_vect,
+                      fill_var = "population", facet_var = "year",
+                      palette = "RdYlBu",
+                      scalebar = T, scalebar_dist = 50,
+                      grid = FALSE, zlims = c(5,20),
+                      outliers_colors = c("yellow", "green"),
+                      borders_layer = get_boundaries("ITA", level = 2),
+                      borders_color = "red", borders_txt_field = "NAME_2"),
+            "gg")
 
   expect_warning(plot_vect(in_vect,
-                         palette_name = "9r38w09r83",
-                         fill_var = "NAME_2"))
+                           palette_name = "9r38w09r83",
+                           fill_var = "NAME_2"))
 
 })

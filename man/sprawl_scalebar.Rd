@@ -4,19 +4,17 @@
 \alias{sprawl_scalebar}
 \title{sprawl_scalebar}
 \usage{
-sprawl_scalebar(data = NULL, location = "bottomright", dist = NULL,
+sprawl_scalebar(in_obj, location = "bottomright", scalebar_dist = NULL,
   height = 0.02, st.dist = 0.025, st.bottom = TRUE, st.size = 3.5,
   st.color = "black", box.fill = c("black", "white"), box.color = "black",
   dd2km = FALSE, model, x.min, x.max, y.min, y.max, anchor = NULL,
   facet.var = NULL, facet.lev = NULL, units = "m")
 }
 \arguments{
-\item{data}{\code{Raster} object passed to \code{plot_rast_gg} to plot the map}
-
 \item{location}{\code{character} indicating the symbol's location in the plot. Possible
 options: "topright" (default), "bottomright", "bottomleft" and "topleft".}
 
-\item{dist}{\code{numeric} distance in to represent with each segment of the scale bar.}
+\item{scalebar_dist}{\code{numeric} distance in to represent with each segment of the scale bar.}
 
 \item{height}{\code{numeric} value between 0 and 1 to indicate the height of the
 scale bar, as a proportion of the y axis, Default: 0.02}
@@ -66,6 +64,8 @@ variable in \code{facet.var}. The scale bar will be drawn only in the \code{face
 facet.}
 
 \item{units}{DESCRIPTION}
+
+\item{data}{\code{Raster} object passed to \code{plot_rast_gg} to plot the map}
 }
 \description{
 Adds a scale bar to maps created with \code{plot_rast_gg}.
@@ -80,10 +80,11 @@ Scale Bars for Maps Created with 'ggplot2' or 'ggmap'. R package version
 0.4.3. https://github.com/oswaldosantos/ggsn
 \item Slight modifications to adapt it to \code{sprawl} needs by Lorenzo Busetto:
 \itemize{
-\item Removed measure units text from all but the last numeric label
+\item Removed measure units text from all but the last numeric label;
 \item Added support for non-metric (e.g., feet) projetions by adding the \code{units}
-argument and changing the text accordingly
-\item fontface to bold in the scalebar to improve visibility.
+argument and changing the text accordingly;
+\item fontface to bold in the scalebar to improve visibility;
+\item automatic computation of distance if \code{dist} is not passed
 }
 }
 }

@@ -10,11 +10,11 @@
 #'   and `plot_vect`
 #` sprawl_fillpals()
 #' }
-#' @rdname sprawl_fillpals
+#' @rdname fillpals
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom dplyr select arrange
 #' @importFrom RColorBrewer brewer.pal.info
-sprawl_fillpals <- function() {
+fillpals <- function() {
 
   name <- source <- category <- cont_qual <- maxcolors <- colorblind <- NULL
   # -----------------------------------------------------------

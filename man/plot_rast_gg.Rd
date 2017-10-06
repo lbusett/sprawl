@@ -2,45 +2,85 @@
 % Please edit documentation in R/plot_rast_gg.R
 \name{plot_rast_gg}
 \alias{plot_rast_gg}
-\title{Plot a raster object using ggplot}
+\title{Plot a map based on a \code{raster} object using ggplot}
 \usage{
-plot_rast_gg(in_rast, rast_type = NULL, maxpixels = 1e+05,
-  band_names = NULL, bands_to_plot = NULL, facet_rows = NULL,
-  xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
-  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
-  basemap = NULL, zoomin = 0, borders_layer = NULL,
-  borders_color = "grey15", borders_size = 0.2, borders_txt_field = NULL,
-  borders_txt_size = 1, borders_txt_color = "grey15", scalebar = TRUE,
-  scalebar_dist = NULL, scalebar_txt_dist = 0.03, transparency = 0,
-  na.color = NULL, na.value = NULL, palette_name = NULL, direction = 1,
-  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
-  no_axis = FALSE, title = NULL, subtitle = NULL, theme = theme_bw(),
-  verbose = TRUE)
+plot_rast_gg(in_rast, rast_type = NULL, palette_name = NULL,
+  direction = 1, leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
+  leg_position = "right", maxpixels = 1e+05, band_names = NULL,
+  bands_to_plot = NULL, facet_rows = 2, xlims = NULL, ylims = NULL,
+  zlims = NULL, zlims_type = "vals", outliers_style = "censor",
+  outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
+  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  borders_txt_field = NULL, borders_txt_size = 3,
+  borders_txt_color = "grey15", scalebar = TRUE, scalebar_dist = NULL,
+  scalebar_txt_dist = 0.03, transparency = 0, na.color = NULL,
+  na.value = NULL, show_axis = TRUE, show_grid = TRUE,
+  grid_color = "grey20", title = NULL, subtitle = NULL,
+  theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
-rasters are supported}
+rasters are supported;}
 
 \item{rast_type}{\code{character} ("continuous" | "categorical"). Specifies if the
-data in \code{in_rast} correspond to a continuousor categorical (i.e., low number
-of levels) variable. If NULL, the function tries to devise the correct type
-from the data, Default: NULL}
+data in \code{in_rast} correspond to a continuous or categorical (i.e., low number
+of integer levels - typically a classified raster) variable.
+If NULL, the function tries to devise the correct type from the data,
+Default: NULL}
+
+\item{palette_name}{\code{character} name of the palette to be used to "color" the raster.
+If NULL, the following defaults are used as a function of variable type:
+\itemize{
+\item categorical --> "hue"
+\item continuous  --> "Greys"
+Note that if a wrong palette name is specified, plot_rast_gg reverts to
+the default values. Run \code{sprawl::fillpals()} to see a list
+of available palettes, Default: NULL
+}}
+
+\item{direction}{\code{character [0 | 1]} direction of the color legend. Chenge this
+to invert the color gradient, Default: 1}
+
+\item{leg_type}{\code{character ["continuous", "discrete"]} type of legend to be used
+on continuous variables. If "continuous" , a colourbar is used. If "discrete",
+a discretized version is used (see examples).#'}
+
+\item{leg_labels}{\code{character (n_leg_breaks)} labels to be used for the legend
+\itemize{
+\item If \code{rast_type} == "categorical", the number of labels must correspond to
+the number of unique values of the raster to be plotted. If NULL or not valid,
+the legend will use the unique raster values in the legend (see examples)
+\item If \code{rast_type} ==  "continuous" the number of labels must be
+equal to the number of breaks specified by "leg_breaks". If this is not
+TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()} (TBD),
+Default: NULL (the default ggplot2 \code{labels = waiver()} is used)
+}}
+
+\item{leg_breaks}{\code{numeric (n_leg_labels)} Values in the scale at which
+leg_labels must be placed (if rast_type != "categorical"). The number
+of breaks must be equal to the number of labels specified by "leg_labels".
+If this is not TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()}
+(TBD)  Default: NULL (the default ggplot2 \code{labels = waiver()} is used)}
+
+\item{leg_position}{\code{character ["right" | "bottom"]} Specifies if plotting
+the legend on the right or on the bottom. Default: "right"}
 
 \item{maxpixels}{\code{numeric} maximum number of pixels to be used for plotting \emph{for
 each band}. Reduce this to speed-up plotting by subsampling the raster (this
-reduces qualitty!). Increase it to improve qualitty (this reduces rendering
+reduces quality!). Increase it to improve qualitty (this reduces rendering
 speed!), Default:1e5}
 
-\item{band_names}{\code{character(nbands)}, array of band names. These will used
-to populate the "strips" above each plotted band. If NULL, bnames are
-retrieved from the input raster using \code{sprawl::get_rastinfo}, Default: NULL}
+\item{band_names}{\code{character (nbands)}, array of band names. These will used
+to populate the "strips" above each plotted band in case of multi-band plot.
+If NULL, bnames are retrieved from the input raster using \code{sprawl::get_rastinfo},
+Default: NULL}
 
-\item{bands_to_plot}{\code{numeric array}, array of band numbers to be plotted (in
+\item{bands_to_plot}{\code{numeric array}, array of band numbers to be plotted in
 case \code{in_rast} is multi-band. If NULL, all bands are plotted separately
 using facet_wrap, Default: NULL}
 
 \item{facet_rows}{\code{numeric}, number of rows used for plotting multiple bands,
-If NULL, one row for each band is used (to be changed !), Default: NULL}
+in faceted plots, Default: 2}
 
 \item{xlims}{\code{numeric(2)}, minimum and maximum x coordinates to be plotted.
 If NULL, the whole x-range is plotted, Default: NULL}
@@ -51,49 +91,56 @@ If NULL, the whole y-range is plotted, Default: NULL}
 \item{zlims}{\code{numeric array [2]} limits governing the range of
 values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
 
-\item{zlims_type}{\code{character} type of zlims specified.
+\item{zlims_type}{\code{character ["vals" | "percs"]} type of zlims specified.
 \itemize{
 \item "vals": zlims indicates the range of values to be plotted
 \item "percs": zlims indicates the range of percentiles to be plotted (e.g.,
 specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
-values between the 2nd to 98th percentile)
+values between the 2nd and 98th percentile). Ignored if \code{zlims} is not
+set, Default: "vals"
 }}
 
 \item{outliers_style}{\code{character ["censor" | "to_minmax"]} specifies how
 the values outside of the zlims range will be plotted.
 \itemize{
-\item If == "as_na" (the default), out of bounds values are plotted using the
-color specified for na.color;
-\item If == "recolor", they are plotted using the oob_high_color and oob_low_color
-arguments
-\item If == "to_minmax" they are plotted using the minimum and maximum colours
-of the current palette (using scales::squish())
-\code{scales::squish}
+\item If == "censor", they are plotted using the colors(s) specified in \code{outliers_color}
+\item If == "to_minmax", outliers are forced to the colors used for the maximum
+and minum values specified in \code{zlims} (using \code{scales::squish}), Default:
+\code{censor}.
 }}
 
-\item{outliers_colors}{\code{character (1/2)} specifies colors to be used to plot
-values outside zlims. If only one color is passed, both values above max(zlims)
+\item{outliers_colors}{\code{character array (length 1 or 2)} specifies colors to be
+used to plot values outside zlims if `outliers_style == "censor".
+If only one color is passed, both values above max(zlims) and below min(zlims)
 are plotted with the same color. If two colors are passed, the first color
-is used to plot values <. min(zlims) and the second to plot colors > max(zlims)}
+is used to plot values < min(zlims) and the second to plot colors > max(zlims),
+Default: c("grey10", "grey90")}
 
 \item{basemap}{\code{character} If not NULL and valid, the selected basemap is
-used as background. For a list of valid values, see \code{rosm::osm.types()},
+used as background. For a list of valid basemaps, see \code{rosm::osm.types()},
 Default: NULL}
 
 \item{zoomin}{\code{numeric}, Adjustment factor for basemap zoom. Negative values
 lead to less detailed basemap, but larger text. Default: 0}
 
-\item{borders_layer}{PARAM_DESCRIPTION, Default: NULL}
+\item{borders_layer}{\code{character} object of class \code{sf_POLYGON} or \code{sfc_polygon},
+(or cohercible to it using \code{sprawl::cast_vect}) to be overlayed to the plot,
+Default: NULL (no overlay)}
 
-\item{borders_color}{PARAM_DESCRIPTION, Default: 'grey15'}
+\item{borders_color}{color used to plot the boundaries of \code{borders_layer}
+(if provided), Default: 'grey15'}
 
-\item{borders_size}{PARAM_DESCRIPTION, Default: 0.2}
+\item{borders_size}{size used to plot the boundaries lines of \code{borders_layer}
+(if provided), Default: 0.2}
 
-\item{borders_txt_field}{PARAM_DESCRIPTION, Default: NULL}
+\item{borders_txt_field}{name of the column of \code{borders_layer} to be used to
+add text labels to \code{borders_layer} (if provided), Default: NULL (no labels)}
 
-\item{borders_txt_size}{PARAM_DESCRIPTION, Default: 1}
+\item{borders_txt_size}{size of the txt labels derived from \code{borders_layer},
+Default: 2}
 
-\item{borders_txt_color}{PARAM_DESCRIPTION, Default: 'grey15'}
+\item{borders_txt_color}{color of the txt labels derived from \code{borders_layer},
+Default: "grey15"}
 
 \item{scalebar}{\code{logical} If TRUE, add a scalebar on the bottom right corner,
 Default: TRUE}
@@ -109,46 +156,20 @@ Adjust this in case of overlap, Default: 0.30}
 values lead to higher transparency, Default: 0 (ignored if basemap == NULL)}
 
 \item{na.color}{\code{character}, color to be used to plot NA values,
-Default: 'grey50'. TO set to "invisible" use na.color = "transparent"}
+Default: 'transparent'.}
 
-\item{na.value}{\code{numeric}, Additional values to be treated as NA, Default: NA}
+\item{na.value}{\code{numeric}, Additional values to be treated as NA, Default: NULL}
 
-\item{palette_name}{name of the palette to be used. If NULL, the following
-defaults are used as a function of palette_type:
-\itemize{
-\item categorical --> "Set1"
-\item gradient    --> "Greens"
-\item diverging   --> "RdYlGn")
-Note that if a wrong palette name is specified, plot_rast_gg reverts to
-the default values. Run \code{RColorBrewer::display.brewer.all()} to see a list
-of available palettes, Default: NULL
-}}
+\item{show_axis}{\code{logical}, If FALSE, axis names and labels are suppressed,
+Default: TRUE}
 
-\item{direction}{DESCRIPTION NEEDEDD}
+\item{show_grid}{\code{logical}, If FALSE, graticule lines are suppressed,
+Default: TRUE}
 
-\item{leg_type}{DESCRIPTION NEEDEDD}
+\item{grid_color}{\code{character} color to be used to plot grid lines,
+Default: grey15"}
 
-\item{leg_labels}{\code{character (n_leg_breaks)} labels to be used in the legend
-\itemize{
-\item If palette_type is "categorical", the number of labels must correspond to
-the number of unique values of the raster to be plotted. If NULL or not valid,
-the legend will use the unique raster values in the legend (see examples)
-\item If palette_type is "gradient" or "diverging" the number of labels must be
-equal to the number of breaks specified by "leg_breaks". If this is not
-TRUE, leg_breaks and leg_labels are reset to \code{waiver()} (TBD),
-Default: NULL (the default ggplot2 \code{labels = waiver()} is used)
-}}
-
-\item{leg_breaks}{\code{numeric (n_leg_labels)} Values in the scale at which
-leg_labels must be placed (if palette_type != "categorical"). The number
-of breaks must be equal to the number of labels specified by "leg_labels".
-If this is not TRUE, leg_breaks and leg_labels are reset to \code{waiver()}
-(TBD)  Default: NULL (the default ggplot2 \code{labels = waiver()} is used)}
-
-\item{no_axis}{\code{logical}, If TRUE, axis names and labels are suppressed,
-Default: FALSE}
-
-\item{title}{\code{character}, Title of the plot, Default: NULL}
+\item{title}{\code{character}, Title of the plot, Default: "Raster Plot"}
 
 \item{subtitle}{Subtitle of the plot, Default: NULL}
 
@@ -157,12 +178,11 @@ Default: FALSE}
 
 \item{verbose}{\code{logical}, If FALSE, suppress processing message,
 Default: TRUE}
-
-\item{palette_type}{\code{character} Type of brewer color ramp to be used. Possible
-values are \code{gradient}, \code{diverging} and \code{categorical}, Default: 'gradient'}
 }
 \value{
-a \code{ggplot}
+a \code{gg} plot. It is plotted immeditely. If the call includes
+an assignment operator (e.g., \code{plot <- plot_rast_gg(in_rast))}, the plot is
+saved to the specified variable. Otherwise, it is plotted immediately.
 }
 \description{
 Plot a raster object using ggplot witn an (optional) basemap.
@@ -172,15 +192,19 @@ The function allows to:
 \code{facet_rows})
 \item Add an optional basemap to the plot, and adjust transparency of the
 overlayed raster (args \code{basemap}, \code{transparency})
-\item "Easily" select different palettes (args \code{palette_type}, \code{palette_name})
+\item "Easily" select different palettes (arg \code{palette_name})
 \item Easily control plotting limits on the z-dimension, specifying either
-values or quantiles ranges (args \code{zlims}, \code{zlims_type})
-\item "Easily" control breaks and labels in legends (args \code{leg_type}, \code{leg_breaks},
+values or quantiles ranges (args \code{zlims}, \code{zlims_type}), as well as how
+the outlier values are represented (args \code{outliers_style} and
+\code{outliers_color})
+\item Easily control breaks and labels in legends (args \code{leg_type}, \code{leg_breaks},
 \code{leg_labels})
-\item Automatically add a scalebar to the plot (args\code{scalebar}, \code{scalebar_dist})
-}
-
+\item Automatically add a scalebar to the plot (args\code{scalebar}, \code{scalebar_dist},
+\code{scalebar_txt_dist}, \code{scalebar_txt_size})
+\item Easily add an additional "vector" layer (e.g., administrative boundaries)
+(args\code{borders_layer}, \code{borders_color}, \code{borders_....})
 See the description of the arguments for details on their use
+}
 }
 \examples{
 \dontrun{
@@ -194,7 +218,7 @@ See the description of the arguments for details on their use
  #Change basemap and transparency
  plot_rast_gg(in_rast, basemap = "stamenbw",
                   palette_name = "RdYlBu",
-                  no_axis = T,
+                  show_axis = T,
                   na.value = 0, na.color = "transparent",
                   transparency = 0.2,
                   title = "OLI - 15/06/2017",
@@ -212,20 +236,22 @@ See the description of the arguments for details on their use
  in_rast <- raster::stack(system.file("extdata/REYE_test",
                           "REYE_2016_185_gNDVI.tif",
                           package = "sprawl.data"))
- #vanilla
+ #vanilla, with borders added
+ borders <- get_boundaries("ITA", 3)
  plot_rast_gg(in_rast,
              palette_name = "RdYlBu",
-             title = "gNDVI - 14/03/2016", subtitle = "From RapidEye")
+             title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
+             borders_layer = borders, borders_txt_field = "NAME_3")
 
  # limits adjusted on the 10th and 99.9th percentile to remove very low
  # values outliers and better use the palette on high values (note that
  # outliers can be set as transparent!) + increase maxpixels to plot at
  # full resolution.
- plot_rast_gg(in_rast, basemap = "osm", maxpixels = 100e5,
+ plot_rast_gg(in_rast, basemap = "osm", maxpixels = 500e5,
              palette_name = "RdYlBu",
              zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
-             outliers_style = "recolor",
+             outliers_style = "censor",
              outliers_colors = c("transparent", "purple"))
 
  # Adjust `maxpixels` to speed-up rendering by sacrificing quality
@@ -233,8 +259,7 @@ See the description of the arguments for details on their use
              palette_name = "RdYlBu",
              zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
-             outliers_style = "recolor",
-             outliers_colors = c("transparent", "purple"),
+             outliers_style = "to_minmax",
              leg_type = "discrete")
 }
 }

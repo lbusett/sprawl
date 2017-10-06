@@ -38,6 +38,7 @@ convert_rastdtype <- function(dtype_string, type){
   # "CFloat32",   "1"
   # "CFloat64",   "1"
   # )
+
   if (type == "raster") {
     lines <- sapply(dtype_string,
                     FUN = function(x){which(dtype_table$raster == x)},

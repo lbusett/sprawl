@@ -31,6 +31,7 @@ add_scale_fill <- function(plot,
                            direction,
                            ...) {
 
+  if (!exists("trans")) trans <- NULL
   # ____________________________________________________________________________
   # Qualitative palette: use scal_fill_hue or scale_fill_brewer             ####
   # TODO add support for manual categorical fill scale
@@ -63,7 +64,7 @@ add_scale_fill <- function(plot,
                          scales::squish, scales::censor), #nolint
         direction = direction,
         na.value = ifelse(is.null(na.color), "grey50", na.color),
-        trans    = ifelse(!exists("trans"), "identity", trans)
+        trans    = ifelse(is.null(trans), "identity", trans)
       )
     }
   }

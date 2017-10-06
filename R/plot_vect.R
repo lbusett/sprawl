@@ -1,45 +1,133 @@
-#' @title plot a map based on a 'vector' object
-#' @description FUNCTION_DESCRIPTION
-#' @param in_data PARAM_DESCRIPTION
+#' @title plot a map based on a `vector` object using `ggplot::geom_sf``
+#' @description Plot a raster object using ggplot witn an (optional) basemap.
+#'   The function allows to:
+#'   - Plot either only the geometry of `in_vect`, or a map with different
+#'     fill colors based on a column of `in_vect`;
+#'   - Plot a single- or multi-band image using facet_wrap (args `facet_var`,
+#'    `facet_rows`);
+#'   - "Easily" select different palettes (arg `palette_name`) for the fill
+#'     variable;
+#'   - Easily control plotting limits on the z-dimension, specifying either
+#'     values or quantiles ranges (args `zlims`, `zlims_type`), as well as how
+#'     the outlier values are represented (args `outliers_style` and
+#'     `outliers_color`)
+#'   - Easily control breaks and labels in legends (args `leg_type`, `leg_breaks`,
+#'     `leg_labels`, `leg_position`)
+#'   - Automatically add a scalebar to the plot (args`scalebar`, `scalebar_dist`,
+#'     `scalebar_txt_dist`, `scalebar_txt_size`)
+#'   - Easily add an additional "vector" layer (e.g., administrative boundaries)
+#'     (args `borders_layer`, `borders_color`, `borders_....`)
+#' See the description of the arguments for details on their use
+#' @param in_vect object of class `sfc_POLYGON` (or coercible to it using
+#'  `sprawl::cast_vect)
 #' @param line_color `character` color used to plot the polygon borders of
-#'   in_data
+#'  `in_vect`
 #' @param line_size `numeric` size of lines used to plot the polygons borders of
-#'   in_data, Default: 0.2
-#' @param fill_var PARAM_DESCRIPTION, Default: NULL
-#' @param transparency PARAM_DESCRIPTION, Default: 0
-#' @param facet_var PARAM_DESCRIPTION, Default: NULL
-#' @param facet_rows PARAM_DESCRIPTION, Default: NULL
-#' @param borders_layer PARAM_DESCRIPTION, Default: NULL
-#' @param borders_color PARAM_DESCRIPTION, Default: 'grey15'
-#' @param borders_size PARAM_DESCRIPTION, Default: 0.2
-#' @param borders_txt_field PARAM_DESCRIPTION, Default: NULL
-#' @param borders_txt_size PARAM_DESCRIPTION, Default: 1
-#' @param borders_txt_color PARAM_DESCRIPTION, Default: 'grey15'
-#' @param basemap PARAM_DESCRIPTION, Default: NULL
-#' @param zoomin PARAM_DESCRIPTION, Default: 0
-#' @param xlims PARAM_DESCRIPTION, Default: NULL
-#' @param ylims PARAM_DESCRIPTION, Default: NULL
-#' @param zlims PARAM_DESCRIPTION, Default: NULL
-#' @param zlims_type PARAM_DESCRIPTION, Default: 'vals'
-#' @param outliers_style PARAM_DESCRIPTION, Default: 'recolor'
-#' @param outliers_colors PARAM_DESCRIPTION, Default: c("grey10", "grey90")
-#' @param scalebar PARAM_DESCRIPTION, Default: FALSE
-#' @param scalebar_dist PARAM_DESCRIPTION, Default: NULL
-#' @param na.color PARAM_DESCRIPTION, Default: NULL
-#' @param na.value PARAM_DESCRIPTION, Default: NULL
-#' @param palette_name PARAM_DESCRIPTION, Default: NULL
-#' @param direction PARAM_DESCRIPTION, Default: 1
-#' @param leg_type PARAM_DESCRIPTION, Default: NULL
-#' @param leg_labels PARAM_DESCRIPTION, Default: NULL
-#' @param leg_breaks PARAM_DESCRIPTION, Default: NULL
-#' @param leg_position PARAM_DESCRIPTION, Default: 'right'
-#' @param no_axis PARAM_DESCRIPTION, Default: FALSE
-#' @param title PARAM_DESCRIPTION, Default: 'Vector Plot'
-#' @param subtitle PARAM_DESCRIPTION, Default: NULL
-#' @param theme PARAM_DESCRIPTION, Default: theme_bw()
-#' @param grid PARAM_DESCRIPTION, Default: FALSE
-#' @param verbose PARAM_DESCRIPTION, Default: TRUE
-#' @return OUTPUT_DESCRIPTION
+#'  in_vect, Default: 0.2
+#' @param fill_var `character` name of the column of `in_vect` to be used for
+#'  coloring the different polygons. If NULL, only the goemetry is plotted,
+#'  Default: NULL
+#' @param transparency `numeric [0, 1]`transparency of the filled polygons. Higher
+#'   values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)
+#' @param facet_var `character` name of a column of `in_vect` to be used for
+#'  making different facets of the plot. Useful in case multiple values of `fill_var`
+#'  are available for each polygon, according to a grouping variable.
+#'  If NULL, multiple values of `fill_var` for the same polygon are ignored
+#'  (the first value found is used), Default: NULL (see examples)
+#' @param facet_rows `numeric`, number of rows used for plotting multiple bands,
+#'   in faceted plots, Default: 2 (Ignored if `fill_var` == NULL)
+#' @param borders_layer `character` object of class `sf_POLYGON` or `sfc_polygon`,
+#'   (or cohercible to it using `sprawl::cast_vect`) to be overlayed to the plot,
+#'   Default: NULL (no overlay)
+#' @param borders_color color used to plot the boundaries of `borders_layer`
+#'   (if provided), Default: 'grey15'
+#' @param borders_size size used to plot the boundaries lines of `borders_layer`
+#'   (if provided), Default: 0.2
+#' @param borders_txt_field name of the column of `borders_layer` to be used to
+#'   add text labels to `borders_layer` (if provided), Default: NULL (no labels)
+#' @param borders_txt_size size of the txt labels derived from `borders_layer`,
+#'   Default: 2
+#' @param borders_txt_color color of the txt labels derived from `borders_layer`,
+#'   Default: "grey15"
+#' @param basemap `character` If not NULL and valid, the selected basemap is
+#'   used as background. For a list of valid basemaps, see `rosm::osm.types()`,
+#'   Default: NULL (Currently not yet supported!)
+#' @param zoomin `numeric`, Adjustment factor for basemap zoom. Negative values
+#'   lead to less detailed basemap, but larger text. Default: 0 (Currently not
+#'   yet supported!)
+#' @param zlims `numeric array [2]` limits governing the range of
+#'  values to be plotted (e.g., c(0.2,0.4)), Default: NULL
+#' @param zlims_type `character ["vals" | "percs"]` type of zlims specified.
+#'   - "vals": zlims indicates the range of values to be plotted
+#'   - "percs": zlims indicates the range of percentiles to be plotted (e.g.,
+#'      specifying zlims = c(0.02, 0.98), zlim_type = "percs" will plot the
+#'      values between the 2nd and 98th percentile). Ignored if `zlims` is not
+#'      set, Default: "vals"
+#' @param outliers_style `character ["censor" | "to_minmax"]` specifies how
+#'   the values outside of the zlims range will be plotted.
+#'   - If == "censor", they are plotted using the colors(s) specified in `outliers_color`
+#'   - If == "to_minmax", outliers are forced to the colors used for the maximum
+#'     and minum values specified in `zlims` (using `scales::squish`), Default:
+#'     `censor`.
+#' @param outliers_colors `character array (length 1 or 2)` specifies colors to be
+#'   used to plot values outside zlims if `outliers_style == "censor".
+#'   If only one color is passed, both values above max(zlims) and below min(zlims)
+#'   are plotted with the same color. If two colors are passed, the first color
+#'   is used to plot values < min(zlims) and the second to plot colors > max(zlims),
+#'   Default: c("grey10", "grey90")
+#' @param scalebar `logical` If TRUE, add a scalebar on the bottom right corner,
+#'   Default: TRUE
+#' @param scalebar_dist `numeric` Width of the scale bar (in km). If NULL, it
+#'   is computed automatically on the basis of the range in x direction,
+#'   Default: NULL
+#' @param scalebar_txt_dist `numeric` Distance between scalebar and its labels.
+#'   Adjust this in case of overlap, Default: 0.30
+#' @param na.color `character`, color to be used to plot NA values,
+#'   Default: 'transparent'.
+#' @param na.value `numeric`, Additional values of `fill_var` to be treated as
+#'  NA, Default: NULL
+#' @param palette_name `character` name of the palette to be used to "color" the raster.
+#'  If NULL, the following defaults are used as a function of variable type:
+#'  - categorical --> "hue"
+#'  - continuous  --> "Greys"
+#'  Note that if a wrong palette name is specified, plot_rast_gg reverts to
+#'  the default values. Run `sprawl::fillpals()` to see a list
+#'  of available palettes, Default: NULL
+#' @param direction `character [0 | 1]` direction of the color legend. Chenge this
+#'  to invert the color gradient, Default: 1
+#' @param leg_type `character ["continuous", "discrete"]` type of legend to be used
+#'  on continuous variables. If "continuous" , a colourbar is used. If "discrete",
+#'  a discretized version is used (see examples).#'
+#' @param leg_labels `character (n_leg_breaks)` labels to be used for the legend
+#'   - If `rast_type` == "categorical", the number of labels must correspond to
+#'   the number of unique values of the raster to be plotted. If NULL or not valid,
+#'   the legend will use the unique raster values in the legend (see examples)
+#'   - If `rast_type` ==  "continuous" the number of labels must be
+#'     equal to the number of breaks specified by "leg_breaks". If this is not
+#'     TRUE, `leg_breaks` and `leg_labels` are reset to `waiver()` (TBD),
+#'     Default: NULL (the default ggplot2 `labels = waiver()` is used)
+#' @param leg_breaks `numeric (n_leg_labels)` Values in the scale at which
+#'   leg_labels must be placed (if rast_type != "categorical"). The number
+#'   of breaks must be equal to the number of labels specified by "leg_labels".
+#'   If this is not TRUE, `leg_breaks` and `leg_labels` are reset to `waiver()`
+#'   (TBD)  Default: NULL (the default ggplot2 `labels = waiver()` is used)
+#' @param leg_position `character ["right" | "bottom"]` Specifies if plotting
+#'   the legend on the right or on the bottom. Default: "right"
+#' @param show_axis `logical`, If FALSE, axis names and labels are suppressed,
+#'   Default: TRUE
+#' @param show_grid `logical`, If FALSE, graticule lines are suppressed,
+#'   Default: TRUE
+#' @param grid_color `character` color to be used to plot grid lines,
+#'  Default: grey15"
+#' @param title `character`, Title of the plot, Default: "Vector Plot"
+#' @param subtitle Subtitle of the plot, Default: NULL
+#' @param theme `theme function` ggplot theme to be used
+#' (e.g., theme_light()), Default: theme_bw()
+#' @param verbose `logical`, If FALSE, suppress processing message,
+#'  Default: TRUE
+#' @return a `gg` plot. It is plotted immeditely. If the call includes
+#'  an assignment operator (e.g., `plot <- plot_vect(in_vect))`, the plot is
+#'  saved to the specified variable. Otherwise, it is plotted immediately.
 #' @details DETAILS
 #' @examples
 #' \dontrun{
@@ -55,7 +143,7 @@
 #'  plot_vect(in_vect, fill_var = "NAME_2")
 #'
 #'  # change the palette, add a scalebar and remove the grid
-#'  plot_vect(in_vect, fill_var = "NAME_2",no_axis = F, palette_name = "Set3",
+#'  plot_vect(in_vect, fill_var = "NAME_2",show_axis = F, palette_name = "Set3",
 #'            scalebar = TRUE, grid = FALSE)
 #'
 #'
@@ -65,8 +153,8 @@
 #'  plot_vect(in_vect, fill_var = "population", facet_var = "year",
 #'            palette = "RdYlBu", scalebar = T, scalebar_dist = 50,
 #'            grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"),
-#'            borders_layer = get_boundaries("ITA", level = 0),
-#'            borders_color = "red")
+#'            borders_layer = get_boundaries("ITA", level = 2),
+#'            borders_color = "red", borders_txt_field = "NAME_2")
 #'
 #'  }
 #' }
@@ -76,7 +164,6 @@
 #' @importFrom assertthat assert_that
 #' @importFrom RColorBrewer brewer.pal.info
 #' @importFrom rosm osm.types
-#' @importFrom scales squish censor
 #' @importFrom sf st_transform
 #' @importFrom grid unit
 #' @importFrom methods is
@@ -88,36 +175,36 @@
 #'  geom_polygon scale_colour_manual guides guide_legend scale_color_manual
 #'  coord_fixed geom_sf aes_string coord_sf margin guide_colourbar element_line
 plot_vect <- function(
-  in_data,
+  in_vect,
   line_color    = "black", line_size     = 0.2,
   fill_var      = NULL, transparency = 0,
   facet_var     = NULL, facet_rows     = NULL,
   borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
-  borders_txt_field = NULL, borders_txt_size = 2.5, borders_txt_color = "grey15",
+  borders_txt_field = NULL, borders_txt_size = 2.5, borders_txt_color = "grey15", #nolint
   basemap        = NULL, zoomin = 0,
   xlims          = NULL, ylims = NULL,
   zlims          = NULL, zlims_type = "vals",
-  outliers_style = "recolor", outliers_colors = c("grey10", "grey90"),
-  scalebar       = FALSE, scalebar_dist = NULL,
+  outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
+  scalebar       = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
   na.color       = NULL,  na.value = NULL,
   palette_name   = NULL,  direction = 1,
-  leg_type       = NULL,  leg_labels = NULL, leg_breaks = NULL,
-  leg_position   = "right",
-  no_axis        = FALSE, title = "Vector Plot", subtitle = NULL,
-  theme          = theme_bw(), grid = FALSE,
+  leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL, leg_position = "right", #nolint
+  show_axis      = FALSE, show_grid = TRUE, grid_color = "grey15",
+  title          = "Vector Plot", subtitle = NULL,
+  theme          = theme_bw(),
   verbose        = TRUE
 ) {
 
-  geometry <- category <- color <- NULL
+  geometry <- color <- NULL
 
   assertthat::assert_that(
-    methods::is(in_data, "sf"),
-    msg = "plot_vect --> `in_data` is not a valid `sf` object. Aborting!"
+    methods::is(in_vect, "sf"),
+    msg = "plot_vect --> `in_vect` is not a valid `sf` object. Aborting!"
   )
 
   if (!is.null(facet_var)) {
 
-    if (!class(in_data[[facet_var]]) %in% c("character", "factor")) {
+    if (!class(in_vect[[facet_var]]) %in% c("character", "factor")) {
       warning("The Specified `facet_var` is not of class `character` or",
               "`factor`. It will be ignored.")
       facet_var <- NULL
@@ -139,14 +226,14 @@ plot_vect <- function(
 
   if (is.null(fill_var)) {
     warning("`fill_var` not specified. Only the geometry will be plotted!")
-    fill_var     <- names(in_data)[1]
+    fill_var     <- names(in_vect)[1]
     na.color     <- "transparent"
     palette_type <- "qual"
     no_fill <- TRUE
   } else {
     # check the class of fill_var. If it is a factoror a character, palette_type
     # is set to "qual", otherwise to "cont".
-    cls_fill_var <- class(in_data[[fill_var]])
+    cls_fill_var <- class(in_vect[[fill_var]])
     if (cls_fill_var %in% c("factor", "character")) {
       palette_type <- "qual"
     } else {
@@ -159,11 +246,11 @@ plot_vect <- function(
   # Set default palettes for different categories and get info
   # on valid pals
 
-  def_palettes = list(qual = "Set3",
-                      cont  = "Greens")
+  def_palettes = list(qual = "hue",
+                      cont  = "Greys")
   def_legtypes = list(qual = "legend",
                       cont  = "colourbar")
-  fill_pals   <- sprawl_fillpals()
+  fill_pals   <- fillpals()
   valid_pals  <- fill_pals[fill_pals$cont_qual == palette_type,]
 
 
@@ -211,25 +298,25 @@ plot_vect <- function(
   #   if (verbose) {
   #     message("plot_rast_gg --> Reprojecting the input raster to epsg:3857")
   #   }
-  #   in_data <- sf::st_transform(in_data, "+init=epsg:3857")
+  #   in_vect <- sf::st_transform(in_vect, "+init=epsg:3857")
   # }
 
   #   __________________________________________________________________________
   #   set x/y limits                                                        ####
 
   if (is.null(xlims)) {
-    xlims <- get_extent(in_data)@extent[c(1,3)]
+    xlims <- get_extent(in_vect)@extent[c(1,3)]
   }
 
   if (is.null(ylims)) {
-    ylims <- get_extent(in_data)@extent[c(2,4)]
+    ylims <- get_extent(in_vect)@extent[c(2,4)]
   }
 
   #   _________________________________________________________________________
   #   if additional NA value passed, convert corresponding values of
   #   fill_var column to NA ####
   if (!is.null(na.value)) {
-    in_data[which(in_data[fill_var] == na.value),][fill_var] <- NA
+    in_vect[which(in_vect[fill_var] == na.value),][fill_var] <- NA
   }
 
   #   _________________________________________________________________________
@@ -237,7 +324,7 @@ plot_vect <- function(
   #   rendering
   if (!is.null(na.color)) {
     if (na.color == "transparent")  {
-      in_data <- in_data[!is.na(in_data[[fill_var]]),]
+      in_vect <- in_vect[!is.na(in_vect[[fill_var]]),]
     }
   }
 
@@ -246,7 +333,7 @@ plot_vect <- function(
 
   if (!is.null(zlims) & zlims_type == "percs") {
 
-    all_lims <- stats::quantile(in_data[[fill_var]], zlims, na.rm = TRUE)
+    all_lims <- stats::quantile(in_vect[[fill_var]], zlims, na.rm = TRUE)
     zlims <- c(min(all_lims[]), max(all_lims[2]))
 
   }
@@ -256,19 +343,19 @@ plot_vect <- function(
   if (palette_type != "qual") {
     if (!is.null(zlims)) {
       #   ____________________________________________________________________________
-      #   If oob_style == "recolor" create additional data tables                 ####
+      #   If outliers_style == "censor" create additional data tables                 ####
       #   containing only values above / below limits
-      if (outliers_style == "recolor") {
+      if (outliers_style == "censor") {
 
-        out_low_tbl  <- in_data[which(in_data[[fill_var]] < zlims[1]),]
-        out_high_tbl <- in_data[which(in_data[[fill_var]] > zlims[2]),]
+        out_low_tbl  <- in_vect[which(in_vect[[fill_var]] < zlims[1]),]
+        out_high_tbl <- in_vect[which(in_vect[[fill_var]] > zlims[2]),]
 
         if (out_high_color == "transparent") {
-          in_data <- in_data[which(in_data[[fill_var]] < zlims[2]),]
+          in_vect <- in_vect[which(in_vect[[fill_var]] < zlims[2]),]
         }
 
         if (out_low_color == "transparent") {
-          in_data <- in_data[which(in_data[[fill_var]] > zlims[1]),]
+          in_vect <- in_vect[which(in_vect[[fill_var]] > zlims[1]),]
         }
 
       }
@@ -277,9 +364,9 @@ plot_vect <- function(
   #   __________________________________________________________________________
   #   If no scalebar dist passed, compute automatically from longitude     ####
   #   range
-  units <- get_projunits(get_proj4string(in_data))
+  units <- get_projunits(get_proj4string(in_vect))
   if (is.null(scalebar_dist)) {
-      if (units != "dec.degrees") {
+    if (units != "dec.degrees") {
       km_extent     <- round(diff(xlims)/1000)
       scalebar_dist <- round(round(km_extent/10) / 5) * 5
     } else {
@@ -297,12 +384,11 @@ plot_vect <- function(
   # Blank plot
   plot <- ggplot() +
     theme +
-    scale_x_continuous(
-      expand = expand_scale(mult = c(0.005,0.005)),
-      limits = c(xlims[1], xlims[2])) +
-    scale_y_continuous(
-      expand = expand_scale(mult = c(0.005,0.005)),
-      limits = c(ylims[1], ylims[2])) +
+    coord_sf(crs = get_proj4string(in_vect), ndiscr = 1000,
+             expand = FALSE,
+             xlim = c(xlims[1], xlims[2]),
+             ylim = c(ylims[1], ylims[2])) +
+    theme(axis.title.x = element_blank(), axis.title.y = element_blank()) +
     ggtitle(title, subtitle = subtitle)
 
   #   __________________________________________________________________________
@@ -313,13 +399,13 @@ plot_vect <- function(
   #     osm_plot <- suppressMessages(
   #       ggspatial::geom_osm(zoomin = zoomin, type = basemap, progress = "text")
   #     )
-  #     vect <- fortify(as(in_data, "Spatial"))
+  #     vect <- fortify(as(in_vect, "Spatial"))
   #     names(vect)[1:2] <- (c("x","y"))
-  #     plot + osm_plot + geom_spatial(as(in_data, "Spatial"), aes(x = long, y = lat, fill = NAME_2))
+  #     plot + osm_plot + geom_spatial(as(in_vect, "Spatial"), aes(x = long, y = lat, fill = NAME_2))
   #
   #
   #     bmap <- get_map(sp::bbox(
-  #       as(sf::st_transform(as(get_extent(in_data), "sfc_POLYGON"), 4326), "Spatial")
+  #       as(sf::st_transform(as(get_extent(in_vect), "sfc_POLYGON"), 4326), "Spatial")
   #       ), maptype = "roadmap")
   #     plot <- plot + ggmap(bmap)
   #   }
@@ -327,14 +413,13 @@ plot_vect <- function(
   #   __________________________________________________________________________
   #   Add the fill                                                          ####
   if (no_fill) {
-    plot <- plot + geom_sf(data = in_data,
+    plot <- plot + geom_sf(data = in_vect,
                            fill  = "transparent",
                            color = line_color,
-                           size  = line_size) +
-      coord_sf(xlim = xlims, ylim = ylims)
+                           size  = line_size)
   } else {
 
-    plot <- plot + geom_sf(data = in_data,
+    plot <- plot + geom_sf(data = in_vect,
                            aes_string(fill = fill_var),
                            size  = line_size,
                            color = line_color,
@@ -355,18 +440,23 @@ plot_vect <- function(
                            outliers_style,
                            direction)
     plot <- plot + theme(legend.justification = "center",
-                         legend.box.spacing = grid::unit(0.5,"points"))
+                         legend.box.spacing = grid::unit(10,"points"))
   }
 
+
+  #   __________________________________________________________________________
+  #   put legend on bottom if requested                                     ####
   if (leg_position == "bottom") {
     plot <- plot + theme(legend.position = "bottom")
     if (palette_type == "qual" | leg_type == "legend") {
       plot <- plot + guides(fill = guide_legend(title.position = "bottom",
                                                 title.hjust = 0.5))
     } else {
+
       plot <- plot + guides(
         fill = guide_colourbar(title.position = "bottom",
-                               title.hjust = 0.5))
+                               title.hjust = 0.5,
+                               barwidth = grid::unit(0.5 , "npc")))
     }
   }
 
@@ -374,9 +464,9 @@ plot_vect <- function(
   #   Facet the plot if a proper faceting variable was passed               ####
 
   if (!is.null(facet_var)) {
-    in_data[[facet_var]] <- as.factor(in_data[[facet_var]])
+    in_vect[[facet_var]] <- as.factor(in_vect[[facet_var]])
     if (is.null(facet_rows)) {
-      facet_rows <- floor(length(unique(in_data[[facet_var]])) / 2)
+      facet_rows <- floor(length(unique(in_vect[[facet_var]])) / 2)
     }
     plot <- plot + facet_wrap(as.formula(paste("~", facet_var)),
                               nrow = facet_rows, drop = T)
@@ -384,9 +474,9 @@ plot_vect <- function(
 
 
   #   ____________________________________________________________________________
-  #   if oob_style = recolor, add "layers" corresponding to oob data          ####
+  #   if oob_style = censor, add "layers" corresponding to oob data          ####
 
-  if (outliers_style == "recolor" & !is.null(zlims)) {
+  if (outliers_style == "censor" & !is.null(zlims)) {
 
     if (length(unique(outliers_colors)) == 1) {
 
@@ -447,13 +537,14 @@ plot_vect <- function(
   ##  If borders passed, add a "borders" layer                              ####
 
   if (!is.null(borders_layer)) {
-    borders <- sf::st_transform(borders_layer, get_proj4string(in_data))
+    borders <- sf::st_transform(borders_layer, get_proj4string(in_vect))
     # %>%
-    #   crop_vect(in_data)
+    #   crop_vect(in_vect)
     plot    <- plot + geom_sf(data  = borders,
                               fill  = "transparent",
                               color = borders_color,
-                              size  = borders_size)
+                              size  = borders_size) +
+      coord_sf(xlim = xlims, ylim = ylims)
     if (!is.null(borders_txt_field)) {
       if(borders_txt_field %in% names(borders)) {
         borders <- borders %>%
@@ -482,20 +573,14 @@ plot_vect <- function(
 
   if (scalebar) {
 
-    # coord_cartesian(xlim = xlims, ylim = ylims) +
     plot <- plot +
-      sprawl_scalebar(
-        dd2km = ifelse(units == "dec.degrees", TRUE, FALSE),
-        dist = scalebar_dist,
-        x.min = xlims[1], x.max = xlims[2],
-        y.min = ylims[1], y.max = ylims[2],
-        location = "bottomright", st.size = 3.5,
-        st.bottom = FALSE, model = NULL,
-        st.dist = 0.025, units = "km"
-      ) + theme(axis.title.x = element_blank(),
-                axis.ticks.x = element_blank(),
-                axis.title.y = element_blank(),
-                axis.ticks.y = element_blank())
+      sprawl_scalebar(in_vect,
+                      scalebar_dist  = scalebar_dist,
+                      x.min = xlims[1], x.max = xlims[2],
+                      y.min = ylims[1], y.max = ylims[2],
+                      location = "bottomright", st.size = 3.5,
+                      st.bottom = FALSE, model = NULL,
+                      st.dist = scalebar_txt_dist, units = rastinfo$units)
 
     #   _________________________________________________________________________
     # Center the title - can be overriden in case after plot completion      ####
@@ -503,13 +588,13 @@ plot_vect <- function(
       theme(plot.title = element_text(hjust = 0.5),
             panel.background = element_rect(fill = "transparent"))
 
-    if (!grid) {
+    if (!show_grid) {
       plot <- plot + theme(
         panel.grid.major = element_line(size = 0, color = "transparent"))
     }
 
-    # Remove axes if no_axis == TRUE
-    if (no_axis) {
+    # Remove axes if show_axis == TRUE
+    if (!show_axis) {
 
       plot <- plot  +
         theme(axis.title.x = element_blank(),
