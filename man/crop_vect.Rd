@@ -4,16 +4,16 @@
 \alias{crop_vect}
 \title{crop a vector on the extent of a different spatial file}
 \usage{
-crop_vect(in_vect, in_obj, to_file = FALSE, as_sp = FALSE)
+crop_vect(in_vect, in_obj, out_file = NULL, verbose = TRUE)
 }
 \arguments{
 \item{in_vect}{PARAM_DESCRIPTION}
 
 \item{in_obj}{PARAM_DESCRIPTION}
 
-\item{to_file}{PARAM_DESCRIPTION, Default: FALSE}
+\item{out_file}{PARAM_DESCRIPTION, Default: FALSE}
 
-\item{as_sp}{PARAM_DESCRIPTION, Default: FALSE}
+\item{verbose}{PARAM_DESCRIPTION, Default: FALSE}
 }
 \value{
 OUTPUT_DESCRIPTION

@@ -1,23 +1,22 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param plot PARAM_DESCRIPTION
-#' @param palette PARAM_DESCRIPTION
-#' @param title PARAM_DESCRIPTION
-#' @param na.color PARAM_DESCRIPTION
-#' @param zlims PARAM_DESCRIPTION
-#' @param leg_breaks PARAM_DESCRIPTION
-#' @param leg_labels PARAM_DESCRIPTION
-#' @param leg_type PARAM_DESCRIPTION
-#' @param outliers_style PARAM_DESCRIPTION
-#' @param direction PARAM_DESCRIPTION
-#' @param ... PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title add a scale_fill palette to a ggplot
+#' @description helper function to `plot_rast_gg` and `plot_vect` which adds
+#'  and customizes the scale_fill palette based on characteristics of the plot
+#'  (e.g., categorical or continuous variable), selected palette and options
+#'  concerning treatment of outliers.
+#' @param plot `gg` object to which the fill scale has to be added.
+#' @param palette `data.frame (1)` Line of the d.f. created by `fillpals`
+#'  corresponding to the desired palette.
+#' @param title `character` Name to be used as title in the palette legend.
+#' @inheritParams plot_vect
+#' @param ... any other parameter to be passed to `ggplot::scale_fill_brewer` or
+#'  `ggplot::scale_fill_hue`
+#' @return The function is called for its side effects.
 #' @rdname add_scale_fill
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom scales squish censor
 #' @importFrom ggplot2 aes_string scale_fill_brewer scale_fill_hue
 #'   scale_fill_distiller
+
 
 add_scale_fill <- function(plot,
                            palette,

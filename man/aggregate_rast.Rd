@@ -4,14 +4,15 @@
 \alias{aggregate_rast}
 \title{aggregate_rast}
 \usage{
-aggregate_rast(in_rast_values, zones_rast, FUN = mean, maxchunk = 5e+07,
-  method = "fastdisk", to_file = FALSE, out_file = NULL,
-  nodata_out = -Inf, verbose = TRUE)
+aggregate_rast(in_val_rast, in_zones_rast, FUN = mean, maxchunk = 5e+07,
+  method = "disk", out_type = "rastobject", out_file = NULL,
+  nodata_in = NULL, verbose = TRUE, overwrite = FALSE)
 }
 \arguments{
-\item{in_rast_values}{PARAM_DESCRIPTION}
+\item{in_val_rast}{Object of class \code{Raster*} or filename corresponding to a
+valid raster file}
 
-\item{zones_rast}{PARAM_DESCRIPTION}
+\item{in_zones_rast}{PARAM_DESCRIPTION}
 
 \item{FUN}{PARAM_DESCRIPTION, Default: mean}
 
@@ -19,13 +20,12 @@ aggregate_rast(in_rast_values, zones_rast, FUN = mean, maxchunk = 5e+07,
 
 \item{method}{PARAM_DESCRIPTION, Default: 'fastdisk'}
 
-\item{to_file}{PARAM_DESCRIPTION, Default: FALSE}
-
 \item{out_file}{PARAM_DESCRIPTION, Default: NULL}
 
-\item{nodata_out}{PARAM_DESCRIPTION, Default: NA}
-
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
+
+\item{overwrite}{\code{logical} If TRUE, existing files are ovewritten,
+Default: FALSE}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -40,7 +40,20 @@ DETAILS
 }
 \examples{
 \dontrun{
- #EXAMPLE1
+ in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+                                         package = "sprawl.data")
+ in_rast      <- read_rast(in_file, bands = 20)
+ tempraster   <- tempfile(fileext = ".tif")
+ in_obj_zones <- raster::aggregate(in_rast,
+                                     fact      = 4,
+                                     filename  = tempraster,
+                                     overwrite = T)
+ test <- aggregate_rast(in_rast,
+                        in_obj_zones,
+                        FUN     = mean,
+                        method  = "fastdisk",
+                        to_file = FALSE,
+                        verbose = FALSE)
  }
 }
 \author{

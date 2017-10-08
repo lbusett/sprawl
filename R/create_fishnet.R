@@ -17,14 +17,20 @@
 #'   dimensions of the desired #' cells in the x and y directions (if only one
 #'   element is provided, the same cellsize is used in each direction),
 #'   Default: NULL
-#' @param exact_csize `logical` PARAM_DESCRIPTION
-#' @param to_file `logical` PARAM_DESCRIPTION, Default: FALSE
-#' @param out_shape `logical` PARAM_DESCRIPTION, Default: FALSE
-#' @param overwrite `logical` PARAM_DESCRIPTION, Default: TRUE
+#' @param exact_csize `logical` If TRUE, the function strictly adheres to what
+#'   specified in `cellsize` or `pix_for_cell` (i.e., it doesn't alter the fishnet
+#'   cell to get a regualr fishnet over the raster). The last column/row of the
+#'   fisnhet have therefore a different area, but the other cells respect what
+#'   specified by the user (i.e., having a regular 2x2 km grid).
+#' @param to_file `logical` PARAM_DESCRIPTION, Default: FALSE.
+#' @param out_shape `logical` PARAM_DESCRIPTION, Default: FALSE.
+#' @param overwrite `logical` PARAM_DESCRIPTION, Default: TRUE.
 #' @param crop_layer `logical` object of class `Extent`. If not null, the
 #'   fishnet is cropped on this extent, without "moving" the nodes of the grid.
 #'   This is useful to crop a grid created on the basis of a different raster
-#'   coordinates on top of a different raster, Default: FALSE
+#'   coordinates on top of a different raster, Default: FALSE.
+#' @param verbose `logical` If FALSE, processing messages are suppressed,
+#'   Default: TRUE.
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -69,10 +75,14 @@ create_fishnet <- function(in_rast,
                            to_file      = FALSE,
                            out_shape    = NULL,
                            overwrite    = TRUE,
-                           crop_layer   = NULL) {
+                           crop_layer   = NULL,
+                           verbose      = TRUE) {
 
   #TODO modify the out_shape/to_file structure. Only use "out_filename"
 
+  call <- match.call()
+  if (verbose) message("create_fishnet --> Creating Fishnet over ",
+                       call[[2]])
   #   __________________________________________________________________________
   #   Check the arguments                                                   ####
   #
@@ -118,7 +128,7 @@ create_fishnet <- function(in_rast,
                                  what = "polygons")
     fish <- sf::st_sf(cell_id = seq_len(length(geometry)[1]),
                       geometry = geometry) %>%
-      crop_vect(in_rast)
+      crop_vect(in_rast, verbose = verbose)
   } else {
     ext_poly <- as(out_ext , "sfc_POLYGON")
     geometry <- sf::st_make_grid(ext_poly,

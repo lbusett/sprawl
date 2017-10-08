@@ -129,7 +129,7 @@ extract_rast <- function(in_rast,
   #   object or *raster object  ####
 
   call <- as.list(match.call())
-  message("extract_rast --> Extracting: ", deparse(substitute(call)$in_rast),
+  if (verbose) message("extract_rast --> Extracting: ", deparse(substitute(call)$in_rast),
           " data on zones of : ", deparse(substitute(call)$in_vect))
 
   #   __________________________________________________________________________
@@ -191,7 +191,7 @@ extract_rast <- function(in_rast,
       tibble::as_tibble() %>%
       sf::st_as_sf() %>%
       sf::st_transform(rast_proj) %>%
-      crop_vect(in_rast)
+      crop_vect(in_rast, verbose = verbose)
 
     if (dim(in_vect_crop)[1] == 0) {
       stop("extract_rast --> `in_vect` doesn't intersect `in_rast`. Aborting!")
@@ -228,7 +228,8 @@ extract_rast <- function(in_rast,
     # Now crop the raster on the vector extent. This speeds-up consistently the
     # processing in case the vectors cover only a part of the raster
 
-    in_rast_crop <- crop_rast(in_rast, in_vect_crop, out_type = "rastobject")
+    in_rast_crop <- crop_rast(in_rast, in_vect_crop, out_type = "rastobject",
+                              verbose = verbose)
 
     # reset some useful info as that of the original file
     # TODO change "crop_rast" behaviour to keep this info from the original !

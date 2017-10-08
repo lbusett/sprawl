@@ -4,7 +4,7 @@
 \alias{plot_vect}
 \title{plot a map based on a \code{vector} object using `ggplot::geom_sf``}
 \usage{
-plot_vect(in_data, line_color = "black", line_size = 0.2, fill_var = NULL,
+plot_vect(in_vect, line_color = "black", line_size = 0.2, fill_var = NULL,
   transparency = 0, facet_var = NULL, facet_rows = NULL,
   borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
   borders_txt_field = NULL, borders_txt_size = 2.5,
@@ -19,23 +19,23 @@ plot_vect(in_data, line_color = "black", line_size = 0.2, fill_var = NULL,
   theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
-\item{in_data}{object of class \code{sfc_POLYGON} (or coercible to it using
+\item{in_vect}{object of class \code{sfc_POLYGON} (or coercible to it using
 `sprawl::cast_vect)}
 
 \item{line_color}{\code{character} color used to plot the polygon borders of
-\code{in_data}}
+\code{in_vect}}
 
 \item{line_size}{\code{numeric} size of lines used to plot the polygons borders of
-in_data, Default: 0.2}
+in_vect, Default: 0.2}
 
-\item{fill_var}{\code{character} name of the column of \code{in_data} to be used for
+\item{fill_var}{\code{character} name of the column of \code{in_vect} to be used for
 coloring the different polygons. If NULL, only the goemetry is plotted,
 Default: NULL}
 
 \item{transparency}{\code{numeric [0, 1]}transparency of the filled polygons. Higher
 values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)}
 
-\item{facet_var}{\code{character} name of a column of \code{in_data} to be used for
+\item{facet_var}{\code{character} name of a column of \code{in_vect} to be used for
 making different facets of the plot. Useful in case multiple values of \code{fill_var}
 are available for each polygon, according to a grouping variable.
 If NULL, multiple values of \code{fill_var} for the same polygon are ignored

@@ -4,8 +4,8 @@
 #' be a valid spatial object (sp, sf, vector file, raster or raster file name)
 #' @param in_vect PARAM_DESCRIPTION
 #' @param in_obj PARAM_DESCRIPTION
-#' @param to_file PARAM_DESCRIPTION, Default: FALSE
-#' @param as_sp PARAM_DESCRIPTION, Default: FALSE
+#' @param out_file PARAM_DESCRIPTION, Default: FALSE
+#' @param verbose PARAM_DESCRIPTION, Default: FALSE
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -37,36 +37,25 @@
 #'
 crop_vect <- function(in_vect,
                       in_obj,
-                      to_file = FALSE,
-                      as_sp   = FALSE) {
+                      out_file = NULL,
+                      verbose  = TRUE) {
 
+  call = match.call()
+  if (verbose) message("crop_vect --> cropping ", call[[2]],
+                       " on extent of ", call[[3]])
   #TODO Modify to use get_extent
 
   #   __________________________________________________________________________
   #   Check arguments                                                       ####
   vectype <- get_vectype(in_vect)
+  objtype <- get_spatype(in_obj)
 
-  objtype <- get_spatype(in_obj, abort = TRUE)
-  # objtype <- try(get_rastype(in_obj), silent = T)
-  # if (class(objtype) == "try-error") {
-  #   objtype <- try(get_vectype(in_obj), silent = T)
-  # }
-  # if (class(objtype) == "try-error") {
-  #   stop()
-  # }
-  # if (!vectype %in% c("sfobject", "spobject", "vectfile")) {
-  #   stop("crop_vect --> in_vect is not a valid vector object (sp, sf or ",
-  #        "vector file")
-  # }
-  # if (objtype == "none") {
-  #   stop("crop_vect --> in_obj is not a valid spatial object (sp, sf, vector ",
-  #        "file, raster or raster file name) or sprawlext object")
-  # }
   if (vectype == "sprawlext") {
     in_vect <- as(in_vect, "sfc_POLYGON")
   } else {
     in_vect <- cast_vect(in_vect, "sfobject")
   }
+
   obj_bbox    <- get_extent(in_obj)
   invect_proj <- get_proj4string(in_vect)
   inobj_proj  <- get_proj4string(in_obj)

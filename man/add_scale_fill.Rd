@@ -2,42 +2,69 @@
 % Please edit documentation in R/add_scale_fill.R
 \name{add_scale_fill}
 \alias{add_scale_fill}
-\title{FUNCTION_TITLE}
+\title{add a scale_fill palette to a ggplot}
 \usage{
 add_scale_fill(plot, palette, title, na.color, zlims, leg_breaks, leg_labels,
   leg_type, outliers_style, direction, ...)
 }
 \arguments{
-\item{plot}{PARAM_DESCRIPTION}
+\item{plot}{\code{gg} object to which the fill scale has to be added.}
 
-\item{palette}{PARAM_DESCRIPTION}
+\item{palette}{\code{data.frame (1)} Line of the d.f. created by \code{fillpals}
+corresponding to the desired palette.}
 
-\item{title}{PARAM_DESCRIPTION}
+\item{title}{\code{character} Name to be used as title in the palette legend.}
 
-\item{na.color}{PARAM_DESCRIPTION}
+\item{na.color}{\code{character}, color to be used to plot NA values,
+Default: 'transparent'.}
 
-\item{zlims}{PARAM_DESCRIPTION}
+\item{zlims}{\code{numeric array [2]} limits governing the range of
+values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
 
-\item{leg_breaks}{PARAM_DESCRIPTION}
+\item{leg_breaks}{\code{numeric (n_leg_labels)} Values in the scale at which
+leg_labels must be placed (if rast_type != "categorical"). The number
+of breaks must be equal to the number of labels specified by "leg_labels".
+If this is not TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()}
+(TBD)  Default: NULL (the default ggplot2 \code{labels = waiver()} is used)}
 
-\item{leg_labels}{PARAM_DESCRIPTION}
+\item{leg_labels}{\code{character (n_leg_breaks)} labels to be used for the legend
+\itemize{
+\item If \code{rast_type} == "categorical", the number of labels must correspond to
+the number of unique values of the raster to be plotted. If NULL or not valid,
+the legend will use the unique raster values in the legend (see examples)
+\item If \code{rast_type} ==  "continuous" the number of labels must be
+equal to the number of breaks specified by "leg_breaks". If this is not
+TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()} (TBD),
+Default: NULL (the default ggplot2 \code{labels = waiver()} is used)
+}}
 
-\item{leg_type}{PARAM_DESCRIPTION}
+\item{leg_type}{\code{character ["continuous", "discrete"]} type of legend to be used
+on continuous variables. If "continuous" , a colourbar is used. If "discrete",
+a discretized version is used (see examples).#'}
 
-\item{outliers_style}{PARAM_DESCRIPTION}
+\item{outliers_style}{\code{character ["censor" | "to_minmax"]} specifies how
+the values outside of the zlims range will be plotted.
+\itemize{
+\item If == "censor", they are plotted using the colors(s) specified in \code{outliers_color}
+\item If == "to_minmax", outliers are forced to the colors used for the maximum
+and minum values specified in \code{zlims} (using \code{scales::squish}), Default:
+\code{censor}.
+}}
 
-\item{direction}{PARAM_DESCRIPTION}
+\item{direction}{\code{character [0 | 1]} direction of the color legend. Chenge this
+to invert the color gradient, Default: 1}
 
-\item{...}{PARAM_DESCRIPTION}
+\item{...}{any other parameter to be passed to \code{ggplot::scale_fill_brewer} or
+\code{ggplot::scale_fill_hue}}
 }
 \value{
-OUTPUT_DESCRIPTION
+The function is called for its side effects.
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
+helper function to \code{plot_rast_gg} and \code{plot_vect} which adds
+and customizes the scale_fill palette based on characteristics of the plot
+(e.g., categorical or continuous variable), selected palette and options
+concerning treatment of outliers.
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
