@@ -7,13 +7,19 @@ testthat::test_that("Crop Vector object", {
                                           package = "sprawl.data")
   in_rast_file   <- system.file("extdata/MODIS_test", "EVIts_test.tif",
                                                package = "sprawl.data")
-  cropped_vect   <- crop_vect(in_polys_file, in_rast_file)
 
+  # crop without saveing ----
+  cropped_vect   <- crop_vect(in_polys_file, in_rast_file)
   in_polys       <- read_vect(in_polys_file)
   cropped_vect2  <- crop_vect(in_polys, in_rast_file)
 
   expect_equal(cropped_vect[["geometry"]], cropped_vect2[["geometry"]])
   expect_is(cropped_vect, "sf")
+
+  # crop with saveing ----
+  temp_file = tempfile(fileext = ".shp")
+  cropped_vect   <- crop_vect(in_polys_file, in_rast_file,
+                              out_file = temp_file)
 
   in_rast     <- read_rast(in_rast_file)
   out_feature <- in_polys[13,]

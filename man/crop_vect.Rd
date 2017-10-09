@@ -4,14 +4,17 @@
 \alias{crop_vect}
 \title{crop a vector on the extent of a different spatial file}
 \usage{
-crop_vect(in_vect, in_obj, out_file = NULL, verbose = TRUE)
+crop_vect(in_vect, ext_obj, out_file = NULL, verbose = TRUE)
 }
 \arguments{
-\item{in_vect}{PARAM_DESCRIPTION}
+\item{in_vect}{Object of class \code{sfc_POLYGON} or \code{sf_POLYGON}, or coercible to
+it using (sprawl::cast_vect)}
 
-\item{in_obj}{PARAM_DESCRIPTION}
+\item{ext_obj}{Object of class \code{sprawl_ext}, or from which an extent can be
+retrieved using \code{spralw::get_extent} (i.e., any \code{R} spatial object, or
+valid filenames of raster or vector files)}
 
-\item{out_file}{PARAM_DESCRIPTION, Default: FALSE}
+\item{out_file}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{verbose}{PARAM_DESCRIPTION, Default: FALSE}
 }
@@ -20,7 +23,7 @@ OUTPUT_DESCRIPTION
 }
 \description{
 Function allowing to crop an input vector object or shapefile on the extent of a
-different spatial object. in_vect must be an *sp, *sf object or vector file, while in_obj should
+different spatial object. in_vect must be an *sp, *sf object or vector file, while ext_obj should
 be a valid spatial object (sp, sf, vector file, raster or raster file name)
 }
 \details{
