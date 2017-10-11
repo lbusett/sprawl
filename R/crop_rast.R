@@ -9,7 +9,7 @@
 #' @param ext_object either an object of class `sprawlext`, or an `R` object or
 #'   filename from which an object of class `sprawlext` can be obtained (see
 #'    `sprawl::get_extent()`)
-#' @param mask `loigical` if TRUE, and `ext_object` is a polygon shapefile or
+#' @param mask `logical` if TRUE, and `ext_object` is a polygon shapefile or
 #'   `R` object, the output is also masked on the boundaries of `ext_object`
 #' @param pad `numeric` extent of a "padding area" to be kept with respect to
 #'   `crop_extent` (in number of pixels). Useful to be sure not to crop "too much"

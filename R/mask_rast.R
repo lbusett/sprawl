@@ -75,6 +75,7 @@ mask_rast <- function(in_rast,
                       compress     = "None",
                       overwrite    = FALSE,
                       parallel     = FALSE,
+                      cores        = NULL,
                       verbose      = TRUE) {
 
   # to avoid NOTE on check
@@ -199,7 +200,7 @@ mask_rast <- function(in_rast,
 
   } else {
 
-    beginCluster()
+    beginCluster(n = ifelse(is.null(cores), 2, cores))
     masked_out <- raster::clusterR(
       in_rast,
       fun       = function(x, y) {x*y},

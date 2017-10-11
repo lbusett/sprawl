@@ -189,8 +189,8 @@ plot_vect <- function(
   na.color       = NULL,  na.value = NULL,
   palette_name   = NULL,  direction = 1,
   leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL, leg_position = "right", #nolint
-  show_axis      = FALSE, show_grid = TRUE, grid_color = "grey15",
-  title          = "Vector Plot", subtitle = NULL,
+  show_axis      = TRUE, show_grid = TRUE, grid_color = "grey15",
+  title          = NULL, subtitle = NULL,
   theme          = theme_bw(),
   verbose        = TRUE
 ) {

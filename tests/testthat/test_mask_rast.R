@@ -48,7 +48,7 @@ testthat::test_that("Test On raster masking", {
   mask_vect <- system.file("extdata/shapes", "oli_polys.shp",
                            package = "sprawl.data")
   masked_fromfiles   <- mask_rast(in_rast, mask_vect, crop = TRUE,
-                                  verbose = FALSE)
+                                  verbose = FALSE, parallel = T, cores = 4)
   expect_is(masked_fromfiles, "Raster")
 
 })
