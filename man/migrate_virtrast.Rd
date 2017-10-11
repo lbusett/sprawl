@@ -4,13 +4,13 @@
 \alias{migrate_virtrast}
 \title{migrate "virtual rasters" to a new location}
 \usage{
-migrate_virtrast(in_obj, new_path, out_file = NULL, overwritr = FALSE)
+migrate_virtrast(in_file, new_path, out_file = NULL)
 }
 \arguments{
-\item{in_obj}{\code{character} file path of an \code{RData} file corresponding to a
+\item{in_file}{\code{character} file path of an \code{RData} file corresponding to a
 \code{*Raster} object or a GDAL \code{vrt} file}
 
-\item{new_path}{\code{character} path were the raster files to which \code{in_obj} points
+\item{new_path}{\code{character} path were the raster files to which \code{in_file} points
 were moved.}
 
 \item{out_file}{\code{character} filename were the updated \code{RData} or \code{vrt} file

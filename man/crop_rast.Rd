@@ -16,7 +16,7 @@ corresponding to a raster filename (with full path)}
 filename from which an object of class \code{sprawlext} can be obtained (see
 \code{sprawl::get_extent()})}
 
-\item{mask}{\code{loigical} if TRUE, and \code{ext_object} is a polygon shapefile or
+\item{mask}{\code{logical} if TRUE, and \code{ext_object} is a polygon shapefile or
 \code{R} object, the output is also masked on the boundaries of \code{ext_object}}
 
 \item{pad}{\code{numeric} extent of a "padding area" to be kept with respect to
