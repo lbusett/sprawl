@@ -9,7 +9,9 @@
 #' @param ext_object either an object of class `sprawlext`, or an `R` object or
 #'   filename from which an object of class `sprawlext` can be obtained (see
 #'    `sprawl::get_extent()`)
-#'@param pad `numeric` extent of a "padding area" to be kept with respect to
+#' @param mask `loigical` if TRUE, and `ext_object` is a polygon shapefile or
+#'   `R` object, the output is also masked on the boundaries of `ext_object`
+#' @param pad `numeric` extent of a "padding area" to be kept with respect to
 #'   `crop_extent` (in number of pixels). Useful to be sure not to crop "too much"
 #'  for example when cropping before extracting freatures suche as in `extract_rast`,
 #'  Default: 1
@@ -44,6 +46,7 @@
 #' @importFrom sf st_intersects
 crop_rast <- function(rast_object,
                       ext_object,
+                      mask         = FALSE,
                       pad          = 1,
                       out_type     = "rastobject",
                       out_filename = NULL,
@@ -189,6 +192,8 @@ crop_rast <- function(rast_object,
                                tmpdir = file.path(tempdir(), "sprawlcrop"))
     }
     make_folder(out_filename, type = "filename")
+
+
     translate_string <- paste("-of GTiff",
                               "-co", paste0("COMPRESS=", compress),
                               "-ot", dtype["gdal"][1,],
@@ -198,6 +203,24 @@ crop_rast <- function(rast_object,
     system2(file.path(find_gdal(), "gdal_translate"),
             args = translate_string, stdout = NULL)
 
+    if (mask == TRUE) {
+      ext_object <- cast_vect(ext_object, "sfobject")
+      if (inherits(st_geometry(ext_object), c("sfc_POLYGON"))) {
+
+        if (!(rast_bbox@proj4string == crop_bbox@proj4string)) {
+          ext_object <- sf::st_transform(ext_object, rast_bbox@proj4string,
+                                         verbose = FALSE)
+        }
+        out_filename <- mask_rast(out_filename,
+                                  ext_object,
+                                  out_filename = out_filename,
+                                  out_type = "rastfile",
+                                  verbose = FALSE,
+                                  overwrite = TRUE)
+
+      }
+
+    }
     if (out_type == "rastobject") {
 
       if (rastinfo$nbands == 1) {

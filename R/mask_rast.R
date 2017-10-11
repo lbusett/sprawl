@@ -121,13 +121,13 @@ mask_rast <- function(in_rast,
 
   #   __________________________________________________________________________
   #   set the output folder (in tempdir if out_filename == NULL)            ####
-  if (is.null(out_filename)){
-    outfold      <- file.path(tempdir(), paste0("sprawlmask_",sample(1:1000))[1]) #nolint
-    out_filename <- file.path(outfold, "sprawlmask.tif")
-  } else {
-    outfold <- dirname(out_filename )
+  if (is.null(out_filename)) {
+    # outfold      <- file.path(tempdir(), paste0("sprawlmask_",sample(1:1000))[1]) #nolint
+    # out_filename <- file.path(outfold, "sprawlmask.tif")
+    out_filename <- tempfile(fileext = ".tif")
   }
-  dir.create(outfold, showWarnings = FALSE, recursive = TRUE)
+
+  make_folder(out_filename, type = "filename")
 
   #   __________________________________________________________________________
   #   apply buffer to mask if necessary                                     ####
@@ -193,12 +193,13 @@ mask_rast <- function(in_rast,
       filename    = out_filename,
       options     = paste0("COMPRESS=", compress),
       overwrite   = TRUE,
-      datatype    = dtype[["raster"]],
+      datatype    = dtype[["raster"]][1],
       updatevalue = ifelse(is.null(out_nodata), -Inf, out_nodata)
     )
 
   } else {
-    raster::beginCluster()
+
+    beginCluster()
     masked_out <- raster::clusterR(
       in_rast,
       fun       = function(x, y) {x*y},
@@ -206,10 +207,11 @@ mask_rast <- function(in_rast,
       filename  = out_filename,
       options   = paste0("COMPRESS=", compress),
       overwrite = TRUE,
-      datatype  = dtype[["raster"]],
+      datatype  = dtype[["raster"]][1],
       NAflag    = ifelse(is.null(out_nodata), -Inf, out_nodata)
     )
-    raster::endCluster()
+    endCluster()
+
   }
 
   #   __________________________________________________________________________
