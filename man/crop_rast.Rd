@@ -4,9 +4,9 @@
 \alias{crop_rast}
 \title{crop a raster file/rast_file on a given extent}
 \usage{
-crop_rast(rast_object, ext_object, pad = 1, out_type = "rastobject",
-  out_filename = NULL, out_dtype = NULL, compress = "None",
-  verbose = TRUE)
+crop_rast(rast_object, ext_object, mask = FALSE, pad = 1,
+  out_type = "rastobject", out_filename = NULL, out_dtype = NULL,
+  compress = "None", verbose = TRUE)
 }
 \arguments{
 \item{rast_object}{either an \code{R} object of class \code{Raster}, or a character string
@@ -15,6 +15,9 @@ corresponding to a raster filename (with full path)}
 \item{ext_object}{either an object of class \code{sprawlext}, or an \code{R} object or
 filename from which an object of class \code{sprawlext} can be obtained (see
 \code{sprawl::get_extent()})}
+
+\item{mask}{\code{loigical} if TRUE, and \code{ext_object} is a polygon shapefile or
+\code{R} object, the output is also masked on the boundaries of \code{ext_object}}
 
 \item{pad}{\code{numeric} extent of a "padding area" to be kept with respect to
 \code{crop_extent} (in number of pixels). Useful to be sure not to crop "too much"

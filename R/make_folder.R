@@ -1,8 +1,8 @@
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 #' @param path PARAM_DESCRIPTION
-#' @param type PARAM_DESCRIPTION, Default: 'filename'
-#' @param verbose PARAM_DESCRIPTION, Default: 'filename'
+#' @param type PARAM_DESCRIPTION, Default: 'dirname'
+#' @param verbose PARAM_DESCRIPTION, Default: 'FALSE'
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -22,7 +22,7 @@
 #' @importFrom assertthat assert_that
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #'
-make_folder <- function(path, type = "filename", verbose = FALSE) {
+make_folder <- function(path, type = "dirname", verbose = TRUE) {
 
   assertthat::assert_that(
     type %in% c("filename", "dirname"),
@@ -32,7 +32,7 @@ make_folder <- function(path, type = "filename", verbose = FALSE) {
   if (verbose) {
     message("make_folder --> Creating ",
             ifelse(type == "filename", dirname(path), path),
-            "folder")
+            " folder")
   }
 
   if (type == "filename") {
@@ -45,5 +45,10 @@ make_folder <- function(path, type = "filename", verbose = FALSE) {
            Please, check your inputs and verify file system permissions. ",
            "Aborting!")
     }
+  } else {
+    if (verbose) {
+      message("make_folder --> specified `path` already exists!")
+    }
   }
+  invisible(path)
 }

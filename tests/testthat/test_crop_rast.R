@@ -14,7 +14,9 @@ testthat::test_that("Test On raster cropping", {
   out_vrt      <- crop_rast(in_rast, in_vect, verbose = FALSE,
                             out_type = "vrtfile")
   out_rastfile <- crop_rast(in_rast, in_vect, verbose = FALSE,
-                            out_type = "rastfile")
+                            out_type = "rastfile", mask = F,
+                            out_filename = tempfile(pattern = "testfile",
+                                                    fileext = ".tif"))
   expect_is(out_cropped, "Raster")
   expect_is(out_vrt, "character")
   expect_is(out_rastfile, "character")

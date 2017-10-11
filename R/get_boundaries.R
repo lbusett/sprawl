@@ -63,7 +63,7 @@ get_boundaries <- function(iso,
 
   #   __________________________________________________________________________
   #   Download the data                                                     ####
-  make_folder(path, type = "dirname")
+  make_folder(path)
   adm <- suppressWarnings(try(raster::getData("GADM",
                                               country = iso_code,
                                               level   = level,

@@ -12,10 +12,10 @@ testthat::test_that("Test On raster masking", {
   # both raster and mask are "R" objects - check if works and equal to
   # raster::mask ----
   mask_in <- read_vect(mask_vect, stringsAsFactors = T)
-  in_rast <- read_rast(in_file, bands = 5)
+  in_rast <- read_rast(in_file, bands = c(1))
   # test both with same projection and differenrt projections between in_rast
   #  and mask_vect
-  out_masked   <- mask_rast(in_rast, mask_vect, verbose = FALSE, crop = FALSE)
+  out_masked   <- mask_rast(in_rast, mask_in, verbose = FALSE, crop = FALSE)
   expect_is(out_masked, "Raster")
   mask_in_2    <- sf::st_transform(mask_in, get_proj4string(in_rast))
   out_masked_2 <- mask_rast(in_rast, mask_in_2, verbose = FALSE)

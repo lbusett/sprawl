@@ -4,35 +4,33 @@
 \alias{migrate_virtrast}
 \title{migrate "virtual rasters" to a new location}
 \usage{
-migrate_virtrast(in_rast, new_path, out_file = NULL)
+migrate_virtrast(in_obj, new_path, out_file = NULL, overwritr = FALSE)
 }
 \arguments{
-\item{in_rast}{\code{character} full file path of an \code{RData} or \code{vrt} file}
+\item{in_obj}{\code{character} file path of an \code{RData} file corresponding to a
+\code{*Raster} object or a GDAL \code{vrt} file}
 
-\item{new_path}{\code{character} new path were the corresponding files are now located. If NULL,
-a file selector is opened allowing to interactively choose the new folder, Default: NULL}
+\item{new_path}{\code{character} path were the raster files to which \code{in_obj} points
+were moved.}
 
-\item{out_file}{\code{character} full path for the new \code{RData} or \code{vrt} file to be saved.
-If NULL, the new file is built nby adding "_new" to the basename of the old one.
-If == "overwrite", the old file is overwritten.  Default: NULL}
+\item{out_file}{\code{character} filename were the updated \code{RData} or \code{vrt} file
+should be saved. If NULL, the new file is built by adding "_new" to the
+basename of the old one. If == "overwrite", the old file is overwritten.
+Default: NULL}
 }
 \value{
-\code{character} path to the new "vrt" or "RData" file giving access to the raster
-files
+\code{character} path to the new "vrt" or "RData"
 }
 \description{
 function allowing to update the paths contained in "virtual rasters"
 such as GDAL VRTs or \code{R} rasterStacks "pointing" to files on disk in the case that
 the corresponding files on disk are moved.
 }
-\details{
-DETAILS
-}
 \examples{
 \dontrun{
  # suppose you had a gdal vrt file "pointing" to tiff files originally located in
  # "/home/mypath/myfolder", and you successively moved them to "/home/mypath/mynewfolder"
- # and you want to update the vrt file so that it keeps working
+ # If you want to update the vrt file so that it keeps working:
 
  #TODO (Remove the # after uploading a test dataset on sprawl.data)
  #old_vrt  <- "/home/mypath/myfolder/myvrt.vrt
