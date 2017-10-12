@@ -9,9 +9,9 @@ make_folder(path, type = "dirname", verbose = TRUE)
 \arguments{
 \item{path}{PARAM_DESCRIPTION}
 
-\item{type}{PARAM_DESCRIPTION, Default: 'filename'}
+\item{type}{PARAM_DESCRIPTION, Default: 'dirname'}
 
-\item{verbose}{PARAM_DESCRIPTION, Default: 'filename'}
+\item{verbose}{PARAM_DESCRIPTION, Default: 'FALSE'}
 }
 \value{
 OUTPUT_DESCRIPTION
