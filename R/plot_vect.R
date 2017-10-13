@@ -52,6 +52,10 @@
 #' @param basemap `character` If not NULL and valid, the selected basemap is
 #'   used as background. For a list of valid basemaps, see `rosm::osm.types()`,
 #'   Default: NULL (Currently not yet supported!)
+#' @param xlims `numeric(2)`, minimum and maximum x coordinates to be plotted.
+#'   If NULL, the whole x-range is plotted, Default: NULL
+#' @param ylims `numeric(2)`, minimum and maximum y coordinates to be plotted.
+#'   If NULL, the whole y-range is plotted, Default: NULL
 #' @param zoomin `numeric`, Adjustment factor for basemap zoom. Negative values
 #'   lead to less detailed basemap, but larger text. Default: 0 (Currently not
 #'   yet supported!)
@@ -133,12 +137,12 @@
 #' @details DETAILS
 #' @examples
 #' \dontrun{
-#' if(interactive()){
 #'  library(ggplot2)
 #'  in_vect <- get(load(system.file("extdata/shapes", "poly_lomb.RData",
 #'                                  package = "sprawl.data")))
 #'  # plot only geometry
 #'  plot_vect(in_vect)
+#'
 #'  plot_vect(in_vect, line_color = "blue", line_size = 1.5)
 #'
 #'  # plot with a fill on a cartegorical variable with a single "level"
@@ -159,7 +163,6 @@
 #'            borders_color = "red", borders_txt_field = "NAME_2")
 #'
 #'  }
-#' }
 #' @rdname plot_vect
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
@@ -586,7 +589,7 @@ plot_vect <- function(
                       y.min = ylims[1], y.max = ylims[2],
                       st.size = 3.5,
                       st.bottom = FALSE, model = NULL,
-                      st.dist = scalebar_txt_dist, units = rastinfo$units)
+                      st.dist = scalebar_txt_dist)
 
     #   _________________________________________________________________________
     # Center the title - can be overriden in case after plot completion      ####

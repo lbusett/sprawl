@@ -28,8 +28,16 @@ test_that("plot_rast_gg works as expected", {
                     outliers_colors = c("blue", "yellow"),
                     rast_type = "categorical")
 
-  expect_warning(p <- plot_rast_gg(in_rast, scalebar_dist = 1,
+  p <- plot_rast_gg(in_rast, scalebar_dist = 1,
                     palette_name = "hue",
+                    zlims = c(0.05, 0.95),
+                    zlims_type = "percs",
+                    outliers_style = "censor", leg_type = "discrete",
+                    outliers_colors = c("blue", "yellow"),
+                    borders_layer = create_fishnet(in_rast, pix_for_cell = 2))
+
+   expect_warning(p <-plot_rast_gg(in_rast, scalebar_dist = 1,
+                    palette_name = "Greens",
                     zlims = c(0.05, 0.95),
                     zlims_type = "percs",
                     outliers_style = "censor", leg_type = "discrete",

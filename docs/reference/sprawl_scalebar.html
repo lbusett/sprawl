@@ -142,8 +142,8 @@
     <p>Adds a scale bar to maps created with <code>plot_rast_gg</code>.</p>
     
 
-    <pre class="usage"><span class='fu'>sprawl_scalebar</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"bottomright"</span>, <span class='no'>dist</span>,
-  <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>0.02</span>, <span class='kw'>st.dist</span> <span class='kw'>=</span> <span class='fl'>0.025</span>, <span class='kw'>st.bottom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>st.size</span> <span class='kw'>=</span> <span class='fl'>3.5</span>,
+    <pre class="usage"><span class='fu'>sprawl_scalebar</span>(<span class='no'>in_obj</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"bottomright"</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>0.02</span>, <span class='kw'>st.dist</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>st.bottom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>st.size</span> <span class='kw'>=</span> <span class='fl'>3.5</span>,
   <span class='kw'>st.color</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>box.fill</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"black"</span>, <span class='st'>"white"</span>), <span class='kw'>box.color</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
   <span class='kw'>dd2km</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>model</span>, <span class='no'>x.min</span>, <span class='no'>x.max</span>, <span class='no'>y.min</span>, <span class='no'>y.max</span>, <span class='kw'>anchor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>facet.var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>facet.lev</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>units</span> <span class='kw'>=</span> <span class='st'>"m"</span>)</pre>
@@ -152,16 +152,17 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p><code>Raster</code> object passed to <code>plot_rast_gg</code> to plot the map</p></td>
+      <th>in_obj</th>
+      <td><p><code>Raster</code> object passed to <code>plot_rast_gg</code> or <code>plot_vect</code> to which
+the scalebar should be added;</p></td>
     </tr>
     <tr>
       <th>location</th>
-      <td><p><code>character</code> indicating the symbol's location in the plot. Possible
-options: "topright" (default), "bottomright", "bottomleft" and "topleft".</p></td>
+      <td><p><code>character ["bottomright" | "bottomleft" | "topleft" | "topright"]</code>
+indicating where the scalebar should be placed, Default: "bottomright"</p></td>
     </tr>
     <tr>
-      <th>dist</th>
+      <th>scalebar_dist</th>
       <td><p><code>numeric</code> distance in to represent with each segment of the scale bar.</p></td>
     </tr>
     <tr>
@@ -270,10 +271,11 @@ facet.</p></td>
 Scale Bars for Maps Created with 'ggplot2' or 'ggmap'. R package version
 0.4.3. https://github.com/oswaldosantos/ggsn</p></li>
 <li><p>Slight modifications to adapt it to <code>sprawl</code> needs by Lorenzo Busetto:</p><ul>
-<li><p>Removed measure units text from all but the last numeric label</p></li>
+<li><p>Removed measure units text from all but the last numeric label;</p></li>
 <li><p>Added support for non-metric (e.g., feet) projetions by adding the <code>units</code>
-argument and changing the text accordingly</p></li>
-<li><p>fontface to bold in the scalebar to improve visibility.</p></li>
+argument and changing the text accordingly;</p></li>
+<li><p>fontface to bold in the scalebar to improve visibility;</p></li>
+<li><p>automatic computation of distance if <code>dist</code> is not passed</p></li>
 </ul></li>
 </ul>
 

@@ -143,13 +143,13 @@
 valid vector file by simply specifying its filename</p>
     
 
-    <pre class="usage"><span class='fu'>read_vect</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>read_vect</span>(<span class='no'>in_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>shp_file</th>
+      <th>in_file</th>
       <td><p><code>character</code> Filename of ESRI shapefile to be opened</p></td>
     </tr>
     <tr>
@@ -180,9 +180,9 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 <span class='co'># open a shapefile as a `sf` object</span>
- <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
+ <span class='no'>in_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>read_vect</span>(<span class='no'>shp_file</span>)</div><div class='output co'>#&gt; Simple feature collection with 13 features and 4 fields
+ <span class='fu'>read_vect</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; Simple feature collection with 13 features and 4 fields
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 120.1778 ymin: 15.15353 xmax: 121.3394 ymax: 16.09343
@@ -205,9 +205,9 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
 #&gt; 12    12    small_feat    Other      Other &lt;POLYGON ((12...&gt;
 #&gt; 13    13      out_feat    Other      Other &lt;POLYGON ((12...&gt;</div><div class='input'>
 <span class='co'># open a shapefile as a `sp` object</span>
- <span class='no'>shp_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
+ <span class='no'>in_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>read_vect</span>(<span class='no'>shp_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
+ <span class='fu'>read_vect</span>(<span class='no'>in_file</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
 #&gt; features    : 13 
 #&gt; extent      : 120.1778, 121.3394, 15.15353, 16.09343  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 

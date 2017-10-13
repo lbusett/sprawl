@@ -34,7 +34,7 @@ plot_rasthist <- function(in_rast,
   } else {
     # TODO recheck this after implementing set_ratinfo !!!!!
     if (!assertthat::has_attr(in_rast, "rastinfo")) {
-      hist_data <- get_raststats(in_rast, hist)
+      hist_data <- get_raststats(in_rast, hist = TRUE)$hist
     } else {
       hist_data <- in_rast@rastinfo$stats$hists
     }

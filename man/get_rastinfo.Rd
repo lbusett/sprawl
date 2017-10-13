@@ -4,7 +4,7 @@
 \alias{get_rastinfo}
 \title{Retrieve useful info from a raster object or file}
 \usage{
-get_rastinfo(in_rast, stats = TRUE, quantiles = FALSE, hist = FALSE,
+get_rastinfo(in_rast, stats = FALSE, quantiles = FALSE, hist = FALSE,
   verbose = TRUE)
 }
 \arguments{

@@ -40,6 +40,7 @@ get_raststats <- function(in_rast,
                           hist      = FALSE,
                           verbose   = TRUE)  {
 
+  . <- NULL
   call <- match.call()
 
   if (verbose) {

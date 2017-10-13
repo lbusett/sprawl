@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>helper function used to extract statistics of raster values within
-<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code> — summarize_data • sprawl</title>
+<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> — summarize_data • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -137,51 +137,78 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>helper function used to extract statistics of raster values within
-<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code></h1>
+<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code></h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>helper function for <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> used to extract
+statistics of values of <code>in_rast</code> for each polygon of the vector object
+passed as input to <code>extract_rast</code></p>
     
 
-    <pre class="usage"><span class='fu'>summarize_data</span>(<span class='no'>in_data</span>, <span class='no'>var</span>, <span class='no'>comp_quant</span>, <span class='no'>FUN</span>, <span class='no'>band_n</span>, <span class='no'>selband</span>)</pre>
+    <pre class="usage"><span class='fu'>summarize_data</span>(<span class='no'>in_data</span>, <span class='no'>rast_type</span>, <span class='no'>group_var</span>, <span class='no'>comp_quant</span>, <span class='no'>comp_freq</span>, <span class='no'>FUN</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>band_n</span>, <span class='no'>selband</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_data</th>
-      <td><p><code>data.table</code> containing raster values (for a full file or a "chunk")</p></td>
+      <td><p><code>data.table</code> containing raster values (for a full file or a
+"chunk")</p></td>
     </tr>
     <tr>
-      <th>var</th>
-      <td><p><code>character</code> name of the variable (i.e., column) to be used as grouping
-variable for summarization</p></td>
+      <th>rast_type</th>
+      <td><p><code>character</code> ("continuous" | "categorical) specifies if the
+values passed in <code>in_data</code> represent a continuous or categorical variable.
+(see @description)</p></td>
+    </tr>
+    <tr>
+      <th>group_var</th>
+      <td><p><code>character</code> name of the group_variable (i.e., column) to be
+used as grouping group_variable for summarization. Always equal to "mdxtnq"
+for now !</p></td>
     </tr>
     <tr>
       <th>comp_quant</th>
-      <td><p><code>logical</code> if TRUE, percentiles of the distribution are computed
-alongside standard statistics</p></td>
+      <td><p><code>logical</code> if TRUE, percentiles of the distribution are
+computed alongside standard statistics, Default: FALSE (Ignored if
+rast_type == "categorical)</p></td>
+    </tr>
+    <tr>
+      <th>comp_freq</th>
+      <td><p><code>logical</code> if TRUE, frequencies of the the different classes
+of a categorical raster present in each polygon are also returned,
+Default = FALSE (Ignored if rast_type == "continuous")</p></td>
     </tr>
     <tr>
       <th>FUN</th>
-      <td><p><code>function</code> if not NULL and is  a valid function, FUN is used for summarization
-and only its results are reported. Useful for example for analyses over large
-high-res raster since it reduces memory footprint (see <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code>)</p></td>
+      <td><p><code>function</code> if not NULL and is  a valid function, FUN is used for
+summarization and only its results are reported. Useful for example for
+analyses over large high-res raster since it reduces memory footprint
+(see <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code>)</p></td>
+    </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p><code>logical</code> If TRUE, nodata values are not considered in statistics
+calculations for continuous variables, Default = FALSE</p></td>
     </tr>
     <tr>
       <th>band_n</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>numeric</code> band of the original raster from which values passed
+in <code>in_data</code> are taken.</p></td>
     </tr>
     <tr>
       <th>selband</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>character</code> or <code>Date</code> bandname or acquisition data of the
+band of the original raster from which values passed in <code>in_data</code> are taken</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>list</code></p>
+    <p><code>data.table</code> containing different data as a function of <code>rast_type</code>.
+(See <code><a href='extract_rast.html'>extract_rast</a></code>)</p>
     
 
   </div>

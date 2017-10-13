@@ -24,15 +24,16 @@ DETAILS
 }
 \examples{
 \dontrun{
-path <- file.path(tempdir(), "test", "testfile.xyz")
-dir.exists(dirname(path))
+path <- file.path(tempdir(), "testdir")
+dir.exists(path)
 make_folder(path)
 dir.exists(dirname(path))
 
-path <- file.path(tempdir(), "testdir")
-dir.exists(path)
-make_folder(path, type = "dirname")
+path <- file.path(tempdir(), "test2", "testfile.xyz")
 dir.exists(dirname(path))
+make_folder(path, type = "filename")
+dir.exists(dirname(path))
+
 }
 }
 \author{

@@ -28,9 +28,16 @@ and automatic recasting to \code{sf} format.
 \examples{
 \dontrun{
  library(sprawl)
+ library(sf)
  ita_boundaries <- get_boundaries("Italy", 0)
+ plot_vect(ita_boundaries)
+
  ita_region_boundaries <- get_boundaries("ITA", 1)
- plot(ita_region_boundaries[1])
+ plot_vect(ita_region_boundaries, fill_var = "NAME_1")
+
+ lomb_boundaries <- ita_region_boundaries \%>\%
+    dplyr::filter(NAME_1 == "Lombardia")
+ plot_vect(lomb_boundaries)
  }
 }
 \seealso{

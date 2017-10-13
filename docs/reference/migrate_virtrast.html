@@ -144,42 +144,39 @@ such as GDAL VRTs or <code>R</code> rasterStacks "pointing" to files on disk in 
 the corresponding files on disk are moved.</p>
     
 
-    <pre class="usage"><span class='fu'>migrate_virtrast</span>(<span class='no'>in_rast</span>, <span class='no'>new_path</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>migrate_virtrast</span>(<span class='no'>in_file</span>, <span class='no'>new_path</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_rast</th>
-      <td><p><code>character</code> full file path of an <code>RData</code> or <code>vrt</code> file</p></td>
+      <th>in_file</th>
+      <td><p><code>character</code> file path of an <code>RData</code> file corresponding to a
+<code>*Raster</code> object or a GDAL <code>vrt</code> file</p></td>
     </tr>
     <tr>
       <th>new_path</th>
-      <td><p><code>character</code> new path were the corresponding files are now located. If NULL,
-a file selector is opened allowing to interactively choose the new folder, Default: NULL</p></td>
+      <td><p><code>character</code> path were the raster files to which <code>in_file</code> points
+were moved.</p></td>
     </tr>
     <tr>
       <th>out_file</th>
-      <td><p><code>character</code> full path for the new <code>RData</code> or <code>vrt</code> file to be saved.
-If NULL, the new file is built nby adding "_new" to the basename of the old one.
-If == "overwrite", the old file is overwritten.  Default: NULL</p></td>
+      <td><p><code>character</code> filename were the updated <code>RData</code> or <code>vrt</code> file
+should be saved. If NULL, the new file is built by adding "_new" to the
+basename of the old one. If == "overwrite", the old file is overwritten.
+Default: NULL</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>character</code> path to the new "vrt" or "RData" file giving access to the raster
-files</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+    <p><code>character</code> path to the new "vrt" or "RData"</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'> # suppose you had a gdal vrt file "pointing" to tiff files originally located in
  # "/home/mypath/myfolder", and you successively moved them to "/home/mypath/mynewfolder"
- # and you want to update the vrt file so that it keeps working
+ # If you want to update the vrt file so that it keeps working:
 
  #TODO (Remove the # after uploading a test dataset on sprawl.data)
  #old_vrt  <- "/home/mypath/myfolder/myvrt.vrt
@@ -195,8 +192,6 @@ files</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

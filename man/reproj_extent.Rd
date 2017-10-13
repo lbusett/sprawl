@@ -42,7 +42,7 @@ in_rast <- raster::raster(in_file)
 in_sprawlext <- get_extent(in_rast)
 
 # Reproject a sprawlext
-reproj_extent(in_sprawlext_1, "+init=epsg:32651")
+reproj_extent(in_sprawlext, "+init=epsg:32651")
 
 # Reproject the extent of a file
 reproj_extent(in_file, "+init=epsg:32651")
@@ -57,7 +57,7 @@ reproj_extent(bbox(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
 reproj_extent(bbox(in_rast), "+init=epsg:32651")
 
 # Reproject without enlarging
-reproj_extent(in_sprawlext_1, "+init=epsg:32651", enlarge = FALSE)
+reproj_extent(in_sprawlext, "+init=epsg:32651", enlarge = FALSE)
 }
 }
 \author{

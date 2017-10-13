@@ -53,7 +53,7 @@
 #' @importFrom glue glue
 
 get_rastinfo <- function(in_rast,
-                         stats     = TRUE,
+                         stats     = FALSE,
                          quantiles = FALSE,
                          hist      = FALSE,
                          verbose   = TRUE) {

@@ -7,7 +7,7 @@
 mask_rast(in_rast, mask, crop = FALSE, buffer = NULL,
   out_type = "rastobject", out_filename = NULL, out_dtype = NULL,
   out_nodata = NULL, compress = "None", overwrite = FALSE,
-  parallel = FALSE, cores = NULL, verbose = TRUE)
+  parallel = FALSE, cores = parallel::detectCores() - 2, verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
@@ -50,6 +50,9 @@ existing files are overwritten, Default: FALSE}
 
 \item{parallel}{\code{logical} if TRUE, use ClusterR to implement multicore
 processing. This speeds up execution for large rasters, Default: FALSE}
+
+\item{cores}{\code{numeric} Number of cores to use in case of parallel processing.
+If not provided, it defaults to \code{parallel::detectCores()-2}}
 
 \item{verbose}{\code{logical} if TRUE, extended processing information is sent to
 the console in the form of messages}

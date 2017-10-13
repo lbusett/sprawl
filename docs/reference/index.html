@@ -224,6 +224,12 @@
             <p><code><a href="reclass_rast.html">reclass_rast</a></code> </p>
           </td>
           <td><p>reclassify values of a raster</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="reproj_rast.html">reproj_rast</a></code> </p>
+          </td>
+          <td><p>reproj_rast</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -249,13 +255,19 @@
           <td>
             <p><code><a href="create_fishnet.html">create_fishnet</a></code> </p>
           </td>
-          <td><p>Create a "fishnet" vector based on cells of a raster</p></td>
+          <td><p>Create a "fishnet" vector over the extent of a spatial object</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="crop_vect.html">crop_vect</a></code> </p>
           </td>
           <td><p>crop a vector on the extent of a different spatial file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="select_extent.html">select_extent</a></code> </p>
+          </td>
+          <td><p>FUNCTION_TITLE</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -279,9 +291,9 @@
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="get_spatype.html">get_spatype</a></code> </p>
+            <p><code><a href="get_raststats.html">get_raststats</a></code> </p>
           </td>
-          <td><p>check the "spatial type" of an object or file</p></td>
+          <td><p>Retrieve statistics about value of a raster object</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -313,7 +325,19 @@
           <td>
             <p><code><a href="plot_rast_gg.html">plot_rast_gg</a></code> </p>
           </td>
-          <td><p>Plot a raster object using ggplot</p></td>
+          <td><p>Plot a map based on a <code>raster</code> object using ggplot</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="plot_rasthist.html">plot_rasthist</a></code> </p>
+          </td>
+          <td><p>FUNCTION_TITLE</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="plot_vect.html">plot_vect</a></code> </p>
+          </td>
+          <td><p>plot a map based on a <code>vector</code> object using `ggplot::geom_sf``</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -339,33 +363,33 @@
         <tr>
           <!--  -->
           <td>
+            <p><code><a href="add_scale_fill.html">add_scale_fill</a></code> </p>
+          </td>
+          <td><p>add a scale_fill palette to a ggplot</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
             <p></p>
           </td>
           <td><p>sprawlext class</p></td>
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="build_testraster.html">build_testraster</a></code> </p>
-          </td>
-          <td><p>build_testraster</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="build_testshape.html">build_testshape</a></code> </p>
-          </td>
-          <td><p>build_testshape</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
             <p><code><a href="check_proj4string.html">check_proj4string</a></code> </p>
           </td>
-          <td><p>Check the validity of the input proj4string</p></td>
+          <td><p>Check the validity of the input projection</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="convert_rastdtype.html">convert_rastdtype</a></code> </p>
           </td>
           <td><p>convert data type between <code>raster</code> and <code>gdal</code> conventions</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="create_virtrast.html">create_virtrast</a></code> </p>
+          </td>
+          <td><p>create a GDAL vrt file starting from a <code>Raster</code> object</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -381,6 +405,12 @@
         </tr><tr>
           <!--  -->
           <td>
+            <p><code><a href="fillpals.html">fillpals</a></code> </p>
+          </td>
+          <td><p>create list of validi fill palettes</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
             <p><code><a href="find_command.html">find_command</a></code> </p>
           </td>
           <td><p>find the path to a specified command</p></td>
@@ -390,6 +420,12 @@
             <p><code><a href="find_gdal.html">find_gdal</a></code> </p>
           </td>
           <td><p>find gdal main folder</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_spatype.html">get_rastype</a></code> <code><a href="get_spatype.html">get_spatype</a></code> <code><a href="get_spatype.html">get_vectype</a></code> </p>
+          </td>
+          <td><p>check the "spatial type" of an object or file</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -414,13 +450,19 @@
             <p><code><a href="summarize_data.html">summarize_data</a></code> </p>
           </td>
           <td><p>helper function used to extract statistics of raster values within
-<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code> and <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/aggregate_rast'>sprawl::aggregate_rast</a></code></p></td>
+<code><a href='http://www.rdocumentation.org/packages/sprawl/topics/extract_rast'>sprawl::extract_rast</a></code></p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="sprawl_initcluster.html">sprawl_initcluster</a></code> </p>
           </td>
           <td><p>initialize clustered processing on multiband raster</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="sprawl_scalebar.html">sprawl_scalebar</a></code> </p>
+          </td>
+          <td><p>sprawl_scalebar</p></td>
         </tr>
       </tbody>
       </table>

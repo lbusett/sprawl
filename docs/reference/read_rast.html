@@ -144,19 +144,19 @@
 a single- or multi-band object.</p>
     
 
-    <pre class="usage"><span class='fu'>read_rast</span>(<span class='no'>object</span>, <span class='kw'>bands_to_read</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>read_rast</span>(<span class='no'>in_file</span>, <span class='kw'>bands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
+      <th>in_file</th>
       <td><p><code>character</code> filename to be read</p></td>
     </tr>
     <tr>
-      <th>bands_to_read</th>
+      <th>bands</th>
       <td><p><code>numeric array</code> If the input is a multiband raster,
-band numbers to be read (e.g., bands_to_read = c(1,5,7) will read only the
+band numbers to be read (e.g., bands = c(1,5,7) will read only the
 specified bands in a <code>RasterStack</code>)</p></td>
     </tr>
     <tr>
@@ -179,7 +179,7 @@ Default: TRUE</p></td>
     <pre class="examples"><div class='input'> <span class='co'># read a singleband file</span>
   <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/REYE_test"</span>, <span class='st'>"REYE_2016_185_gNDVI.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `object`</span></div><div class='output co'>#&gt; class       : RasterLayer 
+  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; class       : RasterLayer 
 #&gt; dimensions  : 1763, 2081, 3668803  (nrow, ncol, ncell)
 #&gt; resolution  : 5, 5  (x, y)
 #&gt; extent      : 465485, 475890, 5004050, 5012865  (xmin, xmax, ymin, ymax)
@@ -191,7 +191,7 @@ Default: TRUE</p></td>
   <span class='co'># read a multiband file</span>
   <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `object`</span></div><div class='output co'>#&gt; class       : RasterBrick 
+  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; class       : RasterBrick 
 #&gt; dimensions  : 447, 331, 147957, 46  (nrow, ncol, ncell, nlayers)
 #&gt; resolution  : 231.6564, 231.6564  (x, y)
 #&gt; extent      : 12897004, 12973683, 1685995, 1789545  (xmin, xmax, ymin, ymax)
@@ -202,14 +202,14 @@ Default: TRUE</p></td>
 #&gt; max values  :         9971,         9167,         9307,         9988,         8706,         9767,         9740,         9939,         8452,          9358,          9983,          8504,          9858,          9976,          9980, ... 
 #&gt; </div><div class='input'>
   <span class='co'># read a multiband file selecting specific bands</span>
-  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>, <span class='kw'>bands_to_read</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>10</span>))</div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `object`</span></div><div class='output co'>#&gt; class       : RasterStack 
+  <span class='fu'>read_rast</span>(<span class='no'>in_file</span>, <span class='kw'>bands</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>10</span>))</div><div class='output co'>#&gt; class       : RasterStack 
 #&gt; dimensions  : 447, 331, 147957, 2  (nrow, ncol, ncell, nlayers)
 #&gt; resolution  : 231.6564, 231.6564  (x, y)
 #&gt; extent      : 12897004, 12973683, 1685995, 1789545  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs 
-#&gt; names       : EVIts_test.10, EVIts_test.15 
-#&gt; min values  :          -884,         -1912 
-#&gt; max values  :          9358,          9980 
+#&gt; names       : EVIts_test.1, EVIts_test.10 
+#&gt; min values  :         -621,          -884 
+#&gt; max values  :         9971,          9358 
 #&gt; </div><div class='input'>
 </div></pre>
   </div>

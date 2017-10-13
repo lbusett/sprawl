@@ -53,8 +53,8 @@ library(sp)
 check_proj4string(CRS("+init=epsg:32632"))
 
 library(raster)
-in_rast <- system.file("extdata", "sprawl_EVItest.tif", package = "sprawl.data")
-in_rast <- raster::raster(in_rast)
+ in_rast <- read_rast(system.file("extdata/OLI_test",
+  "oli_multi_1000_b2.tif", package = "sprawl.data"))
 check_proj4string(in_rast@crs)
 }
 }

@@ -32,6 +32,8 @@
 #'   existing files are overwritten, Default: FALSE
 #' @param parallel `logical` if TRUE, use ClusterR to implement multicore
 #'   processing. This speeds up execution for large rasters, Default: FALSE
+#' @param cores `numeric` Number of cores to use in case of parallel processing.
+#'   If not provided, it defaults to `parallel::detectCores()-2`
 #' @param verbose `logical` if TRUE, extended processing information is sent to
 #'  the console in the form of messages
 #'
@@ -63,6 +65,7 @@
 #'  endCluster
 #' @importFrom sf st_transform st_buffer st_combine st_sf
 #' @importFrom magrittr "%>%"
+#' @importFrom parallel detectCores
 
 mask_rast <- function(in_rast,
                       mask,
@@ -75,7 +78,7 @@ mask_rast <- function(in_rast,
                       compress     = "None",
                       overwrite    = FALSE,
                       parallel     = FALSE,
-                      cores        = NULL,
+                      cores        = parallel::detectCores() - 2,
                       verbose      = TRUE) {
 
   # to avoid NOTE on check
@@ -92,7 +95,7 @@ mask_rast <- function(in_rast,
   # checks on in_rast ----
 
   in_rast   <- cast_rast(in_rast, "rastobject")
-  rastinfo  <- get_rastinfo(in_rast)
+  rastinfo  <- get_rastinfo(in_rast, stats = FALSE)
   rast_proj <- get_proj4string(in_rast)
   bnames_in <- names(in_rast)
   times_in  <- raster::getZ(in_rast)

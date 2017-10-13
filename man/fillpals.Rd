@@ -20,7 +20,8 @@ DETAILS
 \examples{
 \dontrun{
 # Print the list of valid fill palettes used in `plot_rast`, `plot_rast_gg`
-  and `plot_vect`
+# and `plot_vect`
+fillpals()
 }
 }
 \author{

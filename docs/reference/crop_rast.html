@@ -139,16 +139,17 @@
     </div>
 
     
-    <p>function to crop a raster file/rast_file on a given extent. The extent
-can be:</p><ol>
-<li><p>directly passed (as a <code>sprawlext</code> rast_file or numeric array);</p></li>
-<li><p>derived from a different rast_file (raster of vector file/rast_file) passed to
-the function (see details)</p></li>
+    <p>function to crop a raster file/rast_file on a given extent.
+The cropping extent can be:</p><ol>
+<li><p>directly passed (as a <code>sprawlext</code> object or numeric array);</p></li>
+<li><p>derived from a different object from which a <code>sprawlext</code> object object
+can be derived (see details)</p></li>
 </ol>
     
 
-    <pre class="usage"><span class='fu'>crop_rast</span>(<span class='no'>rast_object</span>, <span class='no'>ext_object</span>, <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>,
-  <span class='kw'>out_filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>crop_rast</span>(<span class='no'>rast_object</span>, <span class='no'>ext_object</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>pad</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -165,15 +166,26 @@ filename from which an object of class <code>sprawlext</code> can be obtained (s
 <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/get_extent'>sprawl::get_extent()</a></code>)</p></td>
     </tr>
     <tr>
+      <th>mask</th>
+      <td><p><code>logical</code> if TRUE, and <code>ext_object</code> is a polygon shapefile or
+<code>R</code> object, the output is also masked on the boundaries of <code>ext_object</code></p></td>
+    </tr>
+    <tr>
+      <th>pad</th>
+      <td><p><code>numeric</code> extent of a "padding area" to be kept with respect to
+<code>crop_extent</code> (in number of pixels). Useful to be sure not to crop "too much"
+for example when cropping before extracting freatures suche as in <code>extract_rast</code>,
+Default: 1</p></td>
+    </tr>
+    <tr>
       <th>out_type</th>
-      <td><p><code>character</code> indicating to which type of rast_file the input should be
-re-cropped.</p><ol>
+      <td><p><code>character</code> indicates the type of object to be returned:</p><ol>
 <li><p>"rastobject" return a <code>raster</code> rast_file accessing the saved cropped file</p></li>
 <li><p>"rastfile" return the filename of the GTiff file corresponding to the
 cropped GTiff file. If <code>out_filename == NULL</code>, this corresponds to a file
 saved in <code>R</code> temporary folder.</p></li>
 <li><p>"vrtfile" return the filename of the vrt file built for cropping
-the input raster (no saving to disk is performed)
+the input raster (<strong>no saving to disk is performed</strong>)
 , Default: "rastobject"</p></li>
 </ol></td>
     </tr>
@@ -181,6 +193,13 @@ the input raster (no saving to disk is performed)
       <th>out_filename</th>
       <td><p><code>character</code> filename to be used to save the cropped
 raster.</p></td>
+    </tr>
+    <tr>
+      <th>out_dtype</th>
+      <td><p><code>character</code> data type of the output masked files, according
+to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+"Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
+If NULL, the data type is retrieved from the input, Default: NULL</p></td>
     </tr>
     <tr>
       <th>compress</th>

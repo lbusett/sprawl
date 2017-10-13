@@ -20,6 +20,7 @@ reference:
       - '`extract_rast`'
       - '`mask_rast`'
       - '`reclass_rast`'
+      - '`reproj_rast`'
   - title: Vector processing
     desc: ~
     contents:
@@ -27,12 +28,13 @@ reference:
       - '`cast_vect`'
       - '`create_fishnet`'
       - '`crop_vect`'
+      - '`select_extent`'
   - title: Retrieve info from spatial files
     desc: ~
     contents:
       - '`get_extent`'
       - '`get_rastinfo`'
-      - '`get_spatype`'
+      - '`get_raststats`'
       - '`get_proj4string`'
       - '`get_projunits`'
       - '`get_extent`'
@@ -41,6 +43,8 @@ reference:
     contents:
       - '`plot_rast`'
       - '`plot_rast_gg`'
+      - '`plot_rasthist`'
+      - '`plot_vect`'
   - title: Data fetching from public repositories
     desc: ~
     contents:
@@ -48,20 +52,24 @@ reference:
   - title: Miscellaneous Helpers
     desc: ~
     contents:
+      - '`add_scale_fill`'
       - '`sprawlext`'
-      - '`build_testraster`'
-      - '`build_testshape`'
       - '`check_proj4string`'
       - '`convert_rastdtype`'
+      - '`create_virtrast`'
       - '`datetodoy`'
       - '`doytodate`'
+      - '`fillpals`'
       - '`find_command`'
       - '`find_gdal`'
+      - '`get_spatype`'
+      - '`get_vectype`'
       - '`make_folder`'
       - '`migrate_virtrast`'
       - '`reproj_extent`'
       - '`summarize_data`'
       - '`sprawl_initcluster`'
+      - '`sprawl_scalebar`'
 navbar:
   type: inverse
   left:

@@ -191,12 +191,10 @@ projection is passed. Otherwise, the function returns "invalid", Default: TRUE</
 <span class='fu'>check_proj4string</span>(<span class='st'>"example of invalid string"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: check_proj4string --&gt; Invalid projection detected!</span></div><div class='output co'>#&gt; [1] "invalid"</div><div class='input'>
 <span class='fu'>library</span>(<span class='no'>sp</span>)
 <span class='fu'>check_proj4string</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='st'>"+init=epsg:32632"</span>))</div><div class='output co'>#&gt; [1] "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
-</div><span class='co'># NOT RUN {</span>
 <span class='fu'>library</span>(<span class='no'>raster</span>)
-<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"sprawl_EVItest.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='no'>in_rast</span>)
-<span class='fu'>check_proj4string</span>(<span class='no'>in_rast</span>@<span class='kw'>crs</span>)
-<span class='co'># }</span></pre>
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>,
+  <span class='st'>"oli_multi_1000_b2.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
+<span class='fu'>check_proj4string</span>(<span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

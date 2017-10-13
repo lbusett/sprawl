@@ -18,9 +18,13 @@ valid raster file}
 
 \item{maxchunk}{PARAM_DESCRIPTION, Default: 5e+07}
 
-\item{method}{PARAM_DESCRIPTION, Default: 'fastdisk'}
+\item{method}{PARAM_DESCRIPTION, Default: "disk"}
+
+\item{out_type}{PARAM_DESCRIPTION, Default: 'rastobject'}
 
 \item{out_file}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{nodata_in}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
 
@@ -51,7 +55,7 @@ DETAILS
  test <- aggregate_rast(in_rast,
                         in_obj_zones,
                         FUN     = mean,
-                        method  = "fastdisk",
+                        method  = "disk",
                         to_file = FALSE,
                         verbose = FALSE)
  }

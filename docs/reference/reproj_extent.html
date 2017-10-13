@@ -144,7 +144,7 @@ a different projection. simple wrapper for the <code>spTransform</code> function
     
 
     <pre class="usage"><span class='fu'>reproj_extent</span>(<span class='no'>ext</span>, <span class='no'>out_proj</span>, <span class='kw'>in_proj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>n_dens</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
+  <span class='kw'>n_dens</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -175,6 +175,10 @@ the one obtained by reprojecting the upper-left and the lower-right corners.</p>
       <td><p><code>numeric</code> Densification ratio used in the case enlarge is TRUE.
 reprojected extent</p></td>
     </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> If FALSE, suppress processing messages, Default: TRUE</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -190,9 +194,16 @@ reprojected extent</p></td>
 <span class='no'>in_sprawlext</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_rast</span>)
 
 <span class='co'># Reproject a sprawlext</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get_extent(ext, proj4string = in_proj, abort = TRUE): object 'in_sprawlext_1' not found</span></div><div class='input'>
+<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: in_sprawlext to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;      xmin      ymin      xmax      ymax 
+#&gt;  195742.3 1677398.6  332519.7 1780655.5 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
+#&gt; </div><div class='input'>
 <span class='co'># Reproject the extent of a file</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_file</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+<span class='fu'>reproj_extent</span>(<span class='no'>in_file</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: in_file to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":
 #&gt;      xmin      ymin      xmax      ymax 
 #&gt;  195742.3 1677398.6  332519.7 1780655.5 
@@ -201,7 +212,7 @@ reprojected extent</p></td>
 #&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
 #&gt; </div><div class='input'>
 <span class='co'># Reproject the extent of a raster</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_rast</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+<span class='fu'>reproj_extent</span>(<span class='no'>in_rast</span>, <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: in_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":
 #&gt;      xmin      ymin      xmax      ymax 
 #&gt;  195742.3 1677398.6  332519.7 1780655.5 
@@ -210,14 +221,14 @@ reprojected extent</p></td>
 #&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
 #&gt; </div><div class='input'>
 <span class='co'># Reproject an extent or a bounding box (given the input projection)</span>
-<span class='fu'>reproj_extent</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+<span class='fu'>reproj_extent</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: extentin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":
 #&gt;      xmin      ymin      xmax      ymax 
 #&gt;  195742.3 1677398.6  332519.7 1780655.5 
 #&gt; 
 #&gt; Slot "proj4string":
 #&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
-#&gt; </div><div class='input'><span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; </div><div class='input'><span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: bboxin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":
 #&gt;      xmin      ymin      xmax      ymax 
 #&gt;  195742.3 1677398.6  332519.7 1780655.5 
@@ -225,9 +236,16 @@ reprojected extent</p></td>
 #&gt; Slot "proj4string":
 #&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
 #&gt; </div><div class='input'><span class='co'># (this fails without providing in_proj value:)</span>
-<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in check_proj4string.default(proj4string, abort = abort): check_proj4string --&gt; proj4string is not a valid CRS object or proj4string. Aborting!</span></div><div class='input'>
+<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: bboxin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; <span class='error'>Error in check_proj4string.default(proj4string, abort = TRUE): check_proj4string --&gt; proj4string is not a valid CRS object or proj4string. Aborting!</span></div><div class='input'>
 <span class='co'># Reproject without enlarging</span>
-<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext_1</span>, <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get_extent(ext, proj4string = in_proj, abort = TRUE): object 'in_sprawlext_1' not found</span></div></pre>
+<span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext</span>, <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: in_sprawlext to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;      xmin      ymin      xmax      ymax 
+#&gt;  195742.3 1677398.6  332519.7 1780655.5 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

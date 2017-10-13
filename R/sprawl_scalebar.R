@@ -1,6 +1,7 @@
 #' @title sprawl_scalebar
 #' @description Adds a scale bar to maps created with `plot_rast_gg`.
-#' @param data `Raster` object passed to `plot_rast_gg` to plot the map
+#' @param in_obj `Raster` object passed to `plot_rast_gg` or `plot_vect` to which
+#'  the scalebar should be added;
 #' @param location `character ["bottomright" | "bottomleft" | "topleft" | "topright"]`
 #'  indicating where the scalebar should be placed, Default: "bottomright"
 #' @param scalebar_dist `numeric` distance in to represent with each segment of the scale bar.
@@ -125,7 +126,7 @@ sprawl_scalebar <- function(
       # x <- x.max - (x.max - x.min) / 15
       # y <- y.min + (y.max - y.min) / 40
       x <- x.max - (x.max - x.min) / 15
-      y <- y.min
+      y <- y.min + (y.max - y.min) / 40
     }
     else {
       x <- as.numeric(anchor["x"])

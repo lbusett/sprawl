@@ -7,11 +7,13 @@
 #' @param in_zones_rast PARAM_DESCRIPTION
 #' @param FUN PARAM_DESCRIPTION, Default: mean
 #' @param maxchunk PARAM_DESCRIPTION, Default: 5e+07
-#' @param method PARAM_DESCRIPTION, Default: 'fastdisk'
+#' @param method PARAM_DESCRIPTION, Default: "disk"
 #' @param out_file PARAM_DESCRIPTION, Default: NULL
 #' @param overwrite `logical` If TRUE, existing files are ovewritten,
 #'   Default: FALSE
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
+#' @param out_type PARAM_DESCRIPTION, Default: 'rastobject'
+#' @param nodata_in PARAM_DESCRIPTION, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -27,17 +29,17 @@
 #'  test <- aggregate_rast(in_rast,
 #'                         in_obj_zones,
 #'                         FUN     = mean,
-#'                         method  = "fastdisk",
+#'                         method  = "disk",
 #'                         to_file = FALSE,
 #'                         verbose = FALSE)
 #'  }
 #' @rdname aggregate_rast
 #' @export
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
+#' @importFrom assertthat assert_that
 #' @importFrom data.table data.table
-#' @importFrom raster raster writeRaster rasterize res
-#' @importFrom sf st_crs st_transform st_bbox st_coordinates st_centroid st_as_sf
-#'  st_set_crs
+#' @importFrom raster res rasterize
+#' @importFrom sf st_crs st_transform st_bbox st_coordinates st_centroid st_as_sf st_set_crs
 #' @importFrom sp proj4string
 
 aggregate_rast <- function(in_val_rast,
@@ -168,7 +170,7 @@ aggregate_rast <- function(in_val_rast,
   }
 
   if (out_file == "rastfile") {
-    return(out_rast)
+    return(out_file)
   } else {
     return(read_rast(out_file))
   }

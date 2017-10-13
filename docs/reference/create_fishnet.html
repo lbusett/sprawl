@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a "fishnet" vector based on cells of a raster — create_fishnet • sprawl</title>
+<title>Create a "fishnet" vector over the extent of a spatial object — create_fishnet • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,7 +135,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a "fishnet" vector based on cells of a raster</h1>
+    <h1>Create a "fishnet" vector over the extent of a spatial object</h1>
     </div>
 
     
@@ -147,9 +147,9 @@ number of cells in each direction. If the <code>cellsize</code> option is set, a
 of the specified resolution is created over the extent of the raster)</p>
     
 
-    <pre class="usage"><span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>crop_layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"rect"</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>exact_csize</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_shape</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>crop_layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -168,6 +168,10 @@ of pixel is aggregated in each direction). Ignored if <code>cellsize</code> is n
 Default: 1</p></td>
     </tr>
     <tr>
+      <th>shape</th>
+      <td><p><code>character [\"rect\" \"hex\"</code>]</p></td>
+    </tr>
+    <tr>
       <th>cellsize</th>
       <td><p><code>numeric(1/2)</code> (optional) 1/2 element array specifying the
 dimensions of the desired #' cells in the x and y directions (if only one
@@ -175,23 +179,36 @@ element is provided, the same cellsize is used in each direction),
 Default: NULL</p></td>
     </tr>
     <tr>
+      <th>exact_csize</th>
+      <td><p><code>logical</code> If TRUE, the function strictly adheres to what
+specified in <code>cellsize</code> or <code>pix_for_cell</code> (i.e., it doesn't alter the fishnet
+cell to get a regualr fishnet over the raster). The last column/row of the
+fisnhet have therefore a different area, but the other cells respect what
+specified by the user (i.e., having a regular 2x2 km grid).</p></td>
+    </tr>
+    <tr>
       <th>to_file</th>
-      <td><p><code>logical</code> PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> PARAM_DESCRIPTION, Default: FALSE.</p></td>
     </tr>
     <tr>
       <th>out_shape</th>
-      <td><p><code>logical</code> PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> PARAM_DESCRIPTION, Default: FALSE.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p><code>logical</code> PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> PARAM_DESCRIPTION, Default: TRUE.</p></td>
     </tr>
     <tr>
       <th>crop_layer</th>
       <td><p><code>logical</code> object of class <code>Extent</code>. If not null, the
 fishnet is cropped on this extent, without "moving" the nodes of the grid.
 This is useful to crop a grid created on the basis of a different raster
-coordinates on top of a different raster, Default: FALSE</p></td>
+coordinates on top of a different raster, Default: FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p><code>logical</code> If FALSE, processing messages are suppressed,
+Default: TRUE.</p></td>
     </tr>
     </table>
     
@@ -208,18 +225,20 @@ coordinates on top of a different raster, Default: FALSE</p></td>
     <pre class="examples"><div class='input'>  <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
   <span class='fu'>library</span>(<span class='no'>raster</span>)
   <span class='fu'>library</span>(<span class='no'>sprawl</span>)
-  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: lattice</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: latticeExtra</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: RColorBrewer</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘latticeExtra’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:ggplot2’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    layer</span></div><div class='input'>
-  <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='build_testraster.html'>build_testraster</a></span>(<span class='fl'>20</span>,<span class='fl'>20</span>,<span class='fl'>1</span>)
-  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>)
+  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)
 
-  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2</span>,<span class='fl'>2</span>))
-  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>22</span>,<span class='fl'>50</span>))
-  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
+  <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='build_testraster.html'>build_testraster</a></span>(<span class='fl'>20</span>,<span class='fl'>40</span>,<span class='fl'>1</span>)
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_rast</span></div><div class='input'>
+  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>4</span>,<span class='fl'>2</span>))</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_rast</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-7.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>25</span>,<span class='fl'>25</span>))</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_rast</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='co'># plotting with `exact_csize` creates a grid that covers the extent with</span>
+  <span class='co'># regular cells, by adapting the cellsize (see `sf::st_make_grid`)</span>
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>25</span>,<span class='fl'>25</span>),
+                                  <span class='kw'>exact_csize</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_rast</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='co'># using shape = "hex" gives and hexagonal grid instead</span>
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>25</span>,<span class='fl'>25</span>),
+                                  <span class='kw'>exact_csize</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"hex"</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

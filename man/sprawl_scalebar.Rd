@@ -11,6 +11,9 @@ sprawl_scalebar(in_obj, location = "bottomright", scalebar_dist = NULL,
   facet.var = NULL, facet.lev = NULL, units = "m")
 }
 \arguments{
+\item{in_obj}{\code{Raster} object passed to \code{plot_rast_gg} or \code{plot_vect} to which
+the scalebar should be added;}
+
 \item{location}{\code{character ["bottomright" | "bottomleft" | "topleft" | "topright"]}
 indicating where the scalebar should be placed, Default: "bottomright"}
 
@@ -64,8 +67,6 @@ variable in \code{facet.var}. The scale bar will be drawn only in the \code{face
 facet.}
 
 \item{units}{DESCRIPTION}
-
-\item{data}{\code{Raster} object passed to \code{plot_rast_gg} to plot the map}
 }
 \description{
 Adds a scale bar to maps created with \code{plot_rast_gg}.

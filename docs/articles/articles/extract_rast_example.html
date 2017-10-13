@@ -198,7 +198,7 @@ in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdoc
 ## epsg (SRID):    NA
 ## proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 ## # A tibble: 6 x 10
-##    lc_type band_n    band_name N_PIX     N value    id category sup_catego
+##    lc_type band_n    band_name n_pix     N value    id category sup_catego
 ##     &lt;fctr&gt;  &lt;int&gt;        &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;     &lt;fctr&gt;
 ## 1 forest_1      1 EVIts_test.1    61     1  4454     1   Forest Vegetation
 ## 2 forest_1      1 EVIts_test.1    61     2  4260     1   Forest Vegetation
@@ -212,23 +212,23 @@ in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdoc
 <code>extracted_values$statdata</code> contains instead the statistics for each polygon and band. By default, average, standard deviation, minimum, maximum and median are computed (see the help of the function)</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://www.rdocumentation.org/packages/raster/topics/headtail">head</a></span>(extracted_values<span class="op">$</span>stats)</code></pre></div>
-<pre><code>## Simple feature collection with 6 features and 12 fields
+<pre><code>## Simple feature collection with 6 features and 14 fields
 ## geometry type:  POLYGON
 ## dimension:      XY
 ## bbox:           xmin: 12918420 ymin: 1752797 xmax: 12920610 ymax: 1755103
 ## epsg (SRID):    NA
 ## proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
-## # A tibble: 6 x 13
-##    lc_type band_n    band_name N_PIX      avg   med       sd   min   max
-##     &lt;fctr&gt;  &lt;dbl&gt;        &lt;chr&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 forest_1      1 EVIts_test.1    61 4830.820  4747 540.6097  3731  5987
-## 2 forest_1      2 EVIts_test.2    61 4605.131  4648 510.8426  3665  5547
-## 3 forest_1      3 EVIts_test.3    61 4837.902  4834 557.4429  3640  5827
-## 4 forest_1      4 EVIts_test.4    61 4484.984  4411 473.7452  3285  5275
-## 5 forest_1      5 EVIts_test.5    61 4284.197  4237 498.7366  3469  5318
-## 6 forest_1      6 EVIts_test.6    61 4374.525  4302 471.1914  3317  5363
-## # ... with 4 more variables: id &lt;dbl&gt;, category &lt;fctr&gt;, sup_catego &lt;fctr&gt;,
-## #   geometry &lt;S3: sfc_POLYGON&gt;</code></pre>
+## # A tibble: 6 x 15
+##    lc_type band_n    band_name        area n_pix n_pix_val      avg   med
+##     &lt;fctr&gt;  &lt;dbl&gt;        &lt;chr&gt; &lt;S3: units&gt; &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1 forest_1      1 EVIts_test.1 3400057 m^2    61        61 4830.820  4747
+## 2 forest_1      2 EVIts_test.2 3400057 m^2    61        61 4605.131  4648
+## 3 forest_1      3 EVIts_test.3 3400057 m^2    61        61 4837.902  4834
+## 4 forest_1      4 EVIts_test.4 3400057 m^2    61        61 4484.984  4411
+## 5 forest_1      5 EVIts_test.5 3400057 m^2    61        61 4284.197  4237
+## 6 forest_1      6 EVIts_test.6 3400057 m^2    61        61 4374.525  4302
+## # ... with 7 more variables: sd &lt;dbl&gt;, min &lt;dbl&gt;, max &lt;dbl&gt;, id &lt;dbl&gt;,
+## #   category &lt;fctr&gt;, sup_catego &lt;fctr&gt;, geometry &lt;S3: sfc_POLYGON&gt;</code></pre>
 <p>These results can be easily used for performing further analysis or plotting (<strong>coming soon !</strong>)</p>
 </div>
 </div>

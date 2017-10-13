@@ -143,19 +143,19 @@
 disk as an ESRI shapefile</p>
     
 
-    <pre class="usage"><span class='fu'>write_shape</span>(<span class='no'>out_obj</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>write_shape</span>(<span class='no'>in_object</span>, <span class='no'>out_filename</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>encoding</span> <span class='kw'>=</span> <span class='st'>"UTF-8"</span>, <span class='kw'>create_dir</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>out_obj</th>
+      <th>in_object</th>
       <td><p><code>character</code> object to be written to the shapefile. Must be a
 valid <code>*sp</code> or <code>sf</code> object</p></td>
     </tr>
     <tr>
-      <th>out_file</th>
+      <th>out_filename</th>
       <td><p><code>character</code> output file name</p></td>
     </tr>
     <tr>
@@ -174,8 +174,8 @@ shapefile, Default: "UTF-8"</p></td>
     </tr>
     <tr>
       <th>create_dir</th>
-      <td><p><code>logical</code>, if TRUE and the folder of out_file doesn't exist,
-then the full folder tree up to out_file is created, Default: FALSE
+      <td><p><code>logical</code>, if TRUE and the folder of out_filename doesn't exist,
+then the full folder tree up to out_filename is created, Default: FALSE
 (use with caution !)</p></td>
     </tr>
     <tr>
@@ -194,9 +194,10 @@ then the full folder tree up to out_file is created, Default: FALSE
 <span class='no'>points</span>             <span class='kw'>&lt;-</span> <span class='kw pkg'>sp</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sp/topics/SpatialPoints'>SpatialPointsDataFrame</a></span>(<span class='no'>pts</span>, <span class='no'>df</span>, <span class='kw'>match.ID</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># Save it to a shape file</span>
-<span class='no'>out_file</span>  <span class='kw'>=</span> <span class='fu'>tempfile</span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>tmpdir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(), <span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".shp"</span>)
+<span class='no'>out_filename</span>  <span class='kw'>=</span> <span class='fu'>tempfile</span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>tmpdir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(),
+                         <span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".shp"</span>)
 <span class='no'>mysp_object</span> <span class='kw'>=</span> <span class='no'>points</span>
-<span class='fu'>write_shape</span>(<span class='no'>mysp_object</span>, <span class='no'>out_file</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
+<span class='fu'>write_shape</span>(<span class='no'>mysp_object</span>, <span class='no'>out_filename</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/Rtmpv3iV0o folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

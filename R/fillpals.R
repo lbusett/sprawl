@@ -7,8 +7,8 @@
 #' @examples
 #' \dontrun{
 #' # Print the list of valid fill palettes used in `plot_rast`, `plot_rast_gg`
-#'   and `plot_vect`
-#` sprawl_fillpals()
+#' # and `plot_vect`
+#' fillpals()
 #' }
 #' @rdname fillpals
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

@@ -144,19 +144,20 @@ raster for pixels corresponding to the features of a vector (Polygon,
 Point or Line)</p>
     
 
-    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_rast_values</span>, <span class='no'>zones_rast</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"fastdisk"</span>, <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nodata_out</span> <span class='kw'>=</span> -<span class='fl'>Inf</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>aggregate_rast</span>(<span class='no'>in_val_rast</span>, <span class='no'>in_zones_rast</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"disk"</span>, <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>nodata_in</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_rast_values</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>in_val_rast</th>
+      <td><p>Object of class <code>Raster*</code> or filename corresponding to a
+valid raster file</p></td>
     </tr>
     <tr>
-      <th>zones_rast</th>
+      <th>in_zones_rast</th>
       <td><p>PARAM_DESCRIPTION</p></td>
     </tr>
     <tr>
@@ -169,23 +170,28 @@ Point or Line)</p>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'fastdisk'</p></td>
+      <td><p>PARAM_DESCRIPTION, Default: "disk"</p></td>
     </tr>
     <tr>
-      <th>to_file</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <th>out_type</th>
+      <td><p>PARAM_DESCRIPTION, Default: 'rastobject'</p></td>
     </tr>
     <tr>
       <th>out_file</th>
       <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
     </tr>
     <tr>
-      <th>nodata_out</th>
-      <td><p>PARAM_DESCRIPTION, Default: NA</p></td>
+      <th>nodata_in</th>
+      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
     </tr>
     <tr>
       <th>verbose</th>
       <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p><code>logical</code> If TRUE, existing files are ovewritten,
+Default: FALSE</p></td>
     </tr>
     </table>
     
@@ -199,8 +205,20 @@ Point or Line)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> #EXAMPLE1
- </div></pre>
+    <pre class="examples"><div class='input'> <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
+                                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+ <span class='no'>in_rast</span>      <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='no'>in_file</span>, <span class='kw'>bands</span> <span class='kw'>=</span> <span class='fl'>20</span>)
+ <span class='no'>tempraster</span>   <span class='kw'>&lt;-</span> <span class='fu'>tempfile</span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".tif"</span>)
+ <span class='no'>in_obj_zones</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/aggregate'>aggregate</a></span>(<span class='no'>in_rast</span>,
+                                     <span class='kw'>fact</span>      <span class='kw'>=</span> <span class='fl'>4</span>,
+                                     <span class='kw'>filename</span>  <span class='kw'>=</span> <span class='no'>tempraster</span>,
+                                     <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>)
+ <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>aggregate_rast</span>(<span class='no'>in_rast</span>,
+                        <span class='no'>in_obj_zones</span>,
+                        <span class='kw'>FUN</span>     <span class='kw'>=</span> <span class='no'>mean</span>,
+                        <span class='kw'>method</span>  <span class='kw'>=</span> <span class='st'>"disk"</span>,
+                        <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+                        <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in aggregate_rast(in_rast, in_obj_zones, FUN = mean, method = "disk",     to_file = FALSE, verbose = FALSE): unused argument (to_file = FALSE)</span></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

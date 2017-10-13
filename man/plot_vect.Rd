@@ -71,6 +71,12 @@ Default: NULL (Currently not yet supported!)}
 lead to less detailed basemap, but larger text. Default: 0 (Currently not
 yet supported!)}
 
+\item{xlims}{\code{numeric(2)}, minimum and maximum x coordinates to be plotted.
+If NULL, the whole x-range is plotted, Default: NULL}
+
+\item{ylims}{\code{numeric(2)}, minimum and maximum y coordinates to be plotted.
+If NULL, the whole y-range is plotted, Default: NULL}
+
 \item{zlims}{\code{numeric array [2]} limits governing the range of
 values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
 
@@ -207,12 +213,12 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
  library(ggplot2)
  in_vect <- get(load(system.file("extdata/shapes", "poly_lomb.RData",
                                  package = "sprawl.data")))
  # plot only geometry
  plot_vect(in_vect)
+
  plot_vect(in_vect, line_color = "blue", line_size = 1.5)
 
  # plot with a fill on a cartegorical variable with a single "level"
@@ -233,7 +239,6 @@ if(interactive()){
            borders_color = "red", borders_txt_field = "NAME_2")
 
  }
-}
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

@@ -47,6 +47,7 @@ DETAILS
  plot(rast_extent, add = T)
  plot(in_polys_cropped[1])
  plot(rast_extent, add = T)
+  par(mfrow=c(1,2))
  }
 }
 \seealso{
