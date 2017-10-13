@@ -5,14 +5,14 @@
 \title{sprawl_scalebar}
 \usage{
 sprawl_scalebar(in_obj, location = "bottomright", scalebar_dist = NULL,
-  height = 0.02, st.dist = 0.025, st.bottom = TRUE, st.size = 3.5,
+  height = 0.02, st.dist = 0.01, st.bottom = TRUE, st.size = 3.5,
   st.color = "black", box.fill = c("black", "white"), box.color = "black",
   dd2km = FALSE, model, x.min, x.max, y.min, y.max, anchor = NULL,
   facet.var = NULL, facet.lev = NULL, units = "m")
 }
 \arguments{
-\item{location}{\code{character} indicating the symbol's location in the plot. Possible
-options: "topright" (default), "bottomright", "bottomleft" and "topleft".}
+\item{location}{\code{character ["bottomright" | "bottomleft" | "topleft" | "topright"]}
+indicating where the scalebar should be placed, Default: "bottomright"}
 
 \item{scalebar_dist}{\code{numeric} distance in to represent with each segment of the scale bar.}
 

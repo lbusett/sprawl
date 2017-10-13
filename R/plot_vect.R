@@ -80,6 +80,8 @@
 #' @param scalebar_dist `numeric` Width of the scale bar (in km). If NULL, it
 #'   is computed automatically on the basis of the range in x direction,
 #'   Default: NULL
+#' @param scalebar_pos `character ["bottomright" | "bottomleft" | "topleft" | "topright"]`
+#'  indicating where the scalebar should be placed, Default: "bottomright"
 #' @param scalebar_txt_dist `numeric` Distance between scalebar and its labels.
 #'   Adjust this in case of overlap, Default: 0.30
 #' @param na.color `character`, color to be used to plot NA values,
@@ -186,6 +188,7 @@ plot_vect <- function(
   zlims          = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
   scalebar       = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
+  scalebar_pos   = "bottomright",
   na.color       = NULL,  na.value = NULL,
   palette_name   = NULL,  direction = 1,
   leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL, leg_position = "right", #nolint
@@ -365,25 +368,27 @@ plot_vect <- function(
   #   If no scalebar dist passed, compute automatically from longitude     ####
   #   range
   units <- get_projunits(get_proj4string(in_vect))
-  if (is.null(scalebar_dist)) {
-    if (units != "dec.degrees") {
-      km_extent     <- round(diff(xlims)/1000)
-      scalebar_dist <- round(round(km_extent/10) / 5) * 5
-    } else {
-      deg2rad <- function(deg) {(deg * pi) / (180)}
-      a <- sin(0.5 * (deg2rad(ylims[2]) - deg2rad(ylims[1])))
-      b <- sin(0.5 * (deg2rad(xlims[2]) - deg2rad(xlims[1])))
-      km_extent     <- 12742 * asin(sqrt(a * a +
-                                           cos(deg2rad(ylims[1])) *
-                                           cos(deg2rad(ylims[2])) * b * b))
-      scalebar_dist <- round(round(km_extent/10) / 5) * 5
-      # scalebar_dist <- round(km_extent/100*10)
-    }
-  }
+  # if (is.null(scalebar_dist)) {
+  #   if (units != "dec.degrees") {
+  #     km_extent     <- round(diff(xlims)/1000)
+  #     scalebar_dist <- round(round(km_extent/10) / 5) * 5
+  #   } else {
+  #     deg2rad <- function(deg) {(deg * pi) / (180)}
+  #     a <- sin(0.5 * (deg2rad(ylims[2]) - deg2rad(ylims[1])))
+  #     b <- sin(0.5 * (deg2rad(xlims[2]) - deg2rad(xlims[1])))
+  #     km_extent     <- 12742 * asin(sqrt(a * a +
+  #                                          cos(deg2rad(ylims[1])) *
+  #                                          cos(deg2rad(ylims[2])) * b * b))
+  #     scalebar_dist <- round(round(km_extent/10) / 5) * 5
+  #     # scalebar_dist <- round(km_extent/100*10)
+  #   }
+  # }
 
   # Blank plot
   plot <- ggplot() +
     theme +
+    theme(panel.grid.major = element_line(color = grid_color, linetype = 3),
+          panel.grid.minor = element_blank()) +
     coord_sf(crs = get_proj4string(in_vect), ndiscr = 1000,
              expand = FALSE,
              xlim = c(xlims[1], xlims[2]),
@@ -576,9 +581,10 @@ plot_vect <- function(
     plot <- plot +
       sprawl_scalebar(in_vect,
                       scalebar_dist  = scalebar_dist,
+                      location = scalebar_pos,
                       x.min = xlims[1], x.max = xlims[2],
                       y.min = ylims[1], y.max = ylims[2],
-                      location = "bottomright", st.size = 3.5,
+                      st.size = 3.5,
                       st.bottom = FALSE, model = NULL,
                       st.dist = scalebar_txt_dist, units = rastinfo$units)
 

@@ -12,11 +12,11 @@ plot_vect(in_vect, line_color = "black", line_size = 0.2, fill_var = NULL,
   xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
   scalebar = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
-  na.color = NULL, na.value = NULL, palette_name = NULL, direction = 1,
-  leg_type = NULL, leg_labels = NULL, leg_breaks = NULL,
-  leg_position = "right", show_axis = TRUE, show_grid = TRUE,
-  grid_color = "grey15", title = NULL, subtitle = NULL,
-  theme = theme_bw(), verbose = TRUE)
+  scalebar_pos = "bottomright", na.color = NULL, na.value = NULL,
+  palette_name = NULL, direction = 1, leg_type = NULL,
+  leg_labels = NULL, leg_breaks = NULL, leg_position = "right",
+  show_axis = TRUE, show_grid = TRUE, grid_color = "grey15",
+  title = NULL, subtitle = NULL, theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_vect}{object of class \code{sfc_POLYGON} (or coercible to it using
@@ -108,6 +108,9 @@ Default: NULL}
 
 \item{scalebar_txt_dist}{\code{numeric} Distance between scalebar and its labels.
 Adjust this in case of overlap, Default: 0.30}
+
+\item{scalebar_pos}{\code{character ["bottomright" | "bottomleft" | "topleft" | "topright"]}
+indicating where the scalebar should be placed, Default: "bottomright"}
 
 \item{na.color}{\code{character}, color to be used to plot NA values,
 Default: 'transparent'.}

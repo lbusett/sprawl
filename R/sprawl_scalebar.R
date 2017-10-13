@@ -1,8 +1,8 @@
 #' @title sprawl_scalebar
 #' @description Adds a scale bar to maps created with `plot_rast_gg`.
 #' @param data `Raster` object passed to `plot_rast_gg` to plot the map
-#' @param location `character` indicating the symbol's location in the plot. Possible
-#'   options: "topright" (default), "bottomright", "bottomleft" and "topleft".
+#' @param location `character ["bottomright" | "bottomleft" | "topleft" | "topright"]`
+#'  indicating where the scalebar should be placed, Default: "bottomright"
 #' @param scalebar_dist `numeric` distance in to represent with each segment of the scale bar.
 #' @param height `numeric` value between 0 and 1 to indicate the height of the
 #'   scale bar, as a proportion of the y axis, Default: 0.02
@@ -55,7 +55,7 @@
 
 sprawl_scalebar <- function(
   in_obj, location = "bottomright", scalebar_dist = NULL, height = 0.02,
-  st.dist = 0.025, st.bottom = TRUE, st.size = 3.5, st.color = "black",
+  st.dist = 0.010, st.bottom = TRUE, st.size = 3.5, st.color = "black",
   box.fill = c("black", "white"), box.color = "black", dd2km = FALSE,
   model, x.min, x.max, y.min, y.max, anchor = NULL, facet.var = NULL,
   facet.lev = NULL, units = "m")
@@ -122,8 +122,10 @@ sprawl_scalebar <- function(
   }
   if (location == "bottomright") {
     if (is.null(anchor)) {
+      # x <- x.max - (x.max - x.min) / 15
+      # y <- y.min + (y.max - y.min) / 40
       x <- x.max - (x.max - x.min) / 15
-      y <- y.min + (y.max - y.min) / 40
+      y <- y.min
     }
     else {
       x <- as.numeric(anchor["x"])
