@@ -52,7 +52,7 @@ cast_rast.Raster <- function(object, to) {
   checkmate::assert_choice(to, c("rastobject", "rastfile"))
   if (to == "rastobject") return(object)
   if (to == "rastfile") {
-    info <- get_rastinfo(object, verbose = FALSE)
+    info <- get_rastinfo(object, verbose = FALSE, stats = FALSE)
     if (any(info$fnames == "")) {
       temprastfile <- tempfile(fileext = ".tif")
       raster::writeRaster(object,

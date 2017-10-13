@@ -54,7 +54,7 @@ testthat::test_that("Basic test on polygons extraction", {
   out <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = FALSE)
   expect_is(out, "list")
   # Check that chunked and non-chunked processing yields the same results
-  out  <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
+  out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
                        selbands = c(1,2), small = F, join_geom = F)
   out2 <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
                        selbands = c(1,2), maxchunk = 30000,  small = F)

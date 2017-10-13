@@ -31,9 +31,9 @@ create_virtrast <- function(object,
     rast_file <- cast_rast(object, "rastfile")
   }
 
-  rastinfo <- get_rastinfo(object, verbose = FALSE)
+  rastinfo <- get_rastinfo(object, stats = FALSE, verbose = FALSE)
   if (any(rastinfo$fnames == "")) {
-    rastinfo <- get_rastinfo(rast_file, verbose = FALSE)
+    rastinfo <- get_rastinfo(rast_file, stats = FALSE, verbose = FALSE)
   }
 
   if (rastinfo$nbands > 1) {

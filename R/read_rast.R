@@ -65,5 +65,5 @@ read_rast    <- function(in_file,
       }
     }
 
-    # rastinfo     <- get_rastinfo(in_file, verbose = FALSE)
+
   }
