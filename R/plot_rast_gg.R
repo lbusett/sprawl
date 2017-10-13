@@ -1,5 +1,5 @@
 #' @title Plot a map based on a `raster` object using ggplot
-#' @description Plot a raster object using ggplot witn an (optional) basemap.
+#' @description Plot a raster object using ggplot with an (optional) basemap.
 #'   The function allows to:
 #'   - Plot a single- or multi-band image using facet_wrap (args `bands_to_plot`,
 #'    `facet_rows`)
@@ -31,7 +31,7 @@
 #'  Note that if a wrong palette name is specified, plot_rast_gg reverts to
 #'  the default values. Run `sprawl::fillpals()` to see a list
 #'  of available palettes, Default: NULL
-#' @param direction `character [0 | 1]` direction of the color legend. Chenge this
+#' @param direction `character [0 | 1]` direction of the color legend. Change this
 #'  to invert the color gradient, Default: 1
 #' @param leg_type `character ["continuous", "discrete"]` type of legend to be used
 #'  on continuous variables. If "continuous" , a colourbar is used. If "discrete",
@@ -53,7 +53,7 @@
 #'   the legend on the right or on the bottom. Default: "right"
 #' @param maxpixels `numeric` maximum number of pixels to be used for plotting *for
 #'   each band*. Reduce this to speed-up plotting by subsampling the raster (this
-#'   reduces quality!). Increase it to improve qualitty (this reduces rendering
+#'   reduces quality!). Increase it to improve quality (this reduces rendering
 #'   speed!), Default:1e5
 #' @param band_names `character (nbands)`, array of band names. These will used
 #'   to populate the "strips" above each plotted band in case of multi-band plot.
@@ -80,7 +80,7 @@
 #'   the values outside of the zlims range will be plotted.
 #'   - If == "censor", they are plotted using the colors(s) specified in `outliers_color`
 #'   - If == "to_minmax", outliers are forced to the colors used for the maximum
-#'     and minum values specified in `zlims` (using `scales::squish`), Default:
+#'     and minimum values specified in `zlims` (using `scales::squish`), Default:
 #'     `censor`.
 #' @param outliers_colors `character array (length 1 or 2)` specifies colors to be
 #'   used to plot values outside zlims if `outliers_style == "censor".
@@ -94,7 +94,7 @@
 #' @param zoomin `numeric`, Adjustment factor for basemap zoom. Negative values
 #'   lead to less detailed basemap, but larger text. Default: 0
 #' @param borders_layer `character` object of class `sf_POLYGON` or `sfc_polygon`,
-#'   (or cohercible to it using `sprawl::cast_vect`) to be overlayed to the plot,
+#'   (or coercible to it using `sprawl::cast_vect`) to be overlayed to the plot,
 #'   Default: NULL (no overlay)
 #' @param borders_color color used to plot the boundaries of `borders_layer`
 #'   (if provided), Default: 'grey15'
@@ -113,7 +113,7 @@
 #'   Default: NULL
 #' @param scalebar_txt_dist `numeric` Distance between scalebar and its labels.
 #'   Adjust this in case of overlap, Default: 0.30
-#' @param transparency `numeric [0,1]`, transparency of the raster layer. Higer
+#' @param transparency `numeric [0,1]`, transparency of the raster layer. Higher
 #'   values lead to higher transparency, Default: 0 (ignored if basemap == NULL)
 #' @param na.color `character`, color to be used to plot NA values,
 #'   Default: 'transparent'.
@@ -130,7 +130,7 @@
 #' (e.g., theme_light()), Default: theme_bw()
 #' @param verbose `logical`, If FALSE, suppress processing message,
 #'  Default: TRUE
-#' @return a `gg` plot. It is plotted immeditely. If the call includes
+#' @return a `gg` plot. It is plotted immediately. If the call includes
 #'  an assignment operator (e.g., `plot <- plot_rast_gg(in_rast))`, the plot is
 #'  saved to the specified variable. Otherwise, it is plotted immediately.
 #' @examples

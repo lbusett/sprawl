@@ -29,7 +29,7 @@ plot_vect(in_vect, line_color = "black", line_size = 0.2, fill_var = NULL,
 in_vect, Default: 0.2}
 
 \item{fill_var}{\code{character} name of the column of \code{in_vect} to be used for
-coloring the different polygons. If NULL, only the goemetry is plotted,
+coloring the different polygons. If NULL, only the geometry is plotted,
 Default: NULL}
 
 \item{transparency}{\code{numeric [0, 1]}transparency of the filled polygons. Higher
@@ -45,7 +45,7 @@ If NULL, multiple values of \code{fill_var} for the same polygon are ignored
 in faceted plots, Default: 2 (Ignored if \code{fill_var} == NULL)}
 
 \item{borders_layer}{\code{character} object of class \code{sf_POLYGON} or \code{sfc_polygon},
-(or cohercible to it using \code{sprawl::cast_vect}) to be overlayed to the plot,
+(or coercible to it using \code{sprawl::cast_vect}) to be overlayed to the plot,
 Default: NULL (no overlay)}
 
 \item{borders_color}{color used to plot the boundaries of \code{borders_layer}
@@ -94,7 +94,7 @@ the values outside of the zlims range will be plotted.
 \itemize{
 \item If == "censor", they are plotted using the colors(s) specified in \code{outliers_color}
 \item If == "to_minmax", outliers are forced to the colors used for the maximum
-and minum values specified in \code{zlims} (using \code{scales::squish}), Default:
+and minimum values specified in \code{zlims} (using \code{scales::squish}), Default:
 \code{censor}.
 }}
 
@@ -134,7 +134,7 @@ the default values. Run \code{sprawl::fillpals()} to see a list
 of available palettes, Default: NULL
 }}
 
-\item{direction}{\code{character [0 | 1]} direction of the color legend. Chenge this
+\item{direction}{\code{character [0 | 1]} direction of the color legend. Change this
 to invert the color gradient, Default: 1}
 
 \item{leg_type}{\code{character ["continuous", "discrete"]} type of legend to be used
@@ -181,12 +181,12 @@ Default: grey15"}
 Default: TRUE}
 }
 \value{
-a \code{gg} plot. It is plotted immeditely. If the call includes
+a \code{gg} plot. It is plotted immediately. If the call includes
 an assignment operator (e.g., \code{plot <- plot_vect(in_vect))}, the plot is
 saved to the specified variable. Otherwise, it is plotted immediately.
 }
 \description{
-Plot a raster object using ggplot witn an (optional) basemap.
+Plot a raster object using ggplot with an (optional) basemap.
 The function allows to:
 \itemize{
 \item Plot either only the geometry of \code{in_vect}, or a map with different

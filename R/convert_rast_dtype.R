@@ -1,6 +1,6 @@
 #' @title convert data type between `raster` and `gdal` conventions
 #' @description FUNCTION_DESCRIPTION
-#' @param dtype_string `character` data type string (e.g., Int16, etc)
+#' @param dtype_string `character` data type string (e.g., Int16, etc.)
 #' @param type `character` - either \"gdal\" or \"raster\"
 #' @return `tibble` containing the representation of the data type both for gdal
 #'  and raster

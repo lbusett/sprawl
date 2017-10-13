@@ -31,11 +31,11 @@ Default: "rastobj" (If an invalid string is provided, defaults to \code{rastobj}
 
 \item{out_filename}{\code{character} filename where the masked raster should be saved
 If NULL, the masked raster is saved on a temporary file in the \code{R} temporary
-folder, named \code{<basename(in_rast)>_sprawlmask.tif}. The file is saved in GTtiff
+folder, named \code{<basename(in_rast)>_sprawlmask.tif}. The file is saved in GTiff
 format, with \code{compress} compression.}
 
 \item{out_dtype}{\code{character} data type of the output masked files, according
-to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
 If NULL, the data type is retrieved from the input, Default: NULL}
 

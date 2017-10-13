@@ -13,7 +13,7 @@
 #'   `R` object, the output is also masked on the boundaries of `ext_object`
 #' @param pad `numeric` extent of a "padding area" to be kept with respect to
 #'   `crop_extent` (in number of pixels). Useful to be sure not to crop "too much"
-#'  for example when cropping before extracting freatures suche as in `extract_rast`,
+#'  for example when cropping before extracting features suche as in `extract_rast`,
 #'  Default: 1
 #' @param out_type `character` indicates the type of object to be returned:
 #'   1. "rastobject" return a `raster` rast_file accessing the saved cropped file
@@ -26,7 +26,7 @@
 #' @param out_filename `character` filename to be used to save the cropped
 #'   raster.
 #' @param out_dtype `character` data type of the output masked files, according
-#'   to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+#'   to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 #'   "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
 #'   If NULL, the data type is retrieved from the input, Default: NULL
 #' @param compress `character` compression option to be used to saved the cropped
@@ -61,7 +61,7 @@ crop_rast <- function(rast_object,
 
   #   __________________________________________________________________________
   #   Create processing objects: rast_file is a filename, rast_object a     ####
-  #   raster object used to retrieve extent, resolution, etc
+  #   raster object used to retrieve extent, resolution, etc.
   rast_file    <- cast_rast(rast_object, to = "rastfile")
   rast_object  <- cast_rast(rast_object, to = "rastobject")
   #   __________________________________________________________________________

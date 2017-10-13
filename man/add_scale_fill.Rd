@@ -47,11 +47,11 @@ the values outside of the zlims range will be plotted.
 \itemize{
 \item If == "censor", they are plotted using the colors(s) specified in \code{outliers_color}
 \item If == "to_minmax", outliers are forced to the colors used for the maximum
-and minum values specified in \code{zlims} (using \code{scales::squish}), Default:
+and minimum values specified in \code{zlims} (using \code{scales::squish}), Default:
 \code{censor}.
 }}
 
-\item{direction}{\code{character [0 | 1]} direction of the color legend. Chenge this
+\item{direction}{\code{character [0 | 1]} direction of the color legend. Change this
 to invert the color gradient, Default: 1}
 
 \item{...}{any other parameter to be passed to \code{ggplot::scale_fill_brewer} or

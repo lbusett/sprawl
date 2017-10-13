@@ -21,7 +21,7 @@ Default: FALSE}
 \item{encoding}{\code{character} encoding to be used to write the DBF of the
 shapefile, Default: "UTF-8"}
 
-\item{create_dir}{\code{logical}, if TRUE and the folder of out_filename doesn't exist,
+\item{create_dir}{\code{logical}, if TRUE and the folder of out_filename does not exist,
 then the full folder tree up to out_filename is created, Default: FALSE
 (use with caution !)}
 

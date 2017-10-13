@@ -7,7 +7,7 @@
 convert_rastdtype(dtype_string, type)
 }
 \arguments{
-\item{dtype_string}{\code{character} data type string (e.g., Int16, etc)}
+\item{dtype_string}{\code{character} data type string (e.g., Int16, etc.)}
 
 \item{type}{\code{character} - either "gdal" or "raster"}
 }

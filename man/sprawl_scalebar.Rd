@@ -82,7 +82,7 @@ Scale Bars for Maps Created with 'ggplot2' or 'ggmap'. R package version
 \item Slight modifications to adapt it to \code{sprawl} needs by Lorenzo Busetto:
 \itemize{
 \item Removed measure units text from all but the last numeric label;
-\item Added support for non-metric (e.g., feet) projetions by adding the \code{units}
+\item Added support for non-metric (e.g., feet) projections by adding the \code{units}
 argument and changing the text accordingly;
 \item fontface to bold in the scalebar to improve visibility;
 \item automatic computation of distance if \code{dist} is not passed

@@ -21,7 +21,7 @@ filename from which an object of class \code{sprawlext} can be obtained (see
 
 \item{pad}{\code{numeric} extent of a "padding area" to be kept with respect to
 \code{crop_extent} (in number of pixels). Useful to be sure not to crop "too much"
-for example when cropping before extracting freatures suche as in \code{extract_rast},
+for example when cropping before extracting features suche as in \code{extract_rast},
 Default: 1}
 
 \item{out_type}{\code{character} indicates the type of object to be returned:
@@ -39,7 +39,7 @@ the input raster (\strong{no saving to disk is performed})
 raster.}
 
 \item{out_dtype}{\code{character} data type of the output masked files, according
-to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
 If NULL, the data type is retrieved from the input, Default: NULL}
 

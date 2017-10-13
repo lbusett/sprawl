@@ -2,7 +2,7 @@
 #' @description Function used to facilitate retrieval useful info from a raster object or
 #'  file.
 #' @param in_rast a `Raster` object or the filename of a valid raster
-#' @param stats `logical` If TRUE, retrieve also statisics (min, max, mean, etc.)
+#' @param stats `logical` If TRUE, retrieve also statistics (min, max, mean, etc.)
 #'   for each band, Default: TRUE
 #' @param quantiles `logical` If TRUE, retrieve also the quantiles, for each band,
 #'   Default; FALSE
@@ -33,7 +33,7 @@
 #'   - **quants**: `data.frame` containing the quantiles of the distribution
 #'     of raster values, for each band (100 value - 0.01 interval) (NULL is returned
 #'     if `quants` == FALSE (the default));
-#'   - **hists**: `data.frame` containing information about the distribtion of
+#'   - **hists**: `data.frame` containing information about the distribution of
 #'     raster values for each band. the data frame includes the limits of each
 #'     bin, the count of the number of pixels included in it, the corresponding
 #'     frequency and the cumulated frequency at each bin  (NULL is returned

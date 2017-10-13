@@ -2,7 +2,7 @@
 #' @description Function to retrieve projection units starting from a
 #'   valid proj4string or CRS
 #' @param proj4string valid proj4string or object of class `sp::CRS`
-#' @return `character` meaasure units of the provided proj4string (e.g., "m",
+#' @return `character` measure units of the provided proj4string (e.g., "m",
 #'   "dec.degrees", ...)
 #' @examples
 #' \dontrun{

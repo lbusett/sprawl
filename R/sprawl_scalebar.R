@@ -44,7 +44,7 @@
 #'  0.4.3. https://github.com/oswaldosantos/ggsn
 #'  - Slight modifications to adapt it to `sprawl` needs by Lorenzo Busetto:
 #'    - Removed measure units text from all but the last numeric label;
-#'    - Added support for non-metric (e.g., feet) projetions by adding the `units`
+#'    - Added support for non-metric (e.g., feet) projections by adding the `units`
 #'      argument and changing the text accordingly;
 #'    - fontface to bold in the scalebar to improve visibility;
 #'    - automatic computation of distance if `dist` is not passed

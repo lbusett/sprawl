@@ -8,12 +8,12 @@
 #'   each band, Default: FALSE
 #' @param verbose if FALSE suppress messages, Default: TRUE
 #' @return a `list` containing the following elements:
-#'   - **stats**: `data.frame` containing min, max, average and stendard deviation
+#'   - **stats**: `data.frame` containing min, max, average and standard deviation
 #'     for each band (see examples);
 #'   - **quants**: `data.frame` containing the quantiles of the distribution
 #'     of raster values, for each band (100 value - 0.01 interval) (NULL is returned
 #'     if `quants` == FALSE (the default));
-#'   - **hists**: `data.frame` containing information about the distribtion of
+#'   - **hists**: `data.frame` containing information about the distribution of
 #'     raster values for each band. the data frame includes the limits of each
 #'     bin, the count of the number of pixels included in it, the corresponding
 #'     frequency and the cumulated frequency at each bin  (NULL is returned

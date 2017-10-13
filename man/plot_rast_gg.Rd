@@ -38,7 +38,7 @@ the default values. Run \code{sprawl::fillpals()} to see a list
 of available palettes, Default: NULL
 }}
 
-\item{direction}{\code{character [0 | 1]} direction of the color legend. Chenge this
+\item{direction}{\code{character [0 | 1]} direction of the color legend. Change this
 to invert the color gradient, Default: 1}
 
 \item{leg_type}{\code{character ["continuous", "discrete"]} type of legend to be used
@@ -67,7 +67,7 @@ the legend on the right or on the bottom. Default: "right"}
 
 \item{maxpixels}{\code{numeric} maximum number of pixels to be used for plotting \emph{for
 each band}. Reduce this to speed-up plotting by subsampling the raster (this
-reduces quality!). Increase it to improve qualitty (this reduces rendering
+reduces quality!). Increase it to improve quality (this reduces rendering
 speed!), Default:1e5}
 
 \item{band_names}{\code{character (nbands)}, array of band names. These will used
@@ -105,7 +105,7 @@ the values outside of the zlims range will be plotted.
 \itemize{
 \item If == "censor", they are plotted using the colors(s) specified in \code{outliers_color}
 \item If == "to_minmax", outliers are forced to the colors used for the maximum
-and minum values specified in \code{zlims} (using \code{scales::squish}), Default:
+and minimum values specified in \code{zlims} (using \code{scales::squish}), Default:
 \code{censor}.
 }}
 
@@ -124,7 +124,7 @@ Default: NULL}
 lead to less detailed basemap, but larger text. Default: 0}
 
 \item{borders_layer}{\code{character} object of class \code{sf_POLYGON} or \code{sfc_polygon},
-(or cohercible to it using \code{sprawl::cast_vect}) to be overlayed to the plot,
+(or coercible to it using \code{sprawl::cast_vect}) to be overlayed to the plot,
 Default: NULL (no overlay)}
 
 \item{borders_color}{color used to plot the boundaries of \code{borders_layer}
@@ -152,7 +152,7 @@ Default: NULL}
 \item{scalebar_txt_dist}{\code{numeric} Distance between scalebar and its labels.
 Adjust this in case of overlap, Default: 0.30}
 
-\item{transparency}{\code{numeric [0,1]}, transparency of the raster layer. Higer
+\item{transparency}{\code{numeric [0,1]}, transparency of the raster layer. Higher
 values lead to higher transparency, Default: 0 (ignored if basemap == NULL)}
 
 \item{na.color}{\code{character}, color to be used to plot NA values,
@@ -180,12 +180,12 @@ Default: grey15"}
 Default: TRUE}
 }
 \value{
-a \code{gg} plot. It is plotted immeditely. If the call includes
+a \code{gg} plot. It is plotted immediately. If the call includes
 an assignment operator (e.g., \code{plot <- plot_rast_gg(in_rast))}, the plot is
 saved to the specified variable. Otherwise, it is plotted immediately.
 }
 \description{
-Plot a raster object using ggplot witn an (optional) basemap.
+Plot a raster object using ggplot with an (optional) basemap.
 The function allows to:
 \itemize{
 \item Plot a single- or multi-band image using facet_wrap (args \code{bands_to_plot},

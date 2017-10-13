@@ -28,7 +28,7 @@ valid raster file}
 
 \item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
 
-\item{overwrite}{\code{logical} If TRUE, existing files are ovewritten,
+\item{overwrite}{\code{logical} If TRUE, existing files are overwritten,
 Default: FALSE}
 }
 \value{

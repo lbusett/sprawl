@@ -24,7 +24,7 @@ reproj_rast(in_object, outproj_object, out_res = NULL, crop = FALSE,
 
 \item{out_type}{PARAM_DESCRIPTION, Default: 'rastobject'}
 
-\item{out_format}{PARAM_DESCRIPTION, Default: 'Gtiff'}
+\item{out_format}{PARAM_DESCRIPTION, Default: 'GTiff'}
 
 \item{compression}{PARAM_DESCRIPTION, Default: 'LZW'}
 

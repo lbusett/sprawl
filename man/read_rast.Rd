@@ -13,7 +13,7 @@ read_rast(in_file, bands = NULL, verbose = TRUE)
 band numbers to be read (e.g., bands = c(1,5,7) will read only the
 specified bands in a \code{RasterStack})}
 
-\item{verbose}{\code{logical} If FALSE, processing mesasges are suppressed,
+\item{verbose}{\code{logical} If FALSE, processing messages are suppressed,
 Default: TRUE}
 }
 \value{

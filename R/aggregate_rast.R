@@ -9,7 +9,7 @@
 #' @param maxchunk PARAM_DESCRIPTION, Default: 5e+07
 #' @param method PARAM_DESCRIPTION, Default: "disk"
 #' @param out_file PARAM_DESCRIPTION, Default: NULL
-#' @param overwrite `logical` If TRUE, existing files are ovewritten,
+#' @param overwrite `logical` If TRUE, existing files are overwritten,
 #'   Default: FALSE
 #' @param verbose PARAM_DESCRIPTION, Default: TRUE
 #' @param out_type PARAM_DESCRIPTION, Default: 'rastobject'

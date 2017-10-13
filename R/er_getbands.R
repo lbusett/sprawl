@@ -99,7 +99,7 @@ er_getbands <- function(in_rast,
   } else {
     # selbands provided as dates, but no dates in input raster --> aborting
     if (lubridate::is.timepoint(seldates) & !date_chk) {
-      stop("extract_rast --> Input raster doesn't contain valid dates in its",
+      stop("extract_rast --> Input raster does not contain valid dates in its",
            "'Z' attribute.\nPlease specify the layers to be processed using",
            "a numeric array (e.g., selbands = c(1,5)). Aborting!")
     }

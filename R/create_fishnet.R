@@ -18,8 +18,8 @@
 #'   element is provided, the same cellsize is used in each direction),
 #'   Default: NULL
 #' @param exact_csize `logical` If TRUE, the function strictly adheres to what
-#'   specified in `cellsize` or `pix_for_cell` (i.e., it doesn't alter the fishnet
-#'   cell to get a regualr fishnet over the raster). The last column/row of the
+#'   specified in `cellsize` or `pix_for_cell` (i.e., it does not alter the fishnet
+#'   cell to get a regular fishnet over the raster). The last column/row of the
 #'   fisnhet have therefore a different area, but the other cells respect what
 #'   specified by the user (i.e., having a regular 2x2 km grid).
 #' @param to_file `logical` PARAM_DESCRIPTION, Default: FALSE.

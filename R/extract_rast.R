@@ -34,7 +34,7 @@
 #' @param comp_quant `logical` if TRUE, also quantiles of the distributions of
 #'   values are computed for each zone and returned in  `out$ts_summ`,
 #'   Default: FALSE (Ignored if rast_type == "categorical")
-#' @param comp_freq `logical` if TRUE, also requencies of the the different classes
+#' @param comp_freq `logical` if TRUE, also frequencies of the the different classes
 #'   of a categorical raster present in each polygon are returned, in `out$ts_summ`
 #'   Default = FALSE (Ignored if rast_type == "continuous")
 #' @param long_format `logical` if TRUE, extraction **on points** provides data
@@ -194,7 +194,7 @@ extract_rast <- function(in_rast,
       crop_vect(in_rast, verbose = verbose)
 
     if (dim(in_vect_crop)[1] == 0) {
-      stop("extract_rast --> `in_vect` doesn't intersect `in_rast`. Aborting!")
+      stop("extract_rast --> `in_vect` does not intersect `in_rast`. Aborting!")
     }
 
     # Identify features cropped in the intersection

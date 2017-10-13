@@ -1,7 +1,7 @@
-#' @title create list of validi fill palettes
+#' @title create list of valid fill palettes
 #' @description helper function used to create a `data.frame` containing info
 #'   on valid fill palettes for `plot_rast`, `plot_rast_gg` and `plot_vect`
-#' @return a `data.frame` containing info on valid fill palettes taht can used
+#' @return a `data.frame` containing info on valid fill palettes that can used
 #'  in `plot_rast`, `plot_rast_gg` and `plot_vect`
 #' @details DETAILS
 #' @examples
@@ -18,7 +18,7 @@ fillpals <- function() {
 
   name <- source <- category <- cont_qual <- maxcolors <- colorblind <- NULL
   # -----------------------------------------------------------
-  # Create list of valide palette names and chars
+  # Create list of valid palette names and chars
 
   fill_pals   <- rbind(
     cbind(name = row.names(RColorBrewer::brewer.pal.info),

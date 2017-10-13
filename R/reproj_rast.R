@@ -7,7 +7,7 @@
 #' @param pix_buff PARAM_DESCRIPTION, Default: NULL
 #' @param resamp_meth PARAM_DESCRIPTION, Default: 'near'
 #' @param out_type PARAM_DESCRIPTION, Default: 'rastobject'
-#' @param out_format PARAM_DESCRIPTION, Default: 'Gtiff'
+#' @param out_format PARAM_DESCRIPTION, Default: 'GTiff'
 #' @param compression PARAM_DESCRIPTION, Default: 'LZW'
 #' @param out_filename PARAM_DESCRIPTION, Default: NULL
 #' @param warp_args PARAM_DESCRIPTION, Default: FALSE

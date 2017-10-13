@@ -10,7 +10,7 @@ get_projunits(proj4string)
 \item{proj4string}{valid proj4string or object of class \code{sp::CRS}}
 }
 \value{
-\code{character} meaasure units of the provided proj4string (e.g., "m",
+\code{character} measure units of the provided proj4string (e.g., "m",
 "dec.degrees", ...)
 }
 \description{

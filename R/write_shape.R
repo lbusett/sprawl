@@ -9,7 +9,7 @@
 #' @param verbose `logical` if TRUE, provide messages on processing, Default: TRUE
 #' @param encoding  `character` encoding to be used to write the DBF of the
 #'   shapefile, Default: "UTF-8"
-#' @param create_dir `logical`, if TRUE and the folder of out_filename doesn't exist,
+#' @param create_dir `logical`, if TRUE and the folder of out_filename does not exist,
 #'   then the full folder tree up to out_filename is created, Default: FALSE
 #'   (use with caution !)
 #' @param ...  any other arguments to be passed to `sf::st_write`
@@ -52,7 +52,7 @@ write_shape <- function(in_object,
 
   if (!dir.exists(dirname(out_filename)) & create_dir == FALSE) {
     stop(glue::glue(
-      "write_shape --> Output folder doesn't exist on your system. Either ",
+      "write_shape --> Output folder does not exist on your system. Either ",
       "create it beforehand with `dir.create` or set the `create_dir` ",
       "argument to `TRUE`"))
   }

@@ -20,12 +20,12 @@ each band, Default: FALSE}
 \value{
 a \code{list} containing the following elements:
 \itemize{
-\item \strong{stats}: \code{data.frame} containing min, max, average and stendard deviation
+\item \strong{stats}: \code{data.frame} containing min, max, average and standard deviation
 for each band (see examples);
 \item \strong{quants}: \code{data.frame} containing the quantiles of the distribution
 of raster values, for each band (100 value - 0.01 interval) (NULL is returned
 if \code{quants} == FALSE (the default));
-\item \strong{hists}: \code{data.frame} containing information about the distribtion of
+\item \strong{hists}: \code{data.frame} containing information about the distribution of
 raster values for each band. the data frame includes the limits of each
 bin, the count of the number of pixels included in it, the corresponding
 frequency and the cumulated frequency at each bin  (NULL is returned

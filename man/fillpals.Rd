@@ -2,12 +2,12 @@
 % Please edit documentation in R/fillpals.R
 \name{fillpals}
 \alias{fillpals}
-\title{create list of validi fill palettes}
+\title{create list of valid fill palettes}
 \usage{
 fillpals()
 }
 \value{
-a \code{data.frame} containing info on valid fill palettes taht can used
+a \code{data.frame} containing info on valid fill palettes that can used
 in \code{plot_rast}, \code{plot_rast_gg} and \code{plot_vect}
 }
 \description{

@@ -57,7 +57,7 @@ idea for large datasets), Default: TRUE}
 values are computed for each zone and returned in  \code{out$ts_summ},
 Default: FALSE (Ignored if rast_type == "categorical")}
 
-\item{comp_freq}{\code{logical} if TRUE, also requencies of the the different classes
+\item{comp_freq}{\code{logical} if TRUE, also frequencies of the the different classes
 of a categorical raster present in each polygon are returned, in \code{out$ts_summ}
 Default = FALSE (Ignored if rast_type == "continuous")}
 

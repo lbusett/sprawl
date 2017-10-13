@@ -6,7 +6,7 @@
 #' @param bands `numeric array` If the input is a multiband raster,
 #'   band numbers to be read (e.g., bands = c(1,5,7) will read only the
 #'   specified bands in a `RasterStack`)
-#' @param verbose `logical` If FALSE, processing mesasges are suppressed,
+#' @param verbose `logical` If FALSE, processing messages are suppressed,
 #'  Default: TRUE
 #' @return a `RasterLayer`, `RasterStack` or `RasterBrick` object
 #' @details DETAILS

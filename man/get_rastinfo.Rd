@@ -10,7 +10,7 @@ get_rastinfo(in_rast, stats = FALSE, quantiles = FALSE, hist = FALSE,
 \arguments{
 \item{in_rast}{a \code{Raster} object or the filename of a valid raster}
 
-\item{stats}{\code{logical} If TRUE, retrieve also statisics (min, max, mean, etc.)
+\item{stats}{\code{logical} If TRUE, retrieve also statistics (min, max, mean, etc.)
 for each band, Default: TRUE}
 
 \item{quantiles}{\code{logical} If TRUE, retrieve also the quantiles, for each band,
@@ -48,7 +48,7 @@ for each band (see examples);
 \item \strong{quants}: \code{data.frame} containing the quantiles of the distribution
 of raster values, for each band (100 value - 0.01 interval) (NULL is returned
 if \code{quants} == FALSE (the default));
-\item \strong{hists}: \code{data.frame} containing information about the distribtion of
+\item \strong{hists}: \code{data.frame} containing information about the distribution of
 raster values for each band. the data frame includes the limits of each
 bin, the count of the number of pixels included in it, the corresponding
 frequency and the cumulated frequency at each bin  (NULL is returned

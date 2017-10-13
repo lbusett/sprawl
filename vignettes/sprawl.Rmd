@@ -69,7 +69,7 @@ The main functions available in `sprawl` are documented [here](https://lbusett.g
 
 ## Examples of use
 
-Worked-out examples of the more comlex `sprawl` functions and workflows can be found [here](https://lbusett.github.io/sprawl/Examples/index.html)
+Worked-out examples of the more complex `sprawl` functions and workflows can be found [here](https://lbusett.github.io/sprawl/Examples/index.html)
 
 ## Contributing
 
