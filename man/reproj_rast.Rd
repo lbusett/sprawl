@@ -4,15 +4,15 @@
 \alias{reproj_rast}
 \title{reproj_rast}
 \usage{
-reproj_rast(in_object, outproj_object, out_res = NULL, crop = FALSE,
+reproj_rast(in_rast, in_projobj, out_res = NULL, crop = FALSE,
   pix_buff = 5, resamp_meth = "near", out_type = "rastobject",
   out_format = "GTiff", compression = "LZW", out_filename = NULL,
   warp_args = NULL, overwrite = FALSE, verbose = TRUE, ...)
 }
 \arguments{
-\item{in_object}{PARAM_DESCRIPTION}
+\item{in_rast}{PARAM_DESCRIPTION}
 
-\item{outproj_object}{PARAM_DESCRIPTION}
+\item{in_projobj}{PARAM_DESCRIPTION}
 
 \item{out_res}{PARAM_DESCRIPTION}
 

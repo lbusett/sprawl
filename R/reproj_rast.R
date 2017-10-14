@@ -1,7 +1,7 @@
 #' @title reproj_rast
 #' @description FUNCTION_DESCRIPTION
-#' @param in_object PARAM_DESCRIPTION
-#' @param outproj_object PARAM_DESCRIPTION
+#' @param in_rast PARAM_DESCRIPTION
+#' @param in_projobj PARAM_DESCRIPTION
 #' @param out_res PARAM_DESCRIPTION
 #' @param crop PARAM_DESCRIPTION, Default: NULL
 #' @param pix_buff PARAM_DESCRIPTION, Default: NULL
@@ -47,8 +47,8 @@
 #' @importFrom assertthat assert_that
 #' @importFrom wrapr "%.>%"
 
-reproj_rast <- function(in_object,
-                        outproj_object,
+reproj_rast <- function(in_rast,
+                        in_projobj,
                         out_res         = NULL,
                         crop            = FALSE,
                         pix_buff        = 5,
@@ -67,15 +67,15 @@ reproj_rast <- function(in_object,
   #   ____________________________________________________________________________
   #   Check arguments                                                         ####
 
-  in_type <- get_rastype(in_object)
-  in_proj <- get_proj4string(in_object)
+  in_type <- get_rastype(in_rast)
+  in_proj <- get_proj4string(in_rast)
 
   checkmate::assertSetEqual(
     (in_proj == "invalid"), FALSE)
     # info = glue::glue("reproj_rast --> Invalid projection detected for ",
     #                   call[[2]],". Aborting!"))
 
-  out_proj <- get_proj4string(outproj_object)
+  out_proj <- get_proj4string(in_projobj)
   checkmate::assertSetEqual(
     out_proj == "invalid", FALSE)
     # info = glue::glue("reproj_rast --> Invalid projection detected in ",
@@ -95,26 +95,26 @@ reproj_rast <- function(in_object,
   #   __________________________________________________________________________
   #   if input is a Raster object use create_virtrast to create a GDAL vrt  ####
   #   representing the object to be passed to gdalwarp. The vrt will inherit
-  #   all "in_object" characteristics (i.e., selected bands)
+  #   all "in_rast" characteristics (i.e., selected bands)
 
   if (in_type == "rastobject") {
     srcfile <- tempfile(fileext = ".vrt")
-    srcfile <- create_virtrast(in_object, srcfile, verbose = FALSE)
+    srcfile <- create_virtrast(in_rast, srcfile, verbose = FALSE)
   } else {
-    srcfile <- in_object
+    srcfile <- in_rast
   }
 
   #   __________________________________________________________________________
-  #   If crop == TRUE, retrieve the extent from outproj_object if possible  ####
+  #   If crop == TRUE, retrieve the extent from in_projobj if possible  ####
   #   The extent is then projected badk to in_proj to gauarantee that all
-  #   the area included in the bbox of outproj_object is included in the
+  #   the area included in the bbox of in_projobj is included in the
   #   output raster
-  if (crop & !is(outproj_object, "character")) {
-    te = get_extent(outproj_object) %.>%
+  if (crop & !is(in_projobj, "character")) {
+    te = get_extent(in_projobj) %.>%
       reproj_extent(., out_proj = in_proj, enlarge = TRUE) %.>%
       (.@extent) %.>%
-      (. + c(-pix_buff*res(in_object)[1], -pix_buff*res(in_object)[2],
-             pix_buff*res(in_object)[1], pix_buff*res(in_object)[2]))
+      (. + c(-pix_buff*res(in_rast)[1], -pix_buff*res(in_rast)[2],
+             pix_buff*res(in_rast)[1], pix_buff*res(in_rast)[2]))
   }
 
 
@@ -165,7 +165,7 @@ reproj_rast <- function(in_object,
 
   if (out_type == "rastobject") {
     out        <- read_rast(out_filename, verbose = FALSE)
-    rastinfo   <- get_rastinfo(in_object, verbose = FALSE)
+    rastinfo   <- get_rastinfo(in_rast, verbose = FALSE)
     names(out) <- rastinfo$bnames
     if (length(rastinfo$Z) != 0) {
       out <- setZ(out, rastinfo$Z)

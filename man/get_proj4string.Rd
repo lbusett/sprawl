@@ -8,24 +8,27 @@
 \alias{get_proj4string.sf}
 \alias{get_proj4string.sfc}
 \alias{get_proj4string.Spatial}
+\alias{get_proj4string.sprawlext}
 \title{return the proj4string of a spatial object or file}
 \usage{
-get_proj4string(object)
+get_proj4string(in_obj)
 
-\method{get_proj4string}{default}(object)
+\method{get_proj4string}{default}(in_obj)
 
-\method{get_proj4string}{character}(object)
+\method{get_proj4string}{character}(in_obj)
 
-\method{get_proj4string}{Raster}(object)
+\method{get_proj4string}{Raster}(in_obj)
 
-\method{get_proj4string}{sf}(object)
+\method{get_proj4string}{sf}(in_obj)
 
-\method{get_proj4string}{sfc}(object)
+\method{get_proj4string}{sfc}(in_obj)
 
-\method{get_proj4string}{Spatial}(object)
+\method{get_proj4string}{Spatial}(in_obj)
+
+\method{get_proj4string}{Spatial}(in_obj)
 }
 \arguments{
-\item{object}{\code{character} corresponding to the name of a R object, or a filename
+\item{in_obj}{\code{character} corresponding to the name of a R object, or a filename
 (full path)}
 }
 \value{

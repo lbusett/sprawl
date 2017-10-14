@@ -57,7 +57,7 @@ write_shape <- function(in_object,
       "argument to `TRUE`"))
   }
 
-  make_folder(out_filename, type = "filename")
+  make_folder(out_filename, type = "filename", verbose = FALSE)
 
   checkmate::expect_access(dirname(out_filename), "w")
 
