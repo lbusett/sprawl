@@ -1,4 +1,4 @@
-context("Get projection string of a spatial object/file")
+context("Get projection string of a spatial object/files")
 testthat::test_that("Test projection string",{
   # skip_on_cran()
   skip_on_travis()
@@ -33,7 +33,7 @@ testthat::test_that("Test projection string",{
   expect_equal(get_proj4string(read_vect(in_vect, as_sp = TRUE)),
                "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")  #nolint
 
-  # warning/abort on wrong proj4string ----
+  # warning/abort on wrong proj4string detected on a spatial object ----
   rastobj <- read_rast(in_rast)
   expect_warning(raster::crs(rastobj) <-
                    "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4")  #nolint
@@ -44,8 +44,28 @@ testthat::test_that("Test projection string",{
 
   # warning/abort on invalid filename or object ----
   expect_error(expect_warning(out <- get_proj4string("pippo.shp")))
+})
+context("Get/check projection string from a string or number")
+testthat::test_that("Test projection string",{
+  # skip_on_cran()
+  skip_on_travis()
+  # no proj set
+  library(sprawl.data)
+  library(testthat)
+  library(raster)
   # expect_equal(out, "invalid")
-  expect_error(get_proj4string(123))
 
+  expect_equal(get_proj4string(4326),
+               "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
+
+  expect_equal(get_proj4string("4326"),
+               "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
+
+  expect_equal(get_proj4string("+init=epsg:4326"),
+               "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
+
+  expect_error(get_proj4string("aaaa"))
+  expect_error(get_proj4string(123))
 }
+
 )
