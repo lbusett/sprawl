@@ -159,3 +159,16 @@ get_proj4string.Spatial <- function(in_obj) {
   return(projargs)
 
 }
+
+#   ____________________________________________________________________________
+#   Method for "sprawlext" object - read the CRS                            ####
+#
+
+#' @rdname get_proj4string
+#' @method get_proj4string Spatial
+#' @export
+get_proj4string.sprawlext <- function(in_obj) {
+
+  return(in_obj@proj4string)
+
+}
