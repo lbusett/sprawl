@@ -203,7 +203,9 @@ mask_rast <- function(in_rast,
 
   } else {
 
-    beginCluster(n = ifelse(is.null(cores), 2, cores))
+    beginCluster(n = ifelse((cores > parallel::detectCores() - 1),
+                            (parallel::detectCores() - 2),
+                            cores))
     masked_out <- raster::clusterR(
       in_rast,
       fun       = function(x, y) {x*y},
