@@ -1,7 +1,7 @@
-#' pBuffer
-#' @description Create a \code{\linkS4class{SpatialPolygons}*} object expanding a
-#' \code{\linkS4class{SpatialPoints}*} with single buffers. The new geometries are rectangles
-#' or circles which maintain the original associated \code{data.frame}, if present.
+#' Create a polygon vector object from a points vector by buffering
+#' @description Create a polygon vector object expanding form a points vector
+#' object The new geometries are rectangles or circles which maintain the
+#' original associated \code{data.frame}, if present.
 #' The width/weight or radius of the buffers are directly provided to the function of taken from a sample
 #' \code{\linkS4class{Raster}*} / \code{\linkS4class{SpatialGrid}*} / \code{\linkS4class{SpatialPixels}*}
 #' object (see details).
@@ -69,6 +69,7 @@ pBuffer <- function(points, res, res_scale=1, quadsegs=5, ...) {
       stop("Please provide a vector of length 1 or 2.")
     }
   } else stop("res is not recognised; please provide it as numeric vector or raster object.")
+
 
 
   # Compute buffers

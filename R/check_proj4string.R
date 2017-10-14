@@ -102,7 +102,8 @@ check_proj4string.character  <- function(projection,
 
   # if it is a number, use check_proj4string.integer method
   if (suppressWarnings(!is.na(as.numeric(projection)))) {
-    return(check_proj4string.numeric(as.integer(projection)))
+    return(check_proj4string.numeric(as.integer(projection),
+           abort = abort))
   }
 
   if (rgdal::checkCRSArgs(projection)[[1]] == FALSE) {
