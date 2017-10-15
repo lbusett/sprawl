@@ -28,7 +28,8 @@
 #' @param crop_layer `logical` object of class `Extent`. If not null, the
 #'   fishnet is cropped on this extent, without "moving" the nodes of the grid.
 #'   This is useful to crop a grid created on the basis of a different raster
-#'   coordinates on top of a different raster, Default: FALSE.
+#'   coordinates on top of a different raster, Default: FALSE. CURRENTLY NOT
+#'   IMPLEMENTED - MAY BE DEPRECATED !
 #' @param verbose `logical` If FALSE, processing messages are suppressed,
 #'   Default: TRUE.
 #' @return OUTPUT_DESCRIPTION
@@ -51,7 +52,7 @@
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25))
 #'   plot_rast(in_rast, in_poly = fishnet)
 #'
-#'   # plotting with `exact_csize` creates a grid that covers the extent with
+#'   # plotting with `exact_csize` = FALSE creates a grid that covers the extent with
 #'   # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
 #'                                   exact_csize = F)
@@ -72,8 +73,7 @@ create_fishnet <- function(in_rast,
                            shape        = "rect",
                            cellsize     = NULL,
                            exact_csize  = TRUE,
-                           to_file      = FALSE,
-                           out_shape    = NULL,
+                           out_file     = FALSE,
                            overwrite    = TRUE,
                            crop_layer   = NULL,
                            verbose      = TRUE) {
@@ -140,13 +140,9 @@ create_fishnet <- function(in_rast,
     fish <- sp::HexPoints2SpatialPolygons(hexes) %>%
       sf::st_as_sf(hexes)
   }
-  if (!to_file) {
+  if (is.null(out_file)) {
     return(fish)
   } else {
-    if (is.null(out_shape)) {
-      out_shape <- tempfile(fileext = ".shp")
-    }
-
-    write_shape(fish, out_shape, overwrite = TRUE)
+    write_shape(fish, out_file, overwrite = overwrite)
   }
 }

@@ -271,8 +271,8 @@ plot_rast_gg <- function(
   } else {
     palette_type <- ifelse(rast_type == "continuous", "cont", "qual")
   }
-  def_palettes = list(qual = "Set3",
-                      cont  = "Greens")
+  def_palettes = list(qual = "hue",
+                      cont  = "Greys")
   def_legtypes = list(qual = "legend",
                       cont  = "colourbar")
 

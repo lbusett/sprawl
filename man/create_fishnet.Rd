@@ -5,8 +5,8 @@
 \title{Create a "fishnet" vector over the extent of a spatial object}
 \usage{
 create_fishnet(in_rast, pix_for_cell = 1, shape = "rect", cellsize = NULL,
-  exact_csize = TRUE, to_file = FALSE, out_shape = NULL,
-  overwrite = TRUE, crop_layer = NULL, verbose = TRUE)
+  exact_csize = TRUE, out_file = FALSE, overwrite = TRUE,
+  crop_layer = NULL, verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{raster file or object of class \code{raster*} on which the fishnet
@@ -31,19 +31,20 @@ cell to get a regular fishnet over the raster). The last column/row of the
 fisnhet have therefore a different area, but the other cells respect what
 specified by the user (i.e., having a regular 2x2 km grid).}
 
-\item{to_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
-
-\item{out_shape}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
-
 \item{overwrite}{\code{logical} PARAM_DESCRIPTION, Default: TRUE.}
 
 \item{crop_layer}{\code{logical} object of class \code{Extent}. If not null, the
 fishnet is cropped on this extent, without "moving" the nodes of the grid.
 This is useful to crop a grid created on the basis of a different raster
-coordinates on top of a different raster, Default: FALSE.}
+coordinates on top of a different raster, Default: FALSE. CURRENTLY NOT
+IMPLEMENTED - MAY BE DEPRECATED !}
 
 \item{verbose}{\code{logical} If FALSE, processing messages are suppressed,
 Default: TRUE.}
+
+\item{to_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
+
+\item{out_shape}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -77,7 +78,7 @@ DETAILS
   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25))
   plot_rast(in_rast, in_poly = fishnet)
 
-  # plotting with `exact_csize` creates a grid that covers the extent with
+  # plotting with `exact_csize` = FALSE creates a grid that covers the extent with
   # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
                                   exact_csize = F)

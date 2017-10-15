@@ -1,8 +1,22 @@
-#' @title check the "spatial type" of an object or file
-#' @rdname get_spatype
+#' @title Check in the input is a `Raster` object or raster file
+#' @description Check if a `R` object or a filename correspond to a valid `Raster`
+#'   object, to a raster file or none of the above. Useful to detect which kind
+#'   of input is passed to a function and abort / do something in the case of
+#'   "wrong" input.
+#' @param in_object `R` object or path to a file
+#' @param abort If TRUE, and `in_object` is neither a raster object or
+#'  filename, send an error message and abort, Default: TRUE
+#' @return `character` equal to "rastfile" (if `in_object` is a raster file),
+#'   `rastobject` (if `in_object` is a `R` raster object) or "none" if it is
+#'   neither (unless `abort` == TRUE)
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' #EXAMPLE1
+#'  }
+#' @rdname get_rastype
 #' @export
-#' @importFrom checkmate assert_file_exists
-#' @importFrom rgdal GDALinfo
+#' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 
 get_rastype  <- function(in_object, abort = TRUE) {
   UseMethod("get_rastype")

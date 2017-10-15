@@ -1,7 +1,7 @@
 Package: sprawl
 Title: Spatial Processing (in) R: Advanced Workflows Library
 Version: 0.2.0
-Authors@R: c(person("Lorenzo", "Busetto", email = "busetto.l@irea.cnr.it", role = c("aut", "cre")), 
+Authors@R: c(person("Lorenzo", "Busetto", email = "busetto.l@irea.cnr.it", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9634-6038")),
              person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut")))
 Description: Simplify execution of **frequently performed spatial processing tasks** 
   (e.g., reading and writing spatial datasets, extracting statistics from large datasets, etc.) **by 

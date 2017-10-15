@@ -4,14 +4,14 @@
 \alias{write_shape}
 \title{Write a \code{sf} or \code{sp} to a ESRI shapefile}
 \usage{
-write_shape(in_object, out_filename, overwrite = FALSE, verbose = FALSE,
+write_shape(in_object, out_file, overwrite = FALSE, verbose = FALSE,
   encoding = "UTF-8", create_dir = FALSE, ...)
 }
 \arguments{
 \item{in_object}{\code{character} object to be written to the shapefile. Must be a
 valid \code{*sp} or \code{sf} object}
 
-\item{out_filename}{\code{character} output file name}
+\item{out_file}{\code{character} output file name}
 
 \item{overwrite}{\code{logical} if TRUE, output file will be overwritten if existing,
 Default: FALSE}
@@ -21,8 +21,8 @@ Default: FALSE}
 \item{encoding}{\code{character} encoding to be used to write the DBF of the
 shapefile, Default: "UTF-8"}
 
-\item{create_dir}{\code{logical}, if TRUE and the folder of out_filename does not exist,
-then the full folder tree up to out_filename is created, Default: FALSE
+\item{create_dir}{\code{logical}, if TRUE and the folder of out_file does not exist,
+then the full folder tree up to out_file is created, Default: FALSE
 (use with caution !)}
 
 \item{...}{any other arguments to be passed to \code{sf::st_write}}
@@ -41,9 +41,9 @@ row.names(df)      <- letters[5:1]
 points             <- sp::SpatialPointsDataFrame(pts, df, match.ID = TRUE)
 
 # Save it to a shape file
-out_filename  = tempfile(pattern = "test", tmpdir = tempdir(),
+out_file  = tempfile(pattern = "test", tmpdir = tempdir(),
                          fileext = ".shp")
 mysp_object = points
-write_shape(mysp_object, out_filename, overwrite = TRUE)
+write_shape(mysp_object, out_file, overwrite = TRUE)
 }
 }

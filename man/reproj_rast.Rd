@@ -2,53 +2,85 @@
 % Please edit documentation in R/reproj_rast.R
 \name{reproj_rast}
 \alias{reproj_rast}
-\title{reproj_rast}
+\title{Reproject a raster "R" object or file}
 \usage{
 reproj_rast(in_rast, in_projobj, out_res = NULL, crop = FALSE,
-  pix_buff = 5, resamp_meth = "near", out_type = "rastobject",
-  out_format = "GTiff", compression = "LZW", out_filename = NULL,
+  pix_buff = 1, resamp_meth = "near", out_type = "rastobject",
+  out_format = "GTiff", compression = "LZW", out_file = NULL,
   warp_args = NULL, overwrite = FALSE, verbose = TRUE, ...)
 }
 \arguments{
-\item{in_rast}{PARAM_DESCRIPTION}
+\item{in_rast}{A \code{*Raster} object, or the path to a raster file}
 
-\item{in_projobj}{PARAM_DESCRIPTION}
+\item{in_projobj}{\code{R} object or filename from which the output projection should
+be derived (see @description)}
 
-\item{out_res}{PARAM_DESCRIPTION}
+\item{out_res}{\code{numeric (1 | 2)} desired resolution for the output in X and Y
+(in measure units of the OUTPUT projection). If a 1-element array is passed,
+the same  resolution is used for X and Y. If NULL, the output resolution is set
+automatically by gdalwarp based on input/output projections and the resolution
+of the input, Default: NULL}
 
-\item{crop}{PARAM_DESCRIPTION, Default: NULL}
+\item{crop}{\code{logical} If TRUE, and \code{in_projobj} corresponds to a spatial object or
+filename, the output is also cropped on the extent of \code{in_projobj},
+Default: FALSE}
 
-\item{pix_buff}{PARAM_DESCRIPTION, Default: NULL}
+\item{pix_buff}{\code{numeric} Dimension of a buffer around the extent to be
+added to it to guarantee that all the area of \code{in_projobj} is preserved
+in the reprojected dataset, Default: 1 (ignored if \code{crop == FALSE})}
 
-\item{resamp_meth}{PARAM_DESCRIPTION, Default: 'near'}
+\item{resamp_meth}{\code{character ["near", "bilinear", "cubic", "cubicspline", "lanczos", "average", "mode"]} Resampling method to be used by \code{gdalwarp} (See
+http://www.gdal.org/gdalwarp.html), Default: 'near'}
 
-\item{out_type}{PARAM_DESCRIPTION, Default: 'rastobject'}
+\item{out_type}{\code{character ["rastfile", "rastobject"]} If "rastfile", and \code{out_file}
+is not NULL, the function returns the name of the saved raster. Otherwise,
+it returns the reprojected raster as a \code{*Raster} object}
 
-\item{out_format}{PARAM_DESCRIPTION, Default: 'GTiff'}
+\item{out_format}{\code{character} Format to be used to save the reprojected raster,
+Default: 'GTiff'}
 
-\item{compression}{PARAM_DESCRIPTION, Default: 'LZW'}
+\item{compression}{\code{character ["NONE" | "PACKBITS" | "LZW" | "DEFLATE"]}
+Compression method to be used to save the  raster if \code{out_format} is "GTiff",
+Default: 'LZW'}
 
-\item{out_filename}{PARAM_DESCRIPTION, Default: NULL}
+\item{out_file}{\code{character} Path where the reprojected vector should be saved.
+\strong{If NULL, the reprojected raster saved on \code{R} temporary folder, and will not
+be accessible after closing the session}, Default: NULL}
 
-\item{warp_args}{PARAM_DESCRIPTION, Default: FALSE}
+\item{warp_args}{Additional parameters to be passed to \code{gdalwarp},
+Default: NULL (Not currently implemented)}
 
-\item{overwrite}{PARAM_DESCRIPTION, Default: FALSE}
+\item{overwrite}{\code{logical} If TRUE, overwrite existing files, Default: FALSE}
 
-\item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
+\item{verbose}{\code{logical} If FALSE, suppress processing messages, Default: TRUE}
 
-\item{...}{PARAM_DESCRIPTION}
+\item{...}{Other arguments (None currently implemented)}
 }
 \value{
-OUTPUT_DESCRIPTION
+a \code{Raster} object, or the path of the file where the reprojected input
+was saved
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
+Reproject a raster "R" object or file to a different reference
+system. The function is a simple wrapper around \code{gdalwarp} with
+additional checks on inputs allowing to specify the output projection
+in several ways:
+1: passing a valid proj4 string (e.g., \code{reproj_rast(in_rast, "+init=epsg:4326")}
+2: passing a numeric or character that can be interpreted as an
+EPSG code (e.g., \code{reproj_rast(in_vect, 4326)});
+3: passing the name of a valid \code{R} vector or raster object:
+(e.g.,\code{reproj_rast(in_vect, rast_obj)}, with \code{rast_obj}
+being an existing \code{R} object;
+4: passing the path to a valid vector or raster file:
+EPSG code (e.g.,\code{reproj_rast(in_vect, "D:/Temp/myfile.tif")}
+
+The reprojected raster is written to a temporary "GTiff" file within \code{R}
+tempdir to allow accessing it immediately from \code{R}, unless a specific output
+file name is provided with the \code{out_file} argument.
 }
 \examples{
 \dontrun{
+ library(sprawl.data)
  # reproject a raster based on an output proj4string
  in_file <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
                          package = "sprawl.data")
@@ -72,6 +104,9 @@ DETAILS
   direction = -1) +
   geom_sf(data = my_vect, fill = "transparent", color = "red")
 }
+}
+\seealso{
+http://www.gdal.org/gdalwarp.html
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

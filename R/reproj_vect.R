@@ -14,8 +14,9 @@
 #'
 #'   The reprojected vector can be automatically saved to a shapefile through
 #'    `write_shape` by specifying a valid path with the `out_file` argument.
-#' @param in_vect A vector objec (`*sf` or `sp`), or the path to a vector file
-#' @param in_projobj PARAM_DESCRIPTION
+#' @param in_vect A vector object (`*sf` or `sp`), or the path to a vector file
+#' @param in_projobj `R` object or filename from which the output projection should
+#'   be derived (see @description )
 #' @param out_file `character` Path where the reprojected vector should be saved.
 #'   If NULL, the reprojected vector is not saved, but just sent back to the
 #'   caller, Default: NULL
@@ -23,7 +24,7 @@
 #'   is not NULL, the function returns the name of the saved shapefile. Otherwise,
 #'   it returns the reprojected vector object, with the format specified by
 #'   out_class,  Default: 'vectobject'
-#' @param out_class `character ["sf" | "sp"]` Specifies if the reporjected object
+#' @param out_class `character ["sf" | "sp"]` Specifies if the reprojected object
 #'   should have class `sf` or `sp`. If NULL, the returned reprojected
 #'   object has the same class of `in_vect`, Default: NULL
 #' @param overwrite `logical` If TRUE, overwrite existing files, Default: FALSE
@@ -34,25 +35,39 @@
 #' @examples
 #' \dontrun{
 #' library(sprawl.data)
+#' library(gridExtra)
 #' # reproject a vector file
 #' in_vect <- system.file("extdata/shapes","lc_polys.shp",
 #'                                    package = "sprawl.data")
-#' out_proj = 3857
+#' in_vect <- read_vect(in_vect)
+#' bounds  <- get_boundaries("PHL", 1)
+#' # Input projection is:
+#' get_proj4string(in_vect)
+#' plot_vect(in_vect, fill_var = "category", borders_layer = bounds)
+#'
+#' # reproject to 3857 (web mercator)
+#' out_proj <-  3857
 #' out_vect <- reproj_vect(in_vect, 3857)
-#' out_vect
+#' # Output projection is:
+#' get_proj4string(out_vect)
 #'
 #' # Do the same, but also save the output to file
 #' out_file <- tempfile(fileext = ".shp")
+#' out_proj <- "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs"
 #' out_vect <- reproj_vect(in_vect, 3857, out_file = out_file)
 #' read_vect(out_file)
 #'
-#' # use a different spatial file or object to set the output projection:
-#' # 1.providing
+#' # use a different spatial file or object to set the output projectionaaa:
 #' rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
 #'   package = "sprawl.data")
 #' out_vect <- reproj_vect(in_vect, rast)
-#' out_vect
-#'
+#' # Output projection is:
+#' get_proj4string(out_vect)
+#' p1 <- plot_vect(in_vect, borders_layer = bounds, fill_var = "category",
+#'    title = "Original (lat/lon)")
+#' p2 <- plot_vect(out_vect, borders_layer = bounds, fill_var = "category",
+#'    title = "Reprojected (sinusoidal)")
+#' gridExtra::grid.arrange(p1,p2, ncol = 2)
 #' }
 #' @rdname reproj_vect
 #' @export
@@ -83,6 +98,7 @@ reproj_vect <- function(in_vect,
   }
 
   if (verbose) {
+
     if (is.character(in_projobj) | is.numeric(in_projobj)) {
       message("reproj_vect --> Reprojecting ", call[[2]],
               " to ", get_proj4string(eval(call[[3]])))

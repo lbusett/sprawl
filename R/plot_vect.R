@@ -203,6 +203,7 @@ plot_vect <- function(
 
   geometry <- color <- NULL
 
+  in_vect <- cast_vect(in_vect, "sfobject")
   assertthat::assert_that(
     methods::is(in_vect, "sf"),
     msg = "plot_vect --> `in_vect` is not a valid `sf` object. Aborting!"

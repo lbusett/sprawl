@@ -7,27 +7,26 @@ reference:
   - title: Reading/writing spatial data
     desc: ~
     contents:
+      - '`read_rast`'
       - '`read_vect`'
       - '`write_shape`'
   - title: Raster processing
     desc: ~
     contents:
-      - '`read_rast`'
+      - '`mask_rast`'
+      - '`reproj_rast`'
+      - '`reclass_rast`'
+      - '`extract_rast`'
       - '`aggregate_rast`'
-      - '`cast_rast`'
       - '`crop_rast`'
       - '`cuttails_rast`'
-      - '`extract_rast`'
-      - '`mask_rast`'
-      - '`reclass_rast`'
-      - '`reproj_rast`'
   - title: Vector processing
     desc: ~
     contents:
-      - '`dissolve_shape`'
-      - '`cast_vect`'
-      - '`create_fishnet`'
+      - '`reproj_vect`'
       - '`crop_vect`'
+      - '`dissolve_vect`'
+      - '`create_fishnet`'
       - '`select_extent`'
   - title: Retrieve info from spatial files
     desc: ~
@@ -36,8 +35,6 @@ reference:
       - '`get_rastinfo`'
       - '`get_raststats`'
       - '`get_proj4string`'
-      - '`get_projunits`'
-      - '`get_extent`'
   - title: Visualization and plotting
     desc: ~
     contents:
@@ -54,6 +51,8 @@ reference:
     contents:
       - '`add_scale_fill`'
       - '`sprawlext`'
+      - '`cast_vect`'
+      - '`cast_rast`'
       - '`check_proj4string`'
       - '`convert_rastdtype`'
       - '`create_virtrast`'
@@ -63,6 +62,7 @@ reference:
       - '`find_command`'
       - '`find_gdal`'
       - '`get_spatype`'
+      - '`get_rastype`'
       - '`get_vectype`'
       - '`make_folder`'
       - '`migrate_virtrast`'
@@ -83,7 +83,7 @@ navbar:
       menu:
       -  text: Contributing
          href: articles/articles/contributing.html
-      -  text: Codin Style
+      -  text: Coding Style
          href: articles/articles/coding_style.html
       -  text: Code of Conduct
          href: articles/articles/CONDUCT.html

@@ -1,23 +1,59 @@
-#' @title reproj_rast
-#' @description FUNCTION_DESCRIPTION
-#' @param in_rast PARAM_DESCRIPTION
-#' @param in_projobj PARAM_DESCRIPTION
-#' @param out_res PARAM_DESCRIPTION
-#' @param crop PARAM_DESCRIPTION, Default: NULL
-#' @param pix_buff PARAM_DESCRIPTION, Default: NULL
-#' @param resamp_meth PARAM_DESCRIPTION, Default: 'near'
-#' @param out_type PARAM_DESCRIPTION, Default: 'rastobject'
-#' @param out_format PARAM_DESCRIPTION, Default: 'GTiff'
-#' @param compression PARAM_DESCRIPTION, Default: 'LZW'
-#' @param out_filename PARAM_DESCRIPTION, Default: NULL
-#' @param warp_args PARAM_DESCRIPTION, Default: FALSE
-#' @param overwrite PARAM_DESCRIPTION, Default: FALSE
-#' @param verbose PARAM_DESCRIPTION, Default: TRUE
-#' @param ... PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title Reproject a raster "R" object or file
+#' @description Reproject a raster "R" object or file to a different reference
+#'   system. The function is a simple wrapper around `gdalwarp` with
+#'   additional checks on inputs allowing to specify the output projection
+#'   in several ways:
+#'     1: passing a valid proj4 string (e.g., `reproj_rast(in_rast, "+init=epsg:4326")`
+#'     2: passing a numeric or character that can be interpreted as an
+#'        EPSG code (e.g., `reproj_rast(in_vect, 4326)`);
+#'     3: passing the name of a valid `R` vector or raster object:
+#'        (e.g.,`reproj_rast(in_vect, rast_obj)`, with `rast_obj`
+#'        being an existing `R` object;
+#'     4: passing the path to a valid vector or raster file:
+#'        EPSG code (e.g.,`reproj_rast(in_vect, "D:/Temp/myfile.tif")`
+#'
+#'   The reprojected raster is written to a temporary "GTiff" file within `R`
+#'   tempdir to allow accessing it immediately from `R`, unless a specific output
+#'   file name is provided with the `out_file` argument.
+#' @param in_rast A `*Raster` object, or the path to a raster file
+#' @param in_projobj `R` object or filename from which the output projection should
+#'   be derived (see @description)
+#' @param out_res `numeric (1 | 2)` desired resolution for the output in X and Y
+#'   (in measure units of the OUTPUT projection). If a 1-element array is passed,
+#'   the same  resolution is used for X and Y. If NULL, the output resolution is set
+#'   automatically by gdalwarp based on input/output projections and the resolution
+#'   of the input, Default: NULL
+#' @param crop `logical` If TRUE, and `in_projobj` corresponds to a spatial object or
+#'   filename, the output is also cropped on the extent of `in_projobj`,
+#'  Default: FALSE
+#' @param pix_buff `numeric` Dimension of a buffer around the extent to be
+#'   added to it to guarantee that all the area of `in_projobj` is preserved
+#'   in the reprojected dataset, Default: 1 (ignored if `crop == FALSE`)
+#' @param resamp_meth `character ["near", "bilinear", "cubic", "cubicspline",
+#' "lanczos", "average", "mode"]` Resampling method to be used by `gdalwarp` (See
+#' http://www.gdal.org/gdalwarp.html), Default: 'near'
+#' @param out_file `character` Path where the reprojected vector should be saved.
+#'   __If NULL, the reprojected raster saved on `R` temporary folder, and will not
+#'   be accessible after closing the session__, Default: NULL
+#' @param out_type `character ["rastfile", "rastobject"]` If "rastfile", and `out_file`
+#'   is not NULL, the function returns the name of the saved raster. Otherwise,
+#'   it returns the reprojected raster as a `*Raster` object
+#' @param out_format `character` Format to be used to save the reprojected raster,
+#'  Default: 'GTiff'
+#' @param compression `character ["NONE" | "PACKBITS" | "LZW" | "DEFLATE"]`
+#'  Compression method to be used to save the  raster if `out_format` is "GTiff",
+#'   Default: 'LZW'
+#' @param warp_args Additional parameters to be passed to `gdalwarp`,
+#'   Default: NULL (Not currently implemented)
+#' @param overwrite `logical` If TRUE, overwrite existing files, Default: FALSE
+#' @param verbose `logical` If FALSE, suppress processing messages, Default: TRUE
+#' @param ... Other arguments (None currently implemented)
+#' @return a `Raster` object, or the path of the file where the reprojected input
+#'  was saved
+#' @seealso http://www.gdal.org/gdalwarp.html
 #' @examples
 #' \dontrun{
+#'  library(sprawl.data)
 #'  # reproject a raster based on an output proj4string
 #'  in_file <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
 #'                          package = "sprawl.data")
@@ -51,12 +87,12 @@ reproj_rast <- function(in_rast,
                         in_projobj,
                         out_res         = NULL,
                         crop            = FALSE,
-                        pix_buff        = 5,
+                        pix_buff        = 1,
                         resamp_meth     = "near",
                         out_type        = "rastobject",
                         out_format      = "GTiff",
                         compression     = "LZW",
-                        out_filename    = NULL,
+                        out_file    = NULL,
                         warp_args       = NULL,
                         overwrite       = FALSE,
                         verbose         = TRUE,
@@ -106,7 +142,7 @@ reproj_rast <- function(in_rast,
 
   #   __________________________________________________________________________
   #   If crop == TRUE, retrieve the extent from in_projobj if possible  ####
-  #   The extent is then projected badk to in_proj to gauarantee that all
+  #   The extent is then projected back to in_proj to gauarantee that all
   #   the area included in the bbox of in_projobj is included in the
   #   output raster
   if (crop & !is(in_projobj, "character")) {
@@ -122,8 +158,8 @@ reproj_rast <- function(in_rast,
   #   If no filename is specified, the reprojected raster                   ####
   #   is saved as a "tif" file in tempdir(), unless out_format is "vrt".
   #   In the latter case, the output is a reprojected virtual file (very fast)
-  if (is.null(out_filename)) {
-    out_filename <- tempfile(fileext = ifelse(out_format == "vrt",
+  if (is.null(out_file)) {
+    out_file <- tempfile(fileext = ifelse(out_format == "vrt",
                                               ".vrt",".tif"))
   }
   #   __________________________________________________________________________
@@ -133,7 +169,7 @@ reproj_rast <- function(in_rast,
     "-s_srs \"" , in_proj, "\"",
     " -t_srs \"", out_proj, "\"",
     if (crop) paste0(" -te ", paste(te, collapse = " "),""),
-     if (crop) paste0(" -te_srs \"", in_proj, "\""),
+    if (crop) paste0(" -te_srs \"", in_proj, "\""),
     if (!is.null(out_res)) paste0(" -tr ", paste(out_res, collapse = " ")),
     " -r "    , resamp_meth,
     " -multi",
@@ -145,7 +181,7 @@ reproj_rast <- function(in_rast,
     # "-dstnodata '-Inf' ",
     " ",
     srcfile, " ",
-    out_filename
+    out_file
   )
 
   out <- system2(file.path(find_gdal(), "gdalwarp"), args = warp_string,
@@ -164,7 +200,7 @@ reproj_rast <- function(in_rast,
   #   Return the result as filename or Raster object                        ####
 
   if (out_type == "rastobject") {
-    out        <- read_rast(out_filename, verbose = FALSE)
+    out        <- read_rast(out_file, verbose = FALSE)
     rastinfo   <- get_rastinfo(in_rast, verbose = FALSE)
     names(out) <- rastinfo$bnames
     if (length(rastinfo$Z) != 0) {
@@ -172,6 +208,6 @@ reproj_rast <- function(in_rast,
     }
     return(out)
   } else {
-    return(out_filename)
+    return(out_file)
   }
 }
