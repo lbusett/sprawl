@@ -35,6 +35,14 @@ fillpals <- function() {
                              name, source, category, cont_qual, maxcolors,
                              colorblind) %>%
     dplyr::arrange(cont_qual, category)
+  # Add "manual" entry for qualitative variables
+  fill_pals <- rbind(fill_pals,
+                     data.frame(name       = "manual",
+                                source     = "user",
+                                category   = "qual",
+                                cont_qual  = "qual",
+                                maxcolors  = "NA",
+                                colorblind = "NA"))
 
   #   __________________________________________________________________________
   #   Set default palettes for different categories                         ####

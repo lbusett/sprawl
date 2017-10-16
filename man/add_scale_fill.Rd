@@ -5,7 +5,7 @@
 \title{add a scale_fill palette to a ggplot}
 \usage{
 add_scale_fill(plot, palette, title, na.color, zlims, leg_breaks, leg_labels,
-  leg_type, outliers_style, direction, ...)
+  leg_colors, leg_type, outliers_style, direction, ...)
 }
 \arguments{
 \item{plot}{\code{gg} object to which the fill scale has to be added.}
@@ -37,6 +37,14 @@ equal to the number of breaks specified by "leg_breaks". If this is not
 TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()} (TBD),
 Default: NULL (the default ggplot2 \code{labels = waiver()} is used)
 }}
+
+\item{leg_colors}{\code{characrter (n_leg_labels)} Colors to be assigned to
+the different values of \code{fill_var} if \code{palette_name} == "manual". The number
+of colors must be equal to the number of unique values of \code{fill_var}, otherwise
+an error will be issued. Colors can be specified as \code{R} color names (e.g.,
+\code{leg_colours = c("red", "blue")}, HEX values (e.g., \code{leg_colours = c(#8F2525, #41AB96)}, or a mix of the two. Note that the argument is \strong{mandatory} if
+\code{palette_name} == "manual", and \strong{ignored} on all other palettes,
+Default: NULL}
 
 \item{leg_type}{\code{character ["continuous", "discrete"]} type of legend to be used
 on continuous variables. If "continuous" , a colourbar is used. If "discrete",

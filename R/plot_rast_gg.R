@@ -49,6 +49,14 @@
 #'   of breaks must be equal to the number of labels specified by "leg_labels".
 #'   If this is not TRUE, `leg_breaks` and `leg_labels` are reset to `waiver()`
 #'   (TBD)  Default: NULL (the default ggplot2 `labels = waiver()` is used)
+#' @param leg_colors `characrter (n_leg_labels)` Colors to be assigned to
+#'   the different values of `fill_var` if `palette_name` == "manual". The number
+#'   of colors must be equal to the number of unique values of `fill_var`, otherwise
+#'   an error will be issued. Colors can be specified as `R` color names (e.g.,
+#'   `leg_colours = c("red", "blue")`, HEX values (e.g., `leg_colours = c(#8F2525,
+#'    #41AB96)`, or a mix of the two. Note that the argument is __mandatory__ if
+#'    `palette_name` == "manual", and __ignored__ on all other palettes,
+#'    Default: NULL
 #' @param leg_position `character ["right" | "bottom"]` Specifies if plotting
 #'   the legend on the right or on the bottom. Default: "right"
 #' @param maxpixels `numeric` maximum number of pixels to be used for plotting *for
@@ -214,7 +222,8 @@ plot_rast_gg <- function(
   in_rast,
   rast_type    = NULL,
   palette_name = NULL, direction = 1,
-  leg_type     = NULL, leg_labels = NULL, leg_breaks = NULL, leg_position = "right",
+  leg_type     = NULL, leg_labels = NULL, leg_colors = NULL,
+  leg_breaks   = NULL, leg_position = "right",
   maxpixels    = 1e5,
   band_names   = NULL, bands_to_plot = NULL, facet_rows = 2,
   xlims        = NULL, ylims = NULL,
@@ -326,16 +335,18 @@ plot_rast_gg <- function(
 
   #   __________________________________________________________________________
   #   Reproject to 3857 to allow overlap with background map                ####
+  #   (May need to save a temporary file to disk if the raster is only in
+  #   memory. Since in_memory rasters are always small, we can afford it!)
 
   rastinfo <- get_rastinfo(in_rast, verbose = FALSE)
-
-  if (any(rastinfo$fnames == "")) {
-    rastfile <- cast_rast(in_rast, "rastfile")
-    in_rast  <- raster::stack(rastfile)
-  }
-  rastinfo$fnames <- get_rastinfo(in_rast, verbose = FALSE)$fnames
-
   if (!is.null(basemap)) {
+    if (any(rastinfo$fnames == "")) {
+      rastfile <- cast_rast(in_rast, "rastfile")
+      in_rast  <- read_rast(rastfile)
+    }
+    rastinfo$fnames <- get_rastinfo(in_rast, verbose = FALSE)$fnames
+
+
     if (verbose) {
       message("plot_rast_gg --> Reprojecting the input raster to epsg:3857")
     }
@@ -476,6 +487,17 @@ plot_rast_gg <- function(
   if (rastinfo$nbands > 1) {
     plot <- plot + facet_wrap(~band, nrow = facet_rows, drop = T)
   }
+
+  # Check if the raster has an attribute table. If so, use the class names
+  # to fill-in leg_labels automatically if they were not provided by the user.
+
+  if (is.null(leg_labels)) {
+    if (length(in_rast@data@attributes) != 0 ) {
+      leg_labels <- in_rast@data@attributes[[1]]$Class
+    }
+
+  }
+
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 
@@ -486,6 +508,7 @@ plot_rast_gg <- function(
                          zlims,
                          leg_breaks,
                          leg_labels,
+                         leg_colors,
                          leg_type,
                          outliers_style,
                          direction)
@@ -576,13 +599,13 @@ plot_rast_gg <- function(
                                         get_proj4string(in_rast)) %>%
         crop_vect(in_rast)
       plot <- plot + geom_sf(data  = borders_layer,
-                                fill  = "transparent",
-                                color = borders_color,
-                                size  = borders_size) +
+                             fill  = "transparent",
+                             color = borders_color,
+                             size  = borders_size) +
         coord_sf(crs = get_proj4string(in_rast),
-               # expand = FALSE,
-               xlim = xlims,
-               ylim = ylims)
+                 # expand = FALSE,
+                 xlim = xlims,
+                 ylim = ylims)
       if (!is.null(borders_txt_field)) {
         if (borders_txt_field %in% names(borders_layer)) {
           borders_layer <- borders_layer %>%

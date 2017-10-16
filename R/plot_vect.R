@@ -117,6 +117,14 @@
 #'   of breaks must be equal to the number of labels specified by "leg_labels".
 #'   If this is not TRUE, `leg_breaks` and `leg_labels` are reset to `waiver()`
 #'   (TBD)  Default: NULL (the default ggplot2 `labels = waiver()` is used)
+#' @param leg_colors `character (n_leg_labels)` Colors to be assigned to
+#'   the different values of `fill_var` if `palette_name` == "manual". The number
+#'   of colors must be equal to the number of unique values of `fill_var`, otherwise
+#'   an error will be issued. Colors can be specified as `R` color names (e.g.,
+#'   `leg_colors = c("red", "blue")`, HEX values (e.g., `leg_colours = c(#8F2525,
+#'    #41AB96)`, or a mix of the two. Note that the argument is __mandatory__ if
+#'    `palette_name` == "manual", and __ignored__ on all other palettes,
+#'    Default: NULL
 #' @param leg_position `character ["right" | "bottom"]` Specifies if plotting
 #'   the legend on the right or on the bottom. Default: "right"
 #' @param show_axis `logical`, If FALSE, axis names and labels are suppressed,
@@ -181,10 +189,10 @@
 #'  coord_fixed geom_sf aes_string coord_sf margin guide_colourbar element_line
 plot_vect <- function(
   in_vect,
-  line_color    = "black", line_size     = 0.2,
-  fill_var      = NULL, transparency = 0,
-  facet_var     = NULL, facet_rows     = NULL,
-  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  line_color     = "black", line_size     = 0.2,
+  fill_var       = NULL, transparency = 0,
+  facet_var      = NULL, facet_rows     = NULL,
+  borders_layer  = NULL, borders_color = "grey15", borders_size = 0.2,
   borders_txt_field = NULL, borders_txt_size = 2.5, borders_txt_color = "grey15", #nolint
   basemap        = NULL, zoomin = 0,
   xlims          = NULL, ylims = NULL,
@@ -194,7 +202,8 @@ plot_vect <- function(
   scalebar_pos   = "bottomright",
   na.color       = NULL,  na.value = NULL,
   palette_name   = NULL,  direction = 1,
-  leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL, leg_position = "right", #nolint
+  leg_type       = NULL, leg_labels = NULL, leg_breaks = NULL,
+  leg_colors     = NULL, leg_position = "right",
   show_axis      = TRUE, show_grid = TRUE, grid_color = "grey15",
   title          = NULL, subtitle = NULL,
   theme          = theme_bw(),
@@ -440,14 +449,16 @@ plot_vect <- function(
 
     plot <- add_scale_fill(plot,
                            palette,
-                           title = fill_var,
+                           title = "Value",
                            na.color,
                            zlims,
                            leg_breaks,
                            leg_labels,
+                           leg_colors,
                            leg_type,
                            outliers_style,
                            direction)
+
     plot <- plot + theme(legend.justification = "center",
                          legend.box.spacing = grid::unit(10,"points"))
   }

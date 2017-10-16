@@ -15,7 +15,7 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom scales squish censor
 #' @importFrom ggplot2 aes_string scale_fill_brewer scale_fill_hue
-#'   scale_fill_distiller
+#'   scale_fill_distiller scale_fill_manual
 
 
 add_scale_fill <- function(plot,
@@ -25,6 +25,7 @@ add_scale_fill <- function(plot,
                            zlims,
                            leg_breaks,
                            leg_labels,
+                           leg_colors,
                            leg_type,
                            outliers_style,
                            direction,
@@ -33,23 +34,45 @@ add_scale_fill <- function(plot,
   if (!exists("trans")) trans <- NULL
   # ____________________________________________________________________________
   # Qualitative palette: use scal_fill_hue or scale_fill_brewer             ####
-  # TODO add support for manual categorical fill scale
-  if (palette$cont_qual == "qual") {
-    if (palette$source == "brewer") {
-      plot <- plot + scale_fill_brewer(type = "qual",
-                                       palette = as.character(palette$name),
-                                       na.value = ifelse(is.null(na.color),
-                                                         "grey50", na.color)
+  # or manual (requires also specifying leg_colors)
+
+  if (palette[["cont_qual"]] == "qual") {
+
+    if (palette[["name"]] == "manual") {
+
+      if (is.null(leg_colors)) {
+        stop("To use palette_name = \"manual\" you need also to use ",
+             "`leg_colors` to specify the\n colors to be assigned to each value ",
+             "of `fill_var`. Aborting!")
+      }
+      # check if the passed colours have the right length
+
+      plot <- plot + scale_fill_manual(
+        values   = leg_colors,
+        labels   = if (is.null(leg_labels)) waiver() else leg_labels,
+        na.value = ifelse(is.null(na.color), "grey50", na.color)
       )
     } else {
-      plot <- plot + scale_fill_hue(na.value = ifelse(is.null(na.color),
-                                                      "grey50", na.color))
+      if (palette$source == "brewer") {
+        plot <- plot + scale_fill_brewer(
+          type = "qual",
+          palette = as.character(palette$name),
+          labels   = if (is.null(leg_labels)) waiver() else leg_labels,
+          na.value = ifelse(is.null(na.color), "grey50", na.color)
+        )
+      } else {
+        plot <- plot + scale_fill_hue(
+          labels   = if (is.null(leg_labels)) waiver() else leg_labels,
+          na.value = ifelse(is.null(na.color),"grey50", na.color))
+      }
     }
+
   } else {
 
     # ____________________________________________________________________________
     # Continuous palette: use scal_fill_brewer                                ####
-    # TODO add support for scale_fill_gradient and scale_fill_viridis
+    # TODO add support for scale_fill_viridis and maybe scale_fill_gradient
+
     if (palette$source == "brewer") {
       plot <- plot + scale_fill_distiller(
         title,
