@@ -49,9 +49,9 @@
 #' @rdname dissolve_vect
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
-#' @importFrom dplyr group_by_ summarize_all first mutate_if select_if n_distinct
-#'   summarize_if left_join
-#' @importFrom sf st_as_sf
+#' @importFrom assertthat assert_that is.writeable
+#' @importFrom dplyr group_by_ summarize_all first mutate_if select_if n_distinct summarize_if left_join nth
+#' @importFrom sf st_cast st_set_geometry st_as_sf
 #' @importFrom tibble as_data_frame
 
 
@@ -82,7 +82,7 @@ dissolve_vect <- function(in_vect,
     sf::st_cast("MULTIPOLYGON") %>%
     sf::st_cast("GEOMETRYCOLLECTION") %>%
     dplyr::group_by_(dissolve_var) %>%
-    dplyr::summarize_all(dplyr::first) %>%
+    dplyr::summarize_all(first) %>%
     dplyr::mutate_if(is.character, factor) %>%
     dplyr::select_if(is.factor)
 
@@ -93,7 +93,7 @@ dissolve_vect <- function(in_vect,
   #
   check_cols <- tibble::as_data_frame(in_vect) %>%
     dplyr::group_by_(dissolve_var) %>%
-    dplyr::summarize_all(dplyr::n_distinct)
+    dplyr::summarize_all(n_distinct)
 
   for (selcol in 2:(length(out_object_fact) - 1)) {
 

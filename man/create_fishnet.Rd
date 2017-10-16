@@ -5,7 +5,7 @@
 \title{Create a "fishnet" vector over the extent of a spatial object}
 \usage{
 create_fishnet(in_rast, pix_for_cell = 1, shape = "rect", cellsize = NULL,
-  exact_csize = TRUE, out_file = FALSE, overwrite = TRUE,
+  exact_csize = TRUE, out_file = NULL, overwrite = TRUE,
   crop_layer = NULL, verbose = TRUE)
 }
 \arguments{
@@ -31,6 +31,8 @@ cell to get a regular fishnet over the raster). The last column/row of the
 fisnhet have therefore a different area, but the other cells respect what
 specified by the user (i.e., having a regular 2x2 km grid).}
 
+\item{out_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
+
 \item{overwrite}{\code{logical} PARAM_DESCRIPTION, Default: TRUE.}
 
 \item{crop_layer}{\code{logical} object of class \code{Extent}. If not null, the
@@ -41,10 +43,6 @@ IMPLEMENTED - MAY BE DEPRECATED !}
 
 \item{verbose}{\code{logical} If FALSE, processing messages are suppressed,
 Default: TRUE.}
-
-\item{to_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
-
-\item{out_shape}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
 }
 \value{
 OUTPUT_DESCRIPTION

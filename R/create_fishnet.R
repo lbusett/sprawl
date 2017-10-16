@@ -22,8 +22,7 @@
 #'   cell to get a regular fishnet over the raster). The last column/row of the
 #'   fisnhet have therefore a different area, but the other cells respect what
 #'   specified by the user (i.e., having a regular 2x2 km grid).
-#' @param to_file `logical` PARAM_DESCRIPTION, Default: FALSE.
-#' @param out_shape `logical` PARAM_DESCRIPTION, Default: FALSE.
+#' @param out_file `logical` PARAM_DESCRIPTION, Default: FALSE.
 #' @param overwrite `logical` PARAM_DESCRIPTION, Default: TRUE.
 #' @param crop_layer `logical` object of class `Extent`. If not null, the
 #'   fishnet is cropped on this extent, without "moving" the nodes of the grid.
@@ -73,7 +72,7 @@ create_fishnet <- function(in_rast,
                            shape        = "rect",
                            cellsize     = NULL,
                            exact_csize  = TRUE,
-                           out_file     = FALSE,
+                           out_file     = NULL,
                            overwrite    = TRUE,
                            crop_layer   = NULL,
                            verbose      = TRUE) {

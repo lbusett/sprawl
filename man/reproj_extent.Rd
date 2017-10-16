@@ -51,10 +51,10 @@ reproj_extent(in_file, "+init=epsg:32651")
 reproj_extent(in_rast, "+init=epsg:32651")
 
 # Reproject an extent or a bounding box (given the input projection)
-reproj_extent(extent(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
-reproj_extent(bbox(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
+reproj_extent(raster::extent(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
+reproj_extent(sp::bbox(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
 # (this fails without providing in_proj value:)
-reproj_extent(bbox(in_rast), "+init=epsg:32651")
+reproj_extent(sp::bbox(in_rast), "+init=epsg:32651")
 
 # Reproject without enlarging
 reproj_extent(in_sprawlext, "+init=epsg:32651", enlarge = FALSE)
