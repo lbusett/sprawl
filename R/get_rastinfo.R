@@ -67,11 +67,12 @@ get_rastinfo <- function(in_rast,
   }
 
   if (inherits(in_rast, "RasterBrick")) {
+
     info <- list(nbands      = in_rast@data@nlayers,
                  indbands    = seq(1, in_rast@data@nlayers, 1),
                  ncols       = in_rast@ncols,
                  nrows       = in_rast@nrows,
-                 ncells      = in_rast@ncols * in_rast@nrows,
+                 ncells      = as.numeric(in_rast@ncols) * as.numeric(in_rast@nrows),
                  res         = raster::res(in_rast),
                  bnames      = names(in_rast),
                  fnames      = in_rast@file@name,
@@ -83,11 +84,12 @@ get_rastinfo <- function(in_rast,
   }
 
   if (inherits(in_rast, "RasterLayer")) {
+
     info <- list(nbands      = 1,
                  indbands    = in_rast@data@band,
                  ncols       = in_rast@ncols,
                  nrows       = in_rast@nrows,
-                 ncells      = in_rast@ncols * in_rast@nrows,
+                 ncells      = as.numeric(in_rast@ncols) * as.numeric(in_rast@nrows),
                  res         = raster::res(in_rast),
                  bnames      = names(in_rast),
                  fnames      = in_rast@file@name,
@@ -104,7 +106,7 @@ get_rastinfo <- function(in_rast,
                                              FUN = function(x) {x@data@band})),
                  ncols       = in_rast@ncols,
                  nrows       = in_rast@nrows,
-                 ncells      = in_rast@ncols * in_rast@nrows,
+                 ncells      = as.numeric(in_rast@ncols) * as.numeric(in_rast@nrows),
                  res         = raster::res(in_rast),
                  bnames      = names(in_rast),
                  fnames      = unlist(lapply(in_rast@layers,

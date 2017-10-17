@@ -26,7 +26,7 @@ plot_rasthist <- function(in_rast,
             call[[2]], "`")
   }
 
-
+  info <- get_rastinfo(in_rast, stats = FALSE)
   #   ____________________________________________________________________________
   #   compute statistics if necessary                                         ####
   if (!inherits(in_rast, "Raster")) {
@@ -39,19 +39,22 @@ plot_rasthist <- function(in_rast,
       hist_data <- in_rast@rastinfo$stats$hists
     }
   }
+
   plot <- ggplot(hist_data) + theme_bw()
   if (type == "hist") {
     plot <- plot + ggplot2::geom_col(
       aes_string(x = "value", y = ifelse(variable == "count", "count", "freq")),
       width = (diff(hist_data$value))[1]) +
-      facet_wrap(~band) +
-      ggtitle("Frequency Histogram")
+      facet_wrap(~band)  +
+      ggtitle("Frequency Histogram") +
+      theme(strip.text = element_text(info$bnames))
   } else {
     plot <- plot + ggplot2::geom_line(
       aes_string(x = "value", y = ifelse(variable == "count", "count", "freq"))) +
       facet_wrap(~band) +
+      theme(strip.text = element_text(info$bnames)) +
       ggtitle("Frequency Histogram")
   }
 
-
+  return(plot)
 }

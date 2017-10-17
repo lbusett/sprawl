@@ -40,7 +40,7 @@ efficiently conducted by using less-known (and sometimes difficult to find) pack
 
 **`sprawl`** aims to simplify the execution of some spatial processing tasks by **providing a 
 single and (hopefully) simpler access point to functionalities spread in the `R` packages ecosystem, 
-introducing optimixed functions for exection of frequently used processing tasks, and providing 
+introducing optimixed functions for executing frequently used processing tasks, and providing 
 custom functions or workflows for the execution of more complex processing tasks** (See [here](https://lbusett.github.io/sprawl/articles/sprawl.html) for further details). 
 
 ## **WORK IN PROGRESS !**

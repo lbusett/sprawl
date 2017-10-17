@@ -18,7 +18,7 @@ Support for spatial processing tasks is provided in `R` by several great package
 
 This huge variability provides advanced `R` programmers with great flexibility for conducting simple or complex spatial data analyses, by combining functionalities of different packages within custom scripts. At the same time, it may be confusing for less skilled programmers, who may struggle with dealing with multiple packages and don't know that a certain processing task may be more efficiently conducted by using less-known (and sometimes difficult to find) packages.
 
-**`sprawl`** aims to simplify the execution of some spatial processing tasks by **providing a single and (hopefully) simpler access point to functionalities spread in the `R` packages ecosystem, introducing optimixed functions for exection of frequently used processing tasks, and providing custom functions or workflows for the execution of more complex processing tasks** (See [here](https://lbusett.github.io/sprawl/articles/sprawl.html) for further details).
+**`sprawl`** aims to simplify the execution of some spatial processing tasks by **providing a single and (hopefully) simpler access point to functionalities spread in the `R` packages ecosystem, introducing optimixed functions for executing frequently used processing tasks, and providing custom functions or workflows for the execution of more complex processing tasks** (See [here](https://lbusett.github.io/sprawl/articles/sprawl.html) for further details).
 
 NOTE: WORK IN PROGRESS !
 ------------------------

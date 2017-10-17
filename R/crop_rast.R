@@ -209,13 +209,15 @@ crop_rast <- function(rast_object,
             args = translate_string, stdout = NULL)
 
     if (mask == TRUE) {
+
       ext_object <- cast_vect(ext_object, "sfobject")
-      if (inherits(st_geometry(ext_object), c("sfc_POLYGON"))) {
+      if (inherits(st_geometry(ext_object), c("sfc_POLYGON", "sfc_MULTIPOLYGON"))) {
 
         if (!(rast_bbox@proj4string == crop_bbox@proj4string)) {
           ext_object <- sf::st_transform(ext_object, rast_bbox@proj4string,
                                          verbose = FALSE)
         }
+
         out_filename <- mask_rast(out_filename,
                                   ext_object,
                                   out_filename = out_filename,

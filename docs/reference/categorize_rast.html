@@ -242,7 +242,7 @@ will be implemented in the future!)</p>
 
   <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>20</span>) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/init'>init</a></span>(<span class='st'>"row"</span>)
-  <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>in_rast</span>, <span class='kw'>rast_type</span> <span class='kw'>=</span> <span class='st'>"continuous"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='categorize_rast-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>in_rast</span>, <span class='kw'>rast_type</span> <span class='kw'>=</span> <span class='st'>"continuous"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='categorize_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># build a reclassification matrix</span>
 
   <span class='no'>class_matrix</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/tribble'>tribble</a></span>(
@@ -260,15 +260,15 @@ will be implemented in the future!)</p>
 #&gt; resolution  : 18, 9  (x, y)
 #&gt; extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-#&gt; data source : /tmp/RtmprpzVW8/file3b7e4bc3e5f.tif 
-#&gt; names       : file3b7e4bc3e5f 
+#&gt; data source : /tmp/RtmpU8rpQ0/file8631f654fed.tif 
+#&gt; names       : file8631f654fed 
 #&gt; values      : 1, 3  (min, max)
 #&gt; attributes  :
 #&gt;  ID    Class
 #&gt;   1    pippo
 #&gt;   2    pluto
 #&gt;   3 paperino
-#&gt; </div><div class='input'><span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='categorize_rast-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt; </div><div class='input'><span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='categorize_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
 # reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5
 # and 9, putting the rest to 0 and values >= 11 to NA

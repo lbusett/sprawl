@@ -57,11 +57,20 @@ set_rastlabels <- function(in_rast,
   n_class  <- dim(cat_rast@data@attributes[[1]])[1]
 
   if (length(class_names) != n_class & length(class_names != 0)) {
-
+#TODO This can be only attempted if nclasses legend > nclasses raster!!!
     warning("The number of specified class names is not equal to the ",
             "number of classes in the reclassified raster. \nClass names will ",
             "be set to numeric values equal to the raster value")
-    class_names <- NULL
+
+    class_names <- merge(cat_rast@data@attributes[[1]], class_names,
+                         by.x = "ID", by.y = "Value")
+
+    if (length(class_names$ID) != n_class & length(class_names != 0)) {
+     class_names <- NULL
+    } else {
+      class_names <- class_names[,2]
+    }
+
   }
 
   if (is.null(class_names)) {

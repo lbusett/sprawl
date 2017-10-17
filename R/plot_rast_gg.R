@@ -160,7 +160,7 @@
 #'                   subtitle = "Band 2 - Green")
 #'
 #' #Multi band plot with selection of bands
-#'  in_rast <- raster::stack(system.file("extdata/OLI_test",
+#'  in_rast <- read_rast(system.file("extdata/OLI_test",
 #'   "oli_multi_1000.tif", package = "sprawl.data"))
 #'  plot_rast_gg(in_rast, basemap = "osm", bands_to_plot = c(1,4),
 #'                   na.value = 0, na.color = "transparent",
