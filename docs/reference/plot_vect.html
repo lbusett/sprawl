@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -139,7 +139,7 @@
     </div>
 
     
-    <p>Plot a raster object using ggplot witn an (optional) basemap.
+    <p>Plot a raster object using ggplot with an (optional) basemap.
 The function allows to:</p><ul>
 <li><p>Plot either only the geometry of <code>in_vect</code>, or a map with different
 fill colors based on a column of <code>in_vect</code>;</p></li>
@@ -171,9 +171,10 @@ See the description of the arguments for details on their use</p></li>
   <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scalebar_txt_dist</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
   <span class='kw'>scalebar_pos</span> <span class='kw'>=</span> <span class='st'>"bottomright"</span>, <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>direction</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>leg_type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>leg_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_breaks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_position</span> <span class='kw'>=</span> <span class='st'>"right"</span>,
-  <span class='kw'>show_axis</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_grid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>,
-  <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fu'>theme_bw</span>(), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>leg_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_breaks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_colors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>leg_position</span> <span class='kw'>=</span> <span class='st'>"right"</span>, <span class='kw'>show_axis</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_grid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>grid_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>theme</span> <span class='kw'>=</span> <span class='fu'>theme_bw</span>(), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -196,7 +197,7 @@ in_vect, Default: 0.2</p></td>
     <tr>
       <th>fill_var</th>
       <td><p><code>character</code> name of the column of <code>in_vect</code> to be used for
-coloring the different polygons. If NULL, only the goemetry is plotted,
+coloring the different polygons. If NULL, only the geometry is plotted,
 Default: NULL</p></td>
     </tr>
     <tr>
@@ -220,7 +221,7 @@ in faceted plots, Default: 2 (Ignored if <code>fill_var</code> == NULL)</p></td>
     <tr>
       <th>borders_layer</th>
       <td><p><code>character</code> object of class <code>sf_POLYGON</code> or <code>sfc_polygon</code>,
-(or cohercible to it using <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/cast_vect'>sprawl::cast_vect</a></code>) to be overlayed to the plot,
+(or coercible to it using <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/cast_vect'>sprawl::cast_vect</a></code>) to be overlayed to the plot,
 Default: NULL (no overlay)</p></td>
     </tr>
     <tr>
@@ -291,7 +292,7 @@ set, Default: "vals"</p></li>
 the values outside of the zlims range will be plotted.</p><ul>
 <li><p>If == "censor", they are plotted using the colors(s) specified in <code>outliers_color</code></p></li>
 <li><p>If == "to_minmax", outliers are forced to the colors used for the maximum
-and minum values specified in <code>zlims</code> (using <code><a href='http://www.rdocumentation.org/packages/scales/topics/squish'>scales::squish</a></code>), Default:
+and minimum values specified in <code>zlims</code> (using <code><a href='http://www.rdocumentation.org/packages/scales/topics/squish'>scales::squish</a></code>), Default:
 <code>censor</code>.</p></li>
 </ul></td>
     </tr>
@@ -348,7 +349,7 @@ of available palettes, Default: NULL</p></li>
     </tr>
     <tr>
       <th>direction</th>
-      <td><p><code>character [0 | 1]</code> direction of the color legend. Chenge this
+      <td><p><code>character [0 | 1]</code> direction of the color legend. Change this
 to invert the color gradient, Default: 1</p></td>
     </tr>
     <tr>
@@ -376,6 +377,16 @@ leg_labels must be placed (if rast_type != "categorical"). The number
 of breaks must be equal to the number of labels specified by "leg_labels".
 If this is not TRUE, <code>leg_breaks</code> and <code>leg_labels</code> are reset to <code>waiver()</code>
 (TBD)  Default: NULL (the default ggplot2 <code>labels = waiver()</code> is used)</p></td>
+    </tr>
+    <tr>
+      <th>leg_colors</th>
+      <td><p><code>character (n_leg_labels)</code> Colors to be assigned to
+the different values of <code>fill_var</code> if <code>palette_name</code> == "manual". The number
+of colors must be equal to the number of unique values of <code>fill_var</code>, otherwise
+an error will be issued. Colors can be specified as <code>R</code> color names (e.g.,
+<code>leg_colors = c("red", "blue")</code>, HEX values (e.g., <code>leg_colours = c(#8F2525, #41AB96)</code>, or a mix of the two. Note that the argument is <strong>mandatory</strong> if
+<code>palette_name</code> == "manual", and <strong>ignored</strong> on all other palettes,
+Default: NULL</p></td>
     </tr>
     <tr>
       <th>leg_position</th>
@@ -419,7 +430,7 @@ Default: TRUE</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>gg</code> plot. It is plotted immeditely. If the call includes
+    <p>a <code>gg</code> plot. It is plotted immediately. If the call includes
 an assignment operator (e.g., <code>plot &lt;- plot_vect(in_vect))</code>, the plot is
 saved to the specified variable. Otherwise, it is plotted immediately.</p>
     
@@ -433,13 +444,13 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>get</span>(<span class='fu'>load</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>, <span class='st'>"poly_lomb.RData"</span>,
                                  <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)))
  <span class='co'># plot only geometry</span>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-7.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>1.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>1.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-7.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># plot with a fill on a cartegorical variable with a single "level"</span>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='img'><img src='plot_vect-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># change the palette, add a scalebar and remove the grid</span>
  <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>,<span class='kw'>show_axis</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Set3"</span>,
-           <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot_vect-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
  <span class='co'># plot with a fill on a continuous variable with two "levels", using facets</span>
  <span class='co'># and a diverging palette. also add a "borders" layer with a different</span>
@@ -448,7 +459,7 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
            <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>50</span>,
            <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>,<span class='fl'>20</span>), <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"yellow"</span>, <span class='st'>"green"</span>),
            <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>2</span>),
-           <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/Rtmpv3iV0o folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='img'><img src='plot_vect-11.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/RtmprpzVW8 folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

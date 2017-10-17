@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -159,6 +159,12 @@
         <tr>
           <!--  -->
           <td>
+            <p><code><a href="read_rast.html">read_rast</a></code> </p>
+          </td>
+          <td><p>read a raster file from disk</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
             <p><code><a href="read_vect.html">read_vect</a></code> </p>
           </td>
           <td><p>read a vector spatial file to R</p></td>
@@ -179,21 +185,39 @@
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="read_rast.html">read_rast</a></code> </p>
+            <p><code><a href="mask_rast.html">mask_rast</a></code> </p>
           </td>
-          <td><p>read a raster file from disk</p></td>
+          <td><p>Mask a raster based on a vector</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="reproj_rast.html">reproj_rast</a></code> </p>
+          </td>
+          <td><p>Reproject a raster "R" object or file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="categorize_rast.html">categorize_rast</a></code> </p>
+          </td>
+          <td><p>reclassify values of a raster</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="set_rastlabels.html">set_rastlabels</a></code> </p>
+          </td>
+          <td><p>categorize a raster and assign class names</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="extract_rast.html">extract_rast</a></code> </p>
+          </td>
+          <td><p>extract raster values on features of a vector</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="aggregate_rast.html">aggregate_rast</a></code> </p>
           </td>
           <td><p>aggregate_rast</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="cast_rast.html">cast_rast</a></code> </p>
-          </td>
-          <td><p>automatic recasting between Raster object and raster files on disk</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -206,30 +230,6 @@
             <p><code><a href="cuttails_rast.html">cuttails_rast</a></code> </p>
           </td>
           <td><p>remove outliers from a raster image</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="extract_rast.html">extract_rast</a></code> </p>
-          </td>
-          <td><p>extract raster values on features of a vector</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mask_rast.html">mask_rast</a></code> </p>
-          </td>
-          <td><p>Mask a raster based on a vector</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="reclass_rast.html">reclass_rast</a></code> </p>
-          </td>
-          <td><p>reclassify values of a raster</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="reproj_rast.html">reproj_rast</a></code> </p>
-          </td>
-          <td><p>reproj_rast</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -241,27 +241,27 @@
         <tr>
           <!--  -->
           <td>
-            <p><code><a href="dissolve_shape.html">dissolve_shape</a></code> </p>
+            <p><code><a href="reproj_vect.html">reproj_vect</a></code> </p>
           </td>
-          <td><p>dissolve attributes of a vector</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="cast_vect.html">cast_vect</a></code> </p>
-          </td>
-          <td><p>cast a vector object to a different <code>R</code> spatial class or to a shapefile</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="create_fishnet.html">create_fishnet</a></code> </p>
-          </td>
-          <td><p>Create a "fishnet" vector over the extent of a spatial object</p></td>
+          <td><p>Reproject a vector "R" object or file</p></td>
         </tr><tr>
           <!--  -->
           <td>
             <p><code><a href="crop_vect.html">crop_vect</a></code> </p>
           </td>
           <td><p>crop a vector on the extent of a different spatial file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="dissolve_vect.html">dissolve_vect</a></code> </p>
+          </td>
+          <td><p>dissolve attributes of a vector and aggregate its table</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="create_fishnet.html">create_fishnet</a></code> </p>
+          </td>
+          <td><p>Create a "fishnet" vector over the extent of a spatial object</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -300,12 +300,6 @@
             <p><code><a href="get_proj4string.html">get_proj4string</a></code> </p>
           </td>
           <td><p>return the proj4string of a spatial object or file</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="get_projunits.html">get_projunits</a></code> </p>
-          </td>
-          <td><p>Retrieve projection units</p></td>
         </tr>
       </tbody><tbody>
         <tr>
@@ -369,9 +363,21 @@
         </tr><tr>
           <!--  -->
           <td>
-            <p></p>
+            <p><code><a href="sprawlext.html">sprawlext-class</a></code> </p>
           </td>
           <td><p>sprawlext class</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="cast_vect.html">cast_vect</a></code> </p>
+          </td>
+          <td><p>cast a vector object to a different <code>R</code> spatial class or to a shapefile</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="cast_rast.html">cast_rast</a></code> </p>
+          </td>
+          <td><p>automatic recasting between Raster object and raster files on disk</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -407,7 +413,7 @@
           <td>
             <p><code><a href="fillpals.html">fillpals</a></code> </p>
           </td>
-          <td><p>create list of validi fill palettes</p></td>
+          <td><p>create list of valid fill palettes</p></td>
         </tr><tr>
           <!--  -->
           <td>
@@ -423,9 +429,15 @@
         </tr><tr>
           <!--  -->
           <td>
-            <p><code><a href="get_spatype.html">get_rastype</a></code> <code><a href="get_spatype.html">get_spatype</a></code> <code><a href="get_spatype.html">get_vectype</a></code> </p>
+            <p><code><a href="get_spatype.html">get_spatype</a></code> <code><a href="get_spatype.html">get_vectype</a></code> </p>
           </td>
           <td><p>check the "spatial type" of an object or file</p></td>
+        </tr><tr>
+          <!--  -->
+          <td>
+            <p><code><a href="get_rastype.html">get_rastype</a></code> </p>
+          </td>
+          <td><p>Check in the input is a <code>Raster</code> object or raster file</p></td>
         </tr><tr>
           <!--  -->
           <td>

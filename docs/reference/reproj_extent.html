@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -221,14 +221,14 @@ reprojected extent</p></td>
 #&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
 #&gt; </div><div class='input'>
 <span class='co'># Reproject an extent or a bounding box (given the input projection)</span>
-<span class='fu'>reproj_extent</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: extentin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
+<span class='fu'>reproj_extent</span>(<span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: raster::extentin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":
 #&gt;      xmin      ymin      xmax      ymax 
 #&gt;  195742.3 1677398.6  332519.7 1780655.5 
 #&gt; 
 #&gt; Slot "proj4string":
 #&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
-#&gt; </div><div class='input'><span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: bboxin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; </div><div class='input'><span class='fu'>reproj_extent</span>(<span class='kw pkg'>sp</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sp/topics/bbox'>bbox</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>in_proj</span><span class='kw'>=</span><span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: sp::bboxin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":
 #&gt;      xmin      ymin      xmax      ymax 
 #&gt;  195742.3 1677398.6  332519.7 1780655.5 
@@ -236,7 +236,7 @@ reprojected extent</p></td>
 #&gt; Slot "proj4string":
 #&gt; [1] "+proj=utm +zone=51 +datum=WGS84 +units=m +no_defs"
 #&gt; </div><div class='input'><span class='co'># (this fails without providing in_proj value:)</span>
-<span class='fu'>reproj_extent</span>(<span class='fu'>bbox</span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: bboxin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; <span class='error'>Error in check_proj4string.default(proj4string, abort = TRUE): check_proj4string --&gt; proj4string is not a valid CRS object or proj4string. Aborting!</span></div><div class='input'>
+<span class='fu'>reproj_extent</span>(<span class='kw pkg'>sp</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sp/topics/bbox'>bbox</a></span>(<span class='no'>in_rast</span>), <span class='st'>"+init=epsg:32651"</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: sp::bboxin_rast to: +init=epsg:32651</span></div><div class='output co'>#&gt; <span class='error'>Error in check_proj4string.default(proj4string, abort = TRUE): check_proj4string --&gt; proj4string is not a valid CRS object or proj4string. Aborting!</span></div><div class='input'>
 <span class='co'># Reproject without enlarging</span>
 <span class='fu'>reproj_extent</span>(<span class='no'>in_sprawlext</span>, <span class='st'>"+init=epsg:32651"</span>, <span class='kw'>enlarge</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: in_sprawlext to: +init=epsg:32651</span></div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":

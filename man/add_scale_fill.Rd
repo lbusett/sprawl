@@ -38,11 +38,11 @@ TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()} (TBD)
 Default: NULL (the default ggplot2 \code{labels = waiver()} is used)
 }}
 
-\item{leg_colors}{\code{characrter (n_leg_labels)} Colors to be assigned to
+\item{leg_colors}{\code{character (n_leg_labels)} Colors to be assigned to
 the different values of \code{fill_var} if \code{palette_name} == "manual". The number
 of colors must be equal to the number of unique values of \code{fill_var}, otherwise
 an error will be issued. Colors can be specified as \code{R} color names (e.g.,
-\code{leg_colours = c("red", "blue")}, HEX values (e.g., \code{leg_colours = c(#8F2525, #41AB96)}, or a mix of the two. Note that the argument is \strong{mandatory} if
+\code{leg_colors = c("red", "blue")}, HEX values (e.g., \code{leg_colours = c(#8F2525, #41AB96)}, or a mix of the two. Note that the argument is \strong{mandatory} if
 \code{palette_name} == "manual", and \strong{ignored} on all other palettes,
 Default: NULL}
 

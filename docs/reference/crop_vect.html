@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -190,14 +190,14 @@ valid filenames of raster or vector files)</p></td>
                                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>,
                                   <span class='st'>"EVIts_test.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
- <span class='no'>in_polys_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>crop_vect</span>(<span class='no'>in_polys</span>, <span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping in_polys on extent of in_rast</span></div><div class='input'>
+ <span class='no'>in_polys_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>crop_vect</span>(<span class='no'>in_polys</span>, <span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping in_polys on extent of in_rast</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>
  <span class='co'># Retrieve a polygon representing in_rast extent and reproject it</span>
  <span class='no'>rast_extent</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"sfc_POLYGON"</span>) <span class='kw'>%&gt;%</span>
     <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='fu'><a href='get_proj4string.html'>get_proj4string</a></span>(<span class='no'>in_polys</span>))
  <span class='fu'>par</span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>))
  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>in_polys</span>[<span class='fl'>1</span>])
  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>rast_extent</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='no'>T</span>)
- <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>in_polys_cropped</span>[<span class='fl'>1</span>])</div><div class='input'> <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>rast_extent</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='img'><img src='crop_vect-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>  <span class='fu'>par</span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>))</div></pre>
+ <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>in_polys_cropped</span>[<span class='fl'>1</span>])</div><div class='input'> <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>rast_extent</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='img'><img src='crop_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>  <span class='fu'>par</span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

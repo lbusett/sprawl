@@ -57,7 +57,7 @@ test_that("plot_rast_gg works as expected", {
   # Categorical raster - manual scale
   in_rast <- raster::raster(ncol = 20, nrow = 20) %>%
     raster::init("row") %>%
-    categorize_rast(class_names = letters[1:20])
+    set_rastlabels(class_names = letters[1:20])
 
 
   expect_error(p <- plot_rast_gg(in_rast, scalebar_dist = 1,

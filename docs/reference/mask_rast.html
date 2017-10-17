@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -186,13 +186,13 @@ Default: "rastobj" (If an invalid string is provided, defaults to <code>rastobj<
       <th>out_filename</th>
       <td><p><code>character</code> filename where the masked raster should be saved
 If NULL, the masked raster is saved on a temporary file in the <code>R</code> temporary
-folder, named <code>&lt;basename(in_rast)&gt;_sprawlmask.tif</code>. The file is saved in GTtiff
+folder, named <code>&lt;basename(in_rast)&gt;_sprawlmask.tif</code>. The file is saved in GTiff
 format, with <code>compress</code> compression.</p></td>
     </tr>
     <tr>
       <th>out_dtype</th>
       <td><p><code>character</code> data type of the output masked files, according
-to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
 If NULL, the data type is retrieved from the input, Default: NULL</p></td>
     </tr>
@@ -245,7 +245,7 @@ string corresponding to the filename of the created raster (if out_type ==
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
-<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/Rtmpv3iV0o folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/Rtmpv3iV0o folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
+<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/RtmprpzVW8 folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

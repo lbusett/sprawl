@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -216,7 +216,7 @@ Default: FALSE (Ignored if rast_type == "categorical")</p></td>
     </tr>
     <tr>
       <th>comp_freq</th>
-      <td><p><code>logical</code> if TRUE, also requencies of the the different classes
+      <td><p><code>logical</code> if TRUE, also frequencies of the the different classes
 of a categorical raster present in each polygon are returned, in <code>out$ts_summ</code>
 Default = FALSE (Ignored if rast_type == "continuous")</p></td>
     </tr>
@@ -293,7 +293,7 @@ extracted (see examples).</p>
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
-<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/Rtmpv3iV0o/sprawlcrop folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/Rtmpv3iV0o folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 552 features and 15 fields
+<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/RtmprpzVW8/sprawlcrop folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 552 features and 15 fields
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12897990 ymin: 1685995 xmax: 12971590 ymax: 1780601

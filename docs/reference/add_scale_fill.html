@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -146,7 +146,7 @@ concerning treatment of outliers.</p>
     
 
     <pre class="usage"><span class='fu'>add_scale_fill</span>(<span class='no'>plot</span>, <span class='no'>palette</span>, <span class='no'>title</span>, <span class='no'>na.color</span>, <span class='no'>zlims</span>, <span class='no'>leg_breaks</span>, <span class='no'>leg_labels</span>,
-  <span class='no'>leg_type</span>, <span class='no'>outliers_style</span>, <span class='no'>direction</span>, <span class='no'>...</span>)</pre>
+  <span class='no'>leg_colors</span>, <span class='no'>leg_type</span>, <span class='no'>outliers_style</span>, <span class='no'>direction</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -195,6 +195,16 @@ Default: NULL (the default ggplot2 <code>labels = waiver()</code> is used)</p></
 </ul></td>
     </tr>
     <tr>
+      <th>leg_colors</th>
+      <td><p><code>character (n_leg_labels)</code> Colors to be assigned to
+the different values of <code>fill_var</code> if <code>palette_name</code> == "manual". The number
+of colors must be equal to the number of unique values of <code>fill_var</code>, otherwise
+an error will be issued. Colors can be specified as <code>R</code> color names (e.g.,
+<code>leg_colors = c("red", "blue")</code>, HEX values (e.g., <code>leg_colours = c(#8F2525, #41AB96)</code>, or a mix of the two. Note that the argument is <strong>mandatory</strong> if
+<code>palette_name</code> == "manual", and <strong>ignored</strong> on all other palettes,
+Default: NULL</p></td>
+    </tr>
+    <tr>
       <th>leg_type</th>
       <td><p><code>character ["continuous", "discrete"]</code> type of legend to be used
 on continuous variables. If "continuous" , a colourbar is used. If "discrete",
@@ -206,13 +216,13 @@ a discretized version is used (see examples).#'</p></td>
 the values outside of the zlims range will be plotted.</p><ul>
 <li><p>If == "censor", they are plotted using the colors(s) specified in <code>outliers_color</code></p></li>
 <li><p>If == "to_minmax", outliers are forced to the colors used for the maximum
-and minum values specified in <code>zlims</code> (using <code><a href='http://www.rdocumentation.org/packages/scales/topics/squish'>scales::squish</a></code>), Default:
+and minimum values specified in <code>zlims</code> (using <code><a href='http://www.rdocumentation.org/packages/scales/topics/squish'>scales::squish</a></code>), Default:
 <code>censor</code>.</p></li>
 </ul></td>
     </tr>
     <tr>
       <th>direction</th>
-      <td><p><code>character [0 | 1]</code> direction of the color legend. Chenge this
+      <td><p><code>character [0 | 1]</code> direction of the color legend. Change this
 to invert the color gradient, Default: 1</p></td>
     </tr>
     <tr>

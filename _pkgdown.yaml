@@ -15,7 +15,9 @@ reference:
     contents:
       - '`mask_rast`'
       - '`reproj_rast`'
+      - '`categorize_rast`'
       - '`reclass_rast`'
+      - '`set_rastlabels`'
       - '`extract_rast`'
       - '`aggregate_rast`'
       - '`crop_rast`'

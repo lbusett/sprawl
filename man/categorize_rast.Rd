@@ -2,56 +2,132 @@
 % Please edit documentation in R/categorize_rast.R
 \name{categorize_rast}
 \alias{categorize_rast}
-\title{categorize a raster and assign class names}
+\alias{reclass_rast}
+\title{reclassify values of a raster}
 \usage{
-categorize_rast(in_rast, class_names = NULL, verbose = TRUE)
+categorize_rast(in_rast, class_matrix, class_names = NULL, out_file = NULL,
+  out_type = "rastobject", overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
-\item{in_rast}{a \code{Raster} object or the path to a valid rster file}
+\item{in_rast}{Input raster file or "R" raster layer to be reclassified}
+
+\item{class_matrix}{\code{data.frame} 3 column data frame with column names equal
+to \code{start}, \code{end} and \code{new}. Each line specifies an interval of values in
+the original raster and the value they will assume in the output.
+\cr  \strong{IMPORTANT !} Intervals in \code{class_matrix} will be considered
+as \strong{CLOSED on THE LEFT and OPEN ON THE RIGHT !} - see examples !!!! -}
 
 \item{class_names}{\code{character array} optional array of names to be assigned
 to the new classes (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
-see examples. Order of the class names should follow the numeric sortuing
-of the values to which class names should correspond. If NULL, class names
-are assigned by converting the numeric values of the new raster to character,
-Default: NULL}
+see examples. If NULL, class names are assigned by converting the numeric
+values of the new raster to character, Default: NULL}
+
+\item{out_file}{\code{character} Name of the output raster file. If NULL and to_file == TRUE ,
+the raster is saved to a file in the \code{R} temporary folder
+in "R" tempdir(), Default: NULL}
+
+\item{out_type}{\code{character}
+\itemize{
+\item if == "rastobj", return a \code{Raster} object;
+\item if == "filename", return the filename of the masked layer (GTiff or gdal vrt format
+depending on other arguments - see below)
+Default: "rastobj" (If an invalid string is provided, defaults to \code{rastobj})
+}}
+
+\item{overwrite}{\code{logical} If TRUE and `out_file`` already exists, the file is overwritten,
+Default: FALSE}
 
 \item{verbose}{\code{logical} if TRUE, extended processing information is sent to
 the console in the form of messages}
 }
 \value{
-a 'Raster' object equal to \code{in_rast} to which a Raster Attribute table
-has been added (see \code{raster::ratify})
+\itemize{
+\item if out_type == rastobject:  \code{*raster} corresponding to the reclassified raster
+\itemize{
+\item if out_type == "rastfile": name of the file where it was saved (either corresponding to
+\code{out_file} or to the name of the temporary file created (if \code{out_file == NULL}))
+}
+}
 }
 \description{
-FUNCTION_DESCRIPTION
+function to reclassify values of a raster object or raster file
+based on a reclassification matrix which specifies which value in the output
+should be taken by different \strong{intervals} of values of the input raster
+(simple wrapper for the raster::reclassify function, providing a (somehow)
+easier and extended I/O functionality and possibility to set the class names
+for the new raster using \code{raster::ratify}
 }
 \details{
-Simple wrapper around \code{raster::ratify}, providing the added
-functionality of specifying specific names for the classes.
+\code{class_matrix} must be a 3-columns \code{data.frame} (or similar), including
+the \code{start}, \code{end} and \code{new} columns. It can be easily created by, for example:\preformatted{class_matrix <- tribble(~start, ~end, ~new,
+                               0,    1,   NA, # values >=0 and < 1 will be set to NA
+                               1,    5,   1,  # values >=1 and < 5 will be set to 1
+                               5,    7,   2,  # values >=5 and < 7 will be set to 2
+                             ...,  ..., ...,
+                             ...,  ..., ...,
+                              11, 100, NA)   # values >=11 and < 100 will be set to NA
+}
+
+, or:\preformatted{class_matrix <- data.frame(start = c(0,  1, 5, ..., ..., 11),
+                             end   = c(1,  5, 7, ..., ..., 100),
+                             new   = c(NA, 1, 2, ..., ..., NA)
+}
+
+Note that it is \strong{FUNDAMENTAL} for proper functioning that ALL values of the
+original rasterare "covered" in \code{class_matrix}. Values not falling in any
+of the intervals will be kept at their original values ! (checks for this
+will be implemented in the future!)
 }
 \examples{
 \dontrun{
-  in_rast <- raster::raster(ncol = 5, nrow = 5) \%>\%
-    init("row")
-  levels(in_rast)[[1]]
 
-  # categorize and assign standard class names
-  cat_rast <- categorize_rast(in_rast)
-  levels(cat_rast)[[1]]
+# create a raster with values equal to rows number and assign a RAT
+# to it
 
-  # categorize and assign custom class names
-  cat_rast <- categorize_rast(in_rast,
-                              class_names = c("Water", "Land",
-                              "Vegetation", "Urban", "Other"))
-  levels(cat_rast)[[1]]
-  plot_rast_gg(cat_rast, leg_labels = levels(cat_rast)[[1]]$Class,
-               scalebar = FALSE)
- }
+  in_rast <- raster::raster(ncol = 20, nrow = 20) \%>\%
+  raster::init("row")
+  plot_rast_gg(in_rast, rast_type = "continuous", scalebar = F)
+
+# build a reclassification matrix
+
+  class_matrix <- tibble::tribble(
+                         ~start, ~end, ~new,
+                           -Inf,   5,    1, # Values  < 5 --> 1
+                              5,   8,    2, # Values  >=5 and < 8 --> 2
+                              8,   12,   2, # Values  >=8 and < 12 --> 2
+                             12,  15,   NA, # Values  >=12 and < 15 --> NA
+                             15,  Inf,   3)  # Values >=15  --> 3
+# reclassify and assign class names
+out_rast <- categorize_rast(in_rast,
+                        class_matrix,
+                        class_names = c("pippo", "pluto", "paperino"))
+out_rast
+plot_rast_gg(out_rast, scalebar = F)
+
+
+# reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5
+# and 9, putting the rest to 0 and values >= 11 to NA
+# Open  the masking file
+
+# in_mask <- raster(in_maskfile)
+# setup the reclassification matrix
+
+#  class_matrix <- tibble::tribble(
+#                ~start, ~end, ~new,
+#                     0,   0,   NA,
+#                     1,   5,   0,
+#                     5,   6,   1,
+#                     6,   9,   1,
+#                     9,  11,   1,
+#                    11, 100, NA)
+
+# reclass_file = "/home/lb/Temp/buttami/pippo_reclass.tif"
+# outmask = categorize_rast(in_rast,
+#                        class_matrix,
+#                        r_out = TRUE)
+# plot_rast_gg(outmask)
+}
 }
 \seealso{
-\code{raster::ratify}
-}
-\author{
-Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
+\code{raster::reclassify} \code{raster::ratify} \code{\link{set_rastlabels}}
 }

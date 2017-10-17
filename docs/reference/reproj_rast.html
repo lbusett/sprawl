@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>reproj_rast — reproj_rast • sprawl</title>
+<title>Reproject a raster "R" object or file — reproj_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -135,99 +135,133 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>reproj_rast</h1>
+    <h1>Reproject a raster "R" object or file</h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>Reproject a raster "R" object or file to a different reference
+system. The function is a simple wrapper around <code>gdalwarp</code> with
+additional checks on inputs allowing to specify the output projection
+in several ways:
+1: passing a valid proj4 string (e.g., <code>reproj_rast(in_rast, "+init=epsg:4326")</code>
+2: passing a numeric or character that can be interpreted as an
+EPSG code (e.g., <code>reproj_rast(in_vect, 4326)</code>);
+3: passing the name of a valid <code>R</code> vector or raster object:
+(e.g.,<code>reproj_rast(in_vect, rast_obj)</code>, with <code>rast_obj</code>
+being an existing <code>R</code> object;
+4: passing the path to a valid vector or raster file:
+EPSG code (e.g.,<code>reproj_rast(in_vect, "D:/Temp/myfile.tif")</code></p>
+<p>The reprojected raster is written to a temporary "GTiff" file within <code>R</code>
+tempdir to allow accessing it immediately from <code>R</code>, unless a specific output
+file name is provided with the <code>out_file</code> argument.</p>
     
 
-    <pre class="usage"><span class='fu'>reproj_rast</span>(<span class='no'>in_object</span>, <span class='no'>outproj_object</span>, <span class='kw'>out_res</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>pix_buff</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>resamp_meth</span> <span class='kw'>=</span> <span class='st'>"near"</span>, <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>,
-  <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>, <span class='kw'>compression</span> <span class='kw'>=</span> <span class='st'>"LZW"</span>, <span class='kw'>out_filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>reproj_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_projobj</span>, <span class='kw'>out_res</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>pix_buff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>resamp_meth</span> <span class='kw'>=</span> <span class='st'>"near"</span>, <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>,
+  <span class='kw'>out_format</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>, <span class='kw'>compression</span> <span class='kw'>=</span> <span class='st'>"LZW"</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>warp_args</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_object</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>in_rast</th>
+      <td><p>A <code>*Raster</code> object, or the path to a raster file</p></td>
     </tr>
     <tr>
-      <th>outproj_object</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>in_projobj</th>
+      <td><p><code>R</code> object or filename from which the output projection should
+be derived (see @description)</p></td>
     </tr>
     <tr>
       <th>out_res</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p><code>numeric (1 | 2)</code> desired resolution for the output in X and Y
+(in measure units of the OUTPUT projection). If a 1-element array is passed,
+the same  resolution is used for X and Y. If NULL, the output resolution is set
+automatically by gdalwarp based on input/output projections and the resolution
+of the input, Default: NULL</p></td>
     </tr>
     <tr>
       <th>crop</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>logical</code> If TRUE, and <code>in_projobj</code> corresponds to a spatial object or
+filename, the output is also cropped on the extent of <code>in_projobj</code>,
+Default: FALSE</p></td>
     </tr>
     <tr>
       <th>pix_buff</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p><code>numeric</code> Dimension of a buffer around the extent to be
+added to it to guarantee that all the area of <code>in_projobj</code> is preserved
+in the reprojected dataset, Default: 1 (ignored if <code>crop == FALSE</code>)</p></td>
     </tr>
     <tr>
       <th>resamp_meth</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'near'</p></td>
+      <td><p><code>character ["near", "bilinear", "cubic", "cubicspline", "lanczos", "average", "mode"]</code> Resampling method to be used by <code>gdalwarp</code> (See
+http://www.gdal.org/gdalwarp.html), Default: 'near'</p></td>
     </tr>
     <tr>
       <th>out_type</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'rastobject'</p></td>
+      <td><p><code>character ["rastfile", "rastobject"]</code> If "rastfile", and <code>out_file</code>
+is not NULL, the function returns the name of the saved raster. Otherwise,
+it returns the reprojected raster as a <code>*Raster</code> object</p></td>
     </tr>
     <tr>
       <th>out_format</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'Gtiff'</p></td>
+      <td><p><code>character</code> Format to be used to save the reprojected raster,
+Default: 'GTiff'</p></td>
     </tr>
     <tr>
       <th>compression</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'LZW'</p></td>
+      <td><p><code>character ["NONE" | "PACKBITS" | "LZW" | "DEFLATE"]</code>
+Compression method to be used to save the  raster if <code>out_format</code> is "GTiff",
+Default: 'LZW'</p></td>
     </tr>
     <tr>
-      <th>out_filename</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <th>out_file</th>
+      <td><p><code>character</code> Path where the reprojected vector should be saved.
+<strong>If NULL, the reprojected raster saved on <code>R</code> temporary folder, and will not
+be accessible after closing the session</strong>, Default: NULL</p></td>
     </tr>
     <tr>
       <th>warp_args</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p>Additional parameters to be passed to <code>gdalwarp</code>,
+Default: NULL (Not currently implemented)</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>PARAM_DESCRIPTION, Default: FALSE</p></td>
+      <td><p><code>logical</code> If TRUE, overwrite existing files, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>PARAM_DESCRIPTION, Default: TRUE</p></td>
+      <td><p><code>logical</code> If FALSE, suppress processing messages, Default: TRUE</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <td><p>Other arguments (None currently implemented)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
+    <p>a <code>Raster</code> object, or the path of the file where the reprojected input
+was saved</p>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>DETAILS</p>
+    <p>http://www.gdal.org/gdalwarp.html</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='co'># reproject a raster based on an output proj4string</span>
+    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
+ <span class='co'># reproject a raster based on an output proj4string</span>
  <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000_b2.tif"</span>,
                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='no'>out_proj</span> <span class='kw'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
- <span class='fu'>reproj_rast</span>(<span class='no'>in_file</span>, <span class='no'>out_proj</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_file` to +init=epsg:3035</span></div><div class='output co'>#&gt; class       : RasterLayer 
+ <span class='fu'>reproj_rast</span>(<span class='no'>in_file</span>, <span class='no'>out_proj</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_file` to +init=epsg:3035 +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</span></div><div class='output co'>#&gt; class       : RasterLayer 
 #&gt; dimensions  : 1006, 993, 998958  (nrow, ncol, ncell)
 #&gt; resolution  : 30.02464, 30.02464  (x, y)
 #&gt; extent      : 4151395, 4181210, 2606588, 2636793  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-#&gt; data source : /tmp/Rtmpv3iV0o/file106d410a1ed6.tif 
+#&gt; data source : /tmp/RtmprpzVW8/file3b7e371ac7a8.tif 
 #&gt; names       : oli_multi_1000_b2 
 #&gt; </div><div class='input'>
  <span class='co'># reproject on projection of a different spatial object/file</span>
@@ -236,13 +270,13 @@
                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)))
  <span class='no'>out_rep</span> <span class='kw'>&lt;-</span> <span class='fu'>reproj_rast</span>(<span class='no'>in_rast</span>, <span class='no'>my_vect</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_rast` to +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0</span></div><div class='input'> <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rep</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Greys"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>direction</span> <span class='kw'>=</span> -<span class='fl'>1</span>) +
-  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='reproj_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='reproj_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># reproject on projection of a different spatial object/file and crop on</span>
  <span class='co'># its extent</span>
 
  <span class='no'>out_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>reproj_rast</span>(<span class='no'>in_rast</span>, <span class='no'>my_vect</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_rast` to +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0</span></div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: . to: in_proj</span></div><div class='input'> <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_cropped</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>,  <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Greys"</span>,
   <span class='kw'>direction</span> <span class='kw'>=</span> -<span class='fl'>1</span>) +
-  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='reproj_rast-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
+  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='reproj_rast-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -251,7 +285,7 @@
       
       <li><a href="#value">Value</a></li>
 
-      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

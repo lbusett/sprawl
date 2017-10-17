@@ -14,9 +14,10 @@ plot_vect(in_vect, line_color = "black", line_size = 0.2, fill_var = NULL,
   scalebar = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
   scalebar_pos = "bottomright", na.color = NULL, na.value = NULL,
   palette_name = NULL, direction = 1, leg_type = NULL,
-  leg_labels = NULL, leg_breaks = NULL, leg_position = "right",
-  show_axis = TRUE, show_grid = TRUE, grid_color = "grey15",
-  title = NULL, subtitle = NULL, theme = theme_bw(), verbose = TRUE)
+  leg_labels = NULL, leg_breaks = NULL, leg_colors = NULL,
+  leg_position = "right", show_axis = TRUE, show_grid = TRUE,
+  grid_color = "grey15", title = NULL, subtitle = NULL,
+  theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_vect}{object of class \code{sfc_POLYGON} (or coercible to it using
@@ -158,6 +159,14 @@ of breaks must be equal to the number of labels specified by "leg_labels".
 If this is not TRUE, \code{leg_breaks} and \code{leg_labels} are reset to \code{waiver()}
 (TBD)  Default: NULL (the default ggplot2 \code{labels = waiver()} is used)}
 
+\item{leg_colors}{\code{character (n_leg_labels)} Colors to be assigned to
+the different values of \code{fill_var} if \code{palette_name} == "manual". The number
+of colors must be equal to the number of unique values of \code{fill_var}, otherwise
+an error will be issued. Colors can be specified as \code{R} color names (e.g.,
+\code{leg_colors = c("red", "blue")}, HEX values (e.g., \code{leg_colours = c(#8F2525, #41AB96)}, or a mix of the two. Note that the argument is \strong{mandatory} if
+\code{palette_name} == "manual", and \strong{ignored} on all other palettes,
+Default: NULL}
+
 \item{leg_position}{\code{character ["right" | "bottom"]} Specifies if plotting
 the legend on the right or on the bottom. Default: "right"}
 
@@ -179,14 +188,6 @@ Default: grey15"}
 
 \item{verbose}{\code{logical}, If FALSE, suppress processing message,
 Default: TRUE}
-
-\item{leg_colors}{\code{characrter (n_leg_labels)} Colors to be assigned to
-the different values of \code{fill_var} if \code{palette_name} == "manual". The number
-of colors must be equal to the number of unique values of \code{fill_var}, otherwise
-an error will be issued. Colors can be specified as \code{R} color names (e.g.,
-\code{leg_colours = c("red", "blue")}, HEX values (e.g., \code{leg_colours = c(#8F2525, #41AB96)}, or a mix of the two. Note that the argument is \strong{mandatory} if
-\code{palette_name} == "manual", and \strong{ignored} on all other palettes,
-Default: NULL}
 }
 \value{
 a \code{gg} plot. It is plotted immediately. If the call includes

@@ -86,7 +86,7 @@
       <a href="../articles/articles/contributing.html">Contributing</a>
     </li>
     <li>
-      <a href="../articles/articles/coding_style.html">Codin Style</a>
+      <a href="../articles/articles/coding_style.html">Coding Style</a>
     </li>
     <li>
       <a href="../articles/articles/CONDUCT.html">Code of Conduct</a>
@@ -174,7 +174,7 @@ filename from which an object of class <code>sprawlext</code> can be obtained (s
       <th>pad</th>
       <td><p><code>numeric</code> extent of a "padding area" to be kept with respect to
 <code>crop_extent</code> (in number of pixels). Useful to be sure not to crop "too much"
-for example when cropping before extracting freatures suche as in <code>extract_rast</code>,
+for example when cropping before extracting features suche as in <code>extract_rast</code>,
 Default: 1</p></td>
     </tr>
     <tr>
@@ -197,7 +197,7 @@ raster.</p></td>
     <tr>
       <th>out_dtype</th>
       <td><p><code>character</code> data type of the output masked files, according
-to gdal specifications for Gtiff files ("Byte", "UInt16", "Int16", "UInt32",
+to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
 If NULL, the data type is retrieved from the input, Default: NULL</p></td>
     </tr>
@@ -219,8 +219,11 @@ or GTiff filename corresponding to it, depending on <code>out_type</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> #EXAMPLE1
- </div></pre>
+    <pre class="examples"><div class='input'><span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
+                      <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='no'>in_file</span>)
+<span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>60</span>)[<span class='fl'>50</span>:<span class='fl'>55</span>,]</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_rast</span></div><div class='input'><span class='no'>out_cropped</span>  <span class='kw'>&lt;-</span> <span class='fu'>crop_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+                         <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>)</div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/RtmprpzVW8/sprawlcrop folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='input'> </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
