@@ -28,8 +28,9 @@
 #'                               class_names = c("Water", "Land",
 #'                               "Vegetation", "Urban", "Other"))
 #'   levels(cat_rast)[[1]]
-#'   plot_rast_gg(cat_rast, leg_labels = levels(cat_rast)[[1]]$Class,
-#'                scalebar = FALSE)
+#'
+#'   # Class names are automatically recognized by [`plot_rast_gg`]
+#'   plot_rast_gg(cat_rast, scalebar = FALSE)
 #'  }
 #' @rdname set_rastlabels
 #' @seealso `raster::ratify`
