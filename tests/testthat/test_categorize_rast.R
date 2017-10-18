@@ -11,12 +11,12 @@ test_that("reclass_rast/categorize_rast works as expected", {
     set_rastlabels(class_names = letters[1:20])
 
   reclass_matrix <- tibble::tribble(
-    ~start, ~end, ~new,
-    0,   5,    1,
-    5,   8,    2,
-    8,   12,   2,
-    12,  15,   NA,
-    15,  20,   3)
+    ~start, ~end, ~new, ~label,
+    0,   5,    1, "pippo",
+    5,   8,    2, "pluto",
+    8,   12,   2, "pluto",
+    12,  15,   NA, NA,
+    15,  20,   3, "paperino")
   # Vanilla class names
   out_rast <- categorize_rast(in_rast, reclass_matrix, verbose = FALSE)
   expect_is(out_rast, "Raster")
@@ -29,9 +29,8 @@ test_that("reclass_rast/categorize_rast works as expected", {
   expect_is(out_rast@data@attributes[[1]], "data.frame")
 
   # Too few class names --> Warning
-  expect_warning(out_rast <- reclass_rast(in_rast, reclass_matrix,
-                                          c("A", "B"),
-                                          verbose = FALSE))
+  # out_rast <- reclass_rast(in_rast, reclass_matrix,
+  #                                         verbose = FALSE)
 
 
 })

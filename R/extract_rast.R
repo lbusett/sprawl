@@ -76,9 +76,17 @@
 #' in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
 #'                           package = "sprawl.data"))
 #' in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
+#'
 #' out      <- extract_rast(in_rast, in_polys, verbose = FALSE)
+#'
+#' # Statistics for the different polygons
+#'
 #' as_tibble(out$stats)
+#'
+#' # Data from all pixels, grouped by polygon
+#'
 #' as_tibble(out$alldata)
+#'
 #'}
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
 #' @importFrom sp proj4string
@@ -186,6 +194,7 @@ extract_rast <- function(in_rast,
 
     # Get the vector input and do some preprocessing. Reproject and crop
     # if necessary
+
     in_vect_crop  <- cast_vect(in_vect, "sfobject") %>%
       dplyr::mutate_if(is.character, as.factor) %>%
       tibble::as_tibble() %>%

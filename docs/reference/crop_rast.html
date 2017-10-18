@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>crop a raster file/rast_file on a given extent — crop_rast • sprawl</title>
+<title>crop a raster file/rast_file on a given extent � crop_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -148,7 +148,7 @@ can be derived (see details)</p></li>
     
 
     <pre class="usage"><span class='fu'>crop_rast</span>(<span class='no'>rast_object</span>, <span class='no'>ext_object</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>pad</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -182,7 +182,7 @@ Default: 1</p></td>
       <td><p><code>character</code> indicates the type of object to be returned:</p><ol>
 <li><p>"rastobject" return a <code>raster</code> rast_file accessing the saved cropped file</p></li>
 <li><p>"rastfile" return the filename of the GTiff file corresponding to the
-cropped GTiff file. If <code>out_filename == NULL</code>, this corresponds to a file
+cropped GTiff file. If <code>out_file == NULL</code>, this corresponds to a file
 saved in <code>R</code> temporary folder.</p></li>
 <li><p>"vrtfile" return the filename of the vrt file built for cropping
 the input raster (<strong>no saving to disk is performed</strong>)
@@ -190,7 +190,7 @@ the input raster (<strong>no saving to disk is performed</strong>)
 </ol></td>
     </tr>
     <tr>
-      <th>out_filename</th>
+      <th>out_file</th>
       <td><p><code>character</code> filename to be used to save the cropped
 raster.</p></td>
     </tr>
@@ -222,8 +222,28 @@ or GTiff filename corresponding to it, depending on <code>out_type</code>.</p>
     <pre class="examples"><div class='input'><span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
                       <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
 <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='no'>in_file</span>)
-<span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>60</span>)[<span class='fl'>50</span>:<span class='fl'>55</span>,]</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_rast</span></div><div class='input'><span class='no'>out_cropped</span>  <span class='kw'>&lt;-</span> <span class='fu'>crop_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                         <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>)</div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/RtmpU8rpQ0/sprawlcrop folder</span></div><div class='input'> </div></pre>
+
+<span class='no'>in_vect</span>     <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>60</span>,
+                              <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>55</span>:<span class='fl'>60</span>,]
+
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_vect</span>)</div><div class='img'><img src='crop_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='no'>out_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>crop_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Cropping: in_rast on extent of: in_vect</span></div><div class='input'>
+<span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;    xmin    ymin    xmax    ymax 
+#&gt;  407265 5156295  436665 5186085 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
+#&gt; </div><div class='input'><span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>out_cropped</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;    xmin    ymin    xmax    ymax 
+#&gt;  412635 5161665  423525 5163555 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
+#&gt; </div><div class='input'>
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>out_cropped</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='img'><img src='crop_rast-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

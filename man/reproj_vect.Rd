@@ -60,15 +60,15 @@ in_vect <- system.file("extdata/shapes","lc_polys.shp",
                                    package = "sprawl.data")
 in_vect <- read_vect(in_vect)
 bounds  <- get_boundaries("PHL", 1)
-# Input projection is:
-get_proj4string(in_vect)
+
+message("Input projection is: ", get_proj4string(in_vect))
 plot_vect(in_vect, fill_var = "category", borders_layer = bounds)
 
 # reproject to 3857 (web mercator)
 out_proj <-  3857
 out_vect <- reproj_vect(in_vect, 3857)
-# Output projection is:
-get_proj4string(out_vect)
+
+message("Output projection is: ", get_proj4string(out_vect))
 
 # Do the same, but also save the output to file
 out_file <- tempfile(fileext = ".shp")
@@ -76,17 +76,19 @@ out_proj <- "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +un
 out_vect <- reproj_vect(in_vect, 3857, out_file = out_file)
 read_vect(out_file)
 
-# use a different spatial file or object to set the output projectionaaa:
-rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
-  package = "sprawl.data")
+# use a different spatial file or object to set the output projection:
+rast <- read_rast(system.file("extdata/MODIS_test", "EVIts_test.tif",
+  package = "sprawl.data"))
 out_vect <- reproj_vect(in_vect, rast)
-# Output projection is:
-get_proj4string(out_vect)
-p1 <- plot_vect(in_vect, borders_layer = bounds, fill_var = "category",
+
+message("Output projection is: ", get_proj4string(out_vect))
+
+plot_vect(in_vect, borders_layer = bounds, fill_var = "category",
    title = "Original (lat/lon)")
-p2 <- plot_vect(out_vect, borders_layer = bounds, fill_var = "category",
+
+plot_vect(out_vect, borders_layer = bounds, fill_var = "category",
    title = "Reprojected (sinusoidal)")
-gridExtra::grid.arrange(p1,p2, ncol = 2)
+
 }
 }
 \seealso{

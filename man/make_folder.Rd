@@ -4,7 +4,7 @@
 \alias{make_folder}
 \title{FUNCTION_TITLE}
 \usage{
-make_folder(path, type = "dirname", verbose = TRUE)
+make_folder(path, type = "dirname", verbose = FALSE)
 }
 \arguments{
 \item{path}{PARAM_DESCRIPTION}

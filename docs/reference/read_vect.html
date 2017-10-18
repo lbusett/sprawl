@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>read a vector spatial file to R — read_vect • sprawl</title>
+<title>read a vector spatial file to R � read_vect • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -182,7 +182,8 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
 <span class='co'># open a shapefile as a `sf` object</span>
  <span class='no'>in_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
- <span class='fu'>read_vect</span>(<span class='no'>in_file</span>)</div><div class='output co'>#&gt; Simple feature collection with 13 features and 4 fields
+ <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>read_vect</span>(<span class='no'>in_file</span>)
+ <span class='no'>in_vect</span></div><div class='output co'>#&gt; Simple feature collection with 13 features and 4 fields
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 120.1778 ymin: 15.15353 xmax: 121.3394 ymax: 16.09343
@@ -204,6 +205,11 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
 #&gt; 11    11         water    Other      Other &lt;POLYGON ((12...&gt;
 #&gt; 12    12    small_feat    Other      Other &lt;POLYGON ((12...&gt;
 #&gt; 13    13      out_feat    Other      Other &lt;POLYGON ((12...&gt;</div><div class='input'>
+ <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_file</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>)</div><div class='img'><img src='read_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reproj_vect.html'>reproj_vect</a></span>(<span class='no'>in_vect</span>,
+      <span class='st'>"+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs"</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_vect --&gt; Reprojecting in_vect to +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs</span></div><div class='input'> <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>,
+           <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"PHL"</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+           )</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "PHL", Level: 1</span></div><div class='img'><img src='read_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># open a shapefile as a `sp` object</span>
  <span class='no'>in_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)

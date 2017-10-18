@@ -61,17 +61,18 @@
 #'
 #'   in_rast <- raster::raster(ncol = 20, nrow = 20) %>%
 #'   raster::init("row")
-#'   plot_rast_gg(in_rast, rast_type = "continuous", scalebar = F)
+#'   plot_rast_gg(in_rast, rast_type = "continuous", scalebar = F,
+#'                direction = -1)
 #'
 #' # build a reclassification matrix
 #'
 #'   class_matrix <- tibble::tribble(
-#'                          ~start, ~end, ~new,
-#'                            -Inf,   5,    1, # Values  < 5 --> 1
-#'                               5,   8,    2, # Values  >=5 and < 8 --> 2
-#'                               8,   12,   2, # Values  >=8 and < 12 --> 2
-#'                              12,  15,   NA, # Values  >=12 and < 15 --> NA
-#'                              15,  Inf,   3)  # Values >=15  --> 3
+#'                          ~start, ~end, ~new, ~label,
+#'                            -Inf,   5,    1, "pippo",   # Values  < 5 --> 1
+#'                               5,   8,    2, "pluto",   # >=5 and < 8 --> 2
+#'                               8,   12,   2, "pluto",   # >=8 and < 12 --> 2
+#'                              12,  15,   NA, NA,       #>=12 and < 15 --> NA
+#'                              15,  Inf,   3, "paperino")# Values >=15  --> 3
 #' # reclassify and assign class names
 #' out_rast <- categorize_rast(in_rast,
 #'                         class_matrix,
@@ -144,14 +145,14 @@ categorize_rast <- function(in_rast,
   }
 
   recl_rast <- raster::reclassify(in_rast,
-                                  class_matrix,
+                                  class_matrix[,1:3],
                                   filename       = out_file,
                                   include.lowest = TRUE,
                                   right          = FALSE,
                                   overwrite      = overwrite,
                                   datatype       = ot) %>%
     raster::ratify() %>%
-    set_rastlabels(class_names, verbose = FALSE)
+    set_rastlabels(class_names = class_matrix[, 3:4], verbose = FALSE)
 
 
   if (out_type == "rastobject") {

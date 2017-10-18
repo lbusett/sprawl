@@ -23,7 +23,7 @@
 #' @importFrom assertthat assert_that
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #'
-make_folder <- function(path, type = "dirname", verbose = TRUE) {
+make_folder <- function(path, type = "dirname", verbose = FALSE) {
 
   assertthat::assert_that(
     type %in% c("filename", "dirname"),

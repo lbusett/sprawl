@@ -18,12 +18,12 @@
 #' @param out_type `character` indicates the type of object to be returned:
 #'   1. "rastobject" return a `raster` rast_file accessing the saved cropped file
 #'   2. "rastfile" return the filename of the GTiff file corresponding to the
-#'     cropped GTiff file. If `out_filename == NULL`, this corresponds to a file
+#'     cropped GTiff file. If `out_file == NULL`, this corresponds to a file
 #'     saved in `R` temporary folder.
 #'   3. "vrtfile" return the filename of the vrt file built for cropping
 #'     the input raster (**no saving to disk is performed**)
 #' , Default: "rastobject"
-#' @param out_filename `character` filename to be used to save the cropped
+#' @param out_file `character` filename to be used to save the cropped
 #'   raster.
 #' @param out_dtype `character` data type of the output masked files, according
 #'   to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
@@ -39,10 +39,19 @@
 #' in_file <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
 #'                       package = "sprawl.data")
 #' in_rast <- read_rast(in_file)
-#' in_vect <- create_fishnet(in_rast, pix_for_cell = 60)[50:55,]
-#' out_cropped  <- crop_rast(in_rast, in_vect, verbose = FALSE,
-#'                          out_type = "rastobject")
-#'  }
+#'
+#' in_vect     <- create_fishnet(in_rast, pix_for_cell = 60,
+#'                               verbose = FALSE)[55:60,]
+#'
+#' plot_rast(in_rast[[1]], in_poly = in_vect)
+#'
+#' out_cropped <- crop_rast(in_rast, in_vect)
+#'
+#' get_extent(in_rast)
+#' get_extent(out_cropped)
+#'
+#' plot_rast(out_cropped[[1]])
+#' }
 #' @rdname crop_rast
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
@@ -54,7 +63,7 @@ crop_rast <- function(rast_object,
                       mask         = FALSE,
                       pad          = 1,
                       out_type     = "rastobject",
-                      out_filename = NULL,
+                      out_file = NULL,
                       out_dtype    = NULL,
                       compress     = "None",
                       verbose      = TRUE){
@@ -177,9 +186,9 @@ crop_rast <- function(rast_object,
 
   if (out_type == "vrtfile") {
     # Just return the vrt
-    if (!is.null(out_filename)) {
-      file.copy(temp_vrt, out_filename)
-      temp_vrt <- out_filename
+    if (!is.null(out_file)) {
+      file.copy(temp_vrt, out_file)
+      temp_vrt <- out_file
     }
     return(temp_vrt)
 
@@ -192,18 +201,18 @@ crop_rast <- function(rast_object,
     }
 
     # Save and return filename or rastobject
-    if (is.null(out_filename)) {
-      out_filename <- tempfile(fileext = ".tif",
-                               tmpdir = file.path(tempdir(), "sprawlcrop"))
+    if (is.null(out_file)) {
+      out_file <- tempfile(fileext = ".tif",
+                           tmpdir = file.path(tempdir(), "sprawlcrop"))
     }
-    make_folder(out_filename, type = "filename")
+    make_folder(out_file, type = "filename")
 
 
     translate_string <- paste("-of GTiff",
                               "-co", paste0("COMPRESS=", compress),
                               "-ot", dtype["gdal"][1,],
                               temp_vrt,
-                              out_filename)
+                              out_file)
 
     system2(file.path(find_gdal(), "gdal_translate"),
             args = translate_string, stdout = NULL)
@@ -218,12 +227,12 @@ crop_rast <- function(rast_object,
                                          verbose = FALSE)
         }
 
-        out_filename <- mask_rast(out_filename,
-                                  ext_object,
-                                  out_filename = out_filename,
-                                  out_type = "rastfile",
-                                  verbose = FALSE,
-                                  overwrite = TRUE)
+        out_file <- mask_rast(out_file,
+                              ext_object,
+                              out_file = out_file,
+                              out_type = "rastfile",
+                              verbose = FALSE,
+                              overwrite = TRUE)
 
       }
 
@@ -231,10 +240,10 @@ crop_rast <- function(rast_object,
     if (out_type == "rastobject") {
 
       if (rastinfo$nbands == 1) {
-        out <- raster::raster(out_filename)
+        out <- raster::raster(out_file)
       } else {
 
-        out <- raster::brick(out_filename)
+        out <- raster::brick(out_file)
       }
       names(out) <- paste0(rastinfo$bnames)
       if (length(rastinfo$Z$time) == rastinfo$nbands) {
@@ -242,7 +251,7 @@ crop_rast <- function(rast_object,
       }
       return(out)
     } else {
-      return(out_filename)
+      return(out_file)
     }
   }
 }

@@ -33,6 +33,11 @@
 #'                          fileext = ".shp")
 #' mysp_object = points
 #' write_shape(mysp_object, out_file, overwrite = TRUE)
+#'
+#' # read the saved shape
+#' in_data <- read_vect(out_file)
+#' in_data
+#'
 #'}
 write_shape <- function(in_object,
                         out_file,

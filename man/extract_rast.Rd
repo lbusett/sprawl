@@ -115,9 +115,17 @@ in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
 in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
                           package = "sprawl.data"))
 in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
+
 out      <- extract_rast(in_rast, in_polys, verbose = FALSE)
+
+# Statistics for the different polygons
+
 as_tibble(out$stats)
+
+# Data from all pixels, grouped by polygon
+
 as_tibble(out$alldata)
+
 }
 }
 \author{

@@ -247,6 +247,7 @@ plot_vect <- function(
     palette_type <- "qual"
     no_fill <- TRUE
   } else {
+
     # check the class of fill_var. If it is a factoror a character, palette_type
     # is set to "qual", otherwise to "cont".
     cls_fill_var <- class(in_vect[[fill_var]])

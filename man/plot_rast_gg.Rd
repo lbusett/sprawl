@@ -221,7 +221,8 @@ See the description of the arguments for details on their use
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
  plot_rast_gg(in_rast, basemap = "osm",
                   na.value = 0, na.color = "transparent",
-                  title = "OLI", subtitle = "Band 2")
+                  title = "OLI", subtitle = "Band 2",
+                  direction = -1)
 
  #Change basemap and transparency
  plot_rast_gg(in_rast, basemap = "stamenbw",
@@ -233,12 +234,13 @@ See the description of the arguments for details on their use
                   subtitle = "Band 2 - Green")
 
 #Multi band plot with selection of bands
- in_rast <- raster::stack(system.file("extdata/OLI_test",
+ in_rast <- read_rast(system.file("extdata/OLI_test",
   "oli_multi_1000.tif", package = "sprawl.data"))
  plot_rast_gg(in_rast, basemap = "osm", bands_to_plot = c(1,4),
-                  na.value = 0, na.color = "transparent",
-                  title = "OLI", subtitle = "Band 2 vs band 4",
-                  facet_row = 1)
+              palette_name = "RdYlGn",
+              na.value = 0, na.color = "transparent",
+              title = "OLI", subtitle = "Band 2 vs band 4",
+              facet_row = 1)
 
 #Adjusting limits and changing palette
  in_rast <- raster::stack(system.file("extdata/REYE_test",

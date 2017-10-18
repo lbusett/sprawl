@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>extract raster values on features of a vector — extract_rast • sprawl</title>
+<title>extract raster values on features of a vector � extract_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -293,7 +293,12 @@ extracted (see examples).</p>
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
-<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; Creating /tmp/RtmpU8rpQ0/sprawlcrop folder</span></div><div class='output co'>#&gt; <span class='message'>make_folder --&gt; specified `path` already exists!</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 552 features and 15 fields
+
+<span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># Statistics for the different polygons</span>
+
+<span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 552 features and 15 fields
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12897990 ymin: 1685995 xmax: 12971590 ymax: 1780601
@@ -314,7 +319,10 @@ extracted (see examples).</p>
 #&gt; 10       1     10 2013-03-14 3400057 m^2    61        61 4281.672  4282
 #&gt; # ... with 542 more rows, and 8 more variables: sd &lt;dbl&gt;, min &lt;dbl&gt;, max &lt;dbl&gt;,
 #&gt; #   id &lt;dbl&gt;, lc_type &lt;fctr&gt;, category &lt;fctr&gt;, sup_catego &lt;fctr&gt;,
-#&gt; #   geometry &lt;simple_feature&gt;</div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; Simple feature collection with 147384 features and 10 fields
+#&gt; #   geometry &lt;simple_feature&gt;</div><div class='input'>
+<span class='co'># Data from all pixels, grouped by polygon</span>
+
+<span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; Simple feature collection with 147384 features and 10 fields
 #&gt; geometry type:  POINT
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12898050 ymin: 1685995 xmax: 12971710 ymax: 1780279
@@ -334,7 +342,8 @@ extracted (see examples).</p>
 #&gt;  9       1      1 2013-01-01    61     9  3904     1 forest_1   Forest
 #&gt; 10       1      1 2013-01-01    61    10  4768     1 forest_1   Forest
 #&gt; # ... with 147,374 more rows, and 2 more variables: sup_catego &lt;fctr&gt;,
-#&gt; #   geometry &lt;simple_feature&gt;</div></pre>
+#&gt; #   geometry &lt;simple_feature&gt;</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

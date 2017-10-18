@@ -5,7 +5,7 @@
 \title{crop a raster file/rast_file on a given extent}
 \usage{
 crop_rast(rast_object, ext_object, mask = FALSE, pad = 1,
-  out_type = "rastobject", out_filename = NULL, out_dtype = NULL,
+  out_type = "rastobject", out_file = NULL, out_dtype = NULL,
   compress = "None", verbose = TRUE)
 }
 \arguments{
@@ -28,14 +28,14 @@ Default: 1}
 \enumerate{
 \item "rastobject" return a \code{raster} rast_file accessing the saved cropped file
 \item "rastfile" return the filename of the GTiff file corresponding to the
-cropped GTiff file. If \code{out_filename == NULL}, this corresponds to a file
+cropped GTiff file. If \code{out_file == NULL}, this corresponds to a file
 saved in \code{R} temporary folder.
 \item "vrtfile" return the filename of the vrt file built for cropping
 the input raster (\strong{no saving to disk is performed})
 , Default: "rastobject"
 }}
 
-\item{out_filename}{\code{character} filename to be used to save the cropped
+\item{out_file}{\code{character} filename to be used to save the cropped
 raster.}
 
 \item{out_dtype}{\code{character} data type of the output masked files, according
@@ -66,10 +66,19 @@ can be derived (see details)
 in_file <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
                       package = "sprawl.data")
 in_rast <- read_rast(in_file)
-in_vect <- create_fishnet(in_rast, pix_for_cell = 60)[50:55,]
-out_cropped  <- crop_rast(in_rast, in_vect, verbose = FALSE,
-                         out_type = "rastobject")
- }
+
+in_vect     <- create_fishnet(in_rast, pix_for_cell = 60,
+                              verbose = FALSE)[55:60,]
+
+plot_rast(in_rast[[1]], in_poly = in_vect)
+
+out_cropped <- crop_rast(in_rast, in_vect)
+
+get_extent(in_rast)
+get_extent(out_cropped)
+
+plot_rast(out_cropped[[1]])
+}
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

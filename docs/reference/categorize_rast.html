@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>reclassify values of a raster — categorize_rast • sprawl</title>
+<title>reclassify values of a raster � categorize_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -242,16 +242,17 @@ will be implemented in the future!)</p>
 
   <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>20</span>) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/init'>init</a></span>(<span class='st'>"row"</span>)
-  <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>in_rast</span>, <span class='kw'>rast_type</span> <span class='kw'>=</span> <span class='st'>"continuous"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='categorize_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>in_rast</span>, <span class='kw'>rast_type</span> <span class='kw'>=</span> <span class='st'>"continuous"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>,
+               <span class='kw'>direction</span> <span class='kw'>=</span> -<span class='fl'>1</span>)</div><div class='img'><img src='categorize_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># build a reclassification matrix</span>
 
   <span class='no'>class_matrix</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/tribble'>tribble</a></span>(
-                         ~<span class='no'>start</span>, ~<span class='no'>end</span>, ~<span class='no'>new</span>,
-                           -<span class='fl'>Inf</span>,   <span class='fl'>5</span>,    <span class='fl'>1</span>, <span class='co'># Values  &lt; 5 --&gt; 1</span>
-                              <span class='fl'>5</span>,   <span class='fl'>8</span>,    <span class='fl'>2</span>, <span class='co'># Values  &gt;=5 and &lt; 8 --&gt; 2</span>
-                              <span class='fl'>8</span>,   <span class='fl'>12</span>,   <span class='fl'>2</span>, <span class='co'># Values  &gt;=8 and &lt; 12 --&gt; 2</span>
-                             <span class='fl'>12</span>,  <span class='fl'>15</span>,   <span class='fl'>NA</span>, <span class='co'># Values  &gt;=12 and &lt; 15 --&gt; NA</span>
-                             <span class='fl'>15</span>,  <span class='fl'>Inf</span>,   <span class='fl'>3</span>)  <span class='co'># Values &gt;=15  --&gt; 3</span>
+                         ~<span class='no'>start</span>, ~<span class='no'>end</span>, ~<span class='no'>new</span>, ~<span class='no'>label</span>,
+                           -<span class='fl'>Inf</span>,   <span class='fl'>5</span>,    <span class='fl'>1</span>, <span class='st'>"pippo"</span>,   <span class='co'># Values  &lt; 5 --&gt; 1</span>
+                              <span class='fl'>5</span>,   <span class='fl'>8</span>,    <span class='fl'>2</span>, <span class='st'>"pluto"</span>,   <span class='co'># &gt;=5 and &lt; 8 --&gt; 2</span>
+                              <span class='fl'>8</span>,   <span class='fl'>12</span>,   <span class='fl'>2</span>, <span class='st'>"pluto"</span>,   <span class='co'># &gt;=8 and &lt; 12 --&gt; 2</span>
+                             <span class='fl'>12</span>,  <span class='fl'>15</span>,   <span class='fl'>NA</span>, <span class='fl'>NA</span>,       <span class='co'>#&gt;=12 and &lt; 15 --&gt; NA</span>
+                             <span class='fl'>15</span>,  <span class='fl'>Inf</span>,   <span class='fl'>3</span>, <span class='st'>"paperino"</span>)<span class='co'># Values &gt;=15  --&gt; 3</span>
 <span class='co'># reclassify and assign class names</span>
 <span class='no'>out_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>categorize_rast</span>(<span class='no'>in_rast</span>,
                         <span class='no'>class_matrix</span>,
@@ -260,15 +261,15 @@ will be implemented in the future!)</p>
 #&gt; resolution  : 18, 9  (x, y)
 #&gt; extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-#&gt; data source : /tmp/RtmpU8rpQ0/file8631f654fed.tif 
-#&gt; names       : file8631f654fed 
+#&gt; data source : C:\Users\LB_laptop\AppData\Local\Temp\RtmpOEbn0h\file336853df7b71.tif 
+#&gt; names       : file336853df7b71 
 #&gt; values      : 1, 3  (min, max)
 #&gt; attributes  :
 #&gt;  ID    Class
 #&gt;   1    pippo
 #&gt;   2    pluto
 #&gt;   3 paperino
-#&gt; </div><div class='input'><span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='categorize_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt; </div><div class='input'><span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='img'><img src='categorize_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
 # reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5
 # and 9, putting the rest to 0 and values >= 11 to NA

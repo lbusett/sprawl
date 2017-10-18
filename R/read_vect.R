@@ -17,7 +17,16 @@
 #' # open a shapefile as a `sf` object
 #'  in_file = system.file("extdata/shapes","lc_polys.shp",
 #'                         package = "sprawl.data")
-#'  read_vect(in_file)
+#'  in_vect <- read_vect(in_file)
+#'  in_vect
+#'
+#'  plot_vect(in_file, fill_var = "category")
+#'
+#'  in_vect <- reproj_vect(in_vect,
+#'       "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs")
+#'  plot_vect(in_vect, fill_var = "category",
+#'            borders_layer = get_boundaries("PHL", level = 1)
+#'            )
 #'
 #' # open a shapefile as a `sp` object
 #'  in_file = system.file("extdata/shapes","lc_polys.shp",

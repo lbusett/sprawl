@@ -1,11 +1,11 @@
-in_shape <- "/home/lb/tmp/mappa_rischio_robi/Com2016_WGS84_g.shp" %>%
+in_shape <- "C:/Users/LB_laptop/Google Drive/My_Files/Varie/Com2016_WGS84_g.shp" %>%
   read_vect() %>%
   dplyr::filter(COD_REG %in% c(1,3,4,5))
 
 plot_vect(in_shape,fill_var = "COD_REG")
 
 
-in_txt <- "/home/lb/projects/ermes/datasets/ERMES_Folder_Structure/IT/Regional/IT_EI_R3_Risk_Biotic/2017/Txt_ensurance/ERMES_indici_rischi_biotici_20170807_054427.txt"
+in_txt <- "C:/Users/LB_laptop/Google Drive/My_Files/Varie/Txt_ensurance/ERMES_indici_rischi_biotici_20170807_054427.txt"
 in_risk <- data.table::fread(in_txt) %>%
   dplyr::rename(PRO_COM = Comune, Rischio = Value)
 

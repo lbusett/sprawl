@@ -39,12 +39,23 @@
 #' @examples
 #' \dontrun{
 #'  library(sprawl.data)
-#'  indata    <- read_vect(system.file("extdata/shapes","lc_polys.shp",
+#'
+#'  indata    <- read_vect(system.file("extdata/shapes","poly_lomb.shp",
 #'     package = "sprawl.data"))
-#'  indata
-#'  dissolve_var     <- "category"
-#'  out_shape <- dissolve_vect(indata, dissolve_var)
-#'  out_shape
+#'  plot_vect(in_vect, fill_var = "NAME_2")
+#'  plot_vect(in_vect, fill_var = "Population", palette_name = "RdYlGn")
+#'
+#'  # Dissolve the vector to provinces
+#'  diss <- dissolve_vect(in_vect, "NAME_2")
+#'  diss
+#'
+#'  plot_vect(diss, fill_var = "NAME_2")
+#'  provinces <- get_boundaries("ITA", 2)
+#'
+#'  plot_vect(diss, fill_var = "Population", palette_name = "RdYlBu",
+#'          borders_layer = provinces, borders_txt_field = "NAME_2",
+#'          leg_position = "bottom")
+#'
 #'  }
 #' @rdname dissolve_vect
 #' @export

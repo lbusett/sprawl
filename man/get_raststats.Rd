@@ -45,6 +45,10 @@ sd, and eventually quantiles) for bands of a raster object
  get_raststats(in_rast, quantiles = T)
 
  get_raststats(in_rast, hist = T, quantiles = T)
+
+
+ plot_rasthist(in_rast, type = "line") + xlim(-200,30000) + theme_bw()
+
  }
 }
 \author{
