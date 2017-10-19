@@ -57,7 +57,7 @@ Given this aim, `sprawl` is expected to be a broadly-aimed (and therefore rather
 You can install sprawl from git-hub with:
 
 ```{r gh-installation, eval = FALSE}
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("lbusett/sprawl")
 ```
 

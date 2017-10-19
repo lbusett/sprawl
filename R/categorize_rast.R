@@ -7,14 +7,10 @@
 #'   for the new raster using `raster::ratify`
 #' @param in_rast Input raster file or "R" raster layer to be reclassified
 #' @param class_matrix `data.frame` 3 column data frame with column names equal
-#'   to `start`, `end` and `new`. Each line specifies an interval of values in
+#'   to `start`, `end`, `new` and `label`. Each line specifies an interval of values in
 #'   the original raster and the value they will assume in the output.
 #'   \cr  **IMPORTANT !** Intervals in `class_matrix` will be considered
 #'   as **CLOSED on THE LEFT and OPEN ON THE RIGHT !** - see examples !!!! -
-#' @param class_names `character array` optional array of names to be assigned
-#'   to the new classes (useful for plotting with `plot_rast` or `plot_rast_gg`) -
-#'   see examples. If NULL, class names are assigned by converting the numeric
-#'   values of the new raster to character, Default: NULL
 #' @param out_file `character` Name of the output raster file. If NULL and to_file == TRUE ,
 #'   the raster is saved to a file in the `R` temporary folder
 #'   in "R" tempdir(), Default: NULL
@@ -31,23 +27,25 @@
 #'   * if out_type == "rastfile": name of the file where it was saved (either corresponding to
 #'   `out_file` or to the name of the temporary file created (if `out_file == NULL`))
 #' @details `class_matrix` must be a 3-columns `data.frame` (or similar), including
-#'   the `start`, `end` and `new` columns. It can be easily created by, for example:
+#'   the `start`, `end`, `new`and `label` columns. It can be easily created by, for example:
 #'
 #'   ```
-#'   class_matrix <- tribble(~start, ~end, ~new,
-#'                                  0,    1,   NA, # values >=0 and < 1 will be set to NA
-#'                                  1,    5,   1,  # values >=1 and < 5 will be set to 1
-#'                                  5,    7,   2,  # values >=5 and < 7 will be set to 2
-#'                                ...,  ..., ...,
-#'                                ...,  ..., ...,
-#'                                 11, 100, NA)   # values >=11 and < 100 will be set to NA
+#'   class_matrix <- tribble(~start, ~end, ~new, ~label
+#'                                0,    1,   NA, NA         # values >=0 and < 1 will be set to NA
+#'                                1,    5,   1,  "Class_1", # values >=1 and < 5 will be set to 1
+#'                                5,    7,   2,  "Class_2", # values >=5 and < 7 will be set to 2
+#'                              ...,  ..., ...,  ...,
+#'                              ...,  ..., ...,  ...,
+#'                               11,  100,  NA,  NA)   # values >=11 and < 100 will be set to NA
 #'   ```
 #'  , or:
 #'
 #'    ```
 #'    class_matrix <- data.frame(start = c(0,  1, 5, ..., ..., 11),
-#'                                 end   = c(1,  5, 7, ..., ..., 100),
-#'                                 new   = c(NA, 1, 2, ..., ..., NA)
+#'                               end   = c(1,  5, 7, ..., ..., 100),
+#'                               new   = c(NA, 1, 2, ..., ..., NA),
+#'                               label = c(NA, "Class_1", "Class_2", ..., ..., NA)
+#'                               )
 #'   ```
 #'
 #'   Note that it is __FUNDAMENTAL__ for proper functioning that ALL values of the
@@ -89,12 +87,12 @@
 #' # setup the reclassification matrix
 #'
 #' #  class_matrix <- tibble::tribble(
-#' #                ~start, ~end, ~new,
-#' #                     0,   0,   NA,
-#' #                     1,   5,   0,
-#' #                     5,   6,   1,
-#' #                     6,   9,   1,
-#' #                     9,  11,   1,
+#' #                ~start, ~end, ~new, ~label,
+#' #                     0,   0,   NA, NA,
+#' #                     1,   5,   0,  NA,
+#' #                     5,   6,   1,  NA,
+#' #                     6,   9,   1,  NA,
+#' #                     9,  11,   1,  NA,
 #' #                    11, 100, NA)
 #'
 #' # reclass_file = "/home/lb/Temp/buttami/pippo_reclass.tif"
@@ -111,7 +109,6 @@
 
 categorize_rast <- function(in_rast,
                          class_matrix,
-                         class_names = NULL,
                          out_file    = NULL,
                          out_type    = "rastobject",
                          overwrite   = FALSE,

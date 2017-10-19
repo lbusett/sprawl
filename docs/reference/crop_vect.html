@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>crop a vector on the extent of a different spatial file � crop_vect • sprawl</title>
+<title>crop a vector on the extent of a different spatial file — crop_vect • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -190,7 +190,7 @@ valid filenames of raster or vector files)</p></td>
                                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>,
                                   <span class='st'>"EVIts_test.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
- <span class='no'>in_polys_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>crop_vect</span>(<span class='no'>in_polys</span>, <span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping in_polys on extent of in_rast</span></div><div class='input'>
+ <span class='no'>in_polys_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>crop_vect</span>(<span class='no'>in_polys</span>, <span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping in_polys on extent of in_rast</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>
  <span class='co'># Retrieve a polygon representing in_rast extent and reproject it</span>
  <span class='no'>rast_extent</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_rast</span>), <span class='st'>"sfc_POLYGON"</span>) <span class='kw'>%&gt;%</span>
     <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='fu'><a href='get_proj4string.html'>get_proj4string</a></span>(<span class='no'>in_polys</span>))

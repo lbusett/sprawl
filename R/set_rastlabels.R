@@ -63,7 +63,7 @@ set_rastlabels <- function(in_rast,
     #         "be set to numeric values equal to the raster value")
     names(class_names)[1] <- "ID"
     class_names <-  unique( class_names)
-    class_names <- merge(cat_rast@data@attributes[[1]], class_names)
+    class_names <-  merge(cat_rast@data@attributes[[1]], class_names)
 
     if (length(class_names$ID) != n_class & length(class_names != 0)) {
      class_names <- NULL

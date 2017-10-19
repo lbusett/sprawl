@@ -23,14 +23,4 @@ test_that("reclass_rast/categorize_rast works as expected", {
   expect_equal(cellStats(out_rast, max, na.rm = TRUE), 3)
   expect_equal(cellStats(out_rast, min, na.rm = TRUE), 1)
 
-  # Assign class names
-  out_rast <- categorize_rast(in_rast, reclass_matrix, verbose = FALSE,
-                              c("A", "B", "C"))
-  expect_is(out_rast@data@attributes[[1]], "data.frame")
-
-  # Too few class names --> Warning
-  # out_rast <- reclass_rast(in_rast, reclass_matrix,
-  #                                         verbose = FALSE)
-
-
 })

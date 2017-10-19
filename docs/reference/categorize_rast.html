@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>reclassify values of a raster � categorize_rast • sprawl</title>
+<title>reclassify values of a raster — categorize_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -147,7 +147,7 @@ easier and extended I/O functionality and possibility to set the class names
 for the new raster using <code><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>raster::ratify</a></code></p>
     
 
-    <pre class="usage"><span class='fu'>categorize_rast</span>(<span class='no'>in_rast</span>, <span class='no'>class_matrix</span>, <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>categorize_rast</span>(<span class='no'>in_rast</span>, <span class='no'>class_matrix</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -160,17 +160,10 @@ for the new raster using <code><a href='http://www.rdocumentation.org/packages/r
     <tr>
       <th>class_matrix</th>
       <td><p><code>data.frame</code> 3 column data frame with column names equal
-to <code>start</code>, <code>end</code> and <code>new</code>. Each line specifies an interval of values in
+to <code>start</code>, <code>end</code>, <code>new</code> and <code>label</code>. Each line specifies an interval of values in
 the original raster and the value they will assume in the output.
   <strong>IMPORTANT !</strong> Intervals in <code>class_matrix</code> will be considered
 as <strong>CLOSED on THE LEFT and OPEN ON THE RIGHT !</strong> - see examples !!!! -</p></td>
-    </tr>
-    <tr>
-      <th>class_names</th>
-      <td><p><code>character array</code> optional array of names to be assigned
-to the new classes (useful for plotting with <code>plot_rast</code> or <code>plot_rast_gg</code>) -
-see examples. If NULL, class names are assigned by converting the numeric
-values of the new raster to character, Default: NULL</p></td>
     </tr>
     <tr>
       <th>out_file</th>
@@ -213,17 +206,19 @@ the console in the form of messages</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>class_matrix</code> must be a 3-columns <code>data.frame</code> (or similar), including
-the <code>start</code>, <code>end</code> and <code>new</code> columns. It can be easily created by, for example:</p><pre>class_matrix &lt;- tribble(~start, ~end, ~new,
-                               0,    1,   NA, # values &gt;=0 and &lt; 1 will be set to NA
-                               1,    5,   1,  # values &gt;=1 and &lt; 5 will be set to 1
-                               5,    7,   2,  # values &gt;=5 and &lt; 7 will be set to 2
-                             ...,  ..., ...,
-                             ...,  ..., ...,
-                              11, 100, NA)   # values &gt;=11 and &lt; 100 will be set to NA
+the <code>start</code>, <code>end</code>, <code>new</code>and <code>label</code> columns. It can be easily created by, for example:</p><pre>class_matrix &lt;- tribble(~start, ~end, ~new, ~label
+                             0,    1,   NA, NA         # values &gt;=0 and &lt; 1 will be set to NA
+                             1,    5,   1,  "Class_1", # values &gt;=1 and &lt; 5 will be set to 1
+                             5,    7,   2,  "Class_2", # values &gt;=5 and &lt; 7 will be set to 2
+                           ...,  ..., ...,  ...,
+                           ...,  ..., ...,  ...,
+                            11,  100,  NA,  NA)   # values &gt;=11 and &lt; 100 will be set to NA
 </pre>
     <p>, or:</p><pre>class_matrix &lt;- data.frame(start = c(0,  1, 5, ..., ..., 11),
-                             end   = c(1,  5, 7, ..., ..., 100),
-                             new   = c(NA, 1, 2, ..., ..., NA)
+                           end   = c(1,  5, 7, ..., ..., 100),
+                           new   = c(NA, 1, 2, ..., ..., NA),
+                           label = c(NA, "Class_1", "Class_2", ..., ..., NA)
+                           )
 </pre>
     <p>Note that it is <strong>FUNDAMENTAL</strong> for proper functioning that ALL values of the
 original rasterare "covered" in <code>class_matrix</code>. Values not falling in any
@@ -243,7 +238,7 @@ will be implemented in the future!)</p>
   <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>20</span>) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/init'>init</a></span>(<span class='st'>"row"</span>)
   <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>in_rast</span>, <span class='kw'>rast_type</span> <span class='kw'>=</span> <span class='st'>"continuous"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>,
-               <span class='kw'>direction</span> <span class='kw'>=</span> -<span class='fl'>1</span>)</div><div class='img'><img src='categorize_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+               <span class='kw'>direction</span> <span class='kw'>=</span> -<span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='categorize_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># build a reclassification matrix</span>
 
   <span class='no'>class_matrix</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/tribble'>tribble</a></span>(
@@ -256,20 +251,20 @@ will be implemented in the future!)</p>
 <span class='co'># reclassify and assign class names</span>
 <span class='no'>out_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>categorize_rast</span>(<span class='no'>in_rast</span>,
                         <span class='no'>class_matrix</span>,
-                        <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"pippo"</span>, <span class='st'>"pluto"</span>, <span class='st'>"paperino"</span>))</div><div class='output co'>#&gt; <span class='message'>categorize_rast --&gt; Reclassifying: in_rast on values of: class_matrix</span></div><div class='input'><span class='no'>out_rast</span></div><div class='output co'>#&gt; class       : RasterLayer 
+                        <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"pippo"</span>, <span class='st'>"pluto"</span>, <span class='st'>"paperino"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in categorize_rast(in_rast, class_matrix, class_names = c("pippo",     "pluto", "paperino")): unused argument (class_names = c("pippo", "pluto", "paperino"))</span></div><div class='input'><span class='no'>out_rast</span></div><div class='output co'>#&gt; class       : RasterLayer 
 #&gt; dimensions  : 20, 20, 400  (nrow, ncol, ncell)
 #&gt; resolution  : 18, 9  (x, y)
 #&gt; extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
-#&gt; data source : C:\Users\LB_laptop\AppData\Local\Temp\RtmpOEbn0h\file336853df7b71.tif 
-#&gt; names       : file336853df7b71 
+#&gt; data source : /tmp/RtmpQvla7C/file60496abca943.tif 
+#&gt; names       : file60496abca943 
 #&gt; values      : 1, 3  (min, max)
 #&gt; attributes  :
 #&gt;  ID    Class
 #&gt;   1    pippo
 #&gt;   2    pluto
 #&gt;   3 paperino
-#&gt; </div><div class='input'><span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='img'><img src='categorize_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt; </div><div class='input'><span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .local(.Object, ...): </span></div><div class='input'>
 
 # reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5
 # and 9, putting the rest to 0 and values >= 11 to NA
@@ -279,12 +274,12 @@ will be implemented in the future!)</p>
 # setup the reclassification matrix
 
 #  class_matrix <- tibble::tribble(
-#                ~start, ~end, ~new,
-#                     0,   0,   NA,
-#                     1,   5,   0,
-#                     5,   6,   1,
-#                     6,   9,   1,
-#                     9,  11,   1,
+#                ~start, ~end, ~new, ~label,
+#                     0,   0,   NA, NA,
+#                     1,   5,   0,  NA,
+#                     5,   6,   1,  NA,
+#                     6,   9,   1,  NA,
+#                     9,  11,   1,  NA,
 #                    11, 100, NA)
 
 # reclass_file = "/home/lb/Temp/buttami/pippo_reclass.tif"

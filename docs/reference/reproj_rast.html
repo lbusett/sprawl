@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Reproject a raster "R" object or file � reproj_rast • sprawl</title>
+<title>Reproject a raster "R" object or file — reproj_rast • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -261,7 +261,7 @@ was saved</p>
 #&gt; resolution  : 30.02464, 30.02464  (x, y)
 #&gt; extent      : 4151395, 4181210, 2606588, 2636793  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-#&gt; data source : C:\Users\LB_laptop\AppData\Local\Temp\RtmpOEbn0h\file336832fc6773.tif 
+#&gt; data source : /tmp/RtmpZzw8HV/file61a664242c39.tif 
 #&gt; names       : oli_multi_1000_b2 
 #&gt; </div><div class='input'>
  <span class='co'># reproject on projection of a different spatial object/file</span>
@@ -270,13 +270,13 @@ was saved</p>
                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)))
  <span class='no'>out_rep</span> <span class='kw'>&lt;-</span> <span class='fu'>reproj_rast</span>(<span class='no'>in_rast</span>, <span class='no'>my_vect</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_rast` to +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0</span></div><div class='input'> <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_rep</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Greys"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>direction</span> <span class='kw'>=</span> -<span class='fl'>1</span>) +
-  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='reproj_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='reproj_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># reproject on projection of a different spatial object/file and crop on</span>
  <span class='co'># its extent</span>
 
  <span class='no'>out_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>reproj_rast</span>(<span class='no'>in_rast</span>, <span class='no'>my_vect</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_rast` to +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0</span></div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: . to: in_proj</span></div><div class='input'> <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>out_cropped</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>F</span>,  <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Greys"</span>,
   <span class='kw'>direction</span> <span class='kw'>=</span> -<span class='fl'>1</span>) +
-  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='reproj_rast-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
+  <span class='fu'>geom_sf</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>my_vect</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='reproj_rast-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

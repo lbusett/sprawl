@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dissolve attributes of a vector and aggregate its table � dissolve_vect • sprawl</title>
+<title>dissolve attributes of a vector and aggregate its table — dissolve_vect • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -212,34 +212,13 @@ Default: FALSE</p></td>
     <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
 
  <span class='no'>indata</span>    <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"poly_lomb.shp"</span>,
-    <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
- <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='img'><img src='dissolve_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"Population"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>)</div><div class='img'><img src='dissolve_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+    <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in build_site(run_dont_run = T): Assertion on 'in_file' failed: File does not exist: ''.</span></div><div class='input'> <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cast_vect(in_vect, "sfobject"): object 'in_vect' not found</span></div><div class='input'> <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"Population"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cast_vect(in_vect, "sfobject"): object 'in_vect' not found</span></div><div class='input'>
  <span class='co'># Dissolve the vector to provinces</span>
- <span class='no'>diss</span> <span class='kw'>&lt;-</span> <span class='fu'>dissolve_vect</span>(<span class='no'>in_vect</span>, <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "NAME_2"</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column `NAME_2` joining factor and character vector, coercing into character vector</span></div><div class='input'> <span class='no'>diss</span></div><div class='output co'>#&gt; Simple feature collection with 12 features and 5 fields
-#&gt; geometry type:  GEOMETRY
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 8.49941 ymin: 44.6809 xmax: 11.42868 ymax: 46.63806
-#&gt; epsg (SRID):    4326
-#&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
-#&gt; # A tibble: 12 x 6
-#&gt;               NAME_2 NAME_0    NAME_1   NAME_3 Population          geometry
-#&gt;                &lt;chr&gt; &lt;fctr&gt;    &lt;fctr&gt;    &lt;chr&gt;      &lt;int&gt;  &lt;simple_feature&gt;
-#&gt;  1           Bergamo  Italy Lombardia variable    4942891 &lt;POLYGON ((9....&gt;
-#&gt;  2           Brescia  Italy Lombardia variable    3978473 &lt;POLYGON ((10...&gt;
-#&gt;  3              Como  Italy Lombardia variable    3336617 &lt;POLYGON ((9....&gt;
-#&gt;  4           Cremona  Italy Lombardia variable    2243644 &lt;POLYGON ((10...&gt;
-#&gt;  5             Lecco  Italy Lombardia variable    1780029 &lt;POLYGON ((9....&gt;
-#&gt;  6              Lodi  Italy Lombardia variable    1286924 &lt;POLYGON ((9....&gt;
-#&gt;  7            Mantua  Italy Lombardia variable    1409750 &lt;POLYGON ((10...&gt;
-#&gt;  8            Milano  Italy Lombardia variable    2493684 &lt;POLYGON ((9....&gt;
-#&gt;  9 Monza and Brianza  Italy Lombardia variable    1037977 &lt;POLYGON ((9....&gt;
-#&gt; 10             Pavia  Italy Lombardia variable    3695532 &lt;MULTIPOLYGON...&gt;
-#&gt; 11           Sondrio  Italy Lombardia variable    1613172 &lt;POLYGON ((9....&gt;
-#&gt; 12            Varese  Italy Lombardia variable    2733418 &lt;POLYGON ((8....&gt;</div><div class='input'>
- <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>diss</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='img'><img src='dissolve_vect-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='no'>provinces</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='input'>
+ <span class='no'>diss</span> <span class='kw'>&lt;-</span> <span class='fu'>dissolve_vect</span>(<span class='no'>in_vect</span>, <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cast_vect(in_vect, "sfobject"): object 'in_vect' not found</span></div><div class='input'> <span class='no'>diss</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'diss' not found</span></div><div class='input'>
+ <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>diss</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cast_vect(in_vect, "sfobject"): object 'diss' not found</span></div><div class='input'> <span class='no'>provinces</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='input'>
  <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>diss</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"Population"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
          <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='no'>provinces</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>,
-         <span class='kw'>leg_position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>)</div><div class='img'><img src='dissolve_vect-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+         <span class='kw'>leg_position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cast_vect(in_vect, "sfobject"): object 'diss' not found</span></div><div class='input'>
  </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -5,22 +5,17 @@
 \alias{reclass_rast}
 \title{reclassify values of a raster}
 \usage{
-categorize_rast(in_rast, class_matrix, class_names = NULL, out_file = NULL,
+categorize_rast(in_rast, class_matrix, out_file = NULL,
   out_type = "rastobject", overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{Input raster file or "R" raster layer to be reclassified}
 
 \item{class_matrix}{\code{data.frame} 3 column data frame with column names equal
-to \code{start}, \code{end} and \code{new}. Each line specifies an interval of values in
+to \code{start}, \code{end}, \code{new} and \code{label}. Each line specifies an interval of values in
 the original raster and the value they will assume in the output.
 \cr  \strong{IMPORTANT !} Intervals in \code{class_matrix} will be considered
 as \strong{CLOSED on THE LEFT and OPEN ON THE RIGHT !} - see examples !!!! -}
-
-\item{class_names}{\code{character array} optional array of names to be assigned
-to the new classes (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
-see examples. If NULL, class names are assigned by converting the numeric
-values of the new raster to character, Default: NULL}
 
 \item{out_file}{\code{character} Name of the output raster file. If NULL and to_file == TRUE ,
 the raster is saved to a file in the \code{R} temporary folder
@@ -59,18 +54,20 @@ for the new raster using \code{raster::ratify}
 }
 \details{
 \code{class_matrix} must be a 3-columns \code{data.frame} (or similar), including
-the \code{start}, \code{end} and \code{new} columns. It can be easily created by, for example:\preformatted{class_matrix <- tribble(~start, ~end, ~new,
-                               0,    1,   NA, # values >=0 and < 1 will be set to NA
-                               1,    5,   1,  # values >=1 and < 5 will be set to 1
-                               5,    7,   2,  # values >=5 and < 7 will be set to 2
-                             ...,  ..., ...,
-                             ...,  ..., ...,
-                              11, 100, NA)   # values >=11 and < 100 will be set to NA
+the \code{start}, \code{end}, \code{new}and \code{label} columns. It can be easily created by, for example:\preformatted{class_matrix <- tribble(~start, ~end, ~new, ~label
+                             0,    1,   NA, NA         # values >=0 and < 1 will be set to NA
+                             1,    5,   1,  "Class_1", # values >=1 and < 5 will be set to 1
+                             5,    7,   2,  "Class_2", # values >=5 and < 7 will be set to 2
+                           ...,  ..., ...,  ...,
+                           ...,  ..., ...,  ...,
+                            11,  100,  NA,  NA)   # values >=11 and < 100 will be set to NA
 }
 
 , or:\preformatted{class_matrix <- data.frame(start = c(0,  1, 5, ..., ..., 11),
-                             end   = c(1,  5, 7, ..., ..., 100),
-                             new   = c(NA, 1, 2, ..., ..., NA)
+                           end   = c(1,  5, 7, ..., ..., 100),
+                           new   = c(NA, 1, 2, ..., ..., NA),
+                           label = c(NA, "Class_1", "Class_2", ..., ..., NA)
+                           )
 }
 
 Note that it is \strong{FUNDAMENTAL} for proper functioning that ALL values of the
@@ -114,12 +111,12 @@ plot_rast_gg(out_rast, scalebar = F)
 # setup the reclassification matrix
 
 #  class_matrix <- tibble::tribble(
-#                ~start, ~end, ~new,
-#                     0,   0,   NA,
-#                     1,   5,   0,
-#                     5,   6,   1,
-#                     6,   9,   1,
-#                     9,  11,   1,
+#                ~start, ~end, ~new, ~label,
+#                     0,   0,   NA, NA,
+#                     1,   5,   0,  NA,
+#                     5,   6,   1,  NA,
+#                     6,   9,   1,  NA,
+#                     9,  11,   1,  NA,
 #                    11, 100, NA)
 
 # reclass_file = "/home/lb/Temp/buttami/pippo_reclass.tif"
