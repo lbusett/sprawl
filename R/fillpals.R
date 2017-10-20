@@ -12,6 +12,7 @@
 #' }
 #' @rdname fillpals
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
+#' @export
 #' @importFrom dplyr select arrange
 #' @importFrom RColorBrewer brewer.pal.info
 fillpals <- function() {
