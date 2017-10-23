@@ -105,7 +105,7 @@ Function used to extract values of a single- or multi- band raster
 for pixels corresponding to the features of a vector (Polygon, Point or Line)
 }
 \examples{
-\dontrun{
+
 library(sprawl)
 library(sprawl.data)
 library(raster)
@@ -126,7 +126,7 @@ as_tibble(out$stats)
 
 as_tibble(out$alldata)
 
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}

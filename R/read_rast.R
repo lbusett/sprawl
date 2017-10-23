@@ -11,7 +11,7 @@
 #' @return a `RasterLayer`, `RasterStack` or `RasterBrick` object
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #'  # read a singleband file
 #'   in_file <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
 #'                           package = "sprawl.data")
@@ -25,7 +25,7 @@
 #'   # read a multiband file selecting specific bands
 #'   read_rast(in_file, bands = c(1,10))
 #'
-#' }
+#'
 #' @rdname read_rast
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

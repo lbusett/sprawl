@@ -24,9 +24,9 @@ has to be specified, to allow proper handling of leap years
 DETAILS
 }
 \examples{
-\dontrun{
+ # Convert doy 100 of 2015 to date
  doytodate(100, 2015)
-}
+
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

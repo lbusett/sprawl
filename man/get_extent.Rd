@@ -62,7 +62,7 @@ return an object of class \code{sprawlext} with two slots:
 }
 }
 \examples{
-\dontrun{
+
 library(raster)
 
 in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
@@ -78,7 +78,6 @@ get_extent(in_vect)
 
 in_vect <- read_vect(in_vect)
 get_extent(in_vect)
-}
 
 }
 \author{

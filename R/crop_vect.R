@@ -12,7 +12,7 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #'  library(raster)
 #'  library(sf)
 #'  in_polys <- read_vect(system.file("extdata/shapes", "lc_polys.shp",
@@ -30,7 +30,7 @@
 #'  plot(in_polys_cropped[1])
 #'  plot(rast_extent, add = T)
 #'   par(mfrow=c(1,2))
-#'  }
+#'
 #' @seealso
 #'  \code{\link[sp]{proj4string}}
 #' @rdname crop_vect

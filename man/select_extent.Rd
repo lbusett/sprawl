@@ -21,11 +21,10 @@ FUNCTION_DESCRIPTION
 DETAILS
 }
 \examples{
-\dontrun{
 if(interactive()){
  extent    <- select_extent()
  }
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

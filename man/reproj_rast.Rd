@@ -79,7 +79,7 @@ tempdir to allow accessing it immediately from \code{R}, unless a specific outpu
 file name is provided with the \code{out_file} argument.
 }
 \examples{
-\dontrun{
+
  library(sprawl.data)
  # reproject a raster based on an output proj4string
  in_file <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
@@ -103,7 +103,7 @@ file name is provided with the \code{out_file} argument.
  plot_rast_gg(out_cropped, scalebar = F,  palette_name = "Greys",
   direction = -1) +
   geom_sf(data = my_vect, fill = "transparent", color = "red")
-}
+
 }
 \seealso{
 http://www.gdal.org/gdalwarp.html

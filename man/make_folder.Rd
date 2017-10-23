@@ -23,7 +23,7 @@ FUNCTION_DESCRIPTION
 DETAILS
 }
 \examples{
-\dontrun{
+
 path <- file.path(tempdir(), "testdir")
 dir.exists(path)
 make_folder(path)
@@ -34,7 +34,7 @@ dir.exists(dirname(path))
 make_folder(path, type = "filename")
 dir.exists(dirname(path))
 
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

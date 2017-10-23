@@ -30,7 +30,7 @@ be a valid spatial object (sp, sf, vector file, raster or raster file name)
 DETAILS
 }
 \examples{
-\dontrun{
+
  library(raster)
  library(sf)
  in_polys <- read_vect(system.file("extdata/shapes", "lc_polys.shp",
@@ -48,7 +48,7 @@ DETAILS
  plot(in_polys_cropped[1])
  plot(rast_extent, add = T)
   par(mfrow=c(1,2))
- }
+
 }
 \seealso{
 \code{\link[sp]{proj4string}}

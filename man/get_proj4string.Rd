@@ -42,7 +42,7 @@ or of raster or vector files
 DETAILS
 }
 \examples{
-\dontrun{
+
 library(raster)
 
 in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
@@ -56,7 +56,6 @@ get_proj4string(in_vect)
 
 in_vect <- read_vect(in_vect)
 get_proj4string(in_vect)
-}
 
 }
 \author{

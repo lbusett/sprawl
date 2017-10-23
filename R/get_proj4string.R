@@ -15,7 +15,7 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #' @examples
-#' \dontrun{
+#'
 #' library(raster)
 #'
 #' in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
@@ -29,7 +29,6 @@
 #'
 #' in_vect <- read_vect(in_vect)
 #' get_proj4string(in_vect)
-#' }
 #'
 get_proj4string <- function(in_obj) {
   UseMethod("get_proj4string")

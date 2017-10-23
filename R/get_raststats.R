@@ -19,19 +19,16 @@
 #'     frequency and the cumulated frequency at each bin  (NULL is returned
 #'     if `hists` == FALSE (the default));
 #' @examples
-#' \dontrun{
+#'  library(ggplot2)
 #'  in_rast <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
 #'   package = "sprawl.data")
 #'  get_raststats(in_rast)
-#'
 #'  get_raststats(in_rast, quantiles = T)
-#'
 #'  get_raststats(in_rast, hist = T, quantiles = T)
-#'
 #'
 #'  plot_rasthist(in_rast, type = "line") + xlim(-200,30000) + theme_bw()
 #'
-#'  }
+#'
 #' @rdname get_raststats
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

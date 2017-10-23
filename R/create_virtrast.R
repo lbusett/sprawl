@@ -7,11 +7,9 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
-#' if(interactive()){
+#'
 #'  #EXAMPLE1
-#'  }
-#' }
+#'
 #' @rdname create_virtrast
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 

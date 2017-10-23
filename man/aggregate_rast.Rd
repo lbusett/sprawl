@@ -43,7 +43,6 @@ Point or Line)
 DETAILS
 }
 \examples{
-\dontrun{
  in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
                                          package = "sprawl.data")
  in_rast      <- read_rast(in_file, bands = 20)
@@ -51,14 +50,10 @@ DETAILS
  in_obj_zones <- raster::aggregate(in_rast,
                                      fact      = 4,
                                      filename  = tempraster,
-                                     overwrite = T)
+                                     overwrite = TRUE)
  test <- aggregate_rast(in_rast,
                         in_obj_zones,
-                        FUN     = mean,
-                        method  = "disk",
-                        to_file = FALSE,
-                        verbose = FALSE)
- }
+                        FUN     = mean)
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

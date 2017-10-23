@@ -221,7 +221,7 @@ See the description of the arguments for details on their use
 DETAILS
 }
 \examples{
-\dontrun{
+
  library(ggplot2)
  in_vect <- get(load(system.file("extdata/shapes", "poly_lomb.RData",
                                  package = "sprawl.data")))
@@ -247,7 +247,7 @@ DETAILS
            borders_layer = get_boundaries("ITA", level = 2),
            borders_color = "red", borders_txt_field = "NAME_2")
 
- }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

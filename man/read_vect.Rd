@@ -26,7 +26,7 @@ simple wrapper around \code{sf::read_sf}, with some checks on inputs and
 possibility of automatic re-casting to \code{*sp} objects
 }
 \examples{
-\dontrun{
+
 library(sprawl.data)
 # open a shapefile as a `sf` object
  in_file = system.file("extdata/shapes","lc_polys.shp",
@@ -46,7 +46,7 @@ library(sprawl.data)
  in_file = system.file("extdata/shapes","lc_polys.shp",
                         package = "sprawl.data")
  read_vect(in_file, as_sp = TRUE)
-}
+
 }
 \seealso{
 \code{\link[sf]{read_sf}}

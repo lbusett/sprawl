@@ -31,7 +31,7 @@ limits set with the \code{tails} argument are set to NoData in the output
 DETAILS
 }
 \examples{
-\dontrun{
+
  # on single band
  in_rast <- raster::raster(ncol=100, nrow=100)
  in_rast <- raster::setValues(in_rast, 1:10000)
@@ -43,5 +43,5 @@ DETAILS
  in_brick
  in_brick_cut <- cuttails_rast(in_brick)
  in_brick_cut
- }
+
 }

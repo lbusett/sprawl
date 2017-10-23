@@ -184,7 +184,8 @@ projection is passed. Otherwise, the function returns "invalid", Default: TRUE</
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>check_proj4string</span>(<span class='st'>"+init=epsg:32632"</span>)</div><div class='output co'>#&gt; [1] "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
+    <pre class="examples"><div class='input'>
+<span class='fu'>check_proj4string</span>(<span class='st'>"+init=epsg:32632"</span>)</div><div class='output co'>#&gt; [1] "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
 <span class='fu'>check_proj4string</span>(<span class='st'>"32631"</span>)</div><div class='output co'>#&gt; [1] "+init=epsg:32631 +proj=utm +zone=31 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
 <span class='fu'>check_proj4string</span>(<span class='fl'>32633</span>)</div><div class='output co'>#&gt; [1] "+init=epsg:32633 +proj=utm +zone=33 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
 <span class='fu'>check_proj4string</span>(<span class='fl'>30</span>)</div><div class='output co'>#&gt; [1] "+proj=utm +zone=30 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
@@ -194,7 +195,8 @@ projection is passed. Otherwise, the function returns "invalid", Default: TRUE</
 <span class='fu'>library</span>(<span class='no'>raster</span>)
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>,
   <span class='st'>"oli_multi_1000_b2.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
-<span class='fu'>check_proj4string</span>(<span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div></pre>
+<span class='fu'>check_proj4string</span>(<span class='no'>in_rast</span>@<span class='kw'>crs</span>)</div><div class='output co'>#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

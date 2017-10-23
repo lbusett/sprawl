@@ -212,13 +212,10 @@ Default: FALSE</p></td>
  <span class='no'>in_obj_zones</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/aggregate'>aggregate</a></span>(<span class='no'>in_rast</span>,
                                      <span class='kw'>fact</span>      <span class='kw'>=</span> <span class='fl'>4</span>,
                                      <span class='kw'>filename</span>  <span class='kw'>=</span> <span class='no'>tempraster</span>,
-                                     <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='no'>T</span>)
+                                     <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
  <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>aggregate_rast</span>(<span class='no'>in_rast</span>,
                         <span class='no'>in_obj_zones</span>,
-                        <span class='kw'>FUN</span>     <span class='kw'>=</span> <span class='no'>mean</span>,
-                        <span class='kw'>method</span>  <span class='kw'>=</span> <span class='st'>"disk"</span>,
-                        <span class='kw'>to_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                        <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in aggregate_rast(in_rast, in_obj_zones, FUN = mean, method = "disk",     to_file = FALSE, verbose = FALSE): unused argument (to_file = FALSE)</span></div><div class='input'> </div></pre>
+                        <span class='kw'>FUN</span>     <span class='kw'>=</span> <span class='no'>mean</span>)</div><div class='output co'>#&gt; <span class='message'>aggregate_raster --&gt; Aggregating values of `in_rast` on cells of `in_obj_zones`</span></div><div class='output co'>#&gt; <span class='message'>  --&gt; Creating Fishnet on zones_rast</span></div><div class='output co'>#&gt; <span class='message'>  --&gt; Extracting values of in_val_rast on cells of in_zones_rast</span></div><div class='output co'>#&gt; <span class='message'>aggregate_raster --&gt; Assigning extracted values to a new raster</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

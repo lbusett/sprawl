@@ -15,9 +15,7 @@
 #'   it corresponds to a valid raster file and reads it to a `Raster` object through
 #'   `rasterr::stack()`
 #' @examples
-#' \dontrun{
 #'  #EXAMPLE1
-#'  }
 #' @rdname cast_rast
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

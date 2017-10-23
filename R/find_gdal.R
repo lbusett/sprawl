@@ -3,9 +3,9 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #'  find_gdal()
-#'  }
+#'
 #' @rdname find_gdal
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

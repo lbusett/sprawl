@@ -9,9 +9,9 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #'  #EXAMPLE1
-#'  }
+#'
 #' @export
 #' @rdname sprawl_initcluster
 #' @importFrom doParallel registerDoParallel

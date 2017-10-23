@@ -5,16 +5,13 @@
 #' @return `tibble` containing the representation of the data type both for gdal
 #'  and raster
 #' @examples
-#' \dontrun{
+#'
 #'  in_dtype <- "INT1U"
 #'  convert_rastdtype(in_dtype, "raster")
 #'
 #'  in_dtype <- "Float64"
 #'  convert_rastdtype(in_dtype, "gdal")
 #'
-#'  in_dtype <- "Float123"
-#'  convert_rastdtype(in_dtype, "gdal")
-#' }
 #' @rdname convert_rastdtype
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

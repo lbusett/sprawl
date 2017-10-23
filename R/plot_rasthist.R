@@ -7,9 +7,7 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
 #' #EXAMPLE1
-#'  }
 #' @rdname plot_rasthist
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

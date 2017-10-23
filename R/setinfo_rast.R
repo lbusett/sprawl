@@ -5,12 +5,12 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #'  setinfo_obj <- raster::brick(system.file("extdata/OLI_test", "oli_multi_1000.tif",
 #'                                           package = "sprawl.data"))
 #'  setinfo_obj <- setinfo_rast(setinfo_obj)
 #'  setinfo_obj@info
-#'  }
+#'
 #' @rdname setinfo_rast
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

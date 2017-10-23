@@ -12,7 +12,8 @@
 #'   possibility of automatic re-casting to `*sp` objects
 #' @export
 #' @importFrom sf read_sf
-#' @examples \dontrun{
+#' @examples
+#'
 #' library(sprawl.data)
 #' # open a shapefile as a `sf` object
 #'  in_file = system.file("extdata/shapes","lc_polys.shp",
@@ -32,7 +33,7 @@
 #'  in_file = system.file("extdata/shapes","lc_polys.shp",
 #'                         package = "sprawl.data")
 #'  read_vect(in_file, as_sp = TRUE)
-#'}
+#'
 #'@seealso
 #'  \code{\link[sf]{read_sf}}
 #' @rdname read_vect

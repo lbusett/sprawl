@@ -30,10 +30,11 @@ NOTE: to check only for vector or raster types, the associated functions
 \code{get_vectype} and \code{get_rastype} can be used, with the same syntax.
 }
 \examples{
-\dontrun{
+
 library(sprawl.data)
 # input is a raster file
-in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
+in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+                        package = "sprawl.data")
 get_spatype(in_rast)
 
 # input is a raster file
@@ -41,7 +42,8 @@ obj <- read_rast(in_rast)
 get_spatype(in_rast)
 
 # input is a shapefile
-in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
+in_vect <- system.file("extdata/shapes","lc_polys.shp",
+           package = "sprawl.data")
 get_spatype(in_vect)
 
 # input is a `sp` object
@@ -55,8 +57,6 @@ get_spatype(obj)
 # input is a `sprawlext` object
 obj <- get_extent(in_vect)
 get_spatype(obj)
-}
-
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

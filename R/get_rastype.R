@@ -11,9 +11,9 @@
 #'   neither (unless `abort` == TRUE)
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #' #EXAMPLE1
-#'  }
+#'
 #' @rdname get_rastype
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

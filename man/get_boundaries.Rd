@@ -26,7 +26,7 @@ administrative units. The function is a simple wrapper to the
 and automatic recasting to \code{sf} format.
 }
 \examples{
-\dontrun{
+
  library(sprawl)
  library(sf)
  ita_boundaries <- get_boundaries("Italy", 0)
@@ -38,7 +38,7 @@ and automatic recasting to \code{sf} format.
  lomb_boundaries <- ita_region_boundaries \%>\%
     dplyr::filter(NAME_1 == "Lombardia")
  plot_vect(lomb_boundaries)
- }
+
 }
 \seealso{
 \code{\link[raster]{getData}}

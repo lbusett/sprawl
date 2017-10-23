@@ -7,9 +7,9 @@
 #' @return `Date` array resulting from the conversion
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'  # Convert doy 100 of 2015 to date
 #'  doytodate(100, 2015)
-#' }
+#'
 #' @rdname doytodate
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 #' @export
@@ -47,9 +47,9 @@ doytodate <- function(doys, year, verbose = TRUE){
 #' @param dates array of dates to be converted. Class must be `Date` or character
 #'   parsable to `Date` using [`as.Date`] (format "yyyy-mm-dd").
 #' @examples
-#' \dontrun{
+#'  # Convert a date to a doy
 #'  datetodoy(as.Date("2000-04-01"))
-#' }
+#'
 #' @export
 #' @rdname datetodoy
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>

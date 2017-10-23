@@ -38,7 +38,7 @@ is a valid string or CRS.
 DETAILS
 }
 \examples{
-\dontrun{
+
 check_proj4string("+init=epsg:32632")
 
 check_proj4string("32631")
@@ -56,7 +56,7 @@ library(raster)
  in_rast <- read_rast(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
 check_proj4string(in_rast@crs)
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

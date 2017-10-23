@@ -34,7 +34,7 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #'   # create a fishnet over an input raster file and save it as a shapefile
 #'   library(raster)
 #'   library(sprawl)
@@ -61,7 +61,7 @@
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
 #'                                   exact_csize = T, shape = "hex")
 #'   plot_rast(in_rast, in_poly = fishnet)
-#'  }
+#'
 #' @rdname create_fishnet
 #' @export
 #' @importFrom raster extent res

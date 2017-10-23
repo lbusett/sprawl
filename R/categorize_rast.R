@@ -52,11 +52,11 @@
 #'   original rasterare "covered" in `class_matrix`. Values not falling in any
 #'   of the intervals will be kept at their original values ! (checks for this
 #'   will be implemented in the future!)
-#' @examples \dontrun{
+#' @examples
 #'
 #' # create a raster with values equal to rows number and assign a RAT
 #' # to it
-#'
+#'   library(magrittr)
 #'   in_rast <- raster::raster(ncol = 20, nrow = 20) %>%
 #'   raster::init("row")
 #'   plot_rast_gg(in_rast, rast_type = "continuous", scalebar = F,
@@ -73,8 +73,7 @@
 #'                              15,  Inf,   3, "paperino")# Values >=15  --> 3
 #' # reclassify and assign class names
 #' out_rast <- categorize_rast(in_rast,
-#'                         class_matrix,
-#'                         class_names = c("pippo", "pluto", "paperino"))
+#'                         class_matrix)
 #' out_rast
 #' plot_rast_gg(out_rast, scalebar = F)
 #'
@@ -100,7 +99,7 @@
 #' #                        class_matrix,
 #' #                        r_out = TRUE)
 #' # plot_rast_gg(outmask)
-#' }
+#'
 #' @seealso `raster::reclassify` `raster::ratify` [`set_rastlabels`]
 #' @rdname categorize_rast
 #' @aliases reclass_rast

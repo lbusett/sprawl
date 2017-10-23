@@ -19,9 +19,3 @@ OUTPUT_DESCRIPTION
 \description{
 FUNCTION_DESCRIPTION
 }
-\examples{
-\dontrun{
-er_getbands(in_rast, selbands = c(1, 2))
-er_getbands(in_rast, selbands = c("2013-01-01", "2015-12-31"))
-}
-}

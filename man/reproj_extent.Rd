@@ -34,7 +34,7 @@ accessory function to convert the extent of a spatial object to
 a different projection. simple wrapper for the \code{spTransform} function on
 }
 \examples{
-\dontrun{
+
 library(raster)
 in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
   package = "sprawl.data")
@@ -53,12 +53,10 @@ reproj_extent(in_rast, "+init=epsg:32651")
 # Reproject an extent or a bounding box (given the input projection)
 reproj_extent(raster::extent(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
 reproj_extent(sp::bbox(in_rast), "+init=epsg:32651", in_proj=in_rast@crs)
-# (this fails without providing in_proj value:)
-reproj_extent(sp::bbox(in_rast), "+init=epsg:32651")
 
 # Reproject without enlarging
 reproj_extent(in_sprawlext, "+init=epsg:32651", enlarge = FALSE)
-}
+
 }
 \author{
 Luigi Ranghetti, phD (2017) \href{mailto:ranghetti.l@irea.cnr.it}{ranghetti.l@irea.cnr.it}

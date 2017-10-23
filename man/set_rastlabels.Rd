@@ -31,7 +31,7 @@ Simple wrapper around \code{raster::ratify}, providing the added
 functionality of specifying specific names for the classes.
 }
 \examples{
-\dontrun{
+
   in_rast <- raster::raster(ncol = 5, nrow = 5) \%>\%
     init("row")
   levels(in_rast)[[1]]
@@ -48,7 +48,7 @@ functionality of specifying specific names for the classes.
 
   # Class names are automatically recognized by [`plot_rast_gg`]
   plot_rast_gg(cat_rast, scalebar = FALSE)
- }
+
 }
 \seealso{
 \code{raster::ratify}

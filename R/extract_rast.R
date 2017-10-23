@@ -66,7 +66,7 @@
 #'   extracted (see examples).
 #' @export
 #' @examples
-#' \dontrun{
+#'
 #' library(sprawl)
 #' library(sprawl.data)
 #' library(raster)
@@ -87,7 +87,7 @@
 #'
 #' as_tibble(out$alldata)
 #'
-#'}
+#'
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
 #' @importFrom sp proj4string
 #' @importFrom dplyr mutate_if

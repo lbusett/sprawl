@@ -16,9 +16,9 @@ FUNCTION_DESCRIPTION
 DETAILS
 }
 \examples{
-\dontrun{
+
  find_gdal()
- }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
