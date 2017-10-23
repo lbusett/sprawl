@@ -56,13 +56,13 @@ polygons belonging to it, weighted by their area;  STILL TO BE IMPLEMENTED !
 CURRENTLTY ALL COLUMNS ARE COMPUTED SIMPLY aS THE SUM !!!!
 }
 \examples{
-\dontrun{
+
  library(sprawl.data)
 
- indata    <- read_vect(system.file("extdata/shapes","poly_lomb.shp",
-    package = "sprawl.data"))
+ in_vect    <- get(load(system.file("extdata/shapes","poly_lomb.RData",
+    package = "sprawl.data")))
  plot_vect(in_vect, fill_var = "NAME_2")
- plot_vect(in_vect, fill_var = "Population", palette_name = "RdYlGn")
+ plot_vect(in_vect, fill_var = "population", palette_name = "RdYlGn")
 
  # Dissolve the vector to provinces
  diss <- dissolve_vect(in_vect, "NAME_2")
@@ -71,11 +71,10 @@ CURRENTLTY ALL COLUMNS ARE COMPUTED SIMPLY aS THE SUM !!!!
  plot_vect(diss, fill_var = "NAME_2")
  provinces <- get_boundaries("ITA", 2)
 
- plot_vect(diss, fill_var = "Population", palette_name = "RdYlBu",
-         borders_layer = provinces, borders_txt_field = "NAME_2",
+ plot_vect(diss, fill_var = "population", palette_name = "RdYlBu",
          leg_position = "bottom")
 
- }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

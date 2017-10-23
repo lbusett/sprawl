@@ -186,7 +186,8 @@ if <code>hists</code> == FALSE (the default));</p></li>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
+    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
 #&gt;    min   max       avg        sd band
@@ -196,8 +197,7 @@ if <code>hists</code> == FALSE (the default));</p></li>
 #&gt; 4:   0 55552 15428.359 13687.184    4
 #&gt; 5:   0 65535  5995.777  4660.999    5
 #&gt; 6:   0 65535  5180.533  3722.452    6
-#&gt; </div><div class='input'>
- <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
+#&gt; </div><div class='input'> <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
 #&gt;    min   max       avg        sd band
 #&gt; 1:   0 57048 14646.024 14498.970    1
 #&gt; 2:   0 55558 13907.527 14207.094    2
@@ -219,8 +219,7 @@ if <code>hists</code> == FALSE (the default));</p></li>
 #&gt; 604:  0.98 11693.500    6
 #&gt; 605:  0.99 12721.500    6
 #&gt; 606:  1.00 65406.500    6
-#&gt; </div><div class='input'>
- <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
+#&gt; </div><div class='input'> <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
 #&gt;    min   max       avg        sd band
 #&gt; 1:   0 57048 14646.024 14498.970    1
 #&gt; 2:   0 55558 13907.527 14207.094    2
@@ -257,9 +256,9 @@ if <code>hists</code> == FALSE (the default));</p></li>
 #&gt; 1535: 65149.5000      0 0.000000e+00 0.9999990    6
 #&gt; 1536: 65406.5000      1 1.027601e-06 1.0000000    6
 #&gt; </div><div class='input'>
+ <span class='fu'><a href='plot_rasthist.html'>plot_rasthist</a></span>(<span class='no'>in_rast</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"line"</span>) + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/lims'>xlim</a></span>(-<span class='fl'>200</span>,<span class='fl'>30000</span>) + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_bw</a></span>()</div><div class='output co'>#&gt; <span class='message'>plot_rasthist --&gt; Plotting histogram of `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 138 rows containing missing values (geom_path).</span></div><div class='img'><img src='get_raststats-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
- <span class='fu'><a href='plot_rasthist.html'>plot_rasthist</a></span>(<span class='no'>in_rast</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"line"</span>) + <span class='fu'>xlim</span>(-<span class='fl'>200</span>,<span class='fl'>30000</span>) + <span class='fu'>theme_bw</span>()</div><div class='output co'>#&gt; <span class='message'>plot_rasthist --&gt; Plotting histogram of `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 138 rows containing missing values (geom_path).</span></div><div class='img'><img src='get_raststats-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
- </div></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

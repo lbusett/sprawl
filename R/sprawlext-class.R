@@ -10,7 +10,8 @@
 #' @importFrom sp CRS
 #' @importFrom sf st_polygon st_point
 #' @importFrom magrittr %>%
-#' @examples \dontrun{
+#' @examples
+#'
 #' showClass("sprawlext")
 #' library(raster)
 #'
@@ -44,7 +45,7 @@
 #'
 #' # Create sprawlext from bbox and CRS
 #' get_extent(ex_bbox, ex_crs)
-#' }
+#'
 
 sprawlext <- methods::setClass(
   "sprawlext",

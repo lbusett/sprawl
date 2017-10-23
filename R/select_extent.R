@@ -6,11 +6,10 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @details DETAILS
 #' @examples
-#' \dontrun{
 #' if(interactive()){
 #'  extent    <- select_extent()
 #'  }
-#' }
+#'
 #' @export
 #' @rdname select_extent
 #' @importFrom checkmate assert checkClass check_null

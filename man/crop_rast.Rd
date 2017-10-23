@@ -62,7 +62,7 @@ can be derived (see details)
 }
 }
 \examples{
-\dontrun{
+
 in_file <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
                       package = "sprawl.data")
 in_rast <- read_rast(in_file)
@@ -78,7 +78,7 @@ get_extent(in_rast)
 get_extent(out_cropped)
 
 plot_rast(out_cropped[[1]])
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

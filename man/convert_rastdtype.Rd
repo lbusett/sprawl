@@ -19,16 +19,13 @@ and raster
 FUNCTION_DESCRIPTION
 }
 \examples{
-\dontrun{
+
  in_dtype <- "INT1U"
  convert_rastdtype(in_dtype, "raster")
 
  in_dtype <- "Float64"
  convert_rastdtype(in_dtype, "gdal")
 
- in_dtype <- "Float123"
- convert_rastdtype(in_dtype, "gdal")
-}
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

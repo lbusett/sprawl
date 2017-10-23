@@ -43,7 +43,6 @@ and extent, specify them by passing the \code{crs} and \code{ext} arguments to `
 }
 }
 \examples{
-\dontrun{
  # create a rasterstack of 100*100 cells and 10 bands and put it in test_rast
  test_rast <- build_testraster(100,100,10)
  test_rast
@@ -56,5 +55,5 @@ and extent, specify them by passing the \code{crs} and \code{ext} arguments to `
  build_testraster(100,100,10, crs = "+init=epsg:3857",
                               ext = raster::extent(c(0, 200000, 0, 200000)))
  test_rast
-}
+
 }

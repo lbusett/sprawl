@@ -161,12 +161,14 @@ valid proj4string or CRS</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='co'># latlong projection</span>
+    <pre class="examples"><div class='input'>
+  <span class='co'># latlong projection</span>
   <span class='no'>proj_string</span> <span class='kw'>&lt;-</span> <span class='st'>"+init=epsg:4326"</span>
   <span class='fu'>get_projunits</span>(<span class='no'>proj_string</span>)</div><div class='output co'>#&gt; [1] "dec.degrees"</div><div class='input'>
   <span class='co'># metric projection</span>
   <span class='no'>proj_string</span> <span class='kw'>&lt;-</span> <span class='st'>"+init=epsg:3857"</span>
-  <span class='fu'>get_projunits</span>(<span class='no'>proj_string</span>)</div><div class='output co'>#&gt; [1] "m"</div></pre>
+  <span class='fu'>get_projunits</span>(<span class='no'>proj_string</span>)</div><div class='output co'>#&gt; [1] "m"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

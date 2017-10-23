@@ -11,7 +11,7 @@
 #'   boundaries should be saved, Default: `tempdir()`
 #' @return `sf` object containing the desired data
 #' @examples
-#' \dontrun{
+#'
 #'  library(sprawl)
 #'  library(sf)
 #'  ita_boundaries <- get_boundaries("Italy", 0)
@@ -23,7 +23,7 @@
 #'  lomb_boundaries <- ita_region_boundaries %>%
 #'     dplyr::filter(NAME_1 == "Lombardia")
 #'  plot_vect(lomb_boundaries)
-#'  }
+#'
 #' @seealso
 #'  \code{\link[raster]{getData}}
 #' @rdname get_boundaries

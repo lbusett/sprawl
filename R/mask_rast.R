@@ -41,7 +41,7 @@
 #'   string corresponding to the filename of the created raster (if out_type ==
 #'   `filename`)
 #' @examples
-#' \dontrun{
+#'
 #' library(sprawl)
 #' library(sprawl.data)
 #' library(raster)
@@ -54,7 +54,7 @@
 #' masked   <- mask_rast(in_rast, in_polys, verbose = FALSE)
 #' plot_rast(in_rast, in_poly = in_polys)
 #' plot_rast(masked, in_poly = in_polys)
-#' }
+#'
 #' @rdname mask_rast
 #' @export
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>

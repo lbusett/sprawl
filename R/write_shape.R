@@ -20,7 +20,8 @@
 #' @importFrom tools file_ext file_path_sans_ext
 #' @importFrom checkmate expect_access
 #' @export
-#' @examples \dontrun{
+#' @examples
+#'
 #' # build a spatialpoints data frame
 #' pts                <- cbind(1:5, 1:5)
 #' dimnames(pts)[[1]] <- letters[1:5]
@@ -38,7 +39,7 @@
 #' in_data <- read_vect(out_file)
 #' in_data
 #'
-#'}
+#'
 write_shape <- function(in_object,
                         out_file,
                         overwrite  = FALSE,

@@ -18,7 +18,7 @@ Function to retrieve projection units starting from a
 valid proj4string or CRS
 }
 \examples{
-\dontrun{
+
   # latlong projection
   proj_string <- "+init=epsg:4326"
   get_projunits(proj_string)
@@ -26,7 +26,7 @@ valid proj4string or CRS
   # metric projection
   proj_string <- "+init=epsg:3857"
   get_projunits(proj_string)
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

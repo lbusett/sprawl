@@ -33,7 +33,7 @@
 #'   path of the file where the reprojected input was saved (if out_type == "vectfile")
 #' @seealso sf::st_write sf::st_transform write_shape
 #' @examples
-#' \dontrun{
+#'
 #' library(sprawl.data)
 #' library(gridExtra)
 #' # reproject a vector file
@@ -70,7 +70,7 @@
 #' plot_vect(out_vect, borders_layer = bounds, fill_var = "category",
 #'    title = "Reprojected (sinusoidal)")
 #'
-#' }
+#'
 #' @rdname reproj_vect
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

@@ -15,9 +15,7 @@
 #'   it corresponds to a valid vector file and reads it to a `sf` or `Spatial`
 #'   object through `sprawl::read_vect`
 #' @examples
-#' \dontrun{
 #'  #EXAMPLE1
-#'  }
 #' @rdname cast_vect
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

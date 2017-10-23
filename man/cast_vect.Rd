@@ -46,9 +46,7 @@ it corresponds to a valid vector file and reads it to a \code{sf} or \code{Spati
 object through \code{sprawl::read_vect}
 }
 \examples{
-\dontrun{
  #EXAMPLE1
- }
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

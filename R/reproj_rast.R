@@ -52,7 +52,7 @@
 #'  was saved
 #' @seealso http://www.gdal.org/gdalwarp.html
 #' @examples
-#' \dontrun{
+#'
 #'  library(sprawl.data)
 #'  # reproject a raster based on an output proj4string
 #'  in_file <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
@@ -76,7 +76,7 @@
 #'  plot_rast_gg(out_cropped, scalebar = F,  palette_name = "Greys",
 #'   direction = -1) +
 #'   geom_sf(data = my_vect, fill = "transparent", color = "red")
-#' }
+#'
 #' @rdname reproj_rast
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

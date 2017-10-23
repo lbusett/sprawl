@@ -66,7 +66,7 @@ FUNCTION_DESCRIPTION
 DETAILS
 }
 \examples{
-\dontrun{
+
  library(sprawl)
 
  in_rast <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
@@ -92,7 +92,7 @@ DETAILS
                           "extdata/OLI_test", "oli_multi_1000.tif",
                           package = "sprawl.data"))[[2:5]]
  plot_rast(in_rast, legend = "custom", maxpixels = 1e5)
- }
+
 }
 \seealso{
 \code{\link[rasterVis]{levelplot}}

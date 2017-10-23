@@ -20,12 +20,12 @@ add an \code{info} attribute containing info retrieved by
 DETAILS
 }
 \examples{
-\dontrun{
+
  setinfo_obj <- raster::brick(system.file("extdata/OLI_test", "oli_multi_1000.tif",
                                           package = "sprawl.data"))
  setinfo_obj <- setinfo_rast(setinfo_obj)
  setinfo_obj@info
- }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

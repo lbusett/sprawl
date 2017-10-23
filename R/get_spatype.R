@@ -17,10 +17,12 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
-#' @examples \dontrun{
+#' @examples
+#'
 #' library(sprawl.data)
 #' # input is a raster file
-#' in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif", package = "sprawl.data")
+#' in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+#'                         package = "sprawl.data")
 #' get_spatype(in_rast)
 #'
 #' # input is a raster file
@@ -28,7 +30,8 @@
 #' get_spatype(in_rast)
 #'
 #' # input is a shapefile
-#' in_vect <- system.file("extdata/shapes","lc_polys.shp", package = "sprawl.data")
+#' in_vect <- system.file("extdata/shapes","lc_polys.shp",
+#'            package = "sprawl.data")
 #' get_spatype(in_vect)
 #'
 #' # input is a `sp` object
@@ -42,17 +45,6 @@
 #' # input is a `sprawlext` object
 #' obj <- get_extent(in_vect)
 #' get_spatype(obj)
-#' }
-#'
-# get_spatype_met <- function(object) {
-#   UseMethod("get_spatype", object)
-# }
-#
-# get_spatype.default <- function(object) {
-#   stop("none")
-# }
-#
-#
 
 get_spatype <- function(in_object,
                         abort = TRUE) {

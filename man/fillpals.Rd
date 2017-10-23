@@ -18,11 +18,11 @@ on valid fill palettes for \code{plot_rast}, \code{plot_rast_gg} and \code{plot_
 DETAILS
 }
 \examples{
-\dontrun{
+
 # Print the list of valid fill palettes used in `plot_rast`, `plot_rast_gg`
 # and `plot_vect`
 fillpals()
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

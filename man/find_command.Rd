@@ -20,10 +20,10 @@ the system of the user. If the command is not found, a \code{stop} is issued and
 the program aborts (gracefully).
 }
 \examples{
-\dontrun{
+
  # Find the path to `gdalinfo`
  gdalinfo_path <- find_command("gdalinfo")
- }
+
 }
 \author{
 Lorenzo Busetto \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

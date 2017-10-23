@@ -32,7 +32,7 @@ Wrapper on  \code{sf::st_write} for writing an \code{sf} or \code{sp} object to
 disk as an ESRI shapefile
 }
 \examples{
-\dontrun{
+
 # build a spatialpoints data frame
 pts                <- cbind(1:5, 1:5)
 dimnames(pts)[[1]] <- letters[1:5]
@@ -50,5 +50,5 @@ write_shape(mysp_object, out_file, overwrite = TRUE)
 in_data <- read_vect(out_file)
 in_data
 
-}
+
 }

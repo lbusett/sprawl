@@ -40,9 +40,7 @@ it corresponds to a valid raster file and reads it to a \code{Raster} object thr
 \code{rasterr::stack()}
 }
 \examples{
-\dontrun{
  #EXAMPLE1
- }
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

@@ -142,7 +142,7 @@
 #'  an assignment operator (e.g., `plot <- plot_rast_gg(in_rast))`, the plot is
 #'  saved to the specified variable. Otherwise, it is plotted immediately.
 #' @examples
-#' \dontrun{
+#'
 #' #single band plot
 #'  in_rast <- read_rast(system.file("extdata/OLI_test",
 #'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
@@ -198,7 +198,7 @@
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
 #'              outliers_style = "to_minmax",
 #'              leg_type = "discrete")
-#' }
+#'
 #' @rdname plot_rast_gg
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

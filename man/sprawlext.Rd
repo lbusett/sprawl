@@ -18,7 +18,7 @@ associated with its proj4string.
 }}
 
 \examples{
-\dontrun{
+
 showClass("sprawlext")
 library(raster)
 
@@ -52,5 +52,5 @@ get_extent(ex_extent, ex_crs)
 
 # Create sprawlext from bbox and CRS
 get_extent(ex_bbox, ex_crs)
-}
+
 }

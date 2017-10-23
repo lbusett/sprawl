@@ -6,7 +6,7 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #' path <- file.path(tempdir(), "testdir")
 #' dir.exists(path)
 #' make_folder(path)
@@ -17,7 +17,7 @@
 #' make_folder(path, type = "filename")
 #' dir.exists(dirname(path))
 #'
-#' }
+#'
 #' @rdname make_folder
 #' @export
 #' @importFrom assertthat assert_that

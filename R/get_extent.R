@@ -23,7 +23,7 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #' @examples
-#' \dontrun{
+#'
 #' library(raster)
 #'
 #' in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
@@ -39,7 +39,6 @@
 #'
 #' in_vect <- read_vect(in_vect)
 #' get_extent(in_vect)
-#' }
 #'
 get_extent <- function(object,
                        proj4string = NULL,

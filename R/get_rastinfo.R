@@ -39,14 +39,14 @@
 #'     frequency and the cumulated frequency at each bin  (NULL is returned
 #'     if `hists` == FALSE (the default));
 #' @examples
-#' \dontrun{
+#'
 #'  in_rast <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
 #'   package = "sprawl.data")
 #'  get_rastinfo(in_rast)
 #'  in_rast <- system.file("extdata/OLI_test", "oli_multi_1000_b1.tif",
 #'   package = "sprawl.data")
 #'  get_rastinfo(in_rast)
-#'  }
+#'
 #' @rdname get_rastinfo
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

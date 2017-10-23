@@ -28,9 +28,9 @@ helper for initializing clustered processing on multiband raster
 DETAILS
 }
 \examples{
-\dontrun{
+
  #EXAMPLE1
- }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

@@ -37,19 +37,16 @@ Function used quickly retrieve statistics (min, max, mean, median
 sd, and eventually quantiles) for bands of a raster object
 }
 \examples{
-\dontrun{
+ library(ggplot2)
  in_rast <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
   package = "sprawl.data")
  get_raststats(in_rast)
-
  get_raststats(in_rast, quantiles = T)
-
  get_raststats(in_rast, hist = T, quantiles = T)
-
 
  plot_rasthist(in_rast, type = "line") + xlim(-200,30000) + theme_bw()
 
- }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

@@ -12,7 +12,7 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
+#'
 #'  # on single band
 #'  in_rast <- raster::raster(ncol=100, nrow=100)
 #'  in_rast <- raster::setValues(in_rast, 1:10000)
@@ -24,7 +24,7 @@
 #'  in_brick
 #'  in_brick_cut <- cuttails_rast(in_brick)
 #'  in_brick_cut
-#'  }
+#'
 #' @rdname cuttails_rast
 #' @export
 #' @importFrom raster quantile getValues setValues brick

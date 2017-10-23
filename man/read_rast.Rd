@@ -28,7 +28,7 @@ a single- or multi-band object.
 DETAILS
 }
 \examples{
-\dontrun{
+
  # read a singleband file
   in_file <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
                           package = "sprawl.data")
@@ -42,7 +42,7 @@ DETAILS
   # read a multiband file selecting specific bands
   read_rast(in_file, bands = c(1,10))
 
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

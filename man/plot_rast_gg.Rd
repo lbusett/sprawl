@@ -215,7 +215,7 @@ See the description of the arguments for details on their use
 }
 }
 \examples{
-\dontrun{
+
 #single band plot
  in_rast <- read_rast(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
@@ -271,7 +271,7 @@ See the description of the arguments for details on their use
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
              outliers_style = "to_minmax",
              leg_type = "discrete")
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

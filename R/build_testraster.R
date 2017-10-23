@@ -19,7 +19,6 @@
 #' corresponding to the entire globe (bbox = -180, 180; -90, 90). To specify a different projection
 #' and extent, specify them by passing the `crs` and `ext` arguments to `raster (see examples).
 #' @examples
-#' \dontrun{
 #'  # create a rasterstack of 100*100 cells and 10 bands and put it in test_rast
 #'  test_rast <- build_testraster(100,100,10)
 #'  test_rast
@@ -32,7 +31,7 @@
 #'  build_testraster(100,100,10, crs = "+init=epsg:3857",
 #'                               ext = raster::extent(c(0, 200000, 0, 200000)))
 #'  test_rast
-#' }
+#'
 #' @rdname build_testraster
 #' @export
 #' @importFrom raster raster stack writeRaster

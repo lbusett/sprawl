@@ -5,7 +5,7 @@
 #' @return `character` measure units of the provided proj4string (e.g., "m",
 #'   "dec.degrees", ...)
 #' @examples
-#' \dontrun{
+#'
 #'   # latlong projection
 #'   proj_string <- "+init=epsg:4326"
 #'   get_projunits(proj_string)
@@ -13,7 +13,7 @@
 #'   # metric projection
 #'   proj_string <- "+init=epsg:3857"
 #'   get_projunits(proj_string)
-#' }
+#'
 #' @rdname get_projunits
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>

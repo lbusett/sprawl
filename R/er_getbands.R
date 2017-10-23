@@ -7,11 +7,7 @@
 #' @export
 #' @importFrom lubridate is.timepoint
 #' @importFrom raster stack nlayers getZ
-#' @examples
-#' \dontrun{
-#' er_getbands(in_rast, selbands = c(1, 2))
-#' er_getbands(in_rast, selbands = c("2013-01-01", "2015-12-31"))
-#' }
+
 er_getbands <- function(in_rast,
                         selbands = NULL,
                         verbose  = FALSE) {

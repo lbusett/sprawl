@@ -6,10 +6,11 @@
 #' @param stop_on_missing PARAM_DESCRIPTION, Default: TRUE
 #' @return `character` normalized path to the desired command
 #' @author Lorenzo Busetto <lbusett@gmail.com>
-#' @examples \dontrun{
+#' @examples
+#'
 #'  # Find the path to `gdalinfo`
 #'  gdalinfo_path <- find_command("gdalinfo")
-#'  }
+#'
 #' @export
 #' @rdname find_command
 

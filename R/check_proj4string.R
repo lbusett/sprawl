@@ -19,7 +19,7 @@
 #' @author Luigi Ranghetti, phD (2017) <ranghetti.l@irea.cnr.it>
 #'
 #' @examples
-#' \dontrun{
+#'
 #' check_proj4string("+init=epsg:32632")
 #'
 #' check_proj4string("32631")
@@ -37,8 +37,7 @@
 #'  in_rast <- read_rast(system.file("extdata/OLI_test",
 #'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
 #' check_proj4string(in_rast@crs)
-#' }
-
+#'
 check_proj4string <- function(projection,
                               abort = FALSE) {
   UseMethod("check_proj4string")

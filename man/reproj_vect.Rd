@@ -52,7 +52,7 @@ The reprojected vector can be automatically saved to a shapefile through
 \code{write_shape} by specifying a valid path with the \code{out_file} argument.
 }
 \examples{
-\dontrun{
+
 library(sprawl.data)
 library(gridExtra)
 # reproject a vector file
@@ -89,7 +89,7 @@ plot_vect(in_vect, borders_layer = bounds, fill_var = "category",
 plot_vect(out_vect, borders_layer = bounds, fill_var = "category",
    title = "Reprojected (sinusoidal)")
 
-}
+
 }
 \seealso{
 sf::st_write sf::st_transform write_shape

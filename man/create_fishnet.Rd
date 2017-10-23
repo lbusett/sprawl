@@ -59,7 +59,7 @@ of the specified resolution is created over the extent of the raster)
 DETAILS
 }
 \examples{
-\dontrun{
+
   # create a fishnet over an input raster file and save it as a shapefile
   library(raster)
   library(sprawl)
@@ -86,7 +86,7 @@ DETAILS
   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
                                   exact_csize = T, shape = "hex")
   plot_rast(in_rast, in_poly = fishnet)
- }
+
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
