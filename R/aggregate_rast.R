@@ -17,7 +17,6 @@
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' \dontrun{
 #'  in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
 #'                                          package = "sprawl.data")
 #'  in_rast      <- read_rast(in_file, bands = 20)
@@ -32,7 +31,7 @@
 #'                         method  = "disk",
 #'                         to_file = FALSE,
 #'                         verbose = FALSE)
-#'  }
+#'
 #' @rdname aggregate_rast
 #' @export
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>

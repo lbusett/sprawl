@@ -26,7 +26,7 @@ Can be either:
 \item An \code{R} \code{+sp} or \code{sf} object
 }}
 
-\item{rast_type}{\code{character} ("continuous" | "categorical) specifies if the
+\item{rast_type}{\code{character ["continuous" | "categorical"]} specifies if the
 values passed in \code{in_data} represent a continuous or categorical variable.
 (see @description)}
 
@@ -39,7 +39,7 @@ prior to data extraction using nearest neighbour resampling. This is useful
 in case the polygons are small with respect to \code{in_rast} resolution,
 Default: NULL (meaning no resampling is done)}
 
-\item{id_field}{\code{character} (optional) field of the vector file to be used to
+\item{id_field}{\code{character} (optional) column of the vector atrtibute table to be used to
 identify the zones from which data is to be extracted, If NULL (or invalid)
 zonal statistics are extracted on each row of the shapefile, and a new column
 named \code{id_feat} is used on the output to distinguish the zones, Default: NULL}
@@ -105,13 +105,13 @@ Function used to extract values of a single- or multi- band raster
 for pixels corresponding to the features of a vector (Polygon, Point or Line)
 }
 \examples{
-\dontrun{
+
 library(sprawl)
 library(sprawl.data)
 library(raster)
 library(tibble)
 in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
-                      package = "sprawl.data"), stringsAsFactors = T)
+                      package = "sprawl.data"), stringsAsFactors = TRUE)
 in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
                           package = "sprawl.data"))
 in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
@@ -126,7 +126,7 @@ as_tibble(out$stats)
 
 as_tibble(out$alldata)
 
-}
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \email{lbusett@gmail.com}

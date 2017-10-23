@@ -10,7 +10,7 @@
 #'   Can be either:
 #'   1. A `file name` corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 #'   2. An `R` `+sp` or `sf` object
-#' @param rast_type `character` ("continuous" | "categorical) specifies if the
+#' @param rast_type `character ["continuous" | "categorical"]` specifies if the
 #'   values passed in `in_data` represent a continuous or categorical variable.
 #'  (see @description)
 #' @param selbands `2-element numeric array` defining starting and ending raster
@@ -20,7 +20,7 @@
 #'   prior to data extraction using nearest neighbour resampling. This is useful
 #'   in case the polygons are small with respect to `in_rast` resolution,
 #'   Default: NULL (meaning no resampling is done)
-#' @param id_field `character` (optional) field of the vector file to be used to
+#' @param id_field `character` (optional) column of the vector atrtibute table to be used to
 #'   identify the zones from which data is to be extracted, If NULL (or invalid)
 #'   zonal statistics are extracted on each row of the shapefile, and a new column
 #'   named `id_feat` is used on the output to distinguish the zones, Default: NULL
@@ -66,13 +66,13 @@
 #'   extracted (see examples).
 #' @export
 #' @examples
-#' \dontrun{
+#'
 #' library(sprawl)
 #' library(sprawl.data)
 #' library(raster)
 #' library(tibble)
 #' in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
-#'                       package = "sprawl.data"), stringsAsFactors = T)
+#'                       package = "sprawl.data"), stringsAsFactors = TRUE)
 #' in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
 #'                           package = "sprawl.data"))
 #' in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
@@ -87,7 +87,7 @@
 #'
 #' as_tibble(out$alldata)
 #'
-#'}
+#'
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf
 #' @importFrom sp proj4string
 #' @importFrom dplyr mutate_if
