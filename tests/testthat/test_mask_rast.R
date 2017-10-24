@@ -31,7 +31,7 @@ testthat::test_that("Test On raster masking", {
   expect_is(masked_file, "character")
   expect_is(masked_file_multi, "Raster")
 
-  # check that extracted values are equal to those of raster::extract ---
+  # check that extracted values are equal to those of raster::mask ---
   # Check for all zero on the difference of the two since sprawl::mask
   # keeps a bit more pixels
   sp_polys    <- mask_in %>%
@@ -41,6 +41,9 @@ testthat::test_that("Test On raster masking", {
   diff <- unique(raster::getValues(out_masked) - raster::getValues(out_mask_raster))  #nolint
   expect_equal(as.numeric(diff), c(NA, 0))
 
+  # check that the parallel = FALSE works
+  out_mask_raster  <- mask_rast(in_rast, mask_in, parallel = TRUE, cores = 1)
+  out_mask_raster  <- mask_rast(in_rast, mask_in, parallel = FALSE, cores = 1)
 
   # both raster and mask are filenames - check if it works ----
   in_rast   <- system.file("extdata/OLI_test", "oli_multi_1000_b1.tif",

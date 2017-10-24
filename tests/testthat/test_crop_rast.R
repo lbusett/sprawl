@@ -17,6 +17,8 @@ testthat::test_that("Test On raster cropping", {
                             out_type = "rastfile", mask = F,
                             out_file = tempfile(pattern = "testfile",
                                                     fileext = ".tif"))
+
+  # test starting from different kinds of objects ----
   expect_is(out_cropped, "Raster")
   expect_is(out_vrt, "character")
   expect_is(out_rastfile, "character")
@@ -27,11 +29,12 @@ testthat::test_that("Test On raster cropping", {
   expect_error(expect_warning(crop_rast("ciao", in_vect)))
   expect_error(expect_warning(crop_rast(in_rast, "ciao.shp")))
 
-
-  in_rast <- raster::stack(c(system.file("extdata/OLI_test", "oli_multi_1000_b1.tif", #nolint
-                                         package = "sprawl.data")),
-                           system.file("extdata/OLI_test", "oli_multi_1000_b2.tif", #nolint
-                                       package = "sprawl.data"))
+  # test on a raster stack with bands from different files ----
+  in_rast <- raster::stack(
+    c(system.file("extdata/OLI_test", "oli_multi_1000_b1.tif",
+                  package = "sprawl.data")),
+    system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
+                package = "sprawl.data"))
   out_cropped  <- crop_rast(in_rast, in_vect, verbose = FALSE,
                             out_type = "rastobject")
   expect_is(out_cropped, "Raster")

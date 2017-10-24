@@ -220,7 +220,8 @@ crop_rast <- function(rast_object,
     if (mask == TRUE) {
 
       ext_object <- cast_vect(ext_object, "sfobject")
-      if (inherits(st_geometry(ext_object), c("sfc_POLYGON", "sfc_MULTIPOLYGON"))) {
+      if (inherits(st_geometry(ext_object),
+                   c("sfc_POLYGON", "sfc_MULTIPOLYGON"))) {
 
         if (!(rast_bbox@proj4string == crop_bbox@proj4string)) {
           ext_object <- sf::st_transform(ext_object, rast_bbox@proj4string,
@@ -229,11 +230,11 @@ crop_rast <- function(rast_object,
 
         out_file <- mask_rast(out_file,
                               ext_object,
-                              out_file = out_file,
-                              out_type = "rastfile",
-                              verbose = FALSE,
+                              out_file  = out_file,
+                              out_type  = "rastfile",
+                              verbose   = FALSE,
                               overwrite = TRUE,
-                              parallel = FALSE)
+                              parallel  = TRUE)
 
       }
 
