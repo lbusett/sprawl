@@ -39,6 +39,7 @@ the corresponding files on disk are moved.
  #new_vrt
  #raster::stack(new_vrt)
 }
+
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

@@ -10,7 +10,7 @@ testthat::test_that("Test On raster cropping", {
   in_rast <- read_rast(in_file)
   in_vect <- create_fishnet(in_rast, pix_for_cell = 60)[50,]
   out_cropped  <- crop_rast(in_rast, in_vect, verbose = FALSE,
-                            out_type = "rastobject")
+                            out_type = "rastobject", mask = T)
   out_vrt      <- crop_rast(in_rast, in_vect, verbose = FALSE,
                             out_type = "vrtfile")
   out_rastfile <- crop_rast(in_rast, in_vect, verbose = FALSE,

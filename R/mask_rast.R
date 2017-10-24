@@ -191,9 +191,10 @@ mask_rast <- function(in_rast,
 
   if (!parallel) {
 
+    maskobj <- raster::brick(temp_rastermask)
     masked_out <- raster::mask(
       in_rast,
-      raster::brick(temp_rastermask),
+      maskobj,
       filename    = out_filename,
       options     = paste0("COMPRESS=", compress),
       overwrite   = TRUE,

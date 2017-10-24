@@ -215,7 +215,7 @@ crop_rast <- function(rast_object,
                               out_file)
 
     system2(file.path(find_gdal(), "gdal_translate"),
-            args = translate_string, stdout = NULL)
+            args = translate_string)
 
     if (mask == TRUE) {
 
@@ -232,7 +232,8 @@ crop_rast <- function(rast_object,
                               out_file = out_file,
                               out_type = "rastfile",
                               verbose = FALSE,
-                              overwrite = TRUE)
+                              overwrite = TRUE,
+                              parallel = FALSE)
 
       }
 
