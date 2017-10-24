@@ -24,6 +24,7 @@
 #'  #new_vrt
 #'  #raster::stack(new_vrt)
 #' }
+#'
 #' @rdname migrate_virtrast
 #' @export
 #' @importFrom raster nlayers
