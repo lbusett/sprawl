@@ -5,6 +5,7 @@
 #'   1. A file name corresponding to a valid single- or multi- band raster (e.g. /my_folder/myfile.tif)
 #'   All `gdal` raster formats are supported
 #'   2. An `raster`, `rasterStack` or `rasterBrick` object
+#' @param na.value DESCRIPTION
 #' @param in_vect input vector object containing zones from which data has to be
 #'   extracted.
 #'   Can be either:
@@ -99,6 +100,7 @@
 #'
 extract_rast <- function(in_rast,
                          in_vect,
+                         na.value      = NULL,
                          rast_type     = "continuous",
                          selbands      = NULL,
                          rastres       = NULL,
@@ -271,6 +273,7 @@ extract_rast <- function(in_rast,
       out_list <- er_polygons(in_vect_crop,
                               in_vect,
                               in_rast_crop,
+                              na.value,
                               seldates,
                               selbands,
                               n_selbands,

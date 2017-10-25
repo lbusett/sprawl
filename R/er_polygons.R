@@ -3,6 +3,7 @@
 #' @param in_vect PARAM_DESCRIPTION
 #' @param in_vect_crop PARAM_DESCRIPTION
 #' @param in_rast PARAM_DESCRIPTION
+#' @param na.vlaue PARAM_DESCRIPTION
 #' @param seldates PARAM_DESCRIPTION
 #' @param selbands PARAM_DESCRIPTION
 #' @param n_selbands PARAM_DESCRIPTION
@@ -35,6 +36,7 @@
 er_polygons <- function(in_vect_crop,
                         in_vect,
                         in_rast,
+                        na.value,
                         seldates,
                         selbands,
                         n_selbands,
@@ -240,6 +242,9 @@ er_polygons <- function(in_vect_crop,
                                                chunkrows)),
         key = "mdxtnq")
       out_data <- out_data[mdxtnq != 0]
+      if (!is.null(na.value)) {
+        out_data <- out_data[value != na.value]
+      }
 
       ext_chunk <- data.frame(x_min = raster::extent(in_band)[1],
                               x_max = raster::extent(in_band)[2],
