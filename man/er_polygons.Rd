@@ -4,8 +4,8 @@
 \alias{er_polygons}
 \title{extract raster data on polygons (helper for extract_rast)}
 \usage{
-er_polygons(in_vect_crop, in_vect, in_rast, seldates, selbands, n_selbands,
-  date_check, er_opts, outside_feat, verb_foreach = FALSE)
+er_polygons(in_vect_crop, in_vect, in_rast, na.value, seldates, selbands,
+  n_selbands, date_check, er_opts, outside_feat, verb_foreach = FALSE)
 }
 \arguments{
 \item{in_vect_crop}{PARAM_DESCRIPTION}
@@ -28,6 +28,8 @@ er_polygons(in_vect_crop, in_vect, in_rast, seldates, selbands, n_selbands,
 
 \item{verb_foreach}{\code{logical} if TRUE, verbose output is sent out from within the foreach cycle,
 Default: FALSE}
+
+\item{na.vlaue}{PARAM_DESCRIPTION}
 }
 \value{
 OUTPUT_DESCRIPTION

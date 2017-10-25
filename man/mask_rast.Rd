@@ -5,7 +5,7 @@
 \title{Mask a raster based on a vector}
 \usage{
 mask_rast(in_rast, mask, crop = FALSE, buffer = NULL,
-  out_type = "rastobject", out_filename = NULL, out_dtype = NULL,
+  out_type = "rastobject", out_file = NULL, out_dtype = NULL,
   out_nodata = NULL, compress = "None", overwrite = FALSE,
   parallel = FALSE, cores = parallel::detectCores() - 2, verbose = TRUE)
 }
@@ -29,7 +29,7 @@ depending on other arguments - see below)
 Default: "rastobj" (If an invalid string is provided, defaults to \code{rastobj})
 }}
 
-\item{out_filename}{\code{character} filename where the masked raster should be saved
+\item{out_file}{\code{character} filename where the masked raster should be saved
 If NULL, the masked raster is saved on a temporary file in the \code{R} temporary
 folder, named \code{<basename(in_rast)>_sprawlmask.tif}. The file is saved in GTiff
 format, with \code{compress} compression.}
@@ -45,7 +45,7 @@ Default: 'NoData'}
 \item{compress}{\code{logical} allow verbose output from \code{foreach} for debugging
 purposes, Default: FALSE}
 
-\item{overwrite}{\code{logical} if TRUE, and out_filename is set and existing,
+\item{overwrite}{\code{logical} if TRUE, and out_file is set and existing,
 existing files are overwritten, Default: FALSE}
 
 \item{parallel}{\code{logical} if TRUE, use ClusterR to implement multicore

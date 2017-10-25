@@ -18,7 +18,7 @@
 #'   - if == "filename", return the filename of the masked layer (GTiff or gdal vrt format
 #'   depending on other arguments - see below)
 #'   Default: "rastobj" (If an invalid string is provided, defaults to `rastobj`)
-#' @param out_filename `character` filename where the masked raster should be saved
+#' @param out_file `character` filename where the masked raster should be saved
 #'   If NULL, the masked raster is saved on a temporary file in the `R` temporary
 #'   folder, named `<basename(in_rast)>_sprawlmask.tif`. The file is saved in GTiff
 #'   format, with `compress` compression.
@@ -28,7 +28,7 @@
 #'   If NULL, the data type is retrieved from the input, Default: NULL
 #' @param compress `logical` allow verbose output from `foreach` for debugging
 #'   purposes, Default: FALSE
-#' @param overwrite `logical` if TRUE, and out_filename is set and existing,
+#' @param overwrite `logical` if TRUE, and out_file is set and existing,
 #'   existing files are overwritten, Default: FALSE
 #' @param parallel `logical` if TRUE, use ClusterR to implement multicore
 #'   processing. This speeds up execution for large rasters, Default: FALSE
@@ -72,7 +72,7 @@ mask_rast <- function(in_rast,
                       crop         = FALSE,
                       buffer       = NULL,
                       out_type     = "rastobject",
-                      out_filename = NULL,
+                      out_file = NULL,
                       out_dtype    = NULL,
                       out_nodata   = NULL,
                       compress     = "None",
@@ -95,7 +95,7 @@ mask_rast <- function(in_rast,
   # checks on in_rast ----
 
   in_rast   <- cast_rast(in_rast, "rastobject")
-  rastinfo  <- get_rastinfo(in_rast, stats = FALSE)
+  rastinfo  <- get_rastinfo(in_rast, stats = FALSE, verbose = FALSE)
   rast_proj <- get_proj4string(in_rast)
   bnames_in <- names(in_rast)
   times_in  <- raster::getZ(in_rast)
@@ -124,14 +124,14 @@ mask_rast <- function(in_rast,
   mask_proj <- get_proj4string(mask)
 
   #   __________________________________________________________________________
-  #   set the output folder (in tempdir if out_filename == NULL)            ####
-  if (is.null(out_filename)) {
+  #   set the output folder (in tempdir if out_file == NULL)            ####
+  if (is.null(out_file)) {
     # outfold      <- file.path(tempdir(), paste0("sprawlmask_",sample(1:1000))[1]) #nolint
-    # out_filename <- file.path(outfold, "sprawlmask.tif")
-    out_filename <- tempfile(fileext = ".tif")
+    # out_file <- file.path(outfold, "sprawlmask.tif")
+    out_file <- tempfile(fileext = ".tif")
   }
 
-  make_folder(out_filename, type = "filename")
+  make_folder(out_file, type = "filename")
 
   #   __________________________________________________________________________
   #   apply buffer to mask if necessary                                     ####
@@ -191,17 +191,17 @@ mask_rast <- function(in_rast,
 
   if (!parallel) {
 
-    maskobj <- raster::brick(temp_rastermask)
+    maskobj <- raster::raster(temp_rastermask)
     masked_out <- raster::mask(
       in_rast,
       maskobj,
-      filename    = out_filename,
-      options     = paste0("COMPRESS=", compress),
-      overwrite   = TRUE,
-      datatype    = dtype[["raster"]][1],
-      updatevalue = ifelse(is.null(out_nodata), -Inf, out_nodata)
+      filename    = out_file,
+      # options     = paste0("COMPRESS=", compress)
+      overwrite   = TRUE
+      # datatype    = "INT2U",
+      # updatevalue = ifelse(is.null(out_nodata), NA, out_nodata)
     )
-
+    dtype[["raster"]][1]
   } else {
 
     beginCluster(n = ifelse((cores > parallel::detectCores() - 1),
@@ -211,7 +211,7 @@ mask_rast <- function(in_rast,
       in_rast,
       fun       = function(x, y) {x*y},
       args      = list(y = raster::brick(temp_rastermask)),
-      filename  = out_filename,
+      filename  = out_file,
       options   = paste0("COMPRESS=", compress),
       overwrite = TRUE,
       datatype  = dtype[["raster"]][1],
@@ -228,13 +228,13 @@ mask_rast <- function(in_rast,
   on.exit({if (exists("temprastfile")) unlink(temprastfile)})
 
   if (out_type == "rastobject") {
-    out <- raster::brick(out_filename)
+    out <- raster::brick(out_file)
     names(out) <- paste0(rastinfo$bnames, "_masked")
     if (length(rastinfo$Z) != 0) {
       out <- raster::setZ(out, rastinfo$Z)
     }
     return(masked_out)
   } else {
-    return(out_filename)
+    return(out_file)
   }
 }

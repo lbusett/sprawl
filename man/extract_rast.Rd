@@ -4,11 +4,12 @@
 \alias{extract_rast}
 \title{extract raster values on features of a vector}
 \usage{
-extract_rast(in_rast, in_vect, rast_type = "continuous", selbands = NULL,
-  rastres = NULL, id_field = NULL, summ_data = TRUE, full_data = TRUE,
-  comp_quant = FALSE, comp_freq = FALSE, long_format = TRUE, FUN = NULL,
-  small = TRUE, na.rm = TRUE, maxchunk = 5e+07, join_feat_tbl = TRUE,
-  join_geom = TRUE, keep_null = FALSE, verbose = TRUE, ncores = NULL)
+extract_rast(in_rast, in_vect, na.value = NULL, rast_type = "continuous",
+  selbands = NULL, rastres = NULL, id_field = NULL, summ_data = TRUE,
+  full_data = TRUE, comp_quant = FALSE, comp_freq = FALSE,
+  long_format = TRUE, FUN = NULL, small = TRUE, na.rm = TRUE,
+  maxchunk = 5e+07, join_feat_tbl = TRUE, join_geom = TRUE,
+  keep_null = FALSE, verbose = TRUE, ncores = NULL)
 }
 \arguments{
 \item{in_rast}{input raster. Can be either:
@@ -25,6 +26,8 @@ Can be either:
 \item A \code{file name} corresponding to a valid ESRI shapefile (e.g. /my_folder/myshape.shp)
 \item An \code{R} \code{+sp} or \code{sf} object
 }}
+
+\item{na.value}{DESCRIPTION}
 
 \item{rast_type}{\code{character ["continuous" | "categorical"]} specifies if the
 values passed in \code{in_data} represent a continuous or categorical variable.
