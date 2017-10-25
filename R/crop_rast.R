@@ -234,10 +234,9 @@ crop_rast <- function(rast_object,
                               out_type  = "rastfile",
                               verbose   = FALSE,
                               overwrite = TRUE,
-                              parallel  = TRUE)
-
+                              parallel  = TRUE,
+                              compress  = compress)
       }
-
     }
     if (out_type == "rastobject") {
 
