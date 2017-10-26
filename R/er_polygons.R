@@ -154,7 +154,7 @@ er_polygons <- function(in_vect_crop,
   ) %dopar%
   {
 
-    # for(band in 1:1){
+    # for (band in 1:1){
 
     all_data     <- list()
     coords       <- list()
@@ -242,8 +242,9 @@ er_polygons <- function(in_vect_crop,
                                                chunkrows)),
         key = "mdxtnq")
       out_data <- out_data[mdxtnq != 0]
+      # browser()
       if (!is.null(na.value)) {
-        out_data <- out_data[value != na.value]
+        out_data[value == na.value][["value"]] <- NA
       }
 
       ext_chunk <- data.frame(x_min = raster::extent(in_band)[1],
@@ -424,7 +425,7 @@ er_polygons <- function(in_vect_crop,
       # this computes number of pixels per polygon and gives a sequential
       # number to each pixel in the polygon (https://goo.gl/c83Pfd)
 
-      all_data <- all_data[, c("band_n", "date", "n_pix", "N") :=
+      all_data <- all_data[, c("band_n", "date", "n_pix_val", "N") :=
                              list(band, seldates[band], .N, seq_len(.N)),
                            by = mdxtnq]
     }
@@ -602,7 +603,7 @@ er_polygons <- function(in_vect_crop,
     }
 
     # define the order of the output columns
-    keep_cols <- c("mdxtnq", "band_n", "date", "n_pix", "N",
+    keep_cols <- c("mdxtnq", "band_n", "date", "n_pix_val", "N",
                    "value",
                    names_shp,
                    "x_coord", "y_coord")
