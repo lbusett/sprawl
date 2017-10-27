@@ -24,10 +24,19 @@
 #'  `in_vect`
 #' @param line_size `numeric` size of lines used to plot the polygons borders of
 #'  in_vect, Default: 0.2
+#' @param point_shape `character ["circle" | "square" | "diamond" | "uptriangle"
+#'  | "downtriangle"]` symbol used to plot points if in_vect is a "POINT" or
+#'  "MULTPOINT" object, default: `circle`
+#' @param point_size `numeric` size of the symbol used to plot points if in_vect
+#'  is a "POINT" or "MULTPOINT" object, Default = 0.2
+#' @param point_linecolor `character` color of the border of the symbol used to plot
+#'  points if in_vect is a "POINT" or "MULTPOINT" object
+#' @param point_linesize `numeric` size of the symbol used to plot points if in_vect is
+#'   a "POINT" or "MULTPOINT" object, Default: 0.2
 #' @param fill_var `character` name of the column of `in_vect` to be used for
 #'  coloring the different polygons. If NULL, only the geometry is plotted,
 #'  Default: NULL
-#' @param transparency `numeric [0, 1]`transparency of the filled polygons. Higher
+#' @param transparency `numeric [0, 1]`transparency of the filled polygons/points. Higher
 #'   values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)
 #' @param facet_var `character` name of a column of `in_vect` to be used for
 #'  making different facets of the plot. Useful in case multiple values of `fill_var`
@@ -171,6 +180,15 @@
 #'            borders_color = "red", borders_txt_field = "NAME_2")
 #'
 #'
+#'  # plot a "points" layer
+#'  library(sp)
+#'  demo(meuse, ask = FALSE, echo = FALSE)
+#'  plot_vect(meuse, scalebar_dist = 0.5)
+#'  plot_vect(meuse, fill_var = "copper",
+#'                   point_shape = "diamond",
+#'                   palette_name = "RdYlGn",
+#'                   scalebar_dist = 0.5)
+#'
 #' @rdname plot_vect
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
@@ -190,6 +208,8 @@
 plot_vect <- function(
   in_vect,
   line_color     = "black", line_size     = 0.2,
+  point_size = 0.2, point_shape = "circle",
+  point_linecolor = "black", point_linesize = 0.01,
   fill_var       = NULL, transparency = 0,
   facet_var      = NULL, facet_rows     = NULL,
   borders_layer  = NULL, borders_color = "grey15", borders_size = 0.2,
@@ -248,7 +268,7 @@ plot_vect <- function(
     no_fill <- TRUE
   } else {
 
-    # check the class of fill_var. If it is a factoror a character, palette_type
+    # check the class of fill_var. If it is a factor or a character, palette_type
     # is set to "qual", otherwise to "cont".
     cls_fill_var <- class(in_vect[[fill_var]])
     if (cls_fill_var %in% c("factor", "character")) {
@@ -378,25 +398,6 @@ plot_vect <- function(
       }
     }
   }
-  #   __________________________________________________________________________
-  #   If no scalebar dist passed, compute automatically from longitude     ####
-  #   range
-  units <- get_projunits(get_proj4string(in_vect))
-  # if (is.null(scalebar_dist)) {
-  #   if (units != "dec.degrees") {
-  #     km_extent     <- round(diff(xlims)/1000)
-  #     scalebar_dist <- round(round(km_extent/10) / 5) * 5
-  #   } else {
-  #     deg2rad <- function(deg) {(deg * pi) / (180)}
-  #     a <- sin(0.5 * (deg2rad(ylims[2]) - deg2rad(ylims[1])))
-  #     b <- sin(0.5 * (deg2rad(xlims[2]) - deg2rad(xlims[1])))
-  #     km_extent     <- 12742 * asin(sqrt(a * a +
-  #                                          cos(deg2rad(ylims[1])) *
-  #                                          cos(deg2rad(ylims[2])) * b * b))
-  #     scalebar_dist <- round(round(km_extent/10) / 5) * 5
-  #     # scalebar_dist <- round(km_extent/100*10)
-  #   }
-  # }
 
   # Blank plot
   plot <- ggplot() +
@@ -438,16 +439,31 @@ plot_vect <- function(
                            size  = line_size)
   } else {
 
-    plot <- plot + geom_sf(data = in_vect,
-                           aes_string(fill = fill_var),
-                           size  = line_size,
-                           color = line_color,
-                           alpha = 1 - transparency) +
-      coord_sf(xlim = xlims, ylim = ylims)
+    if (inherits(in_vect$geometry, c("sfc_POINT", "sfc_MULTIPOINT"))) {
 
-    #   __________________________________________________________________________
-    #   Modify the palette according to variable type and palette             ####
+      point_shapes <- data.frame(shape = c("circle", "square", "diamond",
+                                           "uptriangle", "downtriangle"),
+                                 number = c(21,22,23,24,25))
 
+      point_code <- point_shapes[which(point_shapes$shape == point_shape),]$number
+
+      plot <- plot + geom_sf(data = in_vect,
+                             aes_string(fill = fill_var),
+                             shape = point_code,
+                             colour = point_linecolor,
+                             size  = point_size,
+                             alpha = 1 - transparency) +
+        coord_sf(xlim = xlims, ylim = ylims)
+
+    } else {
+
+      plot <- plot + geom_sf(data = in_vect,
+                             aes_string(fill = fill_var),
+                             size  = line_size,
+                             color = line_color,
+                             alpha = 1 - transparency) +
+        coord_sf(xlim = xlims, ylim = ylims)
+    }
     plot <- add_scale_fill(plot,
                            palette,
                            title = "Value",
@@ -459,6 +475,10 @@ plot_vect <- function(
                            leg_type,
                            outliers_style,
                            direction)
+
+
+    #   __________________________________________________________________________
+    #   Modify the palette according to variable type and palette             ####
 
     plot <- plot + theme(legend.justification = "center",
                          legend.box.spacing = grid::unit(10,"points"))

@@ -242,7 +242,7 @@ er_polygons <- function(in_vect_crop,
                                                chunkrows)),
         key = "mdxtnq")
       out_data <- out_data[mdxtnq != 0]
-      # browser()
+
       if (!is.null(na.value)) {
         out_data[value == na.value][["value"]] <- NA
       }

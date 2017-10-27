@@ -38,6 +38,14 @@ the corresponding files on disk are moved.
  #new_vrt  <- migrate_virtrast(old_vrt, new_path)
  #new_vrt
  #raster::stack(new_vrt)
+ #
+ # The same goes for RData files corresponding to "raster" objects
+
+ #old_RData  <- "/home/mypath/myfolder/myraster.RData
+ #new_path <- "/home/mypath/mynewfolder"
+ #new_RData  <- migrate_virtrast(old_RData, new_path)
+ #new_RData
+ #raster::stack(new_RData)
 }
 
 }

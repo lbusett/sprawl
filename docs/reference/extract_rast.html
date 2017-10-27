@@ -143,11 +143,12 @@
 for pixels corresponding to the features of a vector (Polygon, Point or Line)</p>
     
 
-    <pre class="usage"><span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect</span>, <span class='kw'>rast_type</span> <span class='kw'>=</span> <span class='st'>"continuous"</span>, <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>rastres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summ_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>comp_freq</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>long_format</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>, <span class='kw'>join_feat_tbl</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>join_geom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>keep_null</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rast_type</span> <span class='kw'>=</span> <span class='st'>"continuous"</span>,
+  <span class='kw'>selbands</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>rastres</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summ_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>full_data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>comp_quant</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>comp_freq</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>long_format</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>small</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>maxchunk</span> <span class='kw'>=</span> <span class='fl'>5e+07</span>, <span class='kw'>join_feat_tbl</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>join_geom</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>keep_null</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -170,8 +171,12 @@ Can be either:</p><ol>
 </ol></td>
     </tr>
     <tr>
+      <th>na.value</th>
+      <td><p>DESCRIPTION</p></td>
+    </tr>
+    <tr>
       <th>rast_type</th>
-      <td><p><code>character</code> ("continuous" | "categorical) specifies if the
+      <td><p><code>character ["continuous" | "categorical"]</code> specifies if the
 values passed in <code>in_data</code> represent a continuous or categorical variable.
 (see @description)</p></td>
     </tr>
@@ -190,7 +195,7 @@ Default: NULL (meaning no resampling is done)</p></td>
     </tr>
     <tr>
       <th>id_field</th>
-      <td><p><code>character</code> (optional) field of the vector file to be used to
+      <td><p><code>character</code> (optional) column of the vector atrtibute table to be used to
 identify the zones from which data is to be extracted, If NULL (or invalid)
 zonal statistics are extracted on each row of the shapefile, and a new column
 named <code>id_feat</code> is used on the output to distinguish the zones, Default: NULL</p></td>
@@ -290,7 +295,7 @@ extracted (see examples).</p>
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='fu'>library</span>(<span class='no'>tibble</span>)
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
-                      <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
+                      <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
@@ -319,8 +324,8 @@ extracted (see examples).</p>
 #&gt;  9       1      9 2013-03-06 3400057 m^2    61        61 3937.738  3917
 #&gt; 10       1     10 2013-03-14 3400057 m^2    61        61 4281.672  4282
 #&gt; # ... with 542 more rows, and 8 more variables: sd &lt;dbl&gt;, min &lt;dbl&gt;, max &lt;dbl&gt;,
-#&gt; #   id &lt;dbl&gt;, lc_type &lt;fctr&gt;, category &lt;fctr&gt;, sup_catego &lt;fctr&gt;,
-#&gt; #   geometry &lt;simple_feature&gt;</div><div class='input'>
+#&gt; #   id &lt;dbl&gt;, lc_type &lt;fctr&gt;, category &lt;fctr&gt;, sup_catego &lt;fctr&gt;, geometry &lt;S3:
+#&gt; #   sfc_POLYGON&gt;</div><div class='input'>
 <span class='co'># Data from all pixels, grouped by polygon</span>
 
 <span class='fu'><a href='http://www.rdocumentation.org/packages/tibble/topics/as_tibble'>as_tibble</a></span>(<span class='no'>out</span>$<span class='no'>alldata</span>)</div><div class='output co'>#&gt; Simple feature collection with 147384 features and 10 fields
@@ -330,20 +335,20 @@ extracted (see examples).</p>
 #&gt; epsg (SRID):    NA
 #&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 #&gt; # A tibble: 147,384 x 11
-#&gt;    id_feat band_n       date n_pix     N value    id  lc_type category
-#&gt;      &lt;int&gt;  &lt;int&gt;     &lt;date&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;
-#&gt;  1       1      1 2013-01-01    61     1  4454     1 forest_1   Forest
-#&gt;  2       1      1 2013-01-01    61     2  4260     1 forest_1   Forest
-#&gt;  3       1      1 2013-01-01    61     3  4224     1 forest_1   Forest
-#&gt;  4       1      1 2013-01-01    61     4  4344     1 forest_1   Forest
-#&gt;  5       1      1 2013-01-01    61     5  4489     1 forest_1   Forest
-#&gt;  6       1      1 2013-01-01    61     6  4970     1 forest_1   Forest
-#&gt;  7       1      1 2013-01-01    61     7  3987     1 forest_1   Forest
-#&gt;  8       1      1 2013-01-01    61     8  3904     1 forest_1   Forest
-#&gt;  9       1      1 2013-01-01    61     9  3904     1 forest_1   Forest
-#&gt; 10       1      1 2013-01-01    61    10  4768     1 forest_1   Forest
+#&gt;    id_feat band_n       date n_pix_val     N value    id  lc_type category
+#&gt;      &lt;int&gt;  &lt;int&gt;     &lt;date&gt;     &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;   &lt;fctr&gt;
+#&gt;  1       1      1 2013-01-01        61     1  4454     1 forest_1   Forest
+#&gt;  2       1      1 2013-01-01        61     2  4260     1 forest_1   Forest
+#&gt;  3       1      1 2013-01-01        61     3  4224     1 forest_1   Forest
+#&gt;  4       1      1 2013-01-01        61     4  4344     1 forest_1   Forest
+#&gt;  5       1      1 2013-01-01        61     5  4489     1 forest_1   Forest
+#&gt;  6       1      1 2013-01-01        61     6  4970     1 forest_1   Forest
+#&gt;  7       1      1 2013-01-01        61     7  3987     1 forest_1   Forest
+#&gt;  8       1      1 2013-01-01        61     8  3904     1 forest_1   Forest
+#&gt;  9       1      1 2013-01-01        61     9  3904     1 forest_1   Forest
+#&gt; 10       1      1 2013-01-01        61    10  4768     1 forest_1   Forest
 #&gt; # ... with 147,374 more rows, and 2 more variables: sup_catego &lt;fctr&gt;,
-#&gt; #   geometry &lt;simple_feature&gt;</div><div class='input'>
+#&gt; #   geometry &lt;S3: sfc_POINT&gt;</div><div class='input'>
 
 </div></pre>
   </div>

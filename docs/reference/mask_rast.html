@@ -147,7 +147,7 @@ or to remove also the borders of the vector.</p>
     
 
     <pre class="usage"><span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>mask</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>out_nodata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/parallel/topics/detectCores'>detectCores</a></span>() - <span class='fl'>2</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
@@ -183,7 +183,7 @@ Default: "rastobj" (If an invalid string is provided, defaults to <code>rastobj<
 </ul></td>
     </tr>
     <tr>
-      <th>out_filename</th>
+      <th>out_file</th>
       <td><p><code>character</code> filename where the masked raster should be saved
 If NULL, the masked raster is saved on a temporary file in the <code>R</code> temporary
 folder, named <code>&lt;basename(in_rast)&gt;_sprawlmask.tif</code>. The file is saved in GTiff
@@ -208,7 +208,7 @@ purposes, Default: FALSE</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p><code>logical</code> if TRUE, and out_filename is set and existing,
+      <td><p><code>logical</code> if TRUE, and out_file is set and existing,
 existing files are overwritten, Default: FALSE</p></td>
     </tr>
     <tr>
@@ -246,7 +246,7 @@ string corresponding to the filename of the created raster (if out_type ==
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
-<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='output co'>#&gt; <span class='message'>get_rastinfo --&gt; Retrieving info from: `in_rast`</span></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

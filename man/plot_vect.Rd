@@ -4,14 +4,16 @@
 \alias{plot_vect}
 \title{plot a map based on a \code{vector} object using `ggplot::geom_sf``}
 \usage{
-plot_vect(in_vect, line_color = "black", line_size = 0.2, fill_var = NULL,
-  transparency = 0, facet_var = NULL, facet_rows = NULL,
-  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
-  borders_txt_field = NULL, borders_txt_size = 2.5,
-  borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
-  xlims = NULL, ylims = NULL, zlims = NULL, zlims_type = "vals",
-  outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
-  scalebar = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
+plot_vect(in_vect, line_color = "black", line_size = 0.2,
+  point_size = 0.2, point_shape = "circle", point_linecolor = "black",
+  point_linesize = 0.01, fill_var = NULL, transparency = 0,
+  facet_var = NULL, facet_rows = NULL, borders_layer = NULL,
+  borders_color = "grey15", borders_size = 0.2, borders_txt_field = NULL,
+  borders_txt_size = 2.5, borders_txt_color = "grey15", basemap = NULL,
+  zoomin = 0, xlims = NULL, ylims = NULL, zlims = NULL,
+  zlims_type = "vals", outliers_style = "censor",
+  outliers_colors = c("grey10", "grey90"), scalebar = TRUE,
+  scalebar_dist = NULL, scalebar_txt_dist = 0.03,
   scalebar_pos = "bottomright", na.color = NULL, na.value = NULL,
   palette_name = NULL, direction = 1, leg_type = NULL,
   leg_labels = NULL, leg_breaks = NULL, leg_colors = NULL,
@@ -29,11 +31,23 @@ plot_vect(in_vect, line_color = "black", line_size = 0.2, fill_var = NULL,
 \item{line_size}{\code{numeric} size of lines used to plot the polygons borders of
 in_vect, Default: 0.2}
 
+\item{point_size}{\code{numeric} size of the symbol used to plot points if in_vect
+is a "POINT" or "MULTPOINT" object, Default = 0.2}
+
+\item{point_shape}{\code{character ["circle" | "square" | "diamond" | "uptriangle" | "downtriangle"]} symbol used to plot points if in_vect is a "POINT" or
+"MULTPOINT" object, default: \code{circle}}
+
+\item{point_linecolor}{\code{character} color of the border of the symbol used to plot
+points if in_vect is a "POINT" or "MULTPOINT" object}
+
+\item{point_linesize}{\code{numeric} size of the symbol used to plot points if in_vect is
+a "POINT" or "MULTPOINT" object, Default: 0.2}
+
 \item{fill_var}{\code{character} name of the column of \code{in_vect} to be used for
 coloring the different polygons. If NULL, only the geometry is plotted,
 Default: NULL}
 
-\item{transparency}{\code{numeric [0, 1]}transparency of the filled polygons. Higher
+\item{transparency}{\code{numeric [0, 1]}transparency of the filled polygons/points. Higher
 values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)}
 
 \item{facet_var}{\code{character} name of a column of \code{in_vect} to be used for
@@ -247,6 +261,15 @@ DETAILS
            borders_layer = get_boundaries("ITA", level = 2),
            borders_color = "red", borders_txt_field = "NAME_2")
 
+
+ # plot a "points" layer
+ library(sp)
+ demo(meuse, ask = FALSE, echo = FALSE)
+ plot_vect(meuse, scalebar_dist = 0.5)
+ plot_vect(meuse, fill_var = "copper",
+                  point_shape = "diamond",
+                  palette_name = "RdYlGn",
+                  scalebar_dist = 0.5)
 
 }
 \author{
