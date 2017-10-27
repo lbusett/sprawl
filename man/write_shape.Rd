@@ -4,11 +4,11 @@
 \alias{write_shape}
 \title{Write a \code{sf} or \code{sp} to a ESRI shapefile}
 \usage{
-write_shape(in_object, out_file, overwrite = FALSE, verbose = FALSE,
+write_shape(in_vect, out_file, overwrite = FALSE, verbose = FALSE,
   encoding = "UTF-8", create_dir = FALSE, ...)
 }
 \arguments{
-\item{in_object}{\code{character} object to be written to the shapefile. Must be a
+\item{in_vect}{\code{character} object to be written to the shapefile. Must be a
 valid \code{*sp} or \code{sf} object}
 
 \item{out_file}{\code{character} output file name}

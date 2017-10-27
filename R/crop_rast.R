@@ -31,6 +31,12 @@
 #'   If NULL, the data type is retrieved from the input, Default: NULL
 #' @param compress `character` compression option to be used to saved the cropped
 #'   raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"
+#' @param parallel `logical` if TRUE, use ClusterR to implement multicore
+#'   processingwhile masking. This speeds up execution for large rasters,
+#'   Default: FALSE (Ignored if `mask = FALSE`)
+#' @param cores `numeric` Number of cores to use in case of parallel processing.
+#'   If NULL, it defaults to `parallel::detectCores()-2`, Default = NULL
+#'   (Ignored if `mask = FALSE`)
 #' @param verbose `logical` if FALSE, suppress processing messages, Default: TRUE
 #' @return either a `Raster` object containing the cropped raster, or a gdal vrt
 #'   or GTiff filename corresponding to it, depending on `out_type`.
@@ -63,9 +69,11 @@ crop_rast <- function(rast_object,
                       mask         = FALSE,
                       pad          = 1,
                       out_type     = "rastobject",
-                      out_file = NULL,
+                      out_file     = NULL,
                       out_dtype    = NULL,
                       compress     = "None",
+                      parallel     = FALSE,
+                      cores        = NULL,
                       verbose      = TRUE){
 
   call <- match.call()
@@ -214,8 +222,8 @@ crop_rast <- function(rast_object,
                               temp_vrt,
                               out_file)
 
-    system2(file.path(find_gdal(), "gdal_translate"),
-            args = translate_string)
+    out <- system2(file.path(find_gdal(), "gdal_translate"),
+                   args = translate_string, stdout = TRUE)
 
     if (mask == TRUE) {
 
@@ -228,13 +236,15 @@ crop_rast <- function(rast_object,
                                          verbose = FALSE)
         }
 
-        out_file <- mask_rast(out_file,
+        tempfile <- tempfile(fileext = ".tif")
+        file.rename(out_file, tempfile)
+        out_file <- mask_rast(tempfile,
                               ext_object,
                               out_file  = out_file,
                               out_type  = "rastfile",
                               verbose   = FALSE,
                               overwrite = TRUE,
-                              parallel  = TRUE,
+                              parallel  = parallel,
                               compress  = compress)
       }
     }

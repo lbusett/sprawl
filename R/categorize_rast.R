@@ -59,7 +59,7 @@
 #'   library(magrittr)
 #'   in_rast <- raster::raster(ncol = 20, nrow = 20) %>%
 #'   raster::init("row")
-#'   plot_rast_gg(in_rast, rast_type = "continuous", scalebar = F,
+#'   plot_rast_gg(in_rast, rast_type = "continuous", scalebar = FALSE,
 #'                direction = -1)
 #'
 #' # build a reclassification matrix
@@ -75,7 +75,7 @@
 #' out_rast <- categorize_rast(in_rast,
 #'                         class_matrix)
 #' out_rast
-#' plot_rast_gg(out_rast, scalebar = F)
+#' plot_rast_gg(out_rast, scalebar = FALSE)
 #'
 #'
 #' # reclassify a land cover map with N classes to a 0-1 mask, retaining classes 5

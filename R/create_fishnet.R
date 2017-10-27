@@ -54,12 +54,12 @@
 #'   # plotting with `exact_csize` = FALSE creates a grid that covers the extent with
 #'   # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
-#'                                   exact_csize = F)
+#'                                   exact_csize = FALSE)
 #'   plot_rast(in_rast, in_poly = fishnet)
 #'
 #'   # using shape = "hex" gives and hexagonal grid instead
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
-#'                                   exact_csize = T, shape = "hex")
+#'                                   exact_csize = TRUE, shape = "hex")
 #'   plot_rast(in_rast, in_poly = fishnet)
 #'
 #' @rdname create_fishnet

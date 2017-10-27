@@ -536,7 +536,7 @@ er_polygons <- function(in_vect_crop,
                        "geometry")
       } else {
 
-        which_freqs <- grep("mdtxtnQ_", names(stat_data))
+        which_freqs <- grep("freq_", names(stat_data))
         keep_cols <- c(
           "mdxtnq", "band_n", "date", "area",
           "n_pix", "n_pix_val", "mode",

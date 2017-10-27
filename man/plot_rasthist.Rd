@@ -2,30 +2,33 @@
 % Please edit documentation in R/plot_rasthist.R
 \name{plot_rasthist}
 \alias{plot_rasthist}
-\title{FUNCTION_TITLE}
+\title{plot the frequency histogram of values of a raster}
 \usage{
 plot_rasthist(in_rast, variable = "freq", type = "hist", verbose = TRUE)
 }
 \arguments{
-\item{in_rast}{PARAM_DESCRIPTION}
+\item{in_rast}{a \code{Raster} object, or a file path corresponding to a valid
+raster file}
 
-\item{variable}{PARAM_DESCRIPTION, Default: 'freq'}
+\item{variable}{\code{character} \link{"count" | "freq"}  varaible to be plotted,
+can be the countof pixels or their frequency, Default: 'freq'}
 
-\item{type}{PARAM_DESCRIPTION, Default: 'hist'}
+\item{type}{\code{character ["hist" or "line"]}, plotting style. Usea "bar" or a
+"line" plot, Default: 'line'}
 
-\item{verbose}{PARAM_DESCRIPTION, Default: TRUE}
+\item{verbose}{If FALSE, suppress processing messages, Default: TRUE}
 }
 \value{
-OUTPUT_DESCRIPTION
+A ggplot
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
+plot the frequency histogram of values of a raster, divided
+by band
 }
 \examples{
-#EXAMPLE1
+  in_rast <- read_rast(system.file("extdata/OLI_test",
+      "oli_multi_1000.tif", package = "sprawl.data"))
+  plot_rasthist(in_rast, type = "line")
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

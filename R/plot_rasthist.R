@@ -1,13 +1,18 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param in_rast PARAM_DESCRIPTION
-#' @param variable PARAM_DESCRIPTION, Default: 'freq'
-#' @param type PARAM_DESCRIPTION, Default: 'hist'
-#' @param verbose PARAM_DESCRIPTION, Default: TRUE
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title plot the frequency histogram of values of a raster
+#' @description plot the frequency histogram of values of a raster, divided
+#'   by band
+#' @param in_rast a `Raster` object, or a file path corresponding to a valid
+#'   raster file
+#' @param variable `character` ["count" | "freq"]  varaible to be plotted,
+#'   can be the countof pixels or their frequency, Default: 'freq'
+#' @param type `character ["hist" or "line"]`, plotting style. Usea "bar" or a
+#'   "line" plot, Default: 'line'
+#' @param verbose If FALSE, suppress processing messages, Default: TRUE
+#' @return A ggplot
 #' @examples
-#' #EXAMPLE1
+#'   in_rast <- read_rast(system.file("extdata/OLI_test",
+#'       "oli_multi_1000.tif", package = "sprawl.data"))
+#'   plot_rasthist(in_rast, type = "line")
 #' @rdname plot_rasthist
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
@@ -19,6 +24,7 @@ plot_rasthist <- function(in_rast,
                           type     = "hist",
                           verbose  = TRUE) {
   call <- match.call()
+  in_rast <- cast_rast(in_rast, "rastobject")
   if (verbose) {
     message("plot_rasthist --> Plotting histogram of `",
             call[[2]], "`")
@@ -37,7 +43,7 @@ plot_rasthist <- function(in_rast,
       hist_data <- in_rast@rastinfo$stats$hists
     }
   }
-
+  hist_data$band <- factor(hist_data$band, labels = info$bnames)
   plot <- ggplot(hist_data) + theme_bw()
   if (type == "hist") {
     plot <- plot + ggplot2::geom_col(

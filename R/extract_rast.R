@@ -62,31 +62,34 @@
 #'   If NULL, defaults to  available cores - 2, but up to a maximum of 8. If
 #'   user-provided is greater than available cores - 2  or greater than 8,
 #'   ncores is re-set to the minimum between those two.
-#' @return out_list `list` containing two tibbles: `out_list$summ_data` contains
-#'   summary statistics, while `out_list$alldata` contains the data of all pixels
-#'   extracted (see examples).
+#' @return out_list `list` containing two elements:
+#'   1.`out_list$stats` contains summary statistics
+#'   2.`out_list$alldata` contains the data of all pixels extracted
+#'   (see examples).
 #' @export
 #' @examples
+#'
+#' See [here](https://lbusett.github.io/sprawl/articles/articles/extract_rast_example.html)
+#' for a worked example !
 #'
 #' library(sprawl)
 #' library(sprawl.data)
 #' library(raster)
-#' library(tibble)
 #' in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
 #'                       package = "sprawl.data"), stringsAsFactors = TRUE)
-#' in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
+#' in_rast  <- read_rast(system.file("extdata/MODIS_test", "EVIts_test.tif",
 #'                           package = "sprawl.data"))
 #' in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 #'
-#' out      <- extract_rast(in_rast, in_polys, verbose = FALSE)
+#' out      <- extract_rast(in_rast, in_polys, verbose = FALSE, ncores = 1)
 #'
 #' # Statistics for the different polygons
 #'
-#' as_tibble(out$stats)
+#' head(out$stats)
 #'
 #' # Data from all pixels, grouped by polygon
 #'
-#' as_tibble(out$alldata)
+#' head(out$alldata)
 #'
 #'
 #' @importFrom sf st_crs st_transform st_geometry st_as_sf

@@ -141,12 +141,12 @@ summarize_data <- function(in_data,
     if (comp_freq) {
       #   ____________________________________________________________________
       #   if comp_freq passed, also compute number of pixels per class    ####
-# browser()
+
       freqs <- in_data[, .N, by = c("value", "mdxtnq")] %>%
         .[, perc := N/sum(N), by = c("mdxtnq")] %>%
         data.table::dcast(mdxtnq ~ value, value.var = "perc") %>%
-        data.table::setnames(., c("mdxtnq", paste0("mdtxtnQ_freq_", names(.)[2:length(.)])))
-
+        data.table::setnames(., c("mdxtnq", paste0("freq_", names(.)[2:length(.)])))
+      freqs[is.na(freqs)] <- 0
       summ <- merge(summ, freqs)
 
     }

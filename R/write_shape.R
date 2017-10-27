@@ -1,7 +1,7 @@
 #' @title Write a `sf` or `sp` to a ESRI shapefile
 #' @description Wrapper on  `sf::st_write` for writing an `sf` or `sp` object to
 #'  disk as an ESRI shapefile
-#' @param in_object `character` object to be written to the shapefile. Must be a
+#' @param in_vect `character` object to be written to the shapefile. Must be a
 #'   valid `*sp` or `sf` object
 #' @param out_file  `character` output file name
 #' @param overwrite `logical` if TRUE, output file will be overwritten if existing,
@@ -40,7 +40,7 @@
 #' in_data
 #'
 #'
-write_shape <- function(in_object,
+write_shape <- function(in_vect,
                         out_file,
                         overwrite  = FALSE,
                         verbose    = FALSE,
@@ -73,12 +73,9 @@ write_shape <- function(in_object,
     out_file <- paste0(tools::file_path_sans_ext(out_file), ".shp")
   }
 
-  intype <- get_vectype(in_object)
-  if (intype == "spobject") {
-    in_object <- methods::as(in_object, "sf")
-    intype  <- "sfobject"
-  }
-  sf::write_sf(obj           = in_object,
+  in_vect <- cast_vect(in_vect, "sfobject")
+
+  sf::write_sf(obj           = in_vect,
                dsn           = out_file,
                layer         = basename(out_file),
                driver        = "ESRI Shapefile",
@@ -88,5 +85,5 @@ write_shape <- function(in_object,
                                       "",
                                       paste0("ENCODING=", encoding)),
                ...)
-  return(invisible(in_object))
+  return(invisible(in_vect))
 }

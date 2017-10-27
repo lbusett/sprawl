@@ -44,9 +44,9 @@ DETAILS
     sf::st_transform(get_proj4string(in_polys))
  par(mfrow=c(1,2))
  plot(in_polys[1])
- plot(rast_extent, add = T)
+ plot(rast_extent, add = TRUE)
  plot(in_polys_cropped[1])
- plot(rast_extent, add = T)
+ plot(rast_extent, add = TRUE)
   par(mfrow=c(1,2))
 
 }

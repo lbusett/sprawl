@@ -6,7 +6,7 @@
 \usage{
 crop_rast(rast_object, ext_object, mask = FALSE, pad = 1,
   out_type = "rastobject", out_file = NULL, out_dtype = NULL,
-  compress = "None", verbose = TRUE)
+  compress = "None", parallel = FALSE, cores = NULL, verbose = TRUE)
 }
 \arguments{
 \item{rast_object}{either an \code{R} object of class \code{Raster}, or a character string
@@ -45,6 +45,14 @@ If NULL, the data type is retrieved from the input, Default: NULL}
 
 \item{compress}{\code{character} compression option to be used to saved the cropped
 raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"}
+
+\item{parallel}{\code{logical} if TRUE, use ClusterR to implement multicore
+processingwhile masking. This speeds up execution for large rasters,
+Default: FALSE (Ignored if \code{mask = FALSE})}
+
+\item{cores}{\code{numeric} Number of cores to use in case of parallel processing.
+If NULL, it defaults to \code{parallel::detectCores()-2}, Default = NULL
+(Ignored if \code{mask = FALSE})}
 
 \item{verbose}{\code{logical} if FALSE, suppress processing messages, Default: TRUE}
 }

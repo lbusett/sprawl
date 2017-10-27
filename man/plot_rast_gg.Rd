@@ -7,8 +7,8 @@
 plot_rast_gg(in_rast, rast_type = NULL, palette_name = NULL,
   direction = 1, leg_type = NULL, leg_labels = NULL, leg_colors = NULL,
   leg_breaks = NULL, leg_position = "right", maxpixels = 1e+05,
-  band_names = NULL, bands_to_plot = NULL, facet_rows = 2, xlims = NULL,
-  ylims = NULL, zlims = NULL, zlims_type = "vals",
+  band_names = NULL, bands_to_plot = NULL, facet_rows = 2,
+  extent = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
   basemap = NULL, zoomin = 0, borders_layer = NULL,
   borders_color = "grey15", borders_size = 0.2, borders_txt_field = NULL,
@@ -90,11 +90,12 @@ using facet_wrap, Default: NULL}
 \item{facet_rows}{\code{numeric}, number of rows used for plotting multiple bands,
 in faceted plots, Default: 2}
 
-\item{xlims}{\code{numeric(2)}, minimum and maximum x coordinates to be plotted.
-If NULL, the whole x-range is plotted, Default: NULL}
+\item{extent}{1.\code{numeric (4)} xmin, ymin. xmax. ymax of the desired area, \strong{in WGS84 lat/lon}
+\strong{coordinates} OR
+2. object of class \code{sprawl_ext} OR
+3. any object from which an extent can be retrieved using \code{sprawl::get_extent()}.
 
-\item{ylims}{\code{numeric(2)}, minimum and maximum y coordinates to be plotted.
-If NULL, the whole y-range is plotted, Default: NULL}
+If NULL, plotting extent is retrieved from \code{in_rast}, Default: NULL}
 
 \item{zlims}{\code{numeric array [2]} limits governing the range of
 values to be plotted (e.g., c(0.2,0.4)), Default: NULL}

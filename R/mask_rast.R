@@ -72,7 +72,7 @@ mask_rast <- function(in_rast,
                       crop         = FALSE,
                       buffer       = NULL,
                       out_type     = "rastobject",
-                      out_file = NULL,
+                      out_file     = NULL,
                       out_dtype    = NULL,
                       out_nodata   = NULL,
                       compress     = "None",
@@ -196,10 +196,10 @@ mask_rast <- function(in_rast,
       in_rast,
       maskobj,
       filename    = out_file,
-      # options     = paste0("COMPRESS=", compress)
-      overwrite   = TRUE
-      # datatype    = "INT2U",
-      # updatevalue = ifelse(is.null(out_nodata), NA, out_nodata)
+      options     = paste0("COMPRESS=", compress),
+      overwrite   = TRUE,
+      datatype  = dtype[["raster"]][1],
+      updatevalue = ifelse(is.null(out_nodata), NA, out_nodata)
     )
     dtype[["raster"]][1]
   } else {

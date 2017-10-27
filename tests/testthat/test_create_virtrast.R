@@ -30,7 +30,7 @@ test_that("create_virtrast works as expected on Raster Layers", {
   context("create_virtrast on Raster Stack with bands from different files") # #### #nolint
   library(sprawl.data)
   in_rast1   <- system.file("extdata/OLI_test", "oli_multi_1000_b1.tif",
-                           package = "sprawl.data")
+                            package = "sprawl.data")
   in_rast2   <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
                             package = "sprawl.data")
   in_rast <- raster::stack(in_rast1, in_rast2)

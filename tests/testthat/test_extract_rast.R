@@ -53,6 +53,8 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_equal(out$stats$avg, out2$stats$avg)
   out <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = FALSE)
   expect_is(out, "list")
+  out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
+                       small = F, join_geom = F)
   # Check that chunked and non-chunked processing yields the same results
   out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
                        selbands = c(1,2), small = F, join_geom = F)
@@ -121,6 +123,19 @@ testthat::test_that(
     expect_equal(mean(as.numeric(out_extract), na.rm = TRUE),
                  mean(outcustom$stats$myfun, na.rm = TRUE))
   })
+
+# no error if passing a stack built from different files ####
+testthat::test_that("no error if passing a stack built from different files", {
+  in_rast1 <- system.file("extdata/OLI_test", "oli_multi_1000_b1.tif",
+                          package = "sprawl.data")
+  in_rast2 <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
+                          package = "sprawl.data")
+  in_rast  <- raster::stack(in_rast1, in_rast2)
+  in_poly  <- get(load(system.file("extdata", "Lake.RData",
+                                   package = "sprawl.data")))
+  expect_warning(out <- extract_rast(in_rast, in_poly))
+  expect_is(out, "list")
+})
 
 # Extract data from categorical raster ####
 context("Extract data from categorical raster - on polygons")

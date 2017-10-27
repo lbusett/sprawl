@@ -140,7 +140,14 @@ get_extent.character <- function(object,
     obj_type <- try(get_vectype(object), silent = T)
   }
   if (class(obj_type) == "try-error") {
-    stop()
+    if (abort == TRUE) {
+      stop("get_extent -> `", call[[2]], "` is not a valid vector ",
+           "or raster `R` object or filename! Aborting!")
+    } else {
+      warning("get_extent -> `", call[[2]], "` is not a valid ",
+              "vector or raster `R` object or filename!")
+      return("none")
+    }
   }
 
 
@@ -164,7 +171,7 @@ get_extent.character <- function(object,
            "or raster `R` object or filename! Aborting!")
     } else {
       warning("get_extent -> `", call[[2]], "` is not a valid ",
-              "vector or raster `R` object or filename! ")
+              "vector or raster `R` object or filename!")
       return("none")
     }
   }
@@ -233,7 +240,7 @@ get_extent.sfc <- function(object,
 }
 
 #   ____________________________________________________________________________
-#   Method for "Spatial" object - use use raster::extent               ####
+#   Method for "Spatial" object - use raster::extent               ####
 #
 
 #' @rdname get_extent

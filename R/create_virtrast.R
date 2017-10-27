@@ -90,9 +90,9 @@ create_virtrast <- function(in_rast,
   }
 
   vrt_build <- suppressWarnings(try(system2(file.path(find_gdal(), "gdalbuildvrt"),
-          args = buildvrt_string,
-          stdout = NULL,
-          stderr = TRUE)))
+                                            args = buildvrt_string,
+                                            stdout = NULL,
+                                            stderr = TRUE)))
 
   if (!is.null(attr(vrt_build, "status"))) {
 
