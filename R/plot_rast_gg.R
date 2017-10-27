@@ -72,10 +72,13 @@
 #'   using facet_wrap, Default: NULL
 #' @param facet_rows `numeric`, number of rows used for plotting multiple bands,
 #'   in faceted plots, Default: 2
-#' @param xlims `numeric(2)`, minimum and maximum x coordinates to be plotted.
-#'   If NULL, the whole x-range is plotted, Default: NULL
-#' @param ylims `numeric(2)`, minimum and maximum y coordinates to be plotted.
-#'   If NULL, the whole y-range is plotted, Default: NULL
+#' @param extent
+#'   1.`numeric (4)` xmin, ymin. xmax. ymax of the desired area, **in WGS84 lat/lon**
+#'      **coordinates** OR
+#'   2. object of class `sprawl_ext` OR
+#'   3. any object from which an extent can be retrieved using `sprawl::get_extent()`.
+#'
+#'  If NULL, plotting extent is retrieved from `in_rast`, Default: NULL
 #' @param zlims `numeric array [2]` limits governing the range of
 #'  values to be plotted (e.g., c(0.2,0.4)), Default: NULL
 #' @param zlims_type `character ["vals" | "percs"]` type of zlims specified.
@@ -228,7 +231,7 @@ plot_rast_gg <- function(
   leg_breaks   = NULL, leg_position = "right",
   maxpixels    = 1e5,
   band_names   = NULL, bands_to_plot = NULL, facet_rows = 2,
-  xlims        = NULL, ylims = NULL,
+  extent       = NULL,
   zlims        = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
   basemap      = NULL, zoomin = 0,
@@ -243,6 +246,7 @@ plot_rast_gg <- function(
   verbose      = TRUE
 ) {
 
+  call <- match.call()
   geometry <- NULL
   #TODO find a way to avoid "require"
   #TODO Implement checks on input arguments (e.g., bands_to_plot, band_names)
@@ -424,20 +428,38 @@ plot_rast_gg <- function(
 
     }
   }
+
+
+  #   Set the plotting extent ---
   #   __________________________________________________________________________
-  #   If no geo limits passed, compute them from the input extent           ####
+  #   If no geo limits passed, compute them from the input raster           ####
+  #   otherwise try to use the provided extent
 
-  if (is.null(xlims)) {
-    xlims <- c(min(in_rast_fort$x), max(in_rast_fort$x))
+  if (is.null(extent)) {
+    plot_ext <- get_extent(in_rast)
+  } else {
+    if (inherits(extent, "numeric") & length(extent) == 4) {
+      browser()
+      names(extent) <- c("xmin", "ymin", "xmax", "ymax")
+      plot_ext <- methods::new("sprawlext",
+                               extent     = extent,
+                               proj4string = get_proj4string(4326))
+      plot_ext <-  reproj_extent(plot_ext, get_proj4string(in_rast))
+    } else {
+
+      plot_ext <- get_extent(extent, abort = FALSE)
+      if (inherits(plot_ext, "sprawlext")) {
+        plot_ext <-  reproj_extent(plot_ext, get_proj4string(in_rast))
+      } else {
+        message("plot_rast_gg --> Impossible to retriebve an extent from `",
+                call$extent,
+                "`\n Resetting the extent to that of `", call[[2]], "`")
+        plot_ext <- get_extent(in_rast)
+      }
+    }
   }
-
-  if (is.null(ylims)) {
-    ylims <- c(min(in_rast_fort$y), max(in_rast_fort$y))
-  }
-
-
-
-
+  xlims <- plot_ext@extent[c(1,3)]
+  ylims <- plot_ext@extent[c(2,4)]
   #   __________________________________________________________________________
   #   If palette is categorical and leg_labels was passed, set the levels   ####
   #   of the categorical variables using leg_labels. Otherwis, the numeric
@@ -603,7 +625,7 @@ plot_rast_gg <- function(
 
       borders_layer <- sf::st_transform(borders_layer,
                                         get_proj4string(in_rast)) %>%
-        crop_vect(in_rast)
+        crop_vect(plot_ext)
       plot <- plot + geom_sf(data  = borders_layer,
                              fill  = "transparent",
                              color = borders_color,

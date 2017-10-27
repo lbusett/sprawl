@@ -61,10 +61,13 @@
 #' @param basemap `character` If not NULL and valid, the selected basemap is
 #'   used as background. For a list of valid basemaps, see `rosm::osm.types()`,
 #'   Default: NULL (Currently not yet supported!)
-#' @param xlims `numeric(2)`, minimum and maximum x coordinates to be plotted.
-#'   If NULL, the whole x-range is plotted, Default: NULL
-#' @param ylims `numeric(2)`, minimum and maximum y coordinates to be plotted.
-#'   If NULL, the whole y-range is plotted, Default: NULL
+#' @param extent
+#'   1.`numeric (4)` xmin, ymin. xmax. ymax of the desired area, **in WGS84 lat/lon**
+#'      **coordinates** OR
+#'   2. object of class `sprawl_ext` OR
+#'   3. any object from which an extent can be retrieved using `sprawl::get_extent()`.
+#'
+#'  If NULL, plotting extent is retrieved from `in_rast`, Default: NULL
 #' @param zoomin `numeric`, Adjustment factor for basemap zoom. Negative values
 #'   lead to less detailed basemap, but larger text. Default: 0 (Currently not
 #'   yet supported!)
@@ -215,7 +218,7 @@ plot_vect <- function(
   borders_layer  = NULL, borders_color = "grey15", borders_size = 0.2,
   borders_txt_field = NULL, borders_txt_size = 2.5, borders_txt_color = "grey15", #nolint
   basemap        = NULL, zoomin = 0,
-  xlims          = NULL, ylims = NULL,
+  extent         = NULL,
   zlims          = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
   scalebar       = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
@@ -340,15 +343,37 @@ plot_vect <- function(
 
   #   __________________________________________________________________________
   #   set x/y limits                                                        ####
+  #   Set the plotting extent ---
+  #   __________________________________________________________________________
+  #   If no geo limits passed, compute them from the input raster           ####
+  #   otherwise try to use the provided extent
 
-  if (is.null(xlims)) {
-    xlims <- get_extent(in_vect)@extent[c(1,3)]
+  if (is.null(extent)) {
+    plot_ext <- get_extent(in_vect)
+  } else {
+    if (inherits(extent, "numeric") & length(extent) == 4) {
+      browser()
+      names(extent) <- c("xmin", "ymin", "xmax", "ymax")
+      plot_ext <- methods::new("sprawlext",
+                               extent     = extent,
+                               proj4string = get_proj4string(4326))
+      plot_ext <-  reproj_extent(plot_ext, get_proj4string(in_vect))
+    } else {
+
+      plot_ext <- get_extent(extent, abort = FALSE)
+      if (inherits(plot_ext, "sprawlext")) {
+        plot_ext <-  reproj_extent(plot_ext, get_proj4string(in_vect))
+      } else {
+        message("plot_rast_gg --> Impossible to retriebve an extent from `",
+                call$extent,
+                "`\n Resetting the extent to that of `", call[[2]], "`")
+        plot_ext <- get_extent(in_vect)
+
+      }
+    }
   }
-
-  if (is.null(ylims)) {
-    ylims <- get_extent(in_vect)@extent[c(2,4)]
-  }
-
+  xlims <- plot_ext@extent[c(1,3)]
+  ylims <- plot_ext@extent[c(2,4)]
   #   _________________________________________________________________________
   #   if additional NA value passed, convert corresponding values of
   #   fill_var column to NA ####
