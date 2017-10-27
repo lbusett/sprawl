@@ -4,29 +4,40 @@
 \alias{create_virtrast}
 \title{create a GDAL vrt file starting from a \code{Raster} object}
 \usage{
-create_virtrast(object, out_vrt_file, out_extent = NULL, verbose = TRUE)
+create_virtrast(in_rast, out_vrt_file = NULL, out_extent = NULL,
+  verbose = TRUE)
 }
 \arguments{
-\item{object}{PARAM_DESCRIPTION}
+\item{in_rast}{a \code{*Raster} object or the path to a valid raster file}
 
-\item{out_vrt_file}{PARAM_DESCRIPTION}
+\item{out_vrt_file}{\code{character} path were the vrt file must be saved. If NULL,
+the file is saved in "R" temporarary folder , Default: NULL}
 
-\item{out_extent}{PARAM_DESCRIPTION, Default: NULL}
+\item{out_extent}{\code{numeric (4)} coordinates of a bounding box (xmin, ymin,
+xmax, ymax). If provided, the created vrt file will correspond
+to a "cropped" version of \code{in_rast}. If NULL, no cropping will be done,
+Default: NULL}
 
-\item{verbose}{PARAM_DESCRIPTION, Default: NULL}
+\item{verbose}{If FALSE, processing messages are suppressed, Default: TRUE}
 }
 \value{
-OUTPUT_DESCRIPTION
+\code{character} path to the created vrt file
 }
 \description{
-create a GDAL vrt file starting from a \code{Raster} object
-}
-\details{
-DETAILS
+creates a GDAL vrt file starting from a \code{Raster} object or
+file name.
 }
 \examples{
+library(sprawl.data)
+in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+                     package = "sprawl.data")
+in_rast <- read_rast(in_file, bands = 5)
+vrt     <- create_virtrast(in_rast)
+vrt
 
- #EXAMPLE1
+# reading in the vrt gives a raster object
+rast_from_vrt <- read_rast(vrt)
+rast_from_vrt
 
 }
 \author{
