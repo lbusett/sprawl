@@ -69,11 +69,29 @@ write_shape <- function(in_vect,
 
   if (tools::file_ext(out_file) != "shp") {
     warning("write_shape --> Output file extension is not \".shp\". It will be",
-            "changed automatically")
+            " changed automatically")
     out_file <- paste0(tools::file_path_sans_ext(out_file), ".shp")
   }
 
   in_vect <- cast_vect(in_vect, "sfobject")
+
+  # Automatically remove whitespaces from column names (similar to dot
+  # replacement in st_write)
+
+  if (length(wherespace <- grep(" ", names(in_vect)) > 0)) {
+    warning("write_shape --> White spaces in column names will be replaced by",
+            "\"_\"!")
+    names(in_vect) <- stringr::str_replace_all(names(in_vect), " ", "_")
+  }
+
+  # Automatically shorten column names before attempting to save
+
+  if (any(nchar(names(in_vect)) > 10)) {
+    warning("write_shape --> Column names are too long for saving to .shp",
+            "\n They will be automatically abbreviated!")
+  names(in_vect) <- stringr::str_replace_all(names(in_vect), " ", "_") %>%
+                                    abbreviate(10)
+  }
 
   sf::write_sf(obj           = in_vect,
                dsn           = out_file,
