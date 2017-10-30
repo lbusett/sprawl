@@ -10,7 +10,7 @@ plot_rasthist(in_rast, variable = "freq", type = "hist", verbose = TRUE)
 \item{in_rast}{a \code{Raster} object, or a file path corresponding to a valid
 raster file}
 
-\item{variable}{\code{character} \link{"count" | "freq"}  varaible to be plotted,
+\item{variable}{\code{character ["count" | "freq"]}  varaible to be plotted,
 can be the countof pixels or their frequency, Default: 'freq'}
 
 \item{type}{\code{character ["hist" or "line"]}, plotting style. Usea "bar" or a

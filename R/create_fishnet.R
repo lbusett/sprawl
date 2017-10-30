@@ -77,7 +77,6 @@ create_fishnet <- function(in_rast,
                            crop_layer   = NULL,
                            verbose      = TRUE) {
 
-  #TODO modify the out_shape/to_file structure. Only use "out_filename"
 
   call <- match.call()
   if (verbose) message("create_fishnet --> Creating Fishnet over ",

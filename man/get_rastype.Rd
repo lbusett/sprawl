@@ -4,18 +4,18 @@
 \alias{get_rastype}
 \title{Check in the input is a \code{Raster} object or raster file}
 \usage{
-get_rastype(in_object, abort = TRUE)
+get_rastype(in_rast, abort = TRUE)
 }
 \arguments{
-\item{in_object}{\code{R} object or path to a file}
+\item{in_rast}{name of an \code{R} object, or \code{character} giving the full path
+to a spatial file}
 
-\item{abort}{If TRUE, and \code{in_object} is neither a raster object or
+\item{abort}{If TRUE, and \code{in_rast} is neither a raster object or
 filename, send an error message and abort, Default: TRUE}
 }
 \value{
-\code{character} equal to "rastfile" (if \code{in_object} is a raster file),
-\code{rastobject} (if \code{in_object} is a \code{R} raster object) or "none" if it is
-neither (unless \code{abort} == TRUE)
+\code{character} equal to "rastfile" (if \code{in_rast} is a raster file),
+\code{rastobject} (if \code{in_rast} is a \code{R} raster object) or \code{NA`` if it is neither (unless}abort` == TRUE)
 }
 \description{
 Check if a \code{R} object or a filename correspond to a valid \code{Raster}
@@ -23,12 +23,15 @@ object, to a raster file or none of the above. Useful to detect which kind
 of input is passed to a function and abort / do something in the case of
 "wrong" input.
 }
-\details{
-DETAILS
-}
 \examples{
 
-#EXAMPLE1
+in_rast <- system.file("extdata/MODIS_test", "EVIts_test.tif",
+                        package = "sprawl.data")
+get_rastype(in_rast)
+
+# input is a raster object
+obj <- read_rast(in_rast)
+get_spatype(obj)
 
 }
 \author{

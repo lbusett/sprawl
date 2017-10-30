@@ -8,9 +8,9 @@
 #'  vector or raster layer
 #' @param abort `logical` if TRUE the function aborts if `object` is not
 #' recognized as an R spatial file or valid vector or raster file; if FALSE,
-#' a warning is shown and NA is returned.
+#' a warning is shown and `NA`` is returned.
 #' @return character (\"*spobject*\" | \"*sfobject*\" | \"*rastobject* | \"
-#' *vectfile*\" | *rastfile* \" | *sprawlext*), or "NA" if the input does not
+#' *vectfile*\" | *rastfile* \" | *sprawlext*), or `NA` if the input does not
 #' belong to any spatial category and abort == FALSE
 #' @name get_spatype
 #' @rdname get_spatype
@@ -25,7 +25,7 @@
 #'                         package = "sprawl.data")
 #' get_spatype(in_rast)
 #'
-#' # input is a raster file
+#' # input is a raster object
 #' obj <- read_rast(in_rast)
 #' get_spatype(in_rast)
 #'

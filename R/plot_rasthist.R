@@ -3,7 +3,7 @@
 #'   by band
 #' @param in_rast a `Raster` object, or a file path corresponding to a valid
 #'   raster file
-#' @param variable `character` ["count" | "freq"]  varaible to be plotted,
+#' @param variable `character ["count" | "freq"]`  varaible to be plotted,
 #'   can be the countof pixels or their frequency, Default: 'freq'
 #' @param type `character ["hist" or "line"]`, plotting style. Usea "bar" or a
 #'   "line" plot, Default: 'line'

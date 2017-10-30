@@ -1,10 +1,38 @@
 #' @title check the "spatial type" of an object or file
-#' @rdname get_spatype
+#' @description Check if a `R` object or a filename correspond to a valid vector
+#'   object, to a vector file or none of the above. Useful to detect which kind
+#'   of input is passed to a function and abort / do something in the case of
+#'   "wrong" input.
+#' @param in_vect name of an `R` object, or `character` giving the full path
+#'  to a vector file
+#' @param abort If TRUE, and `in_vect` is neither a spatial object or
+#'  filename, send an error message and abort, Default: TRUE
+#' @return `character` equal to "vectfile" (if `in_vect` is a raster file),
+#'   `spobject` (if `in_vect` is of class `spatial`), `sfobject` (if `in_vect`
+#'   is of class `sf`), or `NA` if it is neither (unless `abort` == TRUE)
+#' @rdname get_vectype
 #' @export
+#' @examples
+#' # input is a shapefile
+#' in_vect <- system.file("extdata/shapes","lc_polys.shp",
+#'            package = "sprawl.data")
+#' get_vectype(in_vect)
+#'
+#' # input is a `sp` object
+#' obj <- read_vect(in_vect, as_sp = TRUE)
+#' get_vectype(obj)
+#'
+#' # input is a `sf` object
+#' obj <- read_vect(in_vect)
+#' get_vectype(obj)
+#'
+#' # input is a `sprawlext` object
+#' obj <- get_extent(in_vect)
+#' get_vectype(obj)
 #' @importFrom gdalUtils ogrinfo
 #' @importFrom checkmate assert_file_exists
 
-get_vectype  <- function(in_object, abort = TRUE) {
+get_vectype  <- function(in_vect, abort = TRUE) {
   UseMethod("get_vectype")
 }
 
@@ -14,8 +42,8 @@ get_vectype  <- function(in_object, abort = TRUE) {
 
 #' @method get_vectype default
 #' @export
-get_vectype.default <- function(in_object, abort = TRUE) {
-  stop_message <- paste0("\"", deparse(substitute(in_object)),
+get_vectype.default <- function(in_vect, abort = TRUE) {
+  stop_message <- paste0("\"", deparse(substitute(in_vect)),
                          "\" is not a recognised vector object or filename.")
   if (abort) {
     stop(stop_message)
@@ -32,10 +60,10 @@ get_vectype.default <- function(in_object, abort = TRUE) {
 #' @importFrom gdalUtils ogrinfo
 #' @importFrom checkmate assert_file_exists
 #' @export
-get_vectype.character <- function(in_object, abort = TRUE) {
-  checkmate::assert_file_exists(in_object, access = "r")
+get_vectype.character <- function(in_vect, abort = TRUE) {
+  checkmate::assert_file_exists(in_vect, access = "r")
   vecttry <- suppressWarnings(
-    try(gdalUtils::ogrinfo(in_object, al = TRUE,
+    try(gdalUtils::ogrinfo(in_vect, al = TRUE,
                            so = TRUE,
                            verbose = FALSE,
                            q = TRUE),
@@ -44,7 +72,7 @@ get_vectype.character <- function(in_object, abort = TRUE) {
   if (is.null(attr(vecttry, "status"))) {
     return("vectfile")
   } else {
-    stop_message <- paste0("\"", deparse(substitute(in_object)),
+    stop_message <- paste0("\"", deparse(substitute(in_vect)),
                            "\" is not a recognised vector filename.")
     if (abort) {
       stop(stop_message)
@@ -60,7 +88,7 @@ get_vectype.character <- function(in_object, abort = TRUE) {
 
 #' @method get_vectype sf
 #' @export
-get_vectype.sf <- function(in_object, abort = TRUE) {
+get_vectype.sf <- function(in_vect, abort = TRUE) {
   "sfobject"
 }
 
@@ -69,7 +97,7 @@ get_vectype.sf <- function(in_object, abort = TRUE) {
 
 #' @method get_vectype sfc
 #' @export
-get_vectype.sfc  <- function(in_object, abort = TRUE) {
+get_vectype.sfc  <- function(in_vect, abort = TRUE) {
   "sfobject"
 }
 
@@ -79,7 +107,7 @@ get_vectype.sfc  <- function(in_object, abort = TRUE) {
 
 #' @method get_vectype Spatial
 #' @export
-get_vectype.Spatial <- function(in_object, abort = TRUE) {
+get_vectype.Spatial <- function(in_vect, abort = TRUE) {
   "spobject"
 }
 
@@ -88,6 +116,6 @@ get_vectype.Spatial <- function(in_object, abort = TRUE) {
 
 #' @method get_vectype Spatial
 #' @export
-get_vectype.sprawlext <- function(in_object, abort = TRUE) {
+get_vectype.sprawlext <- function(in_vect, abort = TRUE) {
   "sprawlext"
 }

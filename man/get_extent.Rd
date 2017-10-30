@@ -14,51 +14,53 @@
 \alias{get_extent.sprawlext}
 \title{return the extent of a spatial object or file (with projection)}
 \usage{
-get_extent(object, proj4string = NULL, abort = FALSE)
+get_extent(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{default}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{default}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{sprawlext}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{sprawlext}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Extent}(object, proj4string, abort = FALSE)
+\method{get_extent}{Extent}(in_object, proj4string, abort = FALSE)
 
-\method{get_extent}{matrix}(object, proj4string, abort = FALSE)
+\method{get_extent}{matrix}(in_object, proj4string, abort = FALSE)
 
-\method{get_extent}{character}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{character}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Raster}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{Raster}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{sf}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{sf}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{sfc}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{sfc}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Spatial}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{Spatial}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Spatial}(object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{Spatial}(in_object, proj4string = NULL, abort = FALSE)
 }
 \arguments{
-\item{object}{\code{character} corresponding to the name of a R object, or a
+\item{in_object}{\code{character} corresponding to the name of a R object, or a
 filename (full path)}
 
 \item{proj4string}{(optional) \code{character} proj4string representing the projection of
-the input extent. It is needed only if 'object' does not include a
+the input extent. It is needed only if \code{in_object} does not include a
 projection (like \code{\link{extent}} or \code{\link{bbox}}).}
 
-\item{abort}{\code{logical} if TRUE, the function aborts in case no proj4string or
-invalid proj4string is found, Default: FALSE}
+\item{abort}{\code{logical} if TRUE, the function aborts in case valid a extent can
+not be retrieved, otherwise, it issues a Warning and returns \code{NA},
+Default: FALSE}
 }
 \value{
 object of class \code{sprawlext}
 }
 \description{
 helper function used to retrieve the extent of a spatial object
-or file with the associated proj4string
+or file, and the associated proj4string
 }
 \details{
 return an object of class \code{sprawlext} with two slots:
 \itemize{
 \item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
 \item $proj4string: \code{character} proj4string of the object
+(if an extent can not be retrieved fron \code{in_object})
 }
 }
 \examples{

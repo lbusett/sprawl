@@ -10,6 +10,7 @@
 #'   Default: NULL
 #' @param verbose If FALSE, processing messages are suppressed, Default: TRUE
 #' @return `character` path to the created vrt file
+#' @export
 #' @examples
 #' library(sprawl.data)
 #' in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",

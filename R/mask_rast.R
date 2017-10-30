@@ -124,7 +124,7 @@ mask_rast <- function(in_rast,
   mask_proj <- get_proj4string(mask)
 
   #   __________________________________________________________________________
-  #   set the output folder (in tempdir if out_file == NULL)            ####
+  #   set the output folder (in tempdir if out_file == NULL)                ####
   if (is.null(out_file)) {
     # outfold      <- file.path(tempdir(), paste0("sprawlmask_",sample(1:1000))[1]) #nolint
     # out_file <- file.path(outfold, "sprawlmask.tif")

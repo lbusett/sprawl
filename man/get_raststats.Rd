@@ -41,8 +41,8 @@ sd, and eventually quantiles) for bands of a raster object
  in_rast <- system.file("extdata/OLI_test", "oli_multi_1000.tif",
   package = "sprawl.data")
  get_raststats(in_rast)
- get_raststats(in_rast, quantiles = T)
- get_raststats(in_rast, hist = T, quantiles = T)
+ get_raststats(in_rast, quantiles = TRUE)
+ get_raststats(in_rast, hist = TRUE, quantiles = TRUE)
 
  plot_rasthist(in_rast, type = "line") + xlim(-200,30000) + theme_bw()
 

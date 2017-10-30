@@ -14,6 +14,8 @@ er_polygons(in_vect_crop, in_vect, in_rast, na.value, seldates, selbands,
 
 \item{in_rast}{PARAM_DESCRIPTION}
 
+\item{na.value}{PARAM_DESCRIPTION}
+
 \item{seldates}{PARAM_DESCRIPTION}
 
 \item{selbands}{PARAM_DESCRIPTION}
@@ -28,8 +30,6 @@ er_polygons(in_vect_crop, in_vect, in_rast, na.value, seldates, selbands,
 
 \item{verb_foreach}{\code{logical} if TRUE, verbose output is sent out from within the foreach cycle,
 Default: FALSE}
-
-\item{na.vlaue}{PARAM_DESCRIPTION}
 }
 \value{
 OUTPUT_DESCRIPTION

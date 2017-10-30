@@ -5,6 +5,7 @@ test_that("select_extent works as expected", {
   skip_on_travis()
   if (interactive()) {
     extent    <- select_extent()
+    expect_is(extent, "sprawlext")
   }
 })
 

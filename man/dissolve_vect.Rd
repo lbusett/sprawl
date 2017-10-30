@@ -58,6 +58,7 @@ CURRENTLTY ALL COLUMNS ARE COMPUTED SIMPLY aS THE SUM !!!!
 \examples{
 
  library(sprawl.data)
+ library(maps)
 
  in_vect    <- get(load(system.file("extdata/shapes","poly_lomb.RData",
     package = "sprawl.data")))

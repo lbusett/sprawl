@@ -23,6 +23,7 @@
 #' @importFrom gdalUtils gdal_setInstallation
 #' @importFrom magrittr "%>%"
 find_gdal <- function() {
+  . <- NULL
   gdalpath <- options()$sprawl_gdalpath
   if (is.null(gdalpath)) {
     gdalpath <- dirname(Sys.which("gdalinfo"))

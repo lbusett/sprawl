@@ -30,8 +30,8 @@ testthat::test_that("Test retrieval of extent",{
 
   # warning/abort on wrong proj4string ----
   wrong_file <- "/tttt/wrong.tif"
-  expect_error(get_extent(wrong_file))
-  # expect_warning(get_extent(wrong_file, abort = FALSE))
+  expect_error(get_extent(wrong_file, abort = TRUE))
+  expect_warning(get_extent(wrong_file, abort = FALSE))
 
 
   # creation of sprawlext from extent / bbox and projection ---

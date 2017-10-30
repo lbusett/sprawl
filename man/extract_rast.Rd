@@ -110,8 +110,8 @@ for pixels corresponding to the features of a vector (Polygon, Point or Line)
 }
 \examples{
 
-See [here](https://lbusett.github.io/sprawl/articles/articles/extract_rast_example.html)
-for a worked example !
+# See [here](https://lbusett.github.io/sprawl/articles/articles/extract_rast_example.html)
+# for a worked example !
 
 library(sprawl)
 library(sprawl.data)
