@@ -29,6 +29,10 @@
 #'   to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 #'   "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
 #'   If NULL, the data type is retrieved from the input, Default: NULL
+#' @param out_nodata `numeric` value to be used to fill (eventual) NoData areas
+#'   outside the cropping extent (or the cropping polygon if `mask = TRUE`). If
+#'   NULL, it is set automatically by `raster::writeRaster` depending on data type
+#'   of the output raster.
 #' @param compress `character` compression option to be used to saved the cropped
 #'   raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"
 #' @param parallel `logical` if TRUE, use ClusterR to implement multicore
@@ -71,6 +75,7 @@ crop_rast <- function(rast_object,
                       out_type     = "rastobject",
                       out_file     = NULL,
                       out_dtype    = NULL,
+                      out_nodata   = NULL,
                       compress     = "None",
                       parallel     = FALSE,
                       cores        = NULL,
@@ -219,6 +224,9 @@ crop_rast <- function(rast_object,
     translate_string <- paste("-of GTiff",
                               "-co", paste0("COMPRESS=", compress),
                               "-ot", dtype["gdal"][1,],
+                              ifelse(!is.null(out_nodata),
+                                     paste0("-a_nodata ", out_nodata),
+                                     ""),
                               temp_vrt,
                               out_file)
 
@@ -236,16 +244,19 @@ crop_rast <- function(rast_object,
                                          verbose = FALSE)
         }
 
-        tempfile <- tempfile(fileext = ".tif")
+        tempfile <- paste0(out_file, "_temp.tif")
         file.rename(out_file, tempfile)
+
         out_file <- mask_rast(tempfile,
                               ext_object,
-                              out_file  = out_file,
-                              out_type  = "rastfile",
-                              verbose   = FALSE,
-                              overwrite = TRUE,
-                              parallel  = parallel,
-                              compress  = compress)
+                              out_file   = out_file,
+                              out_type   = "rastfile",
+                              out_nodata = out_nodata,
+                              verbose    = FALSE,
+                              overwrite  = TRUE,
+                              parallel   = parallel,
+                              compress   = compress)
+        file.remove(tempfile)
       }
     }
     if (out_type == "rastobject") {

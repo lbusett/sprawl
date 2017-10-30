@@ -39,7 +39,7 @@
 #'
 #' @return object of class `raster` (if out_type == `rastobj`), or `character`
 #'   string corresponding to the filename of the created raster (if out_type ==
-#'   `filename`)
+#'   `rastfile`)
 #' @examples
 #'
 #' library(sprawl)
