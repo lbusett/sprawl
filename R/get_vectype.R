@@ -114,7 +114,7 @@ get_vectype.Spatial <- function(in_vect, abort = TRUE) {
 #   ____________________________________________________________________________
 #   Method for "sprawlext"                                                 ####
 
-#' @method get_vectype Spatial
+#' @method get_vectype sprawlext
 #' @export
 get_vectype.sprawlext <- function(in_vect, abort = TRUE) {
   "sprawlext"

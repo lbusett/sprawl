@@ -47,7 +47,7 @@
 #' library(raster)
 #' in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
 #'                                   package = "sprawl.data"),
-#'                        stringsAsFactors = T)
+#'                        stringsAsFactors = TRUE)
 #' in_rast  <- raster::stack(system.file("extdata/MODIS_test", "EVIts_test.tif",
 #'                        package = "sprawl.data"))[[1]]
 #' in_polys <- sf::st_transform(in_polys, proj4string(in_rast))

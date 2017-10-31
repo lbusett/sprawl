@@ -50,13 +50,11 @@ plot_rasthist <- function(in_rast,
       aes_string(x = "value", y = ifelse(variable == "count", "count", "freq")),
       width = (diff(hist_data$value))[1]) +
       facet_wrap(~band)  +
-      ggtitle("Frequency Histogram") +
-      theme(strip.text = element_text(info$bnames))
+      ggtitle("Frequency Histogram")
   } else {
     plot <- plot + ggplot2::geom_line(
       aes_string(x = "value", y = ifelse(variable == "count", "count", "freq"))) +
       facet_wrap(~band) +
-      theme(strip.text = element_text(info$bnames)) +
       ggtitle("Frequency Histogram")
   }
 

@@ -248,7 +248,7 @@ DETAILS
  plot_vect(in_vect, fill_var = "NAME_2")
 
  # change the palette, add a scalebar and remove the grid
- plot_vect(in_vect, fill_var = "NAME_2",show_axis = F, palette_name = "Set3",
+ plot_vect(in_vect, fill_var = "NAME_2",show_axis = FALSE, palette_name = "Set3",
            scalebar = TRUE, grid = FALSE)
 
 
@@ -256,7 +256,7 @@ DETAILS
  # and a diverging palette. also add a "borders" layer with a different
  #plot color
  plot_vect(in_vect, fill_var = "population", facet_var = "year",
-           palette = "RdYlBu", scalebar = T, scalebar_dist = 50,
+           palette = "RdYlBu", scalebar = TRUE, scalebar_dist = 50,
            grid = FALSE, zlims = c(5,20), outliers_colors = c("yellow", "green"),
            borders_layer = get_boundaries("ITA", level = 2),
            borders_color = "red", borders_txt_field = "NAME_2")

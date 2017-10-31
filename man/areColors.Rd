@@ -24,4 +24,5 @@ areColors(c("red", "fdfd"))
 }
 \author{
 Josh O'Brien - https://stackoverflow.com/a/13290832/6871135
+importFrom grDevices col2rgb
 }

@@ -133,7 +133,8 @@ er_polygons <- function(in_vect_crop,
 
   # Setup the processing cluste using `sprawl_initcluster`
 
-  cl <- sprawl_initcluster(in_rast)
+  cl <- sprawl_initcluster(in_rast,
+                           ncores = er_opts$ncores)
   cl_opts <- cl[[2]]
   if (er_opts$verbose) {
     message("extract_rast --> Extracting data from ", n_selbands,

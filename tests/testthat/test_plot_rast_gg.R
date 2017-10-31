@@ -60,8 +60,6 @@ test_that("plot_rast_gg works as expected", {
     set_rastlabels(class_names = letters[1:20])
 
 
-  expect_error(p <- plot_rast_gg(in_rast, scalebar_dist = 1,
-                                 palette_name = "manual"))
   p <- plot_rast_gg(in_rast, scalebar_dist = 1, palette_name = "manual",
                     leg_colors = c("red"))
   expect_is(p, "gg")

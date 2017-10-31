@@ -145,7 +145,7 @@
 #'  an assignment operator (e.g., `plot <- plot_rast_gg(in_rast))`, the plot is
 #'  saved to the specified variable. Otherwise, it is plotted immediately.
 #' @examples
-#'
+#' library(ggspatial)
 #' #single band plot
 #'  in_rast <- read_rast(system.file("extdata/OLI_test",
 #'   "oli_multi_1000_b2.tif", package = "sprawl.data"))
@@ -157,7 +157,7 @@
 #'  #Change basemap and transparency
 #'  plot_rast_gg(in_rast, basemap = "stamenbw",
 #'                   palette_name = "RdYlBu",
-#'                   show_axis = T,
+#'                   show_axis = TRUE,
 #'                   na.value = 0, na.color = "transparent",
 #'                   transparency = 0.2,
 #'                   title = "OLI - 15/06/2017",
@@ -509,7 +509,7 @@ plot_rast_gg <- function(
                 alpha = 1 - transparency, na.rm = TRUE ,
                 hjust = 1, vjust = 1 )
   if (rastinfo$nbands > 1) {
-    plot <- plot + facet_wrap(~band, nrow = facet_rows, drop = T)
+    plot <- plot + facet_wrap(~band, nrow = facet_rows, drop = TRUE)
   }
 
   # Check if the raster has an attribute table. If so, use the class names

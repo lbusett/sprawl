@@ -22,6 +22,7 @@
 #' @examples
 #'
 #'   library(raster)
+#'   library(dplyr)
 #'   in_rast <- raster::raster(ncol = 5, nrow = 5) %>%
 #'     raster::init("row")
 #'   levels(in_rast)[[1]]

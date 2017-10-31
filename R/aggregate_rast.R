@@ -27,7 +27,7 @@
 #'                                      overwrite = TRUE)
 #'  test <- aggregate_rast(in_rast,
 #'                         in_obj_zones,
-#'                         FUN     = mean)
+#'                         FUN = mean)
 #' @rdname aggregate_rast
 #' @export
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
@@ -132,7 +132,7 @@ aggregate_rast <- function(in_val_rast,
     rastout <- suppressWarnings(try(system2(file.path(find_gdal(),"gdal_rasterize"),
                                             args = rasterize_string,
                                             stdout = NULL, stderr = TRUE),
-                                    silent = T))
+                                    silent = TRUE))
 
     if (!is.null(attr(rastout, "status"))) {
 

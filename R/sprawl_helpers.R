@@ -14,10 +14,10 @@
 #' @rdname areColors
 #' @export
 #' @author Josh O'Brien - https://stackoverflow.com/a/13290832/6871135
-#'
+#' importFrom grDevices col2rgb
 areColors <- function(x) {
   sapply(x, function(X) {
-    tryCatch(is.matrix(col2rgb(X)),
+    tryCatch(is.matrix(grDevices::col2rgb(X)),
              error = function(e) FALSE)
   })
 }

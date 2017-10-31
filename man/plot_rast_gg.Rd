@@ -216,7 +216,7 @@ See the description of the arguments for details on their use
 }
 }
 \examples{
-
+library(ggspatial)
 #single band plot
  in_rast <- read_rast(system.file("extdata/OLI_test",
   "oli_multi_1000_b2.tif", package = "sprawl.data"))
@@ -228,7 +228,7 @@ See the description of the arguments for details on their use
  #Change basemap and transparency
  plot_rast_gg(in_rast, basemap = "stamenbw",
                   palette_name = "RdYlBu",
-                  show_axis = T,
+                  show_axis = TRUE,
                   na.value = 0, na.color = "transparent",
                   transparency = 0.2,
                   title = "OLI - 15/06/2017",

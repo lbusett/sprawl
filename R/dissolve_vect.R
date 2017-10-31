@@ -118,7 +118,7 @@ dissolve_vect <- function(in_vect,
   out_object_num <- in_vect %>%
     sf::st_set_geometry(NULL) %>%
     dplyr::group_by_(dissolve_var) %>%
-    dplyr::summarize_if(is.numeric, sum, na.rm = T)
+    dplyr::summarize_if(is.numeric, sum, na.rm = TRUE)
 
   if (length(out_object_num) != 0 ) {
     out_object <- dplyr::left_join(out_object_fact,

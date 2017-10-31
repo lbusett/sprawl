@@ -42,8 +42,8 @@ get_projunits <- function(proj4string) {
   #   ________________________________________________________________________
   #   Find projection type                                                ####
   parse_proj <- stringr::str_split(proj4string@projargs, "\\+",
-                                   simplify = T) %>%
-    stringr::str_split(pattern = "proj=", simplify = T)
+                                   simplify = TRUE) %>%
+    stringr::str_split(pattern = "proj=", simplify = TRUE)
 
   proj_row <- which(parse_proj[,2] != "")
   if (length(proj_row) == 1) {
@@ -56,8 +56,8 @@ get_projunits <- function(proj4string) {
     #   if ! latlong proj_type, findunits                                 ####
     } else {
       parse_units <- stringr::str_split(proj4string@projargs, "\\+",
-                                        simplify = T) %>%
-        stringr::str_split(pattern = "units=", simplify = T)
+                                        simplify = TRUE) %>%
+        stringr::str_split(pattern = "units=", simplify = TRUE)
       if (dim(parse_units)[2] != 1 ) {
         units_row <- which(parse_units[,2] != "")
         if (length(units_row) == 1) {

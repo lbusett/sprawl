@@ -54,6 +54,7 @@
 #' @examples
 #'
 #'  library(sprawl.data)
+#'  library(ggplot2)
 #'  # reproject a raster based on an output proj4string
 #'  in_file <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
 #'                          package = "sprawl.data")
@@ -67,15 +68,15 @@
 #'  out_rep <- reproj_rast(in_rast, my_vect)
 #'  plot_rast_gg(out_rep, palette_name = "Greys", scalebar = FALSE,
 #'   direction = -1) +
-#'   geom_sf(data = my_vect, fill = "transparent", color = "red")
+#'   ggplot2::geom_sf(data = my_vect, fill = "transparent", color = "red")
 #'
 #'  # reproject on projection of a different spatial object/file and crop on
 #'  # its extent
 #'
 #'  out_cropped <- reproj_rast(in_rast, my_vect, crop = TRUE)
-#'  plot_rast_gg(out_cropped, scalebar = F,  palette_name = "Greys",
+#'  plot_rast_gg(out_cropped, scalebar = FALSE,  palette_name = "Greys",
 #'   direction = -1) +
-#'   geom_sf(data = my_vect, fill = "transparent", color = "red")
+#'   ggplot2::geom_sf(data = my_vect, fill = "transparent", color = "red")
 #'
 #' @rdname reproj_rast
 #' @export

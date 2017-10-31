@@ -67,7 +67,7 @@ get_raststats <- function(in_rast,
     ifelse(get_hists, "-hist", "")
   )
 
-  stats <- system2("gdalinfo" , args = gdalinfo_str, stdout = T)
+  stats <- system2("gdalinfo" , args = gdalinfo_str, stdout = TRUE)
   if (!is.null(attr(stats, "status"))) {
     stop("get_raststats --> Extraction of statistics failed. Aborting! \n\n",
          "The call was: \n",

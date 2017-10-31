@@ -53,7 +53,7 @@ DETAILS
                                      overwrite = TRUE)
  test <- aggregate_rast(in_rast,
                         in_obj_zones,
-                        FUN     = mean)
+                        FUN = mean)
 }
 \author{
 Lorenzo Busetto, PhD (2017) email: \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}
