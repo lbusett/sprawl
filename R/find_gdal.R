@@ -39,11 +39,11 @@ find_gdal <- function() {
         gdalUtils::gdal_setInstallation()
         gdalpath <- getOption("gdalUtils_gdalPath")[[1]]$path
       }
-      if (gdalpath == "") {
+      if (is.null(gdalpath)) {
         gdalUtils::gdal_setInstallation(ignore.full_scan = FALSE)
         gdalpath <- getOption("gdalUtils_gdalPath")[[1]]$path
       }
-      if (!(gdalpath == "")) {
+      if(!(is.null(gdalpath))) {
         gdalversion <- system2("gdalinfo", args = "--version", stdout = TRUE) %>%
           strsplit(., ",") %>% `[[`(1) %>% `[[`(1) %>%
           strsplit(., " ") %>% `[[`(1) %>% `[[`(2)
