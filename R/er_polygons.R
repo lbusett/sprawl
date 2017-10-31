@@ -192,7 +192,7 @@ er_polygons <- function(in_vect_crop,
                        FUN = function(x) {
                          bb <- sf::st_bbox(x)
                          data.frame(y_min = bb[2], y_max = bb[4])
-                         }) %>%
+                       }) %>%
         data.table::rbindlist() %>%
         .[, "mdxtnq" := seq_len(dim(.)[1])] %>%
         data.table::setkey("mdxtnq")
@@ -244,7 +244,10 @@ er_polygons <- function(in_vect_crop,
       out_data <- out_data[mdxtnq != 0]
 
       if (!is.null(na.value)) {
-        out_data[value == na.value][["value"]] <- NA
+        which_na <- which(out_data$value == na.value)
+        if (length(which_na != 0)) {
+          out_data[which_na][["value"]] <- NA
+        }
       }
 
       ext_chunk <- data.frame(x_min = raster::extent(in_band)[1],
