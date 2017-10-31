@@ -60,7 +60,7 @@ the console in the form of messages}
 \value{
 object of class \code{raster} (if out_type == \code{rastobj}), or \code{character}
 string corresponding to the filename of the created raster (if out_type ==
-\code{filename})
+\code{rastfile})
 }
 \description{
 Masks a raster file or object on the basis of a vector file or object.

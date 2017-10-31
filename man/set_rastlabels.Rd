@@ -2,19 +2,27 @@
 % Please edit documentation in R/set_rastlabels.R
 \name{set_rastlabels}
 \alias{set_rastlabels}
-\title{categorize a raster and assign class names}
+\title{Assign labels and plotting colors to a categorical raster}
 \usage{
-set_rastlabels(in_rast, class_names = NULL, verbose = TRUE)
+set_rastlabels(in_rast, class_names = NULL, class_colors = NULL,
+  verbose = TRUE)
 }
 \arguments{
-\item{in_rast}{a \code{Raster} object or the path to a valid rster file}
+\item{in_rast}{a categorical \code{Raster} object or the path to a valid
+categorical raster file}
 
 \item{class_names}{\code{character array} optional array of names to be assigned
-to the new classes (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
+to the raster classes (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
 see examples. Order of the class names should follow the numeric sortuing
 of the values to which class names should correspond. If NULL, class names
 are assigned by converting the numeric values of the new raster to character,
 Default: NULL}
+
+\item{class_colors}{\code{character array} optional array of colors to be assigned
+to the rasterclasses (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
+see examples. Order of the class names should follow the numeric sortuing
+of the values to which class colors should correspond. If NULL, class colors
+are assigned automatically using \code{scales::hue_pal()(n_class)}, Default: NULL}
 
 \item{verbose}{\code{logical} if TRUE, extended processing information is sent to
 the console in the form of messages}
@@ -24,7 +32,7 @@ a 'Raster' object equal to \code{in_rast} to which a Raster Attribute table
 has been added (see \code{raster::ratify})
 }
 \description{
-FUNCTION_DESCRIPTION
+Assign labels and plotting colors to a categorical raster
 }
 \details{
 Simple wrapper around \code{raster::ratify}, providing the added
@@ -32,8 +40,9 @@ functionality of specifying specific names for the classes.
 }
 \examples{
 
+  library(raster)
   in_rast <- raster::raster(ncol = 5, nrow = 5) \%>\%
-    init("row")
+    raster::init("row")
   levels(in_rast)[[1]]
 
   # categorize and assign standard class names
@@ -45,6 +54,14 @@ functionality of specifying specific names for the classes.
                               class_names = c("Water", "Land",
                               "Vegetation", "Urban", "Other"))
   levels(cat_rast)[[1]]
+
+  #'   # categorize and assign custom class names and colors
+  cat_rast <- set_rastlabels(in_rast,
+                              class_names = c("Water", "Land",
+                              "Vegetation", "Urban", "Other"),
+                              class_colors = c("blue", "maroon",
+                              "green", "red", "black"))
+  levels(cat_rast)[[1]][1]
 
   # Class names are automatically recognized by [`plot_rast_gg`]
   plot_rast_gg(cat_rast, scalebar = FALSE)

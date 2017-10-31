@@ -85,9 +85,9 @@ mask_rast <- function(in_rast,
   . <- NULL
 
   call <- as.list(match.call())
-  message("mask_rast --> Masking: ",
-          as.character(call[[2]]), " on: ",
-          as.character(call[[3]]))
+  if (verbose) (message("mask_rast --> Masking: ",
+                        as.character(call[[2]]), " on: ",
+                        as.character(call[[3]])))
 
   #   __________________________________________________________________________
   #   Check the arguments                                                   ####

@@ -6,7 +6,8 @@
 \usage{
 crop_rast(rast_object, ext_object, mask = FALSE, pad = 1,
   out_type = "rastobject", out_file = NULL, out_dtype = NULL,
-  compress = "None", parallel = FALSE, cores = NULL, verbose = TRUE)
+  out_nodata = NULL, compress = "None", parallel = FALSE, cores = NULL,
+  verbose = TRUE)
 }
 \arguments{
 \item{rast_object}{either an \code{R} object of class \code{Raster}, or a character string
@@ -42,6 +43,11 @@ raster.}
 to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 "Int32", "Float32", "Float64", "CInt16", "CInt32", "CFloat32" and "CFloat64").
 If NULL, the data type is retrieved from the input, Default: NULL}
+
+\item{out_nodata}{\code{numeric} value to be used to fill (eventual) NoData areas
+outside the cropping extent (or the cropping polygon if \code{mask = TRUE}). If
+NULL, it is set automatically by \code{raster::writeRaster} depending on data type
+of the output raster.}
 
 \item{compress}{\code{character} compression option to be used to saved the cropped
 raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"}
