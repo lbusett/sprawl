@@ -439,7 +439,7 @@ plot_rast_gg <- function(
     plot_ext <- get_extent(in_rast)
   } else {
     if (inherits(extent, "numeric") & length(extent) == 4) {
-      browser()
+
       names(extent) <- c("xmin", "ymin", "xmax", "ymax")
       plot_ext <- methods::new("sprawlext",
                                extent     = extent,
@@ -462,7 +462,7 @@ plot_rast_gg <- function(
   ylims <- plot_ext@extent[c(2,4)]
   #   __________________________________________________________________________
   #   If palette is categorical and leg_labels was passed, set the levels   ####
-  #   of the categorical variables using leg_labels. Otherwis, the numeric
+  #   of the categorical variables using leg_labels. Otherwise, the numeric
   #   value of the variable will be used !
 
   if (palette_type == "qual") {
@@ -525,6 +525,24 @@ plot_rast_gg <- function(
     }
 
   }
+
+  # Check if the raster has a "color" column in the attribute table. If so, use
+  # the class colors to fill-in leg_colors automatically if they were not
+  # provided by the user. Also reset the palete to "manual"
+
+  if (is.null(leg_colors)) {
+    if (has_attr(in_rast, "data")) {
+      if (length(in_rast@data@attributes) != 0) {
+        if (length(in_rast@data@attributes[[1]]$Color) != 0) {
+          leg_colors <- in_rast@data@attributes[[1]]$Color
+          palette <- valid_pals[which(valid_pals$name == "manual"),]
+        }
+      }
+    }
+
+  }
+
+
 
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####

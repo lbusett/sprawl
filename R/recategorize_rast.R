@@ -58,21 +58,21 @@
 #' # to it
 #'   library(magrittr)
 #'   in_rast <- raster::raster(ncol = 20, nrow = 20) %>%
-#'   raster::init("row")
+#'      raster::init("row")
 #'   plot_rast_gg(in_rast, rast_type = "continuous", scalebar = FALSE,
 #'                direction = -1)
 #'
 #' # build a reclassification matrix
 #'
 #'   class_matrix <- tibble::tribble(
-#'                          ~start, ~end, ~new, ~label,
-#'                            -Inf,   5,    1, "pippo",   # Values  < 5 --> 1
-#'                               5,   8,    2, "pluto",   # >=5 and < 8 --> 2
-#'                               8,   12,   2, "pluto",   # >=8 and < 12 --> 2
-#'                              12,  15,   NA, NA,       #>=12 and < 15 --> NA
-#'                              15,  Inf,   3, "paperino")# Values >=15  --> 3
+#'                      ~start, ~end, ~new, ~label, ~color,
+#'                      -Inf,   5,    1, "pippo",   "red", # Values  < 5 --> 1
+#'                         5,   8,    2, "pluto",   "green",# >=5 and < 8 --> 2
+#'                         8,   12,   2, "pluto",   "green",# >=8 and < 12 --> 2
+#'                        12,  15,   NA, NA,         NA,#>=12 and < 15 --> NA
+#'                        15,  Inf,   3, "paperino", "red")# Values >=15  --> 3
 #' # reclassify and assign class names
-#' out_rast <- categorize_rast(in_rast,
+#' out_rast <- recategorize_rast(in_rast,
 #'                         class_matrix)
 #' out_rast
 #' plot_rast_gg(out_rast, scalebar = FALSE)
@@ -86,13 +86,13 @@
 #' # setup the reclassification matrix
 #'
 #' #  class_matrix <- tibble::tribble(
-#' #                ~start, ~end, ~new, ~label,
-#' #                     0,   0,   NA, NA,
-#' #                     1,   5,   0,  NA,
-#' #                     5,   6,   1,  NA,
-#' #                     6,   9,   1,  NA,
-#' #                     9,  11,   1,  NA,
-#' #                    11, 100, NA)
+#' #                ~start, ~end, ~new, ~label, ~color,
+#' #                     0,   0,   NA, NA, NA,
+#' #                     1,   5,   0,  NA, "black",
+#' #                     5,   6,   1,  NA, "white",
+#' #                     6,   9,   1,  NA, "white",
+#' #                     9,  11,   1,  NA, "white",
+#' #                    11, 100,  NA,  NA, NA)
 #'
 #' # reclass_file = "/home/lb/Temp/buttami/pippo_reclass.tif"
 #' # outmask = categorize_rast(in_rast,
@@ -101,20 +101,20 @@
 #' # plot_rast_gg(outmask)
 #'
 #' @seealso `raster::reclassify` `raster::ratify` [`set_rastlabels`]
-#' @rdname categorize_rast
+#' @rdname recategorize_rast
 #' @aliases reclass_rast
 #' @export
 #' @importFrom raster reclassify ratify raster
 
-categorize_rast <- function(in_rast,
-                         class_matrix,
-                         out_file    = NULL,
-                         out_type    = "rastobject",
-                         overwrite   = FALSE,
-                         verbose     = TRUE) {
+recategorize_rast <- function(in_rast,
+                              class_matrix,
+                              out_file    = NULL,
+                              out_type    = "rastobject",
+                              overwrite   = FALSE,
+                              verbose     = TRUE) {
 
   call <- match.call()
-  if (verbose) message("categorize_rast --> Reclassifying: ",
+  if (verbose) message("recategorize_rast--> Reclassifying: ",
                        as.character(call[[2]]), " on values of: ",
                        as.character(call[[3]]))
   #   __________________________________________________________________________
@@ -132,30 +132,75 @@ categorize_rast <- function(in_rast,
     }
   }
 
-  # ___________________________________________________________________________
-  # Launch raster::reclassify, using intervals open on the left and closed ####
-  # on the right, then apply raster::ratify to initialize the RAT on the
-  # result
-  if (is.null(out_file)) {
-    out_file <- tempfile(fileext = ".tif")
-  }
+  # Check the "label" column of class_matrix for consistency
+  if (any(names(class_matrix) == "label")) {
+    if (length(unique(class_matrix$label)) != length(unique(class_matrix$new))) {
+      warning("recategorize_rast --> The number of unique labels is different",
+              "from the number of unique classes requested\n for the output ",
+              "raster. \nClass labels will be ignored!")
+      class_matrix$label = class_matrix$new
 
-  recl_rast <- raster::reclassify(in_rast,
-                                  class_matrix[,1:3],
-                                  filename       = out_file,
-                                  include.lowest = TRUE,
-                                  right          = FALSE,
-                                  overwrite      = overwrite,
-                                  datatype       = ot) %>%
-    raster::ratify() %>%
-    set_rastlabels(class_names = class_matrix[, 3:4], verbose = FALSE)
-
-
-  if (out_type == "rastobject") {
-    return(recl_rast)
+    }
   } else {
-    return(read_rast(out_file))
+    class_matrix$label = NA
   }
+
+  # Check the "colors" column of class_matrix for consistency
+  if (any(names(class_matrix) == "color")) {
+    if (!all(areColors(class_matrix$color))) {
+      class_matrix$color = NA
+    }
+  } else {
+    class_matrix$color = NA
+  }
+
+  class_values <-  unique(class_matrix$new) %>%
+    na.omit() %>%
+    as.numeric()
+
+  n_class <- length(class_values)
+
+  class_names <-  unique(class_matrix$label) %>%
+    na.omit() %>%
+    as.character()
+
+  if (!all(is.na(unique(class_matrix$color)))) {
+    class_colors <-  class_matrix %>%
+      dplyr::group_by(new) %>%
+      dplyr::summarize(color = first(color)) %>%
+      na.omit() %>%
+      .$color
+  } else {
+    warning("categorize_rast --> No (or invalid) color names were found in ",
+            "the \"color\" column of the reclassification matrix.\n ",
+            "Default colours will be used!")
+    class_colors <- scales::hue_pal()(n_class)
+  }
+
+  # ___________________________________________________________________________
+# Launch raster::reclassify, using intervals open on the left and closed ####
+# on the right, then apply raster::ratify to initialize the RAT on the
+# result
+if (is.null(out_file)) {
+  out_file <- tempfile(fileext = ".tif")
 }
 
-reclass_rast <- categorize_rast
+recl_rast <- raster::reclassify(in_rast,
+                                class_matrix[,1:3],
+                                filename       = out_file,
+                                include.lowest = TRUE,
+                                right          = FALSE,
+                                overwrite      = overwrite,
+                                datatype       = ot) %>%
+  raster::ratify() %>%
+  set_rastlabels(class_names =  class_names,
+                 class_colors = class_colors,
+                 verbose = FALSE)
+
+
+if (out_type == "rastobject") {
+  return(recl_rast)
+} else {
+  return(read_rast(out_file))
+}
+}
