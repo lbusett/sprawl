@@ -553,8 +553,6 @@ plot_vect <- function(
                       x = 0, y = 0 ) %>%
         sf::st_as_sf()
 
-
-
       plot <- plot + geom_polygon(data = dummy_data,
                                   aes(x = 0,
                                       y = 0,
@@ -591,15 +589,14 @@ plot_vect <- function(
                               color = "black")))
     }
 
-    plot <- plot + geom_sf(data = out_high_tbl,
+    plot <- plot + geom_sf(data  = out_high_tbl,
                            fill  = out_high_color,
-                           na.rm = TRUE,
-                           ) +
-      coord_sf(xlim = xlims, ylim = ylims)
+                           na.rm = TRUE
+                           )
+
     plot <- plot + geom_sf(data  = out_low_tbl,
                            fill  = out_low_color,
-                           na.rm = TRUE) +
-      coord_sf(xlim = xlims, ylim = ylims)
+                           na.rm = TRUE)
 
   }
 
@@ -613,8 +610,8 @@ plot_vect <- function(
     plot    <- plot + geom_sf(data  = borders,
                               fill  = "transparent",
                               color = borders_color,
-                              size  = borders_size) +
-      coord_sf(xlim = xlims, ylim = ylims)
+                              size  = borders_size)
+
     if (!is.null(borders_txt_field)) {
       if(borders_txt_field %in% names(borders)) {
         borders <- borders %>%
@@ -677,6 +674,6 @@ plot_vect <- function(
     }
   }
 
-  plot
+  plot + coord_sf(xlim = xlims, ylim = ylims)
 
 }

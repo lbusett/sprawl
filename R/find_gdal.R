@@ -35,7 +35,7 @@ find_gdal <- function() {
       options("sprawl_gdalpath" = gdalpath)
     } else {
       gdalpath <- getOption("gdalUtils_gdalPath")[[1]]$path
-      if (gdalpath == "") {
+      if (is.null(gdalpath)) {
         gdalUtils::gdal_setInstallation()
         gdalpath <- getOption("gdalUtils_gdalPath")[[1]]$path
       }
