@@ -404,6 +404,7 @@ plot_vect <- function(
   # outliers "right"
   if (palette_type != "qual") {
     if (!is.null(zlims)) {
+
       #   ____________________________________________________________________________
       #   If outliers_style == "censor" create additional data tables                 ####
       #   containing only values above / below limits
@@ -592,10 +593,13 @@ plot_vect <- function(
 
     plot <- plot + geom_sf(data = out_high_tbl,
                            fill  = out_high_color,
-                           na.rm = TRUE)
+                           na.rm = TRUE,
+                           ) +
+      coord_sf(xlim = xlims, ylim = ylims)
     plot <- plot + geom_sf(data  = out_low_tbl,
                            fill  = out_low_color,
-                           na.rm = TRUE)
+                           na.rm = TRUE) +
+      coord_sf(xlim = xlims, ylim = ylims)
 
   }
 
