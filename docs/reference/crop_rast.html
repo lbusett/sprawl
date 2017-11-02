@@ -149,7 +149,8 @@ can be derived (see details)</p></li>
 
     <pre class="usage"><span class='fu'>crop_rast</span>(<span class='no'>rast_object</span>, <span class='no'>ext_object</span>, <span class='kw'>mask</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>pad</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>out_nodata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -202,9 +203,28 @@ to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 If NULL, the data type is retrieved from the input, Default: NULL</p></td>
     </tr>
     <tr>
+      <th>out_nodata</th>
+      <td><p><code>numeric</code> value to be used to fill (eventual) NoData areas
+outside the cropping extent (or the cropping polygon if <code>mask = TRUE</code>). If
+NULL, it is set automatically by <code><a href='http://www.rdocumentation.org/packages/raster/topics/writeRaster'>raster::writeRaster</a></code> depending on data type
+of the output raster.</p></td>
+    </tr>
+    <tr>
       <th>compress</th>
       <td><p><code>character</code> compression option to be used to saved the cropped
 raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"</p></td>
+    </tr>
+    <tr>
+      <th>parallel</th>
+      <td><p><code>logical</code> if TRUE, use ClusterR to implement multicore
+processingwhile masking. This speeds up execution for large rasters,
+Default: FALSE (Ignored if <code>mask = FALSE</code>)</p></td>
+    </tr>
+    <tr>
+      <th>cores</th>
+      <td><p><code>numeric</code> Number of cores to use in case of parallel processing.
+If NULL, it defaults to <code>parallel::detectCores()-2</code>, Default = NULL
+(Ignored if <code>mask = FALSE</code>)</p></td>
     </tr>
     <tr>
       <th>verbose</th>

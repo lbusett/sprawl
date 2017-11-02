@@ -186,8 +186,12 @@ if <code>hists</code> == FALSE (the default));</p></li>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>ggplot2</span>)
- <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
+    <pre class="examples"><div class='input'> <span class='fu'>library</span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘ggplot2’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:latticeExtra’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    layer</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:sprawl’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    layer</span></div><div class='input'> <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/OLI_test"</span>, <span class='st'>"oli_multi_1000.tif"</span>,
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
  <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
 #&gt;    min   max       avg        sd band
@@ -197,7 +201,7 @@ if <code>hists</code> == FALSE (the default));</p></li>
 #&gt; 4:   0 55552 15428.359 13687.184    4
 #&gt; 5:   0 65535  5995.777  4660.999    5
 #&gt; 6:   0 65535  5180.533  3722.452    6
-#&gt; </div><div class='input'> <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
+#&gt; </div><div class='input'> <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
 #&gt;    min   max       avg        sd band
 #&gt; 1:   0 57048 14646.024 14498.970    1
 #&gt; 2:   0 55558 13907.527 14207.094    2
@@ -219,7 +223,7 @@ if <code>hists</code> == FALSE (the default));</p></li>
 #&gt; 604:  0.98 11693.500    6
 #&gt; 605:  0.99 12721.500    6
 #&gt; 606:  1.00 65406.500    6
-#&gt; </div><div class='input'> <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='no'>T</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
+#&gt; </div><div class='input'> <span class='fu'>get_raststats</span>(<span class='no'>in_rast</span>, <span class='kw'>hist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quantiles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>get_raststats --&gt; Computing statistics of `in_rast`</span></div><div class='output co'>#&gt; $stats
 #&gt;    min   max       avg        sd band
 #&gt; 1:   0 57048 14646.024 14498.970    1
 #&gt; 2:   0 55558 13907.527 14207.094    2

@@ -198,15 +198,15 @@ in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdoc
 ## epsg (SRID):    NA
 ## proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 ## # A tibble: 6 x 10
-##    lc_type band_n    band_name n_pix     N value    id category sup_catego
-##     &lt;fctr&gt;  &lt;int&gt;        &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;     &lt;fctr&gt;
-## 1 forest_1      1 EVIts_test.1    61     1  4454     1   Forest Vegetation
-## 2 forest_1      1 EVIts_test.1    61     2  4260     1   Forest Vegetation
-## 3 forest_1      1 EVIts_test.1    61     3  4224     1   Forest Vegetation
-## 4 forest_1      1 EVIts_test.1    61     4  4344     1   Forest Vegetation
-## 5 forest_1      1 EVIts_test.1    61     5  4489     1   Forest Vegetation
-## 6 forest_1      1 EVIts_test.1    61     6  4970     1   Forest Vegetation
-## # ... with 1 more variables: geometry &lt;S3: sfc_POINT&gt;</code></pre>
+##    lc_type band_n    band_name n_pix_val     N value    id category
+##     &lt;fctr&gt;  &lt;int&gt;        &lt;chr&gt;     &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;
+## 1 forest_1      1 EVIts_test.1        61     1  4454     1   Forest
+## 2 forest_1      1 EVIts_test.1        61     2  4260     1   Forest
+## 3 forest_1      1 EVIts_test.1        61     3  4224     1   Forest
+## 4 forest_1      1 EVIts_test.1        61     4  4344     1   Forest
+## 5 forest_1      1 EVIts_test.1        61     5  4489     1   Forest
+## 6 forest_1      1 EVIts_test.1        61     6  4970     1   Forest
+## # ... with 2 more variables: sup_catego &lt;fctr&gt;, geometry &lt;S3: sfc_POINT&gt;</code></pre>
 <ul>
 <li>
 <code>extracted_values$statdata</code> contains instead the statistics for each polygon and band. By default, average, standard deviation, minimum, maximum and median are computed (see the help of the function)</li>

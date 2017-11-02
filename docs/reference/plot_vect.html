@@ -167,10 +167,9 @@ See the description of the arguments for details on their use</p></li>
   <span class='kw'>facet_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>, <span class='kw'>borders_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>borders_txt_size</span> <span class='kw'>=</span> <span class='fl'>2.5</span>, <span class='kw'>borders_txt_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>xlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"vals"</span>, <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"censor"</span>,
-  <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"grey10"</span>, <span class='st'>"grey90"</span>), <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scalebar_txt_dist</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
+  <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>extent</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"vals"</span>,
+  <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"censor"</span>, <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"grey10"</span>, <span class='st'>"grey90"</span>),
+  <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scalebar_txt_dist</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
   <span class='kw'>scalebar_pos</span> <span class='kw'>=</span> <span class='st'>"bottomright"</span>, <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>direction</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>leg_type</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>leg_labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_breaks</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>leg_colors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -284,14 +283,12 @@ lead to less detailed basemap, but larger text. Default: 0 (Currently not
 yet supported!)</p></td>
     </tr>
     <tr>
-      <th>xlims</th>
-      <td><p><code>numeric(2)</code>, minimum and maximum x coordinates to be plotted.
-If NULL, the whole x-range is plotted, Default: NULL</p></td>
-    </tr>
-    <tr>
-      <th>ylims</th>
-      <td><p><code>numeric(2)</code>, minimum and maximum y coordinates to be plotted.
-If NULL, the whole y-range is plotted, Default: NULL</p></td>
+      <th>extent</th>
+      <td><p>1.<code>numeric (4)</code> xmin, ymin. xmax. ymax of the desired area, <strong>in WGS84 lat/lon</strong>
+<strong>coordinates</strong> OR
+2. object of class <code>sprawl_ext</code> OR
+3. any object from which an extent can be retrieved using <code><a href='http://www.rdocumentation.org/packages/sprawl/topics/get_extent'>sprawl::get_extent()</a></code>.</p>
+<p>If NULL, plotting extent is retrieved from <code>in_rast</code>, Default: NULL</p></td>
     </tr>
     <tr>
       <th>zlims</th>
@@ -472,14 +469,14 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
  <span class='co'># plot with a fill on a cartegorical variable with a single "level"</span>
  <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># change the palette, add a scalebar and remove the grid</span>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>,<span class='kw'>show_axis</span> <span class='kw'>=</span> <span class='no'>F</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Set3"</span>,
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>,<span class='kw'>show_axis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Set3"</span>,
            <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
  <span class='co'># plot with a fill on a continuous variable with two "levels", using facets</span>
  <span class='co'># and a diverging palette. also add a "borders" layer with a different</span>
  <span class='co'>#plot color</span>
  <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"population"</span>, <span class='kw'>facet_var</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
-           <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>50</span>,
+           <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>50</span>,
            <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>,<span class='fl'>20</span>), <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"yellow"</span>, <span class='st'>"green"</span>),
            <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>2</span>),
            <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>

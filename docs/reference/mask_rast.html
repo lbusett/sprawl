@@ -232,7 +232,7 @@ the console in the form of messages</p></td>
 
     <p>object of class <code>raster</code> (if out_type == <code>rastobj</code>), or <code>character</code>
 string corresponding to the filename of the created raster (if out_type ==
-<code>filename</code>)</p>
+<code>rastfile</code>)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -242,11 +242,12 @@ string corresponding to the filename of the created raster (if out_type ==
 <span class='fu'>library</span>(<span class='no'>raster</span>)
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                                   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>),
-                       <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='no'>T</span>)
+                       <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/stack'>stack</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
-<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>mask_rast --&gt; Masking: in_rast on: in_polys</span></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

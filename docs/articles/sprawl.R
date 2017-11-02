@@ -6,6 +6,6 @@ knitr::opts_chunk$set(
 )
 
 ## ----gh-installation, eval = FALSE---------------------------------------
-#  # install.packages("devtools")
+#  install.packages("devtools")
 #  devtools::install_github("lbusett/sprawl")
 

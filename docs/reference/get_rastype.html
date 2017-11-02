@@ -145,37 +145,37 @@ of input is passed to a function and abort / do something in the case of
 "wrong" input.</p>
     
 
-    <pre class="usage"><span class='fu'>get_rastype</span>(<span class='no'>in_object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>get_rastype</span>(<span class='no'>in_rast</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_object</th>
-      <td><p><code>R</code> object or path to a file</p></td>
+      <th>in_rast</th>
+      <td><p>name of an <code>R</code> object, or <code>character</code> giving the full path
+to a spatial file</p></td>
     </tr>
     <tr>
       <th>abort</th>
-      <td><p>If TRUE, and <code>in_object</code> is neither a raster object or
+      <td><p>If TRUE, and <code>in_rast</code> is neither a raster object or
 filename, send an error message and abort, Default: TRUE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>character</code> equal to "rastfile" (if <code>in_object</code> is a raster file),
-<code>rastobject</code> (if <code>in_object</code> is a <code>R</code> raster object) or "none" if it is
-neither (unless <code>abort</code> == TRUE)</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+    <p><code>character</code> equal to "rastfile" (if <code>in_rast</code> is a raster file),
+<code>rastobject</code> (if <code>in_rast</code> is a <code>R</code> raster object) or <code>NA`` if it is neither (unless</code>abort` == TRUE)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-#EXAMPLE1
-
+<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
+                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
+<span class='fu'>get_rastype</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; [1] "rastfile"</div><div class='input'>
+<span class='co'># input is a raster object</span>
+<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='no'>in_rast</span>)
+<span class='fu'><a href='get_spatype.html'>get_spatype</a></span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "rastobject"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -184,8 +184,6 @@ neither (unless <code>abort</code> == TRUE)</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

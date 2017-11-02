@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>check the "spatial type" of an object or file — get_spatype • sprawl</title>
+<title>check if an array represents <code>R</code> colors — areColors • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,65 +135,36 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>check the "spatial type" of an object or file</h1>
+    <h1>check if an array represents <code>R</code> colors</h1>
     </div>
 
     
-    <p>accessory function to check if an object passed to the function
-corresponds to a <code>*Spatial</code> Object, a <code>sf</code> object, a R <code>raster</code> object, a
-file corresponding to a vector, or a file corresponding to a raster.
-NOTE: to check only for vector or raster types, the associated functions
-<code>get_vectype</code> and <code>get_rastype</code> can be used, with the same syntax.</p>
+    <p>check if all elements of a vector are valid "R" colors</p>
     
 
-    <pre class="usage"><span class='fu'>get_spatype</span>(<span class='no'>in_object</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>areColors</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>in_object</th>
-      <td><p>either a <code>R</code> object or a <code>character</code> string pointing to a
-vector or raster layer</p></td>
-    </tr>
-    <tr>
-      <th>abort</th>
-      <td><p><code>logical</code> if TRUE the function aborts if <code>object</code> is not
-recognized as an R spatial file or valid vector or raster file; if FALSE,
-a warning is shown and `NA`` is returned.</p></td>
+      <th>x</th>
+      <td><p><code>character array</code> containing color names</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>character ("<em>spobject</em>" | "<em>sfobject</em>" | "<em>rastobject</em> | "
-<em>vectfile</em>" | <em>rastfile</em> " | <em>sprawlext</em>), or <code>NA</code> if the input does not
-belong to any spatial category and abort == FALSE</p>
+    <p><code>logical array</code> with value TRUE for entries correasponding to
+colors, FALSE for invalid entries</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
-<span class='co'># input is a raster file</span>
-<span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
-                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; [1] "rastfile"</div><div class='input'>
-<span class='co'># input is a raster object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='no'>in_rast</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; [1] "rastfile"</div><div class='input'>
-<span class='co'># input is a shapefile</span>
-<span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
-           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; [1] "vectfile"</div><div class='input'>
-<span class='co'># input is a `sp` object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>as_sp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "spobject"</div><div class='input'>
-<span class='co'># input is a `sf` object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "sfobject"</div><div class='input'>
-<span class='co'># input is a `sprawlext` object</span>
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_vect</span>)
-<span class='fu'>get_spatype</span>(<span class='no'>obj</span>)</div><div class='output co'>#&gt; [1] "sprawlext"</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>areColors</span>(<span class='fu'>c</span>(<span class='st'>"red"</span>, <span class='st'>"green"</span>, <span class='st'>"#C74C4C"</span>))</div><div class='output co'>#&gt;     red   green #C74C4C 
+#&gt;    TRUE    TRUE    TRUE </div><div class='input'>
+<span class='fu'>areColors</span>(<span class='fu'>c</span>(<span class='st'>"red"</span>, <span class='st'>"fdfd"</span>))</div><div class='output co'>#&gt;   red  fdfd 
+#&gt;  TRUE FALSE </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -207,9 +178,8 @@ belong to any spatial category and abort == FALSE</p>
 
     <h2>Author</h2>
     
-Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com</a>
-
-Luigi Ranghetti, phD (2017) <a href='mailto:ranghetti.l@irea.cnr.it'>ranghetti.l@irea.cnr.it</a>
+Josh O'Brien - https://stackoverflow.com/a/13290832/6871135
+importFrom grDevices col2rgb
 
   </div>
 </div>

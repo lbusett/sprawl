@@ -140,59 +140,60 @@
 
     
     <p>helper function used to retrieve the extent of a spatial object
-or file with the associated proj4string</p>
+or file, and the associated proj4string</p>
     
 
-    <pre class="usage"><span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for sprawlext</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Extent</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for matrix</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='no'>proj4string</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Raster</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for sf</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for sfc</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Spatial</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Spatial</span>
-<span class='fu'>get_extent</span>(<span class='no'>object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>get_extent</span>(<span class='no'>in_object</span>, <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
+      <th>in_object</th>
       <td><p><code>character</code> corresponding to the name of a R object, or a
 filename (full path)</p></td>
     </tr>
     <tr>
       <th>proj4string</th>
       <td><p>(optional) <code>character</code> proj4string representing the projection of
-the input extent. It is needed only if 'object' does not include a
+the input extent. It is needed only if <code>in_object</code> does not include a
 projection (like <code>extent</code> or <code>bbox</code>).</p></td>
     </tr>
     <tr>
       <th>abort</th>
-      <td><p><code>logical</code> if TRUE, the function aborts in case no proj4string or
-invalid proj4string is found, Default: FALSE</p></td>
+      <td><p><code>logical</code> if TRUE, the function aborts in case valid a extent can
+not be retrieved, otherwise, it issues a Warning and returns <code>NA</code>,
+Default: FALSE</p></td>
     </tr>
     </table>
     
@@ -204,7 +205,8 @@ invalid proj4string is found, Default: FALSE</p></td>
 
     <p>return an object of class <code>sprawlext</code> with two slots:</p><ul>
 <li><p>$extent: <code>numeric (4)</code> extent of the object (xmin, ymin, xmax, ymax)</p></li>
-<li><p>$proj4string: <code>character</code> proj4string of the object</p></li>
+<li><p>$proj4string: <code>character</code> proj4string of the object
+(if an extent can not be retrieved fron <code>in_object</code>)</p></li>
 </ul>
     
 
