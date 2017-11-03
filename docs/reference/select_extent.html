@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FUNCTION_TITLE — select_extent • sprawl</title>
+<title>Interactively select an extent — select_extent • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,21 +135,29 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>FUNCTION_TITLE</h1>
+    <h1>Interactively select an extent</h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>Select an extent interactively from a leaflet map</p>
     
 
-    <pre class="usage"><span class='fu'>select_extent</span>(<span class='kw'>in_object</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
+    <pre class="usage"><span class='fu'>select_extent</span>(<span class='kw'>in_object</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>reproject</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_object</th>
-      <td><p>PARAM_DESCRIPTION, Default: NULL</p></td>
+      <td><p>a <code>R</code> spatial object of any kind supported by
+<code>mapview</code> ("Raster", "sp", "sf") to be shown as reference on the map
+(see examples). If NULL, an empty map of the world is shown, Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>reproject</th>
+      <td><p><code>logical</code> If TRUE, and a valid <code>in_object</code> was provided,
+the selected extent is returned in the same CRS of <code>in_object</code>, otherwise
+it is returned in CRS 4326</p></td>
     </tr>
     <tr>
       <th>transparency</th>
@@ -159,7 +167,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
+    <p>a <code>sprawlext</code> object representing the selected extent.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -168,10 +176,22 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'>interactive</span>()){
- <span class='no'>extent</span>    <span class='kw'>&lt;-</span> <span class='fu'>select_extent</span>()
- }</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: leaflet.extras</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: miniUI</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Listening on http://127.0.0.1:7924</span></div><div class='input'>
-</div></pre>
+ <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/REYE_test"</span>, <span class='st'>"REYE_2016_185_gNDVI.tif"</span>,
+                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
+ <span class='no'>extent</span>    <span class='kw'>&lt;-</span> <span class='fu'>select_extent</span>(<span class='no'>in_rast</span>)
+ <span class='no'>extent</span>
+ }</div><div class='output co'>#&gt; <span class='warning'>Warning: maximum number of pixels for Raster* viewing is 5e+05 ; </span>
+#&gt; <span class='warning'>the supplied Raster* has 3668803 </span>
+#&gt; <span class='warning'> ... decreasing Raster* resolution to 5e+05 pixels</span>
+#&gt; <span class='warning'> to view full resolution set 'maxpixels =  3668803 '</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: leaflet.extras</span></div><div class='output co'>#&gt; <span class='message'>Loading required namespace: miniUI</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: shiny</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Listening on http://127.0.0.1:6337</span></div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Reprojecting extent of: out_ext to: get_proj4stringin_object</span></div><div class='output co'>#&gt; An object of class "sprawlext"
+#&gt; Slot "extent":
+#&gt;      xmin      ymin      xmax      ymax 
+#&gt;  469470.9 5006782.1  472769.8 5008863.4 
+#&gt; 
+#&gt; Slot "proj4string":
+#&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

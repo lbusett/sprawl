@@ -145,7 +145,7 @@ attribute table for all other columns over the same grouping variable.</p>
 <p>Aggregation of factor or character columns is done as follows:
 - If all polygons that are aggregated to a common dissolved polygon had
 the same value for the column, then the value is preserved;
-- If polygons had different values, the column takes the value "variabl"
+- If polygons had different values, the column takes the value "variable"
 or NA (depending on <code>var_as_NA</code> )</p>
 <p>Aggregation of factor or character columns is done as follows:</p><pre>- If the column represent a "quantity" (e.g., Population), the value for each
   dissolved is computed as the sum of the values of the original
@@ -156,7 +156,7 @@ or NA (depending on <code>var_as_NA</code> )</p>
 - If the column represents a "density" (e.g., ton ha-1), the value for each
 dissolved is computed as the average of the values of the original
 polygons belonging to it, weighted by their area;  STILL TO BE IMPLEMENTED !
-CURRENTLTY ALL COLUMNS ARE COMPUTED SIMPLY aS THE SUM !!!!</p>
+CURRENTLY ALL COLUMNS ARE COMPUTED SIMPLY AS THE SUM !!!!</p>
     
 
     <pre class="usage"><span class='fu'>dissolve_vect</span>(<span class='no'>in_vect</span>, <span class='no'>dissolve_var</span>, <span class='kw'>var_as_NA</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
