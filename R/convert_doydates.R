@@ -31,7 +31,8 @@ doytodate <- function(doys, year, verbose = TRUE){
   }
 
   # send message if outside range
-  if (((min(doys) < min(range))) | (max(doys) > max(range))) {
+  if (((min(doys, na.rm = TRUE) < min(range, na.rm = TRUE))) |
+      (max(doys, na.rm = TRUE) > max(range, na.rm = TRUE))) {
     if (verbose) message(
       "doytodate --> `doy` is not within [0,365] (or [0,366] for leap years)! ",
       "Dates for doys outside this range will report a different year !" )
@@ -54,11 +55,16 @@ doytodate <- function(doys, year, verbose = TRUE){
 #' @rdname datetodoy
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 
-datetodoy <- function(dates = dates){
+datetodoy <- function(dates = dates, abort = FALSE){
   dates <- as.Date(dates)
   if (is.na(max(dates))) {
-    stop("datetodoy --> some input 'dates' can not be parsed to `Date` ",
-         "objects ! Aborting !" )
+    if (abort) {
+      stop("datetodoy --> some input 'dates' can not be parsed to `Date` ",
+           "objects ! Aborting !" )
+    } else {
+      warning("datetodoy --> some input 'dates' can not be parsed to `Date` ",
+              "objects ! Aborting !" )
+    }
   }
   doys <- as.numeric(strftime(dates, format = '%j'))
   return(doys)
