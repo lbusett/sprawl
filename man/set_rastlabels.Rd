@@ -13,14 +13,14 @@ categorical raster file}
 
 \item{class_names}{\code{character array} optional array of names to be assigned
 to the raster classes (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
-see examples. Order of the class names should follow the numeric sortuing
+see examples. Order of the class names should follow the numeric sorting
 of the values to which class names should correspond. If NULL, class names
 are assigned by converting the numeric values of the new raster to character,
 Default: NULL}
 
 \item{class_colors}{\code{character array} optional array of colors to be assigned
-to the rasterclasses (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
-see examples. Order of the class names should follow the numeric sortuing
+to the raster classes (useful for plotting with \code{plot_rast} or \code{plot_rast_gg}) -
+see examples. Order of the class names should follow the numeric sorting
 of the values to which class colors should correspond. If NULL, class colors
 are assigned automatically using \code{scales::hue_pal()(n_class)}, Default: NULL}
 

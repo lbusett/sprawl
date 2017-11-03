@@ -49,7 +49,7 @@
 #'   ```
 #'
 #'   Note that it is __FUNDAMENTAL__ for proper functioning that ALL values of the
-#'   original rasterare "covered" in `class_matrix`. Values not falling in any
+#'   original raster are "covered" in `class_matrix`. Values not falling in any
 #'   of the intervals will be kept at their original values ! (checks for this
 #'   will be implemented in the future!)
 #' @examples

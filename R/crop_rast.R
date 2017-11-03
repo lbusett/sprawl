@@ -36,7 +36,7 @@
 #' @param compress `character` compression option to be used to saved the cropped
 #'   raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"
 #' @param parallel `logical` if TRUE, use ClusterR to implement multicore
-#'   processingwhile masking. This speeds up execution for large rasters,
+#'   processing while masking. This speeds up execution for large rasters,
 #'   Default: FALSE (Ignored if `mask = FALSE`)
 #' @param cores `numeric` Number of cores to use in case of parallel processing.
 #'   If NULL, it defaults to `parallel::detectCores()-2`, Default = NULL

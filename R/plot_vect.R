@@ -26,13 +26,13 @@
 #'  in_vect, Default: 0.2
 #' @param point_shape `character ["circle" | "square" | "diamond" | "uptriangle"
 #'  | "downtriangle"]` symbol used to plot points if in_vect is a "POINT" or
-#'  "MULTPOINT" object, default: `circle`
+#'  "MULTIPOINT" object, default: `circle`
 #' @param point_size `numeric` size of the symbol used to plot points if in_vect
-#'  is a "POINT" or "MULTPOINT" object, Default = 0.2
+#'  is a "POINT" or "MULTIPOINT" object, Default = 0.2
 #' @param point_linecolor `character` color of the border of the symbol used to plot
-#'  points if in_vect is a "POINT" or "MULTPOINT" object
+#'  points if in_vect is a "POINT" or "MULTIPOINT" object
 #' @param point_linesize `numeric` size of the symbol used to plot points if in_vect is
-#'   a "POINT" or "MULTPOINT" object, Default: 0.2
+#'   a "POINT" or "MULTIPOINT" object, Default: 0.2
 #' @param fill_var `character` name of the column of `in_vect` to be used for
 #'  coloring the different polygons. If NULL, only the geometry is plotted,
 #'  Default: NULL

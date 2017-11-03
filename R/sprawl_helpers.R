@@ -4,7 +4,7 @@
 #' @title check if an array represents `R` colors
 #' @description check if all elements of a vector are valid "R" colors
 #' @param x `character array` containing color names
-#' @return `logical array` with value TRUE for entries correasponding to
+#' @return `logical array` with value TRUE for entries corresponding to
 #'   colors, FALSE for invalid entries
 #' @examples
 #' areColors(c("red", "green", "#C74C4C"))

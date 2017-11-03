@@ -3,9 +3,9 @@
 #'   by band
 #' @param in_rast a `Raster` object, or a file path corresponding to a valid
 #'   raster file
-#' @param variable `character ["count" | "freq"]`  varaible to be plotted,
-#'   can be the countof pixels or their frequency, Default: 'freq'
-#' @param type `character ["hist" or "line"]`, plotting style. Usea "bar" or a
+#' @param variable `character ["count" | "freq"]`  variable to be plotted,
+#'   can be the count of pixels or their frequency, Default: 'freq'
+#' @param type `character ["hist" or "line"]`, plotting style. Use a "bar" or a
 #'   "line" plot, Default: 'line'
 #' @param verbose If FALSE, suppress processing messages, Default: TRUE
 #' @return A ggplot

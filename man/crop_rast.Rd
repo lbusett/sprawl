@@ -53,7 +53,7 @@ of the output raster.}
 raster ("None", "PACKBITS", "LZW", "DEFLATE), Default: "None"}
 
 \item{parallel}{\code{logical} if TRUE, use ClusterR to implement multicore
-processingwhile masking. This speeds up execution for large rasters,
+processing while masking. This speeds up execution for large rasters,
 Default: FALSE (Ignored if \code{mask = FALSE})}
 
 \item{cores}{\code{numeric} Number of cores to use in case of parallel processing.

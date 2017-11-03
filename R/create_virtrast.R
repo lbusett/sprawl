@@ -3,7 +3,7 @@
 #'  file name.
 #' @param in_rast a `*Raster` object or the path to a valid raster file
 #' @param out_vrt_file `character` path were the vrt file must be saved. If NULL,
-#'   the file is saved in "R" temporarary folder , Default: NULL
+#'   the file is saved in "R" temporary folder , Default: NULL
 #' @param out_extent `numeric (4)` coordinates of a bounding box (xmin, ymin,
 #'   xmax, ymax). If provided, the created vrt file will correspond
 #'   to a "cropped" version of `in_rast`. If NULL, no cropping will be done,

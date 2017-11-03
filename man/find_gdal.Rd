@@ -9,7 +9,7 @@ find_gdal()
 \value{
 \code{character} full path to the gdal installation folder. The returned
 object contains a \code{version} attribute that can be used to retrieve the
-GDAL version. The functoin first checks if the path was already retrieved
+GDAL version. The function first checks if the path was already retrieved
 and set in the "sprawl_gdalpath" global variable. If not, it tries to locate
 the path using (in sequence):
 1. Sys.which()
@@ -17,8 +17,8 @@ the path using (in sequence):
 3. gdalUtils::gdal_setInstallation(ignore_fullscan = FALSE)
 
 If all fails, the function aborts. If a valid installation is found, then
-the global variable "prawl_gdalpath" is set (this allows not to have
-to continuosly look for the gdal folder on later executions)
+the global variable "sprawl_gdalpath" is set (this allows not to have
+to continuously look for the gdal folder on later executions)
 }
 \description{
 Helper function to identify the folder of the GDAL installation,

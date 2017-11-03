@@ -60,7 +60,7 @@ return an object of class \code{sprawlext} with two slots:
 \itemize{
 \item $extent: \code{numeric (4)} extent of the object (xmin, ymin, xmax, ymax)
 \item $proj4string: \code{character} proj4string of the object
-(if an extent can not be retrieved fron \code{in_object})
+(if an extent can not be retrieved from \code{in_object})
 }
 }
 \examples{

@@ -41,7 +41,7 @@ attribute table for all other columns over the same grouping variable.
 Aggregation of factor or character columns is done as follows:
 - If all polygons that are aggregated to a common dissolved polygon had
 the same value for the column, then the value is preserved;
-- If polygons had different values, the column takes the value "variabl"
+- If polygons had different values, the column takes the value "variable"
 or NA (depending on \code{var_as_NA} )
 
 Aggregation of factor or character columns is done as follows:\preformatted{- If the column represent a "quantity" (e.g., Population), the value for each
@@ -53,7 +53,7 @@ TODO
 - If the column represents a "density" (e.g., ton ha-1), the value for each
 dissolved is computed as the average of the values of the original
 polygons belonging to it, weighted by their area;  STILL TO BE IMPLEMENTED !
-CURRENTLTY ALL COLUMNS ARE COMPUTED SIMPLY aS THE SUM !!!!
+CURRENTLY ALL COLUMNS ARE COMPUTED SIMPLY AS THE SUM !!!!
 }
 \examples{
 

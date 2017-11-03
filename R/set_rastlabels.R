@@ -4,13 +4,13 @@
 #'   categorical raster file
 #' @param class_names `character array` optional array of names to be assigned
 #'   to the raster classes (useful for plotting with `plot_rast` or `plot_rast_gg`) -
-#'   see examples. Order of the class names should follow the numeric sortuing
+#'   see examples. Order of the class names should follow the numeric sorting
 #'   of the values to which class names should correspond. If NULL, class names
 #'   are assigned by converting the numeric values of the new raster to character,
 #'   Default: NULL
 #' @param class_colors `character array` optional array of colors to be assigned
-#'   to the rasterclasses (useful for plotting with `plot_rast` or `plot_rast_gg`) -
-#'   see examples. Order of the class names should follow the numeric sortuing
+#'   to the raster classes (useful for plotting with `plot_rast` or `plot_rast_gg`) -
+#'   see examples. Order of the class names should follow the numeric sorting
 #'   of the values to which class colors should correspond. If NULL, class colors
 #'   are assigned automatically using `scales::hue_pal()(n_class)`, Default: NULL
 #' @param verbose `logical` if TRUE, extended processing information is sent to

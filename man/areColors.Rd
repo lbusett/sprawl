@@ -10,7 +10,7 @@ areColors(x)
 \item{x}{\code{character array} containing color names}
 }
 \value{
-\code{logical array} with value TRUE for entries correasponding to
+\code{logical array} with value TRUE for entries corresponding to
 colors, FALSE for invalid entries
 }
 \description{

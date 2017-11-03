@@ -71,7 +71,7 @@ the \code{start}, \code{end}, \code{new}and \code{label} columns. It can be easi
 }
 
 Note that it is \strong{FUNDAMENTAL} for proper functioning that ALL values of the
-original rasterare "covered" in \code{class_matrix}. Values not falling in any
+original raster are "covered" in \code{class_matrix}. Values not falling in any
 of the intervals will be kept at their original values ! (checks for this
 will be implemented in the future!)
 }

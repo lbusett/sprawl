@@ -31,16 +31,16 @@ plot_vect(in_vect, line_color = "black", line_size = 0.2,
 in_vect, Default: 0.2}
 
 \item{point_size}{\code{numeric} size of the symbol used to plot points if in_vect
-is a "POINT" or "MULTPOINT" object, Default = 0.2}
+is a "POINT" or "MULTIPOINT" object, Default = 0.2}
 
 \item{point_shape}{\code{character ["circle" | "square" | "diamond" | "uptriangle" | "downtriangle"]} symbol used to plot points if in_vect is a "POINT" or
-"MULTPOINT" object, default: \code{circle}}
+"MULTIPOINT" object, default: \code{circle}}
 
 \item{point_linecolor}{\code{character} color of the border of the symbol used to plot
-points if in_vect is a "POINT" or "MULTPOINT" object}
+points if in_vect is a "POINT" or "MULTIPOINT" object}
 
 \item{point_linesize}{\code{numeric} size of the symbol used to plot points if in_vect is
-a "POINT" or "MULTPOINT" object, Default: 0.2}
+a "POINT" or "MULTIPOINT" object, Default: 0.2}
 
 \item{fill_var}{\code{character} name of the column of \code{in_vect} to be used for
 coloring the different polygons. If NULL, only the geometry is plotted,

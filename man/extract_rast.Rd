@@ -42,7 +42,7 @@ prior to data extraction using nearest neighbour resampling. This is useful
 in case the polygons are small with respect to \code{in_rast} resolution,
 Default: NULL (meaning no resampling is done)}
 
-\item{id_field}{\code{character} (optional) column of the vector atrtibute table to be used to
+\item{id_field}{\code{character} (optional) column of the vector attribute table to be used to
 identify the zones from which data is to be extracted, If NULL (or invalid)
 zonal statistics are extracted on each row of the shapefile, and a new column
 named \code{id_feat} is used on the output to distinguish the zones, Default: NULL}

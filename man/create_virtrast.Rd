@@ -11,7 +11,7 @@ create_virtrast(in_rast, out_vrt_file = NULL, out_extent = NULL,
 \item{in_rast}{a \code{*Raster} object or the path to a valid raster file}
 
 \item{out_vrt_file}{\code{character} path were the vrt file must be saved. If NULL,
-the file is saved in "R" temporarary folder , Default: NULL}
+the file is saved in "R" temporary folder , Default: NULL}
 
 \item{out_extent}{\code{numeric (4)} coordinates of a bounding box (xmin, ymin,
 xmax, ymax). If provided, the created vrt file will correspond

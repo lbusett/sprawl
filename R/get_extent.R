@@ -13,7 +13,7 @@
 #' @details return an object of class `sprawlext` with two slots:
 #'   - $extent: `numeric (4)` extent of the object (xmin, ymin, xmax, ymax)
 #'   - $proj4string: `character` proj4string of the object
-#'   (if an extent can not be retrieved fron `in_object`)
+#'   (if an extent can not be retrieved from `in_object`)
 #' @name get_extent
 #' @rdname get_extent
 #' @export
