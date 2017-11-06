@@ -223,13 +223,8 @@ Default: TRUE.</p></td>
   <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
   <span class='fu'>library</span>(<span class='no'>raster</span>)
   <span class='fu'>library</span>(<span class='no'>sprawl</span>)
-  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: lattice</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘lattice’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:sprawl’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    levelplot</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: latticeExtra</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: RColorBrewer</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘latticeExtra’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:ggplot2’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    layer</span></div><div class='input'>
+  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)
+
   <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='build_testraster.html'>build_testraster</a></span>(<span class='fl'>20</span>,<span class='fl'>40</span>,<span class='fl'>1</span>)
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_rast</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>
   <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
