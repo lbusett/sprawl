@@ -40,7 +40,7 @@ read_rast    <- function(in_file,
   #
 
   call <- match.call()
-  checkmate::assertFileExists(in_file, "r")
+  # checkmate::assertFileExists(in_file, "r")
 
   info <- try(rgdal::GDALinfo(in_file, silent = TRUE), silent = TRUE)
   if (!checkmate::test_class(info, "GDALobj")) {
