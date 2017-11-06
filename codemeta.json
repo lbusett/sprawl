@@ -3,7 +3,7 @@
   "@type": "SoftwareSourceCode",
   "identifier": "sprawl",
   "description": "Simplify execution of **frequently performed spatial processing tasks** \n  (e.g., reading and writing spatial datasets, extracting statistics from large datasets, etc.) **by \n  providing a single and (hopefully) simpler access point to functionalities spread in the `R` \n  packages ecosystem.** The aforementioned broad objectives are accomplished in `sprawl` by: \n      1. Providing simple **wrappers to common-use functions** for reading/writing spatial data and \n      performing common-use operations; \n      2. Providing **optimized functions for performing some frequently used processing tasks**, by \n      using custom `sprawl` functions or exploiting functions provided by less-known packages;\n      3. Optimizing **code execution speed** by providing under-the-hood support for multi-core \n      processing using for example `foreach` looping along raster bands or `raster::MakeCluster` \n      functionality;\n      4. Providing **custom functions or workflows for performing more complex processing tasks**, \n      involving the sequential application of different processing steps; \n      5. Simplifying **access and further analysis of processing results**, by carefully formatting \n      processing outputs to easy to use `R` objects.\n      6. Providing **custom functions for visualization** of processing results.",
-  "name": "sprawl: Spatial Processing (in) R: Advanced Workflows Library",
+  "name": "sprawl: Spatial Processing (in) R: Amorphous Wrapper Library",
   "codeRepository": "https://github.com/lbusett/sprawl.git",
   "issueTracker": "https://github.com/lbusett/sprawl/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",

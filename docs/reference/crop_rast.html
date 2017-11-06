@@ -247,7 +247,7 @@ or GTiff filename corresponding to it, depending on <code>out_type</code>.</p>
 <span class='no'>in_vect</span>     <span class='kw'>&lt;-</span> <span class='fu'><a href='create_fishnet.html'>create_fishnet</a></span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fl'>60</span>,
                               <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>55</span>:<span class='fl'>60</span>,]
 
-<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_vect</span>)</div><div class='img'><img src='crop_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_vect</span>)</div><div class='img'><img src='crop_rast-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='no'>out_cropped</span> <span class='kw'>&lt;-</span> <span class='fu'>crop_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='message'>crop_rast --&gt; Cropping: in_rast on extent of: in_vect</span></div><div class='input'>
 <span class='fu'><a href='get_extent.html'>get_extent</a></span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; An object of class "sprawlext"
 #&gt; Slot "extent":
@@ -264,7 +264,7 @@ or GTiff filename corresponding to it, depending on <code>out_type</code>.</p>
 #&gt; Slot "proj4string":
 #&gt; [1] "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
 #&gt; </div><div class='input'>
-<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>out_cropped</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='img'><img src='crop_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>out_cropped</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='img'><img src='crop_rast-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -1,5 +1,5 @@
 
--   [sprawl - Spatial Processing (in) R: Advanced Workflow Library](#sprawl---spatial-processing-in-r-advanced-workflow-library)
+-   [sprawl - Spatial Processing (in) R: Amorphous Wrapper Library](#sprawl---spatial-processing-in-r-advanced-workflow-library)
     -   [Intro and rationale](#intro-and-rationale)
     -   [Package philosophy](#package-philosophy)
     -   [**WORK IN PROGRESS !**](#work-in-progress)
@@ -12,7 +12,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Travis-CI Build Status](https://travis-ci.org/lbusett/sprawl.svg?branch=master)](https://travis-ci.org/lbusett/sprawl) [![codecov](https://codecov.io/gh/lbusett/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/lbusett/sprawl) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-sprawl - Spatial Processing (in) R: Advanced Workflow Library
+sprawl - Spatial Processing (in) R: Amorphous Wrapper Library
 =============================================================
 
 Intro and rationale
@@ -80,6 +80,6 @@ Citation
 
 To cite package `sprawl` in publications use:
 
-Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Advanced Workflow Library. R package version 0.1.0.9000.
+Lorenzo Busetto and Luigi Ranghetti (2017). sprawl: Spatial Processing (in) R: Amorphous Wrapper Library. R package version 0.1.0.9000.
 
 Please note that this project is released with a [Contributor Code of Conduct](https://lbusett.github.io/sprawl/articles/conduct.html). By participating in this project you agree to abide by its terms.

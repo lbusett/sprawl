@@ -1,5 +1,5 @@
 
--   [sprawl: Spatial Processing (in) R: Advanced Workflows Library](#sprawl-spatial-processing-in-r-advanced-workflows-library)
+-   [sprawl: Spatial Processing (in) R: Amorphous Wrapper Library](#sprawl-spatial-processing-in-r-advanced-workflows-library)
     -   [NOTE: WORK IN PROGRESS !](#note-work-in-progress)
     -   [Installation](#installation)
     -   [Function Documentation](#function-documentation)
@@ -11,7 +11,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Travis-CI Build Status](https://travis-ci.org/lbusett/sprawl.svg?branch=master)](https://travis-ci.org/lbusett/sprawl) [![codecov](https://codecov.io/gh/lbusett/sprawl/branch/master/graph/badge.svg?token=0yWdr6gWG7)](https://codecov.io/gh/lbusett/sprawl) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-sprawl: Spatial Processing (in) R: Advanced Workflows Library
+sprawl: Spatial Processing (in) R: Amorphous Wrapper Library
 =============================================================
 
 Support for spatial processing tasks is provided in `R` by several great packages, spanning from all-purpose packages providing generalized access to the main spatial data classes and corresponding processing methods (e.g., [`sp`](https://cran.r-project.org/web/packages/sp/index.html) and [`sf`](https://cran.r-project.org/web/packages/sf/index.html), [`raster`](https://cran.r-project.org/web/packages/raster/index.html) and [`rgdal`](https://cran.r-project.org/web/packages/rgdal/index.html) - providing functions for handling raster and vector spatial data -), to more "specialized" ones meant to allow conducting more specific processing tasks (e.g., [`geosphere`](https://cran.r-project.org/web/packages/geosphere/index.html), [`raster`](https://cran.r-project.org/web/packages/raster/index.html), [`landsat`](https://cran.r-project.org/web/packages/landsat/index.html), [`MODIStsp`](https://cran.r-project.org/web/packages/MODIStsp/index.html)), or to provide optimized/improved/easier solutions for methods already provided by the aforementioned general-purpose packages (e.g., [`velox`](https://cran.r-project.org/web/packages/velox/index.html), [`mapview`](https://cran.r-project.org/web/packages/mapview/index.html)) (Curated lists of some very good packages can be found [here](https://cran.r-project.org/web/views/Spatial.html), [here](https://ropensci.org/blog/blog/2016/11/22/geospatial-suite) and [here](https://github.com/ropensci/maptools)).

@@ -1,5 +1,5 @@
 Package: sprawl
-Title: Spatial Processing (in) R: Advanced Workflows Library
+Title: Spatial Processing (in) R: Amorphous Wrapper Library
 Version: 0.3.0
 Authors@R: c(person("Lorenzo", "Busetto", email = "busetto.l@irea.cnr.it", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9634-6038")),
              person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut")))

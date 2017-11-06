@@ -1,5 +1,5 @@
 ---
-title: "sprawl: Spatial Processing (in) R: Advanced Workflows Library"
+title: "sprawl: Spatial Processing (in) R: Amorphous Wrapper Library"
 author: "Lorenzo Busetto"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

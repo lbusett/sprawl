@@ -140,29 +140,68 @@
     </div>
 
     <div class="contents">
-    <div id="sprawl-0-2-0" class="section level1">
+    <div id="sprawl-0-3-0" class="section level1">
 <h1 class="hasAnchor">
-<a href="#sprawl-0-2-0" class="anchor"></a>sprawl 0.2.0</h1>
+<a href="#sprawl-0-3-0" class="anchor"></a>sprawl 0.3.0</h1>
 <p><br></p>
-<p>20/08/2017 - Second major release, adding some core funtionality and helpers.</p>
+<p>02/11/2017 - First semi-stable releas</p>
 <div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>Major changes</h2>
 <ul>
-<li><p>Addition of <code>mask_rast</code> and <code>crop_rast</code></p></li>
-<li><p>Addition of several helper functions (<code>get_projstring</code>, <code>get_extent</code>, <code>cast_vect</code> <code>cast_rast</code>, <code>reproj_extent</code>…)</p></li>
+<li><p>Improvements on <code>extract_rast</code>, now dealing also with categorical rasters</p></li>
+<li><p>Added plotting routines <code>plot_rast_gg</code> and <code>plot_vect</code></p></li>
+<li><p>Added routines for better dealing with categorical rasters (<code>set_rastlabels</code>, <code>recategorize_rast</code>)</p></li>
+<li><p>Added routines for extracting info from raster data (<code>get_rastinfo</code>, <code>get_raststats</code>, <code>plot_rasthist</code>)</p></li>
+<li><p>Added routines for simplified reading of raster files (<code>read_rast</code>) and vector file (<code>read_vect</code>) from disk</p></li>
+<li><p>Added routines for reprojection of raster and vector data (<code>reproj_rast</code>, <code>reproj_vect</code>, <code>reproj_extent</code>)</p></li>
+<li><p>Added routines for creation of fishnets (<code>create_fishnet</code>)</p></li>
+<li><p>Added routines for cropping and masking rasters, based on cretion of temporary gdal vrt files (<code>crop_rast</code>, <code>mask_rast</code>)</p></li>
+<li><p>Added routines for cropping vectors (<code>crop_vect</code>)</p></li>
+<li><p>Added routine for automatic downloaf of administartive boundaries polygons ( <code>get_boundaries</code>)</p></li>
+<li><p>Added routine for migrating virtual raster files (RData and GDAL vrt) ( <code>migrate_virtrast</code>)</p></li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
 <ul>
-<li>Added coding style and contributing pages to website</li>
+<li><p>Addition of several helper functions (<code>make_folder</code>, <code>fillpals</code>, <code>select_extent</code> <code>find_gdal</code>, <code>cuttails_rast</code>, <code>convert_rast_dtype</code>, <code>add_scale_fill</code>, <code>sprawl_scalebar</code>)</p></li>
+<li><p>Homogenized argument names</p></li>
+<li><p>Improved tests and examples</p></li>
 </ul>
 </div>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug Fixes</h2>
+<ul>
+<li>too many to mention</li>
+</ul>
+</div>
+</div>
+    <div id="sprawl-0-2-0" class="section level1">
+<h1 class="hasAnchor">
+<a href="#sprawl-0-2-0" class="anchor"></a>sprawl 0.2.0</h1>
+<p><br></p>
+<p>20/08/2017 - Second major release, adding some core funtionality and helpers.</p>
+<div id="major-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<ul>
+<li><p>Addition of <code>mask_rast</code> and <code>crop_rast</code></p></li>
+<li><p>Addition of several helper functions (<code>get_projstring</code>, <code>get_extent</code>, <code>cast_vect</code> <code>cast_rast</code>, <code>reproj_extent</code>…)</p></li>
+</ul>
+</div>
+<div id="minor-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>Added coding style and contributing pages to website</li>
+</ul>
+</div>
+<div id="bug-fixes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes</h2>
 <ul>
 <li>too many to mention</li>
 </ul>
@@ -173,20 +212,20 @@
 <h1 class="hasAnchor">
 <a href="#sprawl-0-1-0-9000" class="anchor"></a>sprawl 0.1.0.9000</h1>
 <p><br></p>
-<div id="major-changes-1" class="section level2">
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <ul>
 <li>21/07/2017 Release of the first (rather unstable) version of <code>sprawl</code>. Introduces some raher complex functions (<code>extract_rast</code>, <code>aggregate_rast</code>, plus a series of smaller-scope functions used as helpers).</li>
 </ul>
 </div>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
 </div>
-<div id="bug-fixes-1" class="section level2">
+<div id="bug-fixes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes</h2>
+<a href="#bug-fixes-2" class="anchor"></a>Bug Fixes</h2>
 </div>
 </div>
     </div>
@@ -196,6 +235,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#sprawl-0-3-0">0.3.0</a></li>
         <li><a href="#sprawl-0-2-0">0.2.0</a></li>
         <li><a href="#sprawl-0-1-0-9000">0.1.0.9000</a></li>
       </ul>

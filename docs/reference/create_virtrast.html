@@ -181,7 +181,7 @@ Default: NULL</p></td>
 <span class='no'>in_file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
                      <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
 <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='no'>in_file</span>, <span class='kw'>bands</span> <span class='kw'>=</span> <span class='fl'>5</span>)
-<span class='no'>vrt</span>     <span class='kw'>&lt;-</span> <span class='fu'>create_virtrast</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>create_virtrast --&gt; Creating virtual file from in_rast</span></div><div class='input'><span class='no'>vrt</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpNiEeqP/file17a0224f71dd.vrt"</div><div class='input'>
+<span class='no'>vrt</span>     <span class='kw'>&lt;-</span> <span class='fu'>create_virtrast</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>create_virtrast --&gt; Creating virtual file from in_rast</span></div><div class='input'><span class='no'>vrt</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpA6LFsB/file274247dbee8b.vrt"</div><div class='input'>
 <span class='co'># reading in the vrt gives a raster object</span>
 <span class='no'>rast_from_vrt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='no'>vrt</span>)
 <span class='no'>rast_from_vrt</span></div><div class='output co'>#&gt; class       : RasterLayer 
@@ -189,8 +189,8 @@ Default: NULL</p></td>
 #&gt; resolution  : 231.6564, 231.6564  (x, y)
 #&gt; extent      : 12897004, 12973683, 1685995, 1789545  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. : +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs 
-#&gt; data source : /tmp/RtmpNiEeqP/file17a0224f71dd.vrt 
-#&gt; names       : file17a0224f71dd 
+#&gt; data source : /tmp/RtmpA6LFsB/file274247dbee8b.vrt 
+#&gt; names       : file274247dbee8b 
 #&gt; values      : -323, 8706  (min, max)
 #&gt; </div><div class='input'>
 </div></pre>

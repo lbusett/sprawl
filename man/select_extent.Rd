@@ -27,7 +27,7 @@ Select an extent interactively from a leaflet map
 DETAILS
 }
 \examples{
-\donttun{
+\dontrun{
 if(interactive()){
  in_rast <- read_rast(system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
                           package = "sprawl.data"))

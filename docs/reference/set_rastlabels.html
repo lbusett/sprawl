@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>categorize a raster and assign class names — set_rastlabels • sprawl</title>
+<title>Assign labels and plotting colors to a categorical raster — set_rastlabels • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,30 +135,40 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>categorize a raster and assign class names</h1>
+    <h1>Assign labels and plotting colors to a categorical raster</h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>Assign labels and plotting colors to a categorical raster</p>
     
 
-    <pre class="usage"><span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>, <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>, <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>class_colors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>in_rast</th>
-      <td><p>a <code>Raster</code> object or the path to a valid rster file</p></td>
+      <td><p>a categorical <code>Raster</code> object or the path to a valid
+categorical raster file</p></td>
     </tr>
     <tr>
       <th>class_names</th>
       <td><p><code>character array</code> optional array of names to be assigned
-to the new classes (useful for plotting with <code>plot_rast</code> or <code>plot_rast_gg</code>) -
-see examples. Order of the class names should follow the numeric sortuing
+to the raster classes (useful for plotting with <code>plot_rast</code> or <code>plot_rast_gg</code>) -
+see examples. Order of the class names should follow the numeric sorting
 of the values to which class names should correspond. If NULL, class names
 are assigned by converting the numeric values of the new raster to character,
 Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>class_colors</th>
+      <td><p><code>character array</code> optional array of colors to be assigned
+to the raster classes (useful for plotting with <code>plot_rast</code> or <code>plot_rast_gg</code>) -
+see examples. Order of the class names should follow the numeric sorting
+of the values to which class colors should correspond. If NULL, class colors
+are assigned automatically using <code>scales::hue_pal()(n_class)</code>, Default: NULL</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -184,27 +194,41 @@ functionality of specifying specific names for the classes.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+  <span class='fu'>library</span>(<span class='no'>raster</span>)
+  <span class='fu'>library</span>(<span class='no'>dplyr</span>)
   <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>5</span>) <span class='kw'>%&gt;%</span>
-    <span class='fu'>init</span>(<span class='st'>"row"</span>)
-  <span class='fu'>levels</span>(<span class='no'>in_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt; NULL</div><div class='input'>
+    <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/init'>init</a></span>(<span class='st'>"row"</span>)
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>in_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt; NULL</div><div class='input'>
   <span class='co'># categorize and assign standard class names</span>
-  <span class='no'>cat_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast</span></div><div class='input'>  <span class='fu'>levels</span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;   ID Class
-#&gt; 1  1     1
-#&gt; 2  2     2
-#&gt; 3  3     3
-#&gt; 4  4     4
-#&gt; 5  5     5</div><div class='input'>
+  <span class='no'>cat_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast</span></div><div class='output co'>#&gt; <span class='warning'>Warning: set_rastlabels --&gt; class_names not provided or not matching the  number of classes of in_rast. </span>
+#&gt; <span class='warning'> Class names will beignored!</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;   ID Class   Color
+#&gt; 1  1     1 #F8766D
+#&gt; 2  2     2 #A3A500
+#&gt; 3  3     3 #00BF7D
+#&gt; 4  4     4 #00B0F6
+#&gt; 5  5     5 #E76BF3</div><div class='input'>
   <span class='co'># categorize and assign custom class names</span>
   <span class='no'>cat_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>,
                               <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Water"</span>, <span class='st'>"Land"</span>,
-                              <span class='st'>"Vegetation"</span>, <span class='st'>"Urban"</span>, <span class='st'>"Other"</span>))</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast and assigning class names based on  c</span></div><div class='input'>  <span class='fu'>levels</span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;   ID      Class
-#&gt; 1  1      Water
-#&gt; 2  2       Land
-#&gt; 3  3 Vegetation
-#&gt; 4  4      Urban
-#&gt; 5  5      Other</div><div class='input'>
+                              <span class='st'>"Vegetation"</span>, <span class='st'>"Urban"</span>, <span class='st'>"Other"</span>))</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast and assigning class names based on  c</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;   ID      Class   Color
+#&gt; 1  1      Water #F8766D
+#&gt; 2  2       Land #A3A500
+#&gt; 3  3 Vegetation #00BF7D
+#&gt; 4  4      Urban #00B0F6
+#&gt; 5  5      Other #E76BF3</div><div class='input'>
+  <span class='co'>#'   # categorize and assign custom class names and colors</span>
+  <span class='no'>cat_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>,
+                              <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Water"</span>, <span class='st'>"Land"</span>,
+                              <span class='st'>"Vegetation"</span>, <span class='st'>"Urban"</span>, <span class='st'>"Other"</span>),
+                              <span class='kw'>class_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"blue"</span>, <span class='st'>"maroon"</span>,
+                              <span class='st'>"green"</span>, <span class='st'>"red"</span>, <span class='st'>"black"</span>))</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast and assigning class names based on  c</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]][<span class='fl'>1</span>]</div><div class='output co'>#&gt;   ID
+#&gt; 1  1
+#&gt; 2  2
+#&gt; 3  3
+#&gt; 4  4
+#&gt; 5  5</div><div class='input'>
   <span class='co'># Class names are automatically recognized by [`plot_rast_gg`]</span>
-  <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>cat_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='set_rastlabels-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'><a href='plot_rast_gg.html'>plot_rast_gg</a></span>(<span class='no'>cat_rast</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='set_rastlabels-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

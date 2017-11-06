@@ -129,17 +129,17 @@ out      <- extract_rast(in_rast, in_polys, verbose = FALSE, ncores = 1,
 # Statistics for the different polygons
 
 head(out$stats)
-ggplot(mydata, aes(x = date, y = avg, group = id_feat, color = lc_type)) +
+ggplot(out$stats, aes(x = date, y = avg, group = lc_type, color = lc_type)) +
    geom_line() +
    facet_wrap(~lc_type) +
    theme_light()
 
-# Extract one polygon
+# Extract data for one polygon
 
 polydata <- dplyr::filter(out$stats, lc_type == "forest_1")
-ggplot(polydata, aes(x = date, y = avg)) + geom_line()
+ggplot(polydata, aes(x = date, y = avg)) + geom_line() + theme_light()
 
-# Data from all pixels, grouped by polygon
+# access data extracted from all pixels, grouped by polygon
 
 head(out$alldata)
 
