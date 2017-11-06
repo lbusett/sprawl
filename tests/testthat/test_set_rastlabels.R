@@ -4,7 +4,7 @@ test_that("set_rastlabels works as expected", {
   library(magrittr)
     in_rast <- raster::raster(ncol = 5, nrow = 5) %>%
        init("row")
-    cat_rast <- set_rastlabels(in_ras, verbose = FALSE)
+    expect_warning(cat_rast <- set_rastlabels(in_rast, verbose = FALSE))
     expect_is(cat_rast@data@attributes[[1]], "data.frame")
     expect_is(cat_rast, "Raster")
 
@@ -16,8 +16,11 @@ test_that("set_rastlabels works as expected", {
   expect_equal(levels(cat_rast)[[1]]$Class, letters[1:5])
 
   # wrong labels
-  cat_rast <- set_rastlabels(in_rast, class_names = letters[1:4],
-      verbose = FALSE)
+  expect_warning(cat_rast <- set_rastlabels(in_rast, class_names = letters[1:4],
+      verbose = FALSE))
 
 
 })
+
+sf::st_layers("C:/Users/LB_laptop/Downloads/gdal_sample_v1.2_no_extensions.gpkg")
+a = sf::st_read("C:/Users/LB_laptop/Downloads/gdal_sample_v1.2_no_extensions.gpkg")

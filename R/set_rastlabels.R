@@ -77,8 +77,9 @@ set_rastlabels <- function(in_rast,
   n_class  <- dim(cat_rast@data@attributes[[1]])[1]
 
   if (length(class_names) != n_class) {
-    warning("set_rastlabels --> Provided class_names do not match the number ",
-            "of classes of ", call[[2]], ". \n Class names will be ignored!")
+    warning("set_rastlabels --> class_names not provided or not matching the  ",
+            "number of classes of ", call[[2]], ". \n Class names will be",
+            "ignored!")
     class_names = NULL
   }
 

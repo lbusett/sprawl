@@ -27,11 +27,13 @@ Select an extent interactively from a leaflet map
 DETAILS
 }
 \examples{
+\donttun{
 if(interactive()){
  in_rast <- read_rast(system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
                           package = "sprawl.data"))
  extent    <- select_extent(in_rast)
  extent
+ }
  }
 }
 \author{

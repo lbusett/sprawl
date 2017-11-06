@@ -43,15 +43,20 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_error(extract_rast(in_rast, in_polys, selbands = c(2,NA)))
   expect_error(extract_rast(in_rast, in_polys, selbands = 1))
   expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-01",3)))
-  expect_error(extract_rast(in_rast, in_polys, selbands = c("2013-01-20","2013-01-08"))) #nolint
+  expect_error(extract_rast(in_rast, in_polys,
+                            selbands = c("2013-01-20","2013-01-08"))) #nolint
 
-  out  <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
-                       verbose = FALSE, join_feat_tbl = T)
-  out2 <- extract_rast(in_rast, in_polys, selbands = c("2013-01-01","2013-01-08"),  #nolint
-                       verbose = FALSE, join_feat_tbl = F, join_geom = F)
+  expect_message(out  <- extract_rast(in_rast, in_polys,
+                                      selbands = c("2013-01-01","2013-01-08"),
+                       verbose = FALSE, join_feat_tbl = T))
+  expect_message(out2 <- extract_rast(in_rast, in_polys,
+                                      selbands = c("2013-01-01","2013-01-08"),  #nolint
+                                      verbose = FALSE, join_feat_tbl = F,
+                                      join_geom = F))
   expect_is(out, "list")
   expect_equal(out$stats$avg, out2$stats$avg)
-  out <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = FALSE)
+  expect_message(out <- extract_rast(in_rast, in_polys, selbands = c(1,2),
+                                     verbose = FALSE))
   expect_is(out, "list")
   out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
                        small = F, join_geom = F)

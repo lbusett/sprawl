@@ -10,12 +10,13 @@
 #' @return a `sprawlext` object representing the selected extent.
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @details DETAILS
-#' @examples
+#' @examples \donttun{
 #' if(interactive()){
 #'  in_rast <- read_rast(system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
 #'                           package = "sprawl.data"))
 #'  extent    <- select_extent(in_rast)
 #'  extent
+#'  }
 #'  }
 #' @export
 #' @rdname select_extent
@@ -37,7 +38,7 @@ select_extent <- function(in_object = NULL,
     in_object <- raster::raster(nrows = 18, ncols = 36, vals  = 0) %.>%
       get_extent(.) %.>%
       as(., "sfc_POLYGON")
-      transparency = 1
+    transparency = 1
   }
   #   ________________________________________________________________________
   #   Check arguments                                                     ####

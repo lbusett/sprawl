@@ -13,7 +13,6 @@
 #' @rdname doytodate
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
 #' @export
-
 doytodate <- function(doys, year, verbose = TRUE){
 
   if (!(is.numeric(doys) & is.numeric(year))) {
@@ -40,32 +39,4 @@ doytodate <- function(doys, year, verbose = TRUE){
 
   dates <- as.Date(doys - 1, origin = paste0(year, "-01-01"))
   return(dates)
-}
-
-#' @title Convert dates to DOYs
-#' @description Converts an array of `Date` (or coercible to `Date`) values to
-#'   DOY (Day Of the Year) values. Simple wrapper around strftime(date, format = \"\%j\").
-#' @param dates array of dates to be converted. Class must be `Date` or character
-#'   parsable to `Date` using [`as.Date`] (format "yyyy-mm-dd").
-#' @examples
-#'  # Convert a date to a doy
-#'  datetodoy(as.Date("2000-04-01"))
-#'
-#' @export
-#' @rdname datetodoy
-#' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
-
-datetodoy <- function(dates = dates, abort = FALSE){
-  dates <- as.Date(dates)
-  if (is.na(max(dates))) {
-    if (abort) {
-      stop("datetodoy --> some input 'dates' can not be parsed to `Date` ",
-           "objects ! Aborting !" )
-    } else {
-      warning("datetodoy --> some input 'dates' can not be parsed to `Date` ",
-              "objects ! Aborting !" )
-    }
-  }
-  doys <- as.numeric(strftime(dates, format = '%j'))
-  return(doys)
 }

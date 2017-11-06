@@ -116,17 +116,28 @@ for pixels corresponding to the features of a vector (Polygon, Point or Line)
 library(sprawl)
 library(sprawl.data)
 library(raster)
+library(ggplot2)
 in_polys <- read_vect(system.file("extdata/shapes","lc_polys.shp",
                       package = "sprawl.data"), stringsAsFactors = TRUE)
 in_rast  <- read_rast(system.file("extdata/MODIS_test", "EVIts_test.tif",
                           package = "sprawl.data"))
 in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
 
-out      <- extract_rast(in_rast, in_polys, verbose = FALSE, ncores = 1)
+out      <- extract_rast(in_rast, in_polys, verbose = FALSE, ncores = 1,
+                         id_field = "lc_type")
 
 # Statistics for the different polygons
 
 head(out$stats)
+ggplot(mydata, aes(x = date, y = avg, group = id_feat, color = lc_type)) +
+   geom_line() +
+   facet_wrap(~lc_type) +
+   theme_light()
+
+# Extract one polygon
+
+polydata <- dplyr::filter(out$stats, lc_type == "forest_1")
+ggplot(polydata, aes(x = date, y = avg)) + geom_line()
 
 # Data from all pixels, grouped by polygon
 
