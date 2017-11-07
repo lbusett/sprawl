@@ -203,6 +203,12 @@ testthat::test_that("Test On points extraction", {
                       verbose = F, join_geom = F)
   testthat::expect_s3_class(out, "data.frame")
   testthat::expect_error(st_geometry(out))
+
+  in_polys <- read_vect("/home/lb/projects/ermes/datasets/Field_data/2016/Italy/Static_info/IT_Field_data_static_2016_20170216.shp",
+                        stringsAsFactors = TRUE)
+  in_rast  <- read_rast("/home/lb/nr_working/mirco/2016_IT_S2_L8/PhenoK_analysis/Input/LAI_Pheno_pos_ALL16_im.tif")
+
+  pro <- extract_rast(in_rast, in_polys)
 })
 
 
