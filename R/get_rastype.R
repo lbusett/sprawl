@@ -54,7 +54,7 @@ get_rastype.default <- function(in_rast, abort = TRUE) {
 #' @export
 get_rastype.character <- function(in_rast, abort = TRUE) {
 
-  checkmate::assert_file_exists(in_rast, access = "r")
+ # checkmate::assert_file_exists(in_rast, access = "r")
 
   rastry  <- suppressWarnings(try(rgdal::GDALinfo(in_rast),
                                   silent = TRUE))
