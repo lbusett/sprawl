@@ -352,7 +352,7 @@ plot_vect <- function(
     plot_ext <- get_extent(in_vect)
   } else {
     if (inherits(extent, "numeric") & length(extent) == 4) {
-      browser()
+
       names(extent) <- c("xmin", "ymin", "xmax", "ymax")
       plot_ext <- methods::new("sprawlext",
                                extent     = extent,

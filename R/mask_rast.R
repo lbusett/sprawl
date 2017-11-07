@@ -156,7 +156,9 @@ mask_rast <- function(in_rast,
   #   If crop ==TRUE create a vrt file corresponding to the cropped raster  ####
 
   if (crop) {
-    in_rast <- crop_rast(in_rast, mask, out_type = "vrtfile") %>%
+    in_rast <- crop_rast(in_rast,
+                         mask,
+                         out_type = "vrtfile") %>%
       raster::brick()
   }
   #   __________________________________________________________________________
