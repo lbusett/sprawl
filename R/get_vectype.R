@@ -61,7 +61,7 @@ get_vectype.default <- function(in_vect, abort = TRUE) {
 #' @importFrom checkmate assert_file_exists
 #' @export
 get_vectype.character <- function(in_vect, abort = TRUE) {
-  checkmate::assert_file_exists(in_vect, access = "r")
+  # checkmate::assert_file_exists(in_vect, access = "r")
   vecttry <- suppressWarnings(
     try(gdalUtils::ogrinfo(in_vect, al = TRUE,
                            so = TRUE,
