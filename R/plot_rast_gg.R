@@ -437,6 +437,8 @@ plot_rast_gg <- function(
 
   if (is.null(extent)) {
     plot_ext <- get_extent(in_rast)
+    plot_ext@extent[c(1,3)] <- c(min(in_rast_fort$x), max(in_rast_fort$x))
+    plot_ext@extent[c(2,4)] <- c(min(in_rast_fort$y), max(in_rast_fort$y))
   } else {
     if (inherits(extent, "numeric") & length(extent) == 4) {
 
@@ -451,7 +453,7 @@ plot_rast_gg <- function(
       if (inherits(plot_ext, "sprawlext")) {
         plot_ext <-  reproj_extent(plot_ext, get_proj4string(in_rast))
       } else {
-        message("plot_rast_gg --> Impossible to retriebve an extent from `",
+        message("plot_rast_gg --> Impossible to retrieve an extent from `",
                 call$extent,
                 "`\n Resetting the extent to that of `", call[[2]], "`")
         plot_ext <- get_extent(in_rast)
