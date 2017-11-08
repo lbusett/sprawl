@@ -711,8 +711,7 @@ plot_rast_gg <- function(
 
   if (is.null(basemap)) {
     plot <- plot  +
-      coord_sf(crs = get_proj4string(in_rast), ndiscr = 1000,
-               expand = FALSE            ) +
+      coord_sf(crs = get_proj4string(in_rast), ndiscr = 1000) +
       theme(axis.title.x = element_blank(), axis.title.y = element_blank())
   } else {
     plot <- plot +

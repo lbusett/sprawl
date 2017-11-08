@@ -5,14 +5,22 @@
 #'   buffer can be applied to the input vector to allow a more "lenient" masking,
 #'   or to remove also the borders of the vector.
 #' @param in_rast Raster file or object inheriting class `raster` to be masked
-#' @param mask Vector file or object of class `*sf` or `sp` to be used as a mask
+#' @param mask 1. Vector file or object of class `*sf` or `sp` to be used as a mask
+#'             2. Raster file or object of class `*sf` or `sp` to be used as a mask
+#'  NOTE: If `mask` is a raster object or file, the function checks if it has the
+#'  same number of pixels and extent of `in_rast`. If this is true, then `mask`
+#'  is used directly to mask the input. Otherwise, it is first of all vectorized
+#'  to a vector mask. The vector mask is then used in the processing.
+#' @param mask_value `integer` if `mask` is a raster object/file, value corresponding
+#'  to the areas __that should be removed__ from the ouptut, Default: 0 (_Ignored if
+#'  the provided `mask` is a vector!_)
 #' @param crop `logical` if TRUE, `in_rast` is also cropped on the extent of `mask`,
 #'   Default: FALSE
 #' @param buffer `numeric` if not NULL, width of a buffer to be applied to `mask`
 #'   before masking `in_rast`. If negative, mask is "reduced" prior to masking
 #'   (see examples), Default: NULL
 #' @param out_nodata `numeric` value to be assigned to areas outside the mask,
-#'   Default: 'NoData'
+#'   Default: NULL
 #' @param out_type `character`
 #'   - if == "rastobj", return a `Raster` object;
 #'   - if == "filename", return the filename of the masked layer (GTiff or gdal vrt format
@@ -69,6 +77,7 @@
 
 mask_rast <- function(in_rast,
                       mask,
+                      mask_value   = 0,
                       crop         = FALSE,
                       buffer       = NULL,
                       out_type     = "rastobject",
@@ -119,9 +128,24 @@ mask_rast <- function(in_rast,
     in_rast <- raster::brick(temprastfile)
   }
 
-  # checks on mask ----
-  mask      <- cast_vect(mask, "sfobject")
-  mask_proj <- get_proj4string(mask)
+  # check the type of `mask`
+  mask_type <- get_spatype(mask)
+
+  if (mask_type %in% c("rastfile", "rastobject")) {
+
+    if (all(get_extent(mask)@extent == get_extent(in_rast)@extent) &
+        all(raster::res(mask) == raster::res(in_rast))) {
+
+      message("We will use a raster mask!!!!")
+      temp_rastermask <- cast_rast(mask, "rastobject")
+      if (!is.na(mask_value)) raster::NAvalue(temp_rastermask) <- mask_value
+    } else {
+      #TODO Implement an automatic vectorization instead !!!!!
+      stop("raster mask has a diffewrent extent from `in_rast`. Aborting!")
+
+    }
+
+  }
 
   #   __________________________________________________________________________
   #   set the output folder (in tempdir if out_file == NULL)                ####
@@ -132,57 +156,66 @@ mask_rast <- function(in_rast,
   }
 
   make_folder(out_file, type = "filename")
+  # In case of vector mask, create a temporary raster to be useed as mask ----
 
-  #   __________________________________________________________________________
-  #   apply buffer to mask if necessary                                     ####
-  temp_shapefile <- tempfile(fileext = ".shp")
-  if (rast_proj != mask_proj) {
-    mask <- mask %>%
-      sf::st_transform(rast_proj)
+  if (!mask_type %in% c("rastfile", "rastobject")) {
+    # checks on mask ----
+    mask      <- cast_vect(mask, "sfobject")
+    mask_proj <- get_proj4string(mask)
+
+    #   __________________________________________________________________________
+    #   apply buffer to mask if necessary                                     ####
+    temp_shapefile <- tempfile(fileext = ".shp")
+    if (rast_proj != mask_proj) {
+      mask <- mask %>%
+        sf::st_transform(rast_proj)
+    }
+    if (!is.null(buffer)) {
+      mask <- mask %>%
+        sf::st_buffer(buffer)
+    }
+
+    #   __________________________________________________________________________
+    #   Combine all features in one to speed up rasterization and compute bbox####
+    mask %>%
+      sf::st_combine() %>%
+      sf::st_sf(id = 1, .) %>%
+      write_shape(temp_shapefile, overwrite = TRUE)
+
+    #   __________________________________________________________________________
+    #   If crop ==TRUE create a vrt file corresponding to the cropped raster  ####
+
+    if (crop) {
+      in_rast <- crop_rast(in_rast,
+                           mask,
+                           out_type = "vrtfile") %>%
+        raster::brick()
+    }
+    #   __________________________________________________________________________
+    #   Rasterize the mask shapefile: allows great improvements in speed      ####
+    #   on large raster. Use gdal_rasterize instaad than raster::rasterize to
+    #   create the rasterized shapefile much faster and save as Byte
+
+    if (verbose) {
+      message("mask_rast --> Rasterizing the vector mask to a temporary TIFF ",
+              "file")
+    }
+    temp_rastermask  <- tempfile(tmpdir = tempdir(), fileext = ".tif")
+    rasterize_string <- paste("-at",
+                              "-burn 1",
+                              "-a_nodata 0",
+                              "-te", paste(get_extent(in_rast)@extent, collapse = " "), #nolint
+                              "-tr", paste(rastinfo$res, collapse = " "),
+                              "-ot Byte",
+                              temp_shapefile,
+                              temp_rastermask)
+
+    system2(file.path(find_gdal(), "gdal_rasterize"),
+            args = rasterize_string, stdout = NULL)
+
+    temp_rastermask <- raster::raster(temp_rastermask)
+    mask_value <- NA
   }
-  if (!is.null(buffer)) {
-    mask <- mask %>%
-      sf::st_buffer(buffer)
-  }
-
-  #   __________________________________________________________________________
-  #   Combine all features in one to speed up rasterization and compute bbox####
-  mask %>%
-    sf::st_combine() %>%
-    sf::st_sf(id = 1, .) %>%
-    write_shape(temp_shapefile, overwrite = TRUE)
-
-  #   __________________________________________________________________________
-  #   If crop ==TRUE create a vrt file corresponding to the cropped raster  ####
-
-  if (crop) {
-    in_rast <- crop_rast(in_rast,
-                         mask,
-                         out_type = "vrtfile") %>%
-      raster::brick()
-  }
-  #   __________________________________________________________________________
-  #   Rasterize the mask shapefile: allows great improvements in speed      ####
-  #   on large raster. Use gdal_rasterize instaad than raster::rasterize to
-  #   create the rasterized shapefile much faster and save as Byte
-
-  if (verbose) {
-    message("mask_rast --> Rasterizing the vector mask to a temporary TIFF ",
-            "file")
-  }
-  temp_rastermask  <- tempfile(tmpdir = tempdir(), fileext = ".tif")
-  rasterize_string <- paste("-at",
-                            "-burn 1",
-                            "-a_nodata 0",
-                            "-te", paste(get_extent(in_rast)@extent, collapse = " "), #nolint
-                            "-tr", paste(rastinfo$res, collapse = " "),
-                            "-ot Byte",
-                            temp_shapefile,
-                            temp_rastermask)
-
-  system2(file.path(find_gdal(), "gdal_rasterize"),
-          args = rasterize_string, stdout = NULL)
-
   #   __________________________________________________________________________
   #   Compute the mask - if parallel = TRUE, initialize a Cluster and use   ####
   #   raster::ClusterR(), otherwise use raster::overlay() !
@@ -193,14 +226,15 @@ mask_rast <- function(in_rast,
 
   if (!parallel) {
 
-    maskobj <- raster::raster(temp_rastermask)
     masked_out <- raster::mask(
       in_rast,
-      maskobj,
+      temp_rastermask,
       filename    = out_file,
+      inverse     = FALSE,
+      maskvalue   = NA,
       options     = paste0("COMPRESS=", compress),
       overwrite   = TRUE,
-      datatype  = dtype[["raster"]][1],
+      datatype    = dtype[["raster"]][1],
       updatevalue = ifelse(is.null(out_nodata), NA, out_nodata)
     )
     dtype[["raster"]][1]

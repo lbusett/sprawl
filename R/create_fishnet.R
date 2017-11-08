@@ -5,8 +5,8 @@
 #'  set, then the polygons of the fishnet are built so to include the specified
 #'  number of cells in each direction. If the `cellsize` option is set, a fishnet
 #'  of the specified resolution is created over the extent of the raster)
-#' @param in_rast raster file or object of class `raster*` on which the fishnet
-#'   needs to be derived.
+#' @param in_obj raster/vector file or object, or sprawlext object on which extent
+#'   the fishnet should be built
 #' @param pix_for_cell `numeric(1/2)` (optional) 1/2 element numeric array
 #'   specifying how many pixels of the #' raster will be included in each
 #'   polygon of the fishnet (if only one element is provided, the #' same number
@@ -67,7 +67,7 @@
 #' @importFrom raster extent res
 #' @importFrom sf st_as_sfc st_make_grid st_sf
 #' @author Lorenzo Busetto, PhD (2017) email: <lbusett@gmail.com>
-create_fishnet <- function(in_rast,
+create_fishnet <- function(in_obj,
                            pix_for_cell = 1,
                            shape        = "rect",
                            cellsize     = NULL,
@@ -85,13 +85,13 @@ create_fishnet <- function(in_rast,
   #   Check the arguments                                                   ####
   #
 
-  in_type <- get_rastype(in_rast)
-  if (in_type == "rastfile") {
-    in_rast <- read_rast(in_rast)
-  }
+  in_ext <- out_ext <- get_extent(in_obj)
+  # if (in_type == "rastfile") {
+  #   in_obj <- read_rast(in_obj)
+  # }
 
   if (is.null(cellsize)) {
-    cellsize <- raster::res(in_rast) * pix_for_cell
+    cellsize <- raster::res(in_obj) * pix_for_cell
   } else {
     if (length(cellsize) == 1) {
       cellsize <- c(cellsize, cellsize)
@@ -100,7 +100,7 @@ create_fishnet <- function(in_rast,
 
   #   __________________________________________________________________________
 
-  in_ext <- out_ext <- get_extent(in_rast)
+  # in_ext <- out_ext <- get_extent(in_obj)
 
   if (exact_csize & shape == "rect") {
     #   extend the extent so that it contains an integer number of cells   ####
@@ -126,7 +126,7 @@ create_fishnet <- function(in_rast,
                                  what = "polygons")
     fish <- sf::st_sf(cell_id = seq_len(length(geometry)[1]),
                       geometry = geometry) %>%
-      crop_vect(in_rast, verbose = verbose)
+      crop_vect(in_obj, verbose = verbose)
   } else {
     ext_poly <- as(out_ext , "sfc_POLYGON")
     geometry <- sf::st_make_grid(ext_poly,

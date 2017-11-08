@@ -55,3 +55,32 @@ testthat::test_that("Test On raster masking", {
   expect_is(masked_fromfiles, "Raster")
 
 })
+context("Mask a raster using a raster as mask")
+testthat::test_that("Mask a raster using a raster as mask", {
+  # skip_on_cran()
+  skip_on_travis()
+  # library(testthat)
+  library(sprawl.data)
+  # Test maskuing a raster with a raster
+
+  in_rast <- build_testraster(100,100, with_nodata = FALSE)
+
+  # build a 0-1 mask
+  class_matrix <- tibble::tribble(
+    ~start, ~end, ~new,
+    -Inf,   20,   0,
+    20,   46,     1,
+    46,   1000,   0)
+  expect_warning(mask <- recategorize_rast(in_rast, class_matrix))
+
+  # mask with parallel = T
+  masked_in <- mask_rast(in_rast, mask, parallel = TRUE)
+  expect_equal(min(raster::getValues(masked_in), na.rm = TRUE), 20)
+  expect_equal(max(raster::getValues(masked_in), na.rm = TRUE), 45)
+
+  # mask with parallel = F
+  masked_in <- mask_rast(in_rast, mask, parallel = FALSE)
+  expect_equal(min(raster::getValues(masked_in), na.rm = TRUE), 20)
+  expect_equal(max(raster::getValues(masked_in), na.rm = TRUE), 45)
+
+})

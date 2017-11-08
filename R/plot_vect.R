@@ -45,6 +45,9 @@
 #'  (the first value found is used), Default: NULL (see examples)
 #' @param facet_rows `numeric`, number of rows used for plotting multiple bands,
 #'   in faceted plots, Default: 2 (Ignored if `fill_var` == NULL)
+#' @param levels_to_plot `character array` If `facet_var` is specified, allows
+#'   to select which levels of the vaiable should be plotted. If NULL, all the
+#'   levels availbale will be plotted, Default: NULL
 #' @param borders_layer `character` object of class `sf_POLYGON` or `sfc_polygon`,
 #'   (or coercible to it using `sprawl::cast_vect`) to be overlayed to the plot,
 #'   Default: NULL (no overlay)
@@ -215,6 +218,7 @@ plot_vect <- function(
   point_linecolor = "black", point_linesize = 0.01,
   fill_var       = NULL, transparency = 0,
   facet_var      = NULL, facet_rows     = NULL,
+  levels_to_plot = NULL,
   borders_layer  = NULL, borders_color = "grey15", borders_size = 0.2,
   borders_txt_field = NULL, borders_txt_size = 2.5, borders_txt_color = "grey15", #nolint
   basemap        = NULL, zoomin = 0,
@@ -233,6 +237,7 @@ plot_vect <- function(
   verbose        = TRUE
 ) {
 
+  call = match.call()
   geometry <- color <- NULL
 
   in_vect <- cast_vect(in_vect, "sfobject")
@@ -242,13 +247,25 @@ plot_vect <- function(
   )
 
   if (!is.null(facet_var)) {
-
+    if (!any(names(in_vect) == facet_var)) {
+      warning("The Specified `facet_var` is not a column of ",
+              call[2], ". It will be ignored")
+    }
     if (!class(in_vect[[facet_var]]) %in% c("character", "factor")) {
       warning("The Specified `facet_var` is not of class `character` or",
               "`factor`. It will be ignored.")
       facet_var <- NULL
     }
+    if (!is.null(levels_to_plot)) {
 
+      in_vect <- in_vect %>%
+        dplyr::filter_(fill_var %in% levels_to_plot) %>%
+
+      if (length(in_vect) == 0 ) {
+        stop("Specified values of ", call$levels_to_plot, " do note exist in ",
+             call$in_vect, ". Please check your inputs!")
+      }
+    }
   }
 
   # if (!is.null(basemap)) {
@@ -592,7 +609,7 @@ plot_vect <- function(
     plot <- plot + geom_sf(data  = out_high_tbl,
                            fill  = out_high_color,
                            na.rm = TRUE
-                           )
+    )
 
     plot <- plot + geom_sf(data  = out_low_tbl,
                            fill  = out_low_color,
