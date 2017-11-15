@@ -136,7 +136,7 @@ mask_rast <- function(in_rast,
     if (all(get_extent(mask)@extent == get_extent(in_rast)@extent) &
         all(raster::res(mask) == raster::res(in_rast))) {
 
-      message("We will use a raster mask!!!!")
+      if (verbose) {message("We will use a raster mask")}
       temp_rastermask <- cast_rast(mask, "rastobject")
       if (!is.na(mask_value)) raster::NAvalue(temp_rastermask) <- mask_value
     } else {
