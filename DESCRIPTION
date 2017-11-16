@@ -24,7 +24,7 @@ Depends:
 Imports:  scales, assertthat, data.table, raster, sf, sp, stats, checkmate, rgdal, tibble, 
  dplyr, glue, lubridate, tidyr, foreach, gdalUtils, sprawl, velox, parallel, utils, RColorBrewer, 
  methods, stringr, tcltk, tools, ggplot2, ggspatial, purrr, rosm, grid, latticeExtra, rasterVis, 
- grDevices, mapedit, mapview, shiny, doParallel, maptools
+ grDevices, mapedit, mapview, shiny, doParallel, maptools, DBI,testthat, wrapr, magrittr
 Remotes: lbusett/sprawl.data, tidyverse/ggplot2
 Suggests: knitr,
           rmarkdown,

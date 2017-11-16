@@ -7,10 +7,11 @@
 plot_vect(in_vect, line_color = "black", line_size = 0.2,
   point_size = 0.2, point_shape = "circle", point_linecolor = "black",
   point_linesize = 0.01, fill_var = NULL, transparency = 0,
-  facet_var = NULL, facet_rows = NULL, borders_layer = NULL,
-  borders_color = "grey15", borders_size = 0.2, borders_txt_field = NULL,
-  borders_txt_size = 2.5, borders_txt_color = "grey15", basemap = NULL,
-  zoomin = 0, extent = NULL, zlims = NULL, zlims_type = "vals",
+  facet_var = NULL, facet_rows = NULL, levels_to_plot = NULL,
+  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  borders_txt_field = NULL, borders_txt_size = 2.5,
+  borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
+  extent = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
   scalebar = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
   scalebar_pos = "bottomright", na.color = NULL, na.value = NULL,
@@ -57,6 +58,10 @@ If NULL, multiple values of \code{fill_var} for the same polygon are ignored
 
 \item{facet_rows}{\code{numeric}, number of rows used for plotting multiple bands,
 in faceted plots, Default: 2 (Ignored if \code{fill_var} == NULL)}
+
+\item{levels_to_plot}{\code{character array} If \code{facet_var} is specified, allows
+to select which levels of the vaiable should be plotted. If NULL, all the
+levels availbale will be plotted, Default: NULL}
 
 \item{borders_layer}{\code{character} object of class \code{sf_POLYGON} or \code{sfc_polygon},
 (or coercible to it using \code{sprawl::cast_vect}) to be overlayed to the plot,

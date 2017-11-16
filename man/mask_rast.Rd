@@ -4,7 +4,7 @@
 \alias{mask_rast}
 \title{Mask a raster based on a vector}
 \usage{
-mask_rast(in_rast, mask, crop = FALSE, buffer = NULL,
+mask_rast(in_rast, mask, mask_value = 0, crop = FALSE, buffer = NULL,
   out_type = "rastobject", out_file = NULL, out_dtype = NULL,
   out_nodata = NULL, compress = "None", overwrite = FALSE,
   parallel = FALSE, cores = parallel::detectCores() - 2, verbose = TRUE)
@@ -12,7 +12,18 @@ mask_rast(in_rast, mask, crop = FALSE, buffer = NULL,
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}
 
-\item{mask}{Vector file or object of class \code{*sf} or \code{sp} to be used as a mask}
+\item{mask}{\enumerate{
+\item Vector file or object of class \code{*sf} or \code{sp} to be used as a mask
+2. Raster file or object of class \code{*sf} or \code{sp} to be used as a mask
+NOTE: If \code{mask} is a raster object or file, the function checks if it has the
+same number of pixels and extent of \code{in_rast}. If this is true, then \code{mask}
+is used directly to mask the input. Otherwise, it is first of all vectorized
+to a vector mask. The vector mask is then used in the processing.
+}}
+
+\item{mask_value}{\code{integer} if \code{mask} is a raster object/file, value corresponding
+to the areas \strong{that should be removed} from the ouptut, Default: 0 (\emph{Ignored if
+the provided \code{mask} is a vector!})}
 
 \item{crop}{\code{logical} if TRUE, \code{in_rast} is also cropped on the extent of \code{mask},
 Default: FALSE}
@@ -40,7 +51,7 @@ to gdal specifications for GTiff files ("Byte", "UInt16", "Int16", "UInt32",
 If NULL, the data type is retrieved from the input, Default: NULL}
 
 \item{out_nodata}{\code{numeric} value to be assigned to areas outside the mask,
-Default: 'NoData'}
+Default: NULL}
 
 \item{compress}{\code{logical} allow verbose output from \code{foreach} for debugging
 purposes, Default: FALSE}

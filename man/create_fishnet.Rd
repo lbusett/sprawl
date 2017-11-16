@@ -4,13 +4,13 @@
 \alias{create_fishnet}
 \title{Create a "fishnet" vector over the extent of a spatial object}
 \usage{
-create_fishnet(in_rast, pix_for_cell = 1, shape = "rect", cellsize = NULL,
+create_fishnet(in_obj, pix_for_cell = 1, shape = "rect", cellsize = NULL,
   exact_csize = TRUE, out_file = NULL, overwrite = TRUE,
   crop_layer = NULL, verbose = TRUE)
 }
 \arguments{
-\item{in_rast}{raster file or object of class \code{raster*} on which the fishnet
-needs to be derived.}
+\item{in_obj}{raster/vector file or object, or sprawlext object on which extent
+the fishnet should be built}
 
 \item{pix_for_cell}{\code{numeric(1/2)} (optional) 1/2 element numeric array
 specifying how many pixels of the #' raster will be included in each
