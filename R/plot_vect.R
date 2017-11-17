@@ -261,10 +261,10 @@ plot_vect <- function(
       in_vect <- in_vect %>%
         dplyr::filter_(fill_var %in% levels_to_plot) %>%
 
-      if (length(in_vect) == 0 ) {
-        stop("Specified values of ", call$levels_to_plot, " do note exist in ",
-             call$in_vect, ". Please check your inputs!")
-      }
+        if (length(in_vect) == 0 ) {
+          stop("Specified values of ", call$levels_to_plot, " do note exist in ",
+               call$in_vect, ". Please check your inputs!")
+        }
     }
   }
 
@@ -631,11 +631,12 @@ plot_vect <- function(
 
     if (!is.null(borders_txt_field)) {
       if(borders_txt_field %in% names(borders)) {
+
+        centroids <- st_centroid(borders)
+        centroids <-  do.call(rbind, st_geometry(centroids)) %>%
+          as_tibble() %>% setNames(c("lon","lat"))
         borders <- borders %>%
-          dplyr::mutate(lon = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[1]]),
-                        lat = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[2]])
-          ) %>%
-          sf::st_as_sf()
+          mutate(lon = centroids$lon, lat = centroids$lat)
         plot <- plot + geom_text(data = borders,
                                  aes_string(label = borders_txt_field,
                                             x = "lon", y = "lat"),
