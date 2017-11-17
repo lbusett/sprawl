@@ -44,6 +44,10 @@ reference:
       - '`plot_rast_gg`'
       - '`plot_rasthist`'
       - '`plot_vect`'
+  - title: DB Interaction
+    desc: ~
+    contents:
+      - '`write_vector_to_pgres`'
   - title: Data fetching from public repositories
     desc: ~
     contents:
