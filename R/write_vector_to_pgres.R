@@ -69,8 +69,14 @@ write_vector_to_pgres <- function(in_vect,
       message("write_vector_to_pgres --> The following geometries are invalid: ",
               format(as.character(which(valid == FALSE))),
               "\n Performing automatic correction!")
-      orig_geom_type <- stringr::str_sub(class(st_geometry(in_vect))[1], 5)
-      in_vect <- suppressWarnings(lwgeom::st_make_valid(in_vect)) %>%
+      orig_geom_type <- unique(st_dimension(st_geometry(in_vect)))
+      if (orig_geom_type == 2) {
+        orig_geom_type = "POLYGON"
+      } else {
+          stop("This function currently only supports polygon vectors. Aborting!")
+        }
+
+        in_vect <- suppressWarnings(lwgeom::st_make_valid(in_vect)) %>%
         # ensure to keep original type!
         sf::st_collection_extract(orig_geom_type)
 
