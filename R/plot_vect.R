@@ -36,6 +36,8 @@
 #' @param fill_var `character` name of the column of `in_vect` to be used for
 #'  coloring the different polygons. If NULL, only the geometry is plotted,
 #'  Default: NULL
+#' @param scale_transform `character` optional transformation to be applied on
+#'  values of continuous fill variables (e.g., "log"),  Default: NULL
 #' @param transparency `numeric [0, 1]`transparency of the filled polygons/points. Higher
 #'   values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)
 #' @param facet_var `character` name of a column of `in_vect` to be used for
@@ -216,7 +218,8 @@ plot_vect <- function(
   line_color     = "black", line_size     = 0.2,
   point_size = 0.2, point_shape = "circle",
   point_linecolor = "black", point_linesize = 0.01,
-  fill_var       = NULL, transparency = 0,
+  fill_var       = NULL,
+  scale_transform= NULL, transparency = 0,
   facet_var      = NULL, facet_rows     = NULL,
   levels_to_plot = NULL,
   borders_layer  = NULL, borders_color = "grey15", borders_size = 0.2,
@@ -509,7 +512,8 @@ plot_vect <- function(
     }
     plot <- add_scale_fill(plot,
                            palette,
-                           title = "Value",
+                           scale_transform,
+                           title = fill_var,
                            na.color,
                            zlims,
                            leg_breaks,

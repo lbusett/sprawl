@@ -6,6 +6,8 @@
 #' @param plot `gg` object to which the fill scale has to be added.
 #' @param palette `data.frame (1)` Line of the d.f. created by `fillpals`
 #'  corresponding to the desired palette.
+#' @param scale_transform `character` optional transformation to be applied on
+#'  values of continuous fill variables (e.g., "log"),  Default: NULL
 #' @param title `character` Name to be used as title in the palette legend.
 #' @inheritParams plot_vect
 #' @param ... any other parameter to be passed to `ggplot::scale_fill_brewer` or
@@ -20,6 +22,7 @@
 
 add_scale_fill <- function(plot,
                            palette,
+                           scale_transform,
                            title,
                            na.color,
                            zlims,
@@ -31,7 +34,11 @@ add_scale_fill <- function(plot,
                            direction,
                            ...) {
 
-  if (!exists("trans")) trans <- NULL
+  if (!exists("scale_transform")) {
+    trans <- NULL
+  } else {
+      trans <- scale_transform
+    }
   # ____________________________________________________________________________
   # Qualitative palette: use scal_fill_hue or scale_fill_brewer             ####
   # or manual (requires also specifying leg_colors)
