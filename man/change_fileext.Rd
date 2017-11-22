@@ -4,15 +4,16 @@
 \alias{change_fileext}
 \title{change file extension}
 \usage{
-change_fileext(in_file, new_ext, full_path = FALSE)
+change_fileext(in_file, new_ext, new_path = NULL)
 }
 \arguments{
 \item{in_file}{\code{character} full path of a file}
 
 \item{new_ext}{\code{character} new file extension (e.g., ".png")}
 
-\item{full_path}{\code{logical} if TRUE, a full path with updated extension is
-returne, otherwise, only an updated basename is rerturned, Default: FALSE}
+\item{new_path}{\code{character} if not NULL the returned file name will use this
+new path instead than the one of the original file. If equal to "", only
+the updated basenmae is therefore returned (see examples), Default: NULL}
 }
 \value{
 \code{character} basename/full_path of `in_file`` with updated extension
@@ -21,16 +22,16 @@ returne, otherwise, only an updated basename is rerturned, Default: FALSE}
 Helper function allowing to quckly change the extension of
 a file name
 }
-\details{
-DETAILS
-}
 \examples{
 in_file = "home/lb/tmp/prova.tif"
-# return an updated basename
+# return an updated full_path
 change_fileext(in_file, ".png")
 
-# return an updated full path
-change_fileext(in_file, ".png", full_path = TRUE)
+#' update both path and extension
+change_fileext(in_file, ".png", new_path = "/home/lb/new_path")
+
+# return an updated basename
+change_fileext(in_file, ".png", new_path = "")
 
 }
 \author{
