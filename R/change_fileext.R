@@ -2,7 +2,8 @@
 #' @description Helper function allowing to quckly change the extension of
 #'  a file name
 #' @param in_file `character` full path of a file
-#' @param new_ext `character` new file extension (e.g., ".png")
+#' @param new_ext `character` new file extension (e.g., ".png"). If NULL (the
+#'  default), the basename without extension is return, Deafault: NULL
 #' @param new_path `character` if not NULL the returned file name will use this
 #'  new path instead than the one of the original file. If equal to "", only
 #'  the updated basenmae is therefore returned (see examples), Default: NULL
@@ -24,13 +25,12 @@
 #' @importFrom tools file_path_sans_ext
 
 change_fileext <- function(in_file,
-                           new_ext,
+                           new_ext  = NULL,
                            new_path = NULL) {
 
-  if (length(grep("^\\.",new_ext))==0) {
-    new_ext <- paste0(".",new_ext)
+  if (length(grep("^\\.", new_ext)) == 0 & !is.null(new_ext)) {
+    new_ext <- paste0(".", new_ext)
   }
-
 
   if (is.null(new_path)) {
     paste0(tools::file_path_sans_ext(in_file), new_ext)
