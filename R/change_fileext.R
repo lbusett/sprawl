@@ -24,6 +24,10 @@ change_fileext <- function(in_file,
                            new_ext,
                            full_path = FALSE) {
 
+  if (length(grep("^\\.",new_ext))==0) {
+    new_ext <- paste0(".",new_ext)
+  }
+
   if (full_path) {
     paste0(tools::file_path_sans_ext(in_file), new_ext)
   } else {
