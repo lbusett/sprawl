@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_vector_to_pgres.R
 \name{write_vector_to_pgres}
 \alias{write_vector_to_pgres}
-\title{write spatial table to a PostGIS db table}
+\title{write a spatial table to a PostGIS db table}
 \usage{
 write_vector_to_pgres(in_vect, con, table_name, schema = "public",
   make_valid = FALSE, drop = FALSE, row.names = FALSE, verbose = TRUE)

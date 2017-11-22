@@ -4,14 +4,17 @@
 \alias{add_scale_fill}
 \title{add a scale_fill palette to a ggplot}
 \usage{
-add_scale_fill(plot, palette, title, na.color, zlims, leg_breaks, leg_labels,
-  leg_colors, leg_type, outliers_style, direction, ...)
+add_scale_fill(plot, palette, scale_transform, title, na.color, zlims,
+  leg_breaks, leg_labels, leg_colors, leg_type, outliers_style, direction, ...)
 }
 \arguments{
 \item{plot}{\code{gg} object to which the fill scale has to be added.}
 
 \item{palette}{\code{data.frame (1)} Line of the d.f. created by \code{fillpals}
 corresponding to the desired palette.}
+
+\item{scale_transform}{\code{character} optional transformation to be applied on
+values of continuous fill variables (e.g., "log"),  Default: NULL}
 
 \item{title}{\code{character} Name to be used as title in the palette legend.}
 

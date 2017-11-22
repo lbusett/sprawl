@@ -6,10 +6,10 @@
 \usage{
 plot_vect(in_vect, line_color = "black", line_size = 0.2,
   point_size = 0.2, point_shape = "circle", point_linecolor = "black",
-  point_linesize = 0.01, fill_var = NULL, transparency = 0,
-  facet_var = NULL, facet_rows = NULL, levels_to_plot = NULL,
-  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
-  borders_txt_field = NULL, borders_txt_size = 2.5,
+  point_linesize = 0.01, fill_var = NULL, scale_transform = NULL,
+  transparency = 0, facet_var = NULL, facet_rows = NULL,
+  levels_to_plot = NULL, borders_layer = NULL, borders_color = "grey15",
+  borders_size = 0.2, borders_txt_field = NULL, borders_txt_size = 2.5,
   borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
   extent = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
@@ -46,6 +46,9 @@ a "POINT" or "MULTIPOINT" object, Default: 0.2}
 \item{fill_var}{\code{character} name of the column of \code{in_vect} to be used for
 coloring the different polygons. If NULL, only the geometry is plotted,
 Default: NULL}
+
+\item{scale_transform}{\code{character} optional transformation to be applied on
+values of continuous fill variables (e.g., "log"),  Default: NULL}
 
 \item{transparency}{\code{numeric [0, 1]}transparency of the filled polygons/points. Higher
 values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)}

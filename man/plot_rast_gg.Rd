@@ -5,16 +5,17 @@
 \title{Plot a map based on a \code{raster} object using ggplot}
 \usage{
 plot_rast_gg(in_rast, rast_type = NULL, palette_name = NULL,
-  direction = 1, leg_type = NULL, leg_labels = NULL, leg_colors = NULL,
-  leg_breaks = NULL, leg_position = "right", maxpixels = 1e+05,
-  band_names = NULL, bands_to_plot = NULL, facet_rows = 2,
-  extent = NULL, zlims = NULL, zlims_type = "vals",
-  outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
-  basemap = NULL, zoomin = 0, borders_layer = NULL,
-  borders_color = "grey15", borders_size = 0.2, borders_txt_field = NULL,
-  borders_txt_size = 3, borders_txt_color = "grey15", scalebar = TRUE,
-  scalebar_dist = NULL, scalebar_txt_dist = 0.03, transparency = 0,
-  na.color = NULL, na.value = NULL, show_axis = TRUE, show_grid = TRUE,
+  direction = 1, scale_transform = NULL, leg_type = NULL,
+  leg_labels = NULL, leg_colors = NULL, leg_breaks = NULL,
+  leg_position = "right", maxpixels = 1e+05, band_names = NULL,
+  bands_to_plot = NULL, facet_rows = 2, extent = NULL, zlims = NULL,
+  zlims_type = "vals", outliers_style = "censor",
+  outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
+  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
+  borders_txt_field = NULL, borders_txt_size = 3,
+  borders_txt_color = "grey15", scalebar = TRUE, scalebar_dist = NULL,
+  scalebar_txt_dist = 0.03, transparency = 0, na.color = NULL,
+  na.value = NULL, show_axis = TRUE, show_grid = TRUE,
   grid_color = "grey20", title = NULL, subtitle = NULL,
   theme = theme_bw(), verbose = TRUE)
 }
@@ -40,6 +41,9 @@ of available palettes, Default: NULL
 
 \item{direction}{\code{character [0 | 1]} direction of the color legend. Change this
 to invert the color gradient, Default: 1}
+
+\item{scale_transform}{\code{character} optional transformation to be applied on
+values of continuous fill variables (e.g., "log"),  Default: NULL}
 
 \item{leg_type}{\code{character ["continuous", "discrete"]} type of legend to be used
 on continuous variables. If "continuous" , a colourbar is used. If "discrete",

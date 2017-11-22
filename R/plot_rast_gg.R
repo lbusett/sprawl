@@ -31,6 +31,8 @@
 #'  Note that if a wrong palette name is specified, plot_rast_gg reverts to
 #'  the default values. Run `sprawl::fillpals()` to see a list
 #'  of available palettes, Default: NULL
+#' @param scale_transform `character` optional transformation to be applied on
+#'  values of continuous fill variables (e.g., "log"),  Default: NULL
 #' @param direction `character [0 | 1]` direction of the color legend. Change this
 #'  to invert the color gradient, Default: 1
 #' @param leg_type `character ["continuous", "discrete"]` type of legend to be used
@@ -205,7 +207,7 @@
 #' @rdname plot_rast_gg
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
-#' @importFrom assertthat assert_that
+#' @importFrom assertthat assert_that has_attr
 #' @importFrom data.table as.data.table
 #' @importFrom dplyr mutate
 #' @importFrom gdalUtils gdalwarp
@@ -227,6 +229,7 @@ plot_rast_gg <- function(
   in_rast,
   rast_type    = NULL,
   palette_name = NULL, direction = 1,
+  scale_transform = NULL,
   leg_type     = NULL, leg_labels = NULL, leg_colors = NULL,
   leg_breaks   = NULL, leg_position = "right",
   maxpixels    = 1e5,
@@ -519,7 +522,7 @@ plot_rast_gg <- function(
 
   if (is.null(leg_labels)) {
 
-    if (has_attr(in_rast, "data")) {
+    if (assertthat::has_attr(in_rast, "data")) {
 
       if (length(in_rast@data@attributes)!= 0){
         leg_labels <- in_rast@data@attributes[[1]]$Class
@@ -533,7 +536,7 @@ plot_rast_gg <- function(
   # provided by the user. Also reset the palete to "manual"
 
   if (is.null(leg_colors)) {
-    if (has_attr(in_rast, "data")) {
+    if (assertthat::has_attr(in_rast, "data")) {
       if (length(in_rast@data@attributes) != 0) {
         if (length(in_rast@data@attributes[[1]]$Color) != 0) {
           leg_colors <- in_rast@data@attributes[[1]]$Color
@@ -551,6 +554,7 @@ plot_rast_gg <- function(
 
   plot <- add_scale_fill(plot,
                          palette,
+                         scale_transform,
                          title = "Value",
                          na.color,
                          zlims,
