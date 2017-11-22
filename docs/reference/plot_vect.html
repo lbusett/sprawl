@@ -163,11 +163,12 @@ See the description of the arguments for details on their use</p></li>
 
     <pre class="usage"><span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
   <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>point_shape</span> <span class='kw'>=</span> <span class='st'>"circle"</span>, <span class='kw'>point_linecolor</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
-  <span class='kw'>point_linesize</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>facet_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>, <span class='kw'>borders_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>borders_txt_size</span> <span class='kw'>=</span> <span class='fl'>2.5</span>, <span class='kw'>borders_txt_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>extent</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"vals"</span>,
+  <span class='kw'>point_linesize</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scale_transform</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>facet_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>levels_to_plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>,
+  <span class='kw'>borders_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_txt_size</span> <span class='kw'>=</span> <span class='fl'>2.5</span>,
+  <span class='kw'>borders_txt_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zoomin</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>extent</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"vals"</span>,
   <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"censor"</span>, <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"grey10"</span>, <span class='st'>"grey90"</span>),
   <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scalebar_txt_dist</span> <span class='kw'>=</span> <span class='fl'>0.03</span>,
   <span class='kw'>scalebar_pos</span> <span class='kw'>=</span> <span class='st'>"bottomright"</span>, <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -222,6 +223,11 @@ coloring the different polygons. If NULL, only the geometry is plotted,
 Default: NULL</p></td>
     </tr>
     <tr>
+      <th>scale_transform</th>
+      <td><p><code>character</code> optional transformation to be applied on
+values of continuous fill variables (e.g., "log"),  Default: NULL</p></td>
+    </tr>
+    <tr>
       <th>transparency</th>
       <td><p><code>numeric [0, 1]</code>transparency of the filled polygons/points. Higher
 values lead to higher transparency, Default: 0 (ignored if fill_var == NULL)</p></td>
@@ -238,6 +244,12 @@ If NULL, multiple values of <code>fill_var</code> for the same polygon are ignor
       <th>facet_rows</th>
       <td><p><code>numeric</code>, number of rows used for plotting multiple bands,
 in faceted plots, Default: 2 (Ignored if <code>fill_var</code> == NULL)</p></td>
+    </tr>
+    <tr>
+      <th>levels_to_plot</th>
+      <td><p><code>character array</code> If <code>facet_var</code> is specified, allows
+to select which levels of the vaiable should be plotted. If NULL, all the
+levels availbale will be plotted, Default: NULL</p></td>
     </tr>
     <tr>
       <th>borders_layer</th>
@@ -464,13 +476,13 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>get</span>(<span class='fu'>load</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>, <span class='st'>"poly_lomb.RData"</span>,
                                  <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)))
  <span class='co'># plot only geometry</span>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-15.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>1.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-16.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>1.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># plot with a fill on a cartegorical variable with a single "level"</span>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-17.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='img'><img src='plot_vect-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># change the palette, add a scalebar and remove the grid</span>
  <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>,<span class='kw'>show_axis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Set3"</span>,
-           <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-18.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot_vect-11.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
  <span class='co'># plot with a fill on a continuous variable with two "levels", using facets</span>
  <span class='co'># and a diverging palette. also add a "borders" layer with a different</span>
@@ -479,15 +491,15 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
            <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>50</span>,
            <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>,<span class='fl'>20</span>), <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"yellow"</span>, <span class='st'>"green"</span>),
            <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>2</span>),
-           <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='img'><img src='plot_vect-19.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: st_centroid does not give correct centroids for longitude/latitude data</span></div><div class='img'><img src='plot_vect-12.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
  <span class='co'># plot a "points" layer</span>
  <span class='fu'>library</span>(<span class='no'>sp</span>)
  <span class='fu'>demo</span>(<span class='no'>meuse</span>, <span class='kw'>ask</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
- <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-20.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"copper"</span>,
+ <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"copper"</span>,
                   <span class='kw'>point_shape</span> <span class='kw'>=</span> <span class='st'>"diamond"</span>,
                   <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>,
-                  <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='plot_vect-21.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                  <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='plot_vect-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

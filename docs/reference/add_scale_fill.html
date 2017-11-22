@@ -145,8 +145,8 @@ and customizes the scale_fill palette based on characteristics of the plot
 concerning treatment of outliers.</p>
     
 
-    <pre class="usage"><span class='fu'>add_scale_fill</span>(<span class='no'>plot</span>, <span class='no'>palette</span>, <span class='no'>title</span>, <span class='no'>na.color</span>, <span class='no'>zlims</span>, <span class='no'>leg_breaks</span>, <span class='no'>leg_labels</span>,
-  <span class='no'>leg_colors</span>, <span class='no'>leg_type</span>, <span class='no'>outliers_style</span>, <span class='no'>direction</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>add_scale_fill</span>(<span class='no'>plot</span>, <span class='no'>palette</span>, <span class='no'>scale_transform</span>, <span class='no'>title</span>, <span class='no'>na.color</span>, <span class='no'>zlims</span>,
+  <span class='no'>leg_breaks</span>, <span class='no'>leg_labels</span>, <span class='no'>leg_colors</span>, <span class='no'>leg_type</span>, <span class='no'>outliers_style</span>, <span class='no'>direction</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -159,6 +159,11 @@ concerning treatment of outliers.</p>
       <th>palette</th>
       <td><p><code>data.frame (1)</code> Line of the d.f. created by <code>fillpals</code>
 corresponding to the desired palette.</p></td>
+    </tr>
+    <tr>
+      <th>scale_transform</th>
+      <td><p><code>character</code> optional transformation to be applied on
+values of continuous fill variables (e.g., "log"),  Default: NULL</p></td>
     </tr>
     <tr>
       <th>title</th>

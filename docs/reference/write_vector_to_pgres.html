@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FUNCTION_TITLE — make_folder • sprawl</title>
+<title>write a spatial table to a PostGIS db table — write_vector_to_pgres • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,51 +135,83 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>FUNCTION_TITLE</h1>
+    <h1>write a spatial table to a PostGIS db table</h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>write spatial table to a PostGIS db table (simple wrapper around
+<code><a href='http://www.rdocumentation.org/packages/sf/topics/st_write'>sf::st_write_db</a></code> with automatic casting to <code>sf</code> objects and argument
+checks)</p>
     
 
-    <pre class="usage"><span class='fu'>make_folder</span>(<span class='no'>path</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"dirname"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>write_vector_to_pgres</span>(<span class='no'>in_vect</span>, <span class='no'>con</span>, <span class='no'>table_name</span>, <span class='kw'>schema</span> <span class='kw'>=</span> <span class='st'>"public"</span>,
+  <span class='kw'>make_valid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>path</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>in_vect</th>
+      <td><p>either an "sf" or "sp" R object, or the full path of
+a valid vector file</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'dirname'</p></td>
+      <th>con</th>
+      <td><p>a <code>PostgreSQLConnection</code> object to a PostGIS DB, created by a call to
+<code>DBI::DBI::dbConnect(PostgreSQL(),....</code></p></td>
     </tr>
     <tr>
-      <th>verbose</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'FALSE'</p></td>
+      <th>table_name</th>
+      <td><p><code>character</code> name of the table to be used for storage in the db</p></td>
+    </tr>
+    <tr>
+      <th>schema</th>
+      <td><p><code>character</code> name of the schema to be used for storage in the db</p></td>
+    </tr>
+    <tr>
+      <th>make_valid</th>
+      <td><p><code>logical</code> If FALSE, the function aborts in case invalid
+geometries are found. If TRUE, an automatic correction based on
+<code><a href='http://www.rdocumentation.org/packages/lwgeom/topics/valid'>lwgeom::st_make_valid</a></code> is attempted, Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>drop</th>
+      <td><p><code>logical</code> indicating if existing tables should be overwrittern,
+Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>row.names</th>
+      <td><p><code>logical</code> indicating if an additional row containing row numbers,
+should be added to the DB table, Default: FALSE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
+    <p>The function is called for its side effects</p>
     
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>DETAILS</p>
+    <p><code><a href='http://www.rdocumentation.org/packages/sf/topics/st_write'>sf::st_write_db</a></code> <code><a href='http://www.rdocumentation.org/packages/lwgeom/topics/valid'>lwgeom::st_make_valid</a></code> <code><a href='http://www.rdocumentation.org/packages/sf/topics/geos_query'>sf::st_is_valid</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='fu'>tempdir</span>(), <span class='st'>"testdir"</span>)
-<span class='fu'>dir.exists</span>(<span class='no'>path</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>make_folder</span>(<span class='no'>path</span>)
-<span class='fu'>dir.exists</span>(<span class='fu'>dirname</span>(<span class='no'>path</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='fu'>tempdir</span>(), <span class='st'>"test2"</span>, <span class='st'>"testfile.xyz"</span>)
-<span class='fu'>dir.exists</span>(<span class='fu'>dirname</span>(<span class='no'>path</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>make_folder</span>(<span class='no'>path</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"filename"</span>)
-<span class='fu'>dir.exists</span>(<span class='fu'>dirname</span>(<span class='no'>path</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+    <pre class="examples"># NOT RUN {
+# establish a connection with a postGIS DB
+con <- DBI::dbConnect(PostgreSQL(),
+                     host = "xx.xxx.xx.xx", dbname = "xxxxx", user = "xxxxx",
+                     password = "xxxxx", port = 5432)
+> con
+<PostgreSQLConnection>
 
-</div></pre>
+ # write a vector object in a table of the DB
+ write_vector_to_pgres(in_vect,
+                  con        = con,
+                  table_name = "my_table",
+                  schema     = "public",
+                  drop       = TRUE)
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -188,7 +220,7 @@
       
       <li><a href="#value">Value</a></li>
 
-      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

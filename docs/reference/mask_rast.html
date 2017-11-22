@@ -146,7 +146,7 @@ buffer can be applied to the input vector to allow a more "lenient" masking,
 or to remove also the borders of the vector.</p>
     
 
-    <pre class="usage"><span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>mask</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>mask</span>, <span class='kw'>mask_value</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>out_type</span> <span class='kw'>=</span> <span class='st'>"rastobject"</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>out_dtype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>out_nodata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"None"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/parallel/topics/detectCores'>detectCores</a></span>() - <span class='fl'>2</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
@@ -160,7 +160,20 @@ or to remove also the borders of the vector.</p>
     </tr>
     <tr>
       <th>mask</th>
-      <td><p>Vector file or object of class <code>*sf</code> or <code>sp</code> to be used as a mask</p></td>
+      <td><ol>
+<li><p>Vector file or object of class <code>*sf</code> or <code>sp</code> to be used as a mask
+2. Raster file or object of class <code>*sf</code> or <code>sp</code> to be used as a mask
+NOTE: If <code>mask</code> is a raster object or file, the function checks if it has the
+same number of pixels and extent of <code>in_rast</code>. If this is true, then <code>mask</code>
+is used directly to mask the input. Otherwise, it is first of all vectorized
+to a vector mask. The vector mask is then used in the processing.</p></li>
+</ol></td>
+    </tr>
+    <tr>
+      <th>mask_value</th>
+      <td><p><code>integer</code> if <code>mask</code> is a raster object/file, value corresponding
+to the areas <strong>that should be removed</strong> from the ouptut, Default: 0 (<em>Ignored if
+the provided <code>mask</code> is a vector!</em>)</p></td>
     </tr>
     <tr>
       <th>crop</th>
@@ -199,7 +212,7 @@ If NULL, the data type is retrieved from the input, Default: NULL</p></td>
     <tr>
       <th>out_nodata</th>
       <td><p><code>numeric</code> value to be assigned to areas outside the mask,
-Default: 'NoData'</p></td>
+Default: NULL</p></td>
     </tr>
     <tr>
       <th>compress</th>
@@ -247,7 +260,7 @@ string corresponding to the filename of the created raster (if out_type ==
                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
 <span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

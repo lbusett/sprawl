@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FUNCTION_TITLE — make_folder • sprawl</title>
+<title>change file extension — change_fileext • sprawl</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -135,35 +135,37 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>FUNCTION_TITLE</h1>
+    <h1>change file extension</h1>
     </div>
 
     
-    <p>FUNCTION_DESCRIPTION</p>
+    <p>Helper function allowing to quckly change the extension of
+a file name</p>
     
 
-    <pre class="usage"><span class='fu'>make_folder</span>(<span class='no'>path</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"dirname"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>change_fileext</span>(<span class='no'>in_file</span>, <span class='no'>new_ext</span>, <span class='kw'>full_path</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>path</th>
-      <td><p>PARAM_DESCRIPTION</p></td>
+      <th>in_file</th>
+      <td><p><code>character</code> full path of a file</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'dirname'</p></td>
+      <th>new_ext</th>
+      <td><p><code>character</code> new file extension (e.g., ".png")</p></td>
     </tr>
     <tr>
-      <th>verbose</th>
-      <td><p>PARAM_DESCRIPTION, Default: 'FALSE'</p></td>
+      <th>full_path</th>
+      <td><p><code>logical</code> if TRUE, a full path with updated extension is
+returne, otherwise, only an updated basename is rerturned, Default: FALSE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>OUTPUT_DESCRIPTION</p>
+    <p><code>character</code> basename/full_path of `in_file`` with updated extension</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -171,14 +173,11 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='fu'>tempdir</span>(), <span class='st'>"testdir"</span>)
-<span class='fu'>dir.exists</span>(<span class='no'>path</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>make_folder</span>(<span class='no'>path</span>)
-<span class='fu'>dir.exists</span>(<span class='fu'>dirname</span>(<span class='no'>path</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='fu'>file.path</span>(<span class='fu'>tempdir</span>(), <span class='st'>"test2"</span>, <span class='st'>"testfile.xyz"</span>)
-<span class='fu'>dir.exists</span>(<span class='fu'>dirname</span>(<span class='no'>path</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>make_folder</span>(<span class='no'>path</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"filename"</span>)
-<span class='fu'>dir.exists</span>(<span class='fu'>dirname</span>(<span class='no'>path</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-
+    <pre class="examples"><div class='input'><span class='no'>in_file</span> <span class='kw'>=</span> <span class='st'>"home/lb/tmp/prova.tif"</span>
+<span class='co'># return an updated basename</span>
+<span class='fu'>change_fileext</span>(<span class='no'>in_file</span>, <span class='st'>".png"</span>)</div><div class='output co'>#&gt; [1] "prova.png"</div><div class='input'>
+<span class='co'># return an updated full path</span>
+<span class='fu'>change_fileext</span>(<span class='no'>in_file</span>, <span class='st'>".png"</span>, <span class='kw'>full_path</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "home/lb/tmp/prova.png"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

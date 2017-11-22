@@ -59,6 +59,7 @@ reference:
       - '`sprawlext`'
       - '`cast_vect`'
       - '`cast_rast`'
+      - '`change_fileext`'
       - '`check_proj4string`'
       - '`convert_rastdtype`'
       - '`create_virtrast`'
