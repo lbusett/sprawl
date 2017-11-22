@@ -485,9 +485,8 @@ plot_rast_gg <- function(
   # Blank plot
   plot <- ggplot() + theme +
     theme(panel.grid.major = element_line(color = grid_color, linetype = 3),
-          panel.grid.minor = element_blank())
-  ggtitle(title,
-          subtitle = subtitle)
+          panel.grid.minor = element_blank()) +
+    ggtitle(title, subtitle = subtitle)
 
   # Center the title - can be overriden in case after plot completion
   plot <- plot +

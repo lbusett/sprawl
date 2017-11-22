@@ -4,12 +4,13 @@
 \alias{change_fileext}
 \title{change file extension}
 \usage{
-change_fileext(in_file, new_ext, new_path = NULL)
+change_fileext(in_file, new_ext = NULL, new_path = NULL)
 }
 \arguments{
 \item{in_file}{\code{character} full path of a file}
 
-\item{new_ext}{\code{character} new file extension (e.g., ".png")}
+\item{new_ext}{\code{character} new file extension (e.g., ".png"). If NULL (the
+default), the basename without extension is return, Deafault: NULL}
 
 \item{new_path}{\code{character} if not NULL the returned file name will use this
 new path instead than the one of the original file. If equal to "", only
