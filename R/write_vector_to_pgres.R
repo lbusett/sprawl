@@ -13,6 +13,8 @@
 #'    `lwgeom::st_make_valid` is attempted, Default: FALSE
 #' @param drop `logical` indicating if existing tables should be overwrittern,
 #'  Default: FALSE
+#' @param drop `logical` indicating if data should be appended to existing tables,
+#'  Default: FALSE
 #' @param row.names `logical` indicating if an additional row containing row numbers,
 #'  should be added to the DB table, Default: FALSE
 #' @return The function is called for its side effects
@@ -46,6 +48,7 @@ write_vector_to_pgres <- function(in_vect,
                                   schema     = "public",
                                   make_valid = FALSE,
                                   drop       = FALSE,
+                                  update     = FALSE,
                                   row.names  = FALSE,
                                   verbose    = TRUE) {
 
@@ -90,7 +93,9 @@ write_vector_to_pgres <- function(in_vect,
   # Push table to DB ----
 
   sf::st_write_db(con,
-                  obj = in_vect,
-                  table = c(schema, table_name),
-                  drop = drop, row.names = row.names)
+                  obj       = in_vect,
+                  table     = c(schema, table_name),
+                  drop      = drop,
+                  update    = update,
+                  row.names = row.names)
 }

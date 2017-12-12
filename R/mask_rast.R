@@ -188,7 +188,7 @@ mask_rast <- function(in_rast,
     if (crop) {
       in_rast <- crop_rast(in_rast,
                            mask,
-                           out_type = "vrtfile") %>%
+                           out_type = "vrtfile", verbose = FALSE) %>%
         raster::brick()
     }
     #   __________________________________________________________________________
