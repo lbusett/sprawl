@@ -147,7 +147,7 @@ er_polygons <- function(in_vect_crop,
   #  ___________________________________________________________________________
   #  Extract data from in_rast - foreach cycle on selected bands of in_rast ####
 
-  results <- foreach::foreach(band = 1:cl_opts$n_bands,
+  results <- foreach::foreach(band = seq_along(cl_opts$n_bands),
                               .packages = c("gdalUtils", "raster", "dplyr",
                                             "tibble", "data.table", "sf",
                                             "velox", "sprawl"),
@@ -480,6 +480,7 @@ er_polygons <- function(in_vect_crop,
     # if er_opts$join_feat_tbl, merge the extracted data with the missing shapefile
     # features
     if (er_opts$join_feat_tbl) {
+
       stat_data <- stat_data[{data.table::as.data.table(in_vect_crop) %>%
           data.table::setkey("mdxtnq")}]
       # Add a column for area

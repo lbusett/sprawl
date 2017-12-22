@@ -45,6 +45,7 @@ read_vect <- function(in_file, as_sp = FALSE, ...){
 
 # checkmate::assertFileExists(in_file)
   chk <- get_vectype(in_file)
+
   shp <- sf::read_sf(in_file, ...)
   if (as_sp) {
     shp <- as(shp, "Spatial")
