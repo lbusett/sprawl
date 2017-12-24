@@ -1,8 +1,7 @@
 # Sample .travis.yml for R projects
 
 language: r
-cache:
-  - packages
+cache: packages
 warnings_are_errors: false
 sudo: required
 
@@ -52,7 +51,7 @@ r_packages:
   - sf
 
 after_success:
-#  - Rscript -e 'covr::codecov()'
+   - Rscript -e 'covr::codecov()'
 #  - dropdb postgis
 #  - createdb postgis
 #  - psql -d postgis -c "CREATE EXTENSION postgis;"
