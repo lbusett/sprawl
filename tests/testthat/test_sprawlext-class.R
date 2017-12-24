@@ -3,7 +3,7 @@ context("sprawlext-class")
 
 test_that("sprawlext-class works as expected", {
 
-  skip_on_travis()
+  # skip_on_travis()
   library(raster)
   library(sp)
 

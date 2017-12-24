@@ -1,7 +1,7 @@
 context("Crop vector on a given extent")
 testthat::test_that("Crop Vector object", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   library(sprawl.data)
   in_polys_file  <- system.file("extdata/shapes", "lc_polys.shp",
                                           package = "sprawl.data")

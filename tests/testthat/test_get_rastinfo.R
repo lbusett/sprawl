@@ -1,7 +1,7 @@
 context("Get information on a raster object/file")
 
 test_that("get_rastinfo works as expected", {
-  skip_on_travis()
+  # skip_on_travis()
   library(sprawl.data)
   # Calling on a raster file or on a raster object accessing it gets same
   # results

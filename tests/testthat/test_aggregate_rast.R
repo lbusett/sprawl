@@ -1,7 +1,7 @@
 context("Aggregate raster on larger cells")
 testthat::test_that("Test On raster aggregation", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   library(sprawl.data)
 
   # in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",

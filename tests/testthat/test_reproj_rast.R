@@ -1,6 +1,6 @@
 test_that("reproj_rast works as expected", {
 
-  skip_on_travis()
+  # skip_on_travis()
   library(raster)
   in_file <- system.file("extdata/OLI_test", "oli_multi_1000_b2.tif",
                          package = "sprawl.data")

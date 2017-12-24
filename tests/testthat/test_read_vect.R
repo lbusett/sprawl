@@ -1,7 +1,7 @@
 context("Read a vector file")
 testthat::test_that("Test read_vect", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   library(sprawl.data)
   # open a shapefile as a `sf` object
   shp_file <- system.file("extdata/shapes","lc_polys.shp",

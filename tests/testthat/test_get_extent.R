@@ -1,7 +1,7 @@
 context("Get extent of a spatial object/file")
 testthat::test_that("Test retrieval of extent",{
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # no proj set
   library(sprawl.data)
 

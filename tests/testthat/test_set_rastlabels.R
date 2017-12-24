@@ -21,6 +21,3 @@ test_that("set_rastlabels works as expected", {
 
 
 })
-
-sf::st_layers("C:/Users/LB_laptop/Downloads/gdal_sample_v1.2_no_extensions.gpkg")
-a = sf::st_read("C:/Users/LB_laptop/Downloads/gdal_sample_v1.2_no_extensions.gpkg")

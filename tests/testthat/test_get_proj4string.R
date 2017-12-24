@@ -1,7 +1,7 @@
 context("Get projection string of a spatial object/files")
 testthat::test_that("Test projection string",{
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # no proj set
   library(sprawl.data)
   library(testthat)
@@ -48,7 +48,7 @@ testthat::test_that("Test projection string",{
 context("Get/check projection string from a string or number")
 testthat::test_that("Test projection string",{
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # no proj set
   library(sprawl.data)
   library(testthat)

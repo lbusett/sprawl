@@ -2,7 +2,7 @@ context("plot_rast")
 
 
 test_that("plot_rast works as expected", {
-  skip_on_travis()
+  # skip_on_travis()
   # library(testthat)
   in_rast <- build_testraster(20,20)
   # plot only the raster

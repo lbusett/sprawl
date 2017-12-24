@@ -87,12 +87,12 @@ write_shape <- function(in_vect,
   # Automatically shorten column names before attempting to save
 
 
-  # if (any(nchar(names(in_vect)) > 10)) {
-  #   warning("write_shape --> Column names are too long for saving to .shp",
-  #           "\n They will be automatically abbreviated!")
-  # names(in_vect) <- stringr::str_replace_all(names(in_vect), " ", "_") %>%
-  #                                   abbreviate(10)
-  # }
+  if (any(nchar(names(in_vect)) > 10)) {
+    warning("write_shape --> Column names are too long for saving to .shp",
+            "\n They will be automatically abbreviated!")
+  names(in_vect) <- stringr::str_replace_all(names(in_vect), " ", "_") %>%
+                                    abbreviate(10)
+  }
 
   sf::write_sf(obj           = in_vect,
                dsn           = out_file,

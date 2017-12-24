@@ -3,7 +3,7 @@ context("Read a Raster file")
 library(testthat)
 
 test_that("read_rast works as expected", {
-  skip_on_travis()
+  # skip_on_travis()
   library(sprawl.data)
   # read single-band --> RasterLayer
   in_file <- system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",

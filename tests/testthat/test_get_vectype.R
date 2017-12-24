@@ -1,7 +1,7 @@
 context("get_vectype")
 
 test_that("get_vectype works as expected", {
- skip_on_travis()
+ # skip_on_travis()
   library(sprawl.data)
 
   # input is a shapefile

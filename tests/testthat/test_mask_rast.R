@@ -1,7 +1,7 @@
 context("Mask a raster on features of a vector")
 testthat::test_that("Test On raster masking", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # library(testthat)
   library(sprawl.data)
 
@@ -58,7 +58,7 @@ testthat::test_that("Test On raster masking", {
 context("Mask a raster using a raster as mask")
 testthat::test_that("Mask a raster using a raster as mask", {
   # skip_on_cran()
-  skip_on_travis()
+  # skip_on_travis()
   # library(testthat)
   library(sprawl.data)
   # Test maskuing a raster with a raster
