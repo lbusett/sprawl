@@ -22,7 +22,7 @@
 #' @export
 #' @importFrom data.table data.table rbindlist setkey as.data.table setcolorder
 #' @importFrom dplyr case_when filter
-#' @importFrom foreach foreach
+#' @importFrom foreach foreach "%dopar%"
 #' @importFrom gdalUtils gdal_translate
 #' @importFrom raster res setZ raster writeRaster getValues extent yFromRow extract xyFromCell
 #' @importFrom sf st_bbox st_as_sf st_geometry st_set_crs st_area
@@ -147,7 +147,7 @@ er_polygons <- function(in_vect_crop,
   #  ___________________________________________________________________________
   #  Extract data from in_rast - foreach cycle on selected bands of in_rast ####
 
-  results <- foreach::foreach(band = seq_along(cl_opts$n_bands),
+  results <- foreach::foreach(band = seq_len(cl_opts$n_bands),
                               .packages = c("gdalUtils", "raster", "dplyr",
                                             "tibble", "data.table", "sf",
                                             "velox", "sprawl"),
@@ -444,12 +444,13 @@ er_polygons <- function(in_vect_crop,
     #   return data processed by the "worker" (a.k.a. the "band" results) ####
 
     out <- list(alldata = all_data, stats = stat_data)
+    # out
     return(out)
 
   } # End Foreach cycle on bands
 
   parallel::stopCluster(cl$clust)
-
+# browser()
   if (er_opts$verbose) message(
     "extract_rast --> Data extraction completed. Building outputs"
   )

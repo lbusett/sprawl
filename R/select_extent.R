@@ -10,7 +10,7 @@
 #' @return a `sprawlext` object representing the selected extent.
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @details DETAILS
-#' @examples \donttun{
+#' @examples \dontrun{
 #' if(interactive()){
 #'  in_rast <- read_rast(system.file("extdata/REYE_test", "REYE_2016_185_gNDVI.tif",
 #'                           package = "sprawl.data"))

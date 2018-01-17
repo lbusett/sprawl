@@ -5,7 +5,8 @@
 \title{write a spatial table to a PostGIS db table}
 \usage{
 write_vector_to_pgres(in_vect, con, table_name, schema = "public",
-  make_valid = FALSE, drop = FALSE, row.names = FALSE, verbose = TRUE)
+  make_valid = FALSE, drop = FALSE, update = FALSE, row.names = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{in_vect}{either an "sf" or "sp" R object, or the full path of
@@ -27,6 +28,9 @@ Default: FALSE}
 
 \item{row.names}{\code{logical} indicating if an additional row containing row numbers,
 should be added to the DB table, Default: FALSE}
+
+\item{drop}{\code{logical} indicating if data should be appended to existing tables,
+Default: FALSE}
 }
 \value{
 The function is called for its side effects
