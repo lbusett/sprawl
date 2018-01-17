@@ -262,7 +262,7 @@ plot_rast_gg <- function(
 
   #   __________________________________________________________________________
   #   check arguments                                                       ####
-
+  in_rast <- cast_rast(in_rast, "rastobject")
   assertthat::assert_that(
     methods::is(in_rast, "Raster"),
     msg = "plot_rast_gg --> `in_rast` is not a valid `Raster` object. Aborting!"
