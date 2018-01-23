@@ -22,6 +22,7 @@ reference:
       - '`aggregate_rast`'
       - '`crop_rast`'
       - '`cuttails_rast`'
+      - '`standardise_rast`'
   - title: Vector processing
     desc: ~
     contents:
