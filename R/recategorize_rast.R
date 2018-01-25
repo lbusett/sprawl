@@ -193,7 +193,7 @@ recl_rast <- raster::reclassify(in_rast,
                                 overwrite      = overwrite,
                                 datatype       = ot) %>%
   raster::ratify() %>%
-  set_rastlabels(class_names =  class_names,
+  sprawl::set_rastlabels(class_names =  class_names,
                  class_colors = class_colors,
                  verbose = FALSE)
 

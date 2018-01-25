@@ -61,10 +61,7 @@ set_rastlabels <- function(in_rast,
                            verbose      = TRUE) {
 
   call <- match.call()
-  if (verbose) message("set_rastlabels --> categorizing ", call[[2]],
-                       ifelse(length(class_names != 0),
-                              paste(" and assigning class names based on ",
-                                    call[[3]]), ""))
+  if (verbose) message("set_rastlabels --> categorizing `", call[[2]], "`")
   #   __________________________________________________________________________
   #   build the RAT for the new raster. Use class_names and colors          ####
   #   if available

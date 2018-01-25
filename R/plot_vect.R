@@ -36,6 +36,12 @@
 #' @param fill_var `character` name of the column of `in_vect` to be used for
 #'  coloring the different polygons. If NULL, only the geometry is plotted,
 #'  Default: NULL
+#' @param txt_field name of the column of `borders_layer` to be used to
+#'   add text labels to `borders_layer` (if provided), Default: NULL (no labels)
+#' @param txt_size size of the txt labels derived from `borders_layer`,
+#'   Default: 2
+#' @param txt_color color of the txt labels derived from `borders_layer`,
+#'   Default: "grey15"
 #' @param scale_transform `character` optional transformation to be applied on
 #'  values of continuous fill variables (e.g., "log"),  Default: NULL
 #' @param transparency `numeric [0, 1]`transparency of the filled polygons/points. Higher
@@ -219,6 +225,7 @@ plot_vect <- function(
   point_size = 0.2, point_shape = "circle",
   point_linecolor = "black", point_linesize = 0.01,
   fill_var       = NULL,
+  txt_field = NULL, txt_size = 2.5, txt_color = "grey15", #nolint
   scale_transform= NULL, transparency = 0,
   facet_var      = NULL, facet_rows     = NULL,
   levels_to_plot = NULL,
@@ -241,13 +248,15 @@ plot_vect <- function(
 ) {
 
   call = match.call()
-  geometry <- color <- NULL
+  geocol <- color <- NULL
 
   in_vect <- cast_vect(in_vect, "sfobject")
   assertthat::assert_that(
     methods::is(in_vect, "sf"),
     msg = "plot_vect --> `in_vect` is not a valid `sf` object. Aborting!"
   )
+
+  geocol <- attr(indata, "sf_column")
 
   if (!is.null(facet_var)) {
     if (!any(names(in_vect) == facet_var)) {
@@ -485,7 +494,7 @@ plot_vect <- function(
                            size  = line_size)
   } else {
 
-    if (inherits(in_vect$geometry, c("sfc_POINT", "sfc_MULTIPOINT"))) {
+    if (inherits(in_vect[[geocol]], c("sfc_POINT", "sfc_MULTIPOINT"))) {
 
       point_shapes <- data.frame(shape = c("circle", "square", "diamond",
                                            "uptriangle", "downtriangle"),
@@ -619,6 +628,22 @@ plot_vect <- function(
                            fill  = out_low_color,
                            na.rm = TRUE)
 
+  }
+
+  if (!is.null(txt_field)) {
+    if (txt_field %in% names(in_vect)) {
+
+      centroids <- st_centroid(in_vect)
+      centroids <-  do.call(rbind, st_geometry(centroids)) %>%
+        as_tibble() %>% setNames(c("lon","lat"))
+      lab_layer <- in_vect %>%
+        mutate(lon = centroids$lon, lat = centroids$lat)
+      plot <- plot + geom_text(data = lab_layer,
+                               aes_string(label = txt_field,
+                                          x = "lon", y = "lat"),
+                               size = txt_size,
+                               color = txt_color)
+    }
   }
 
   #   __________________________________________________________________________
