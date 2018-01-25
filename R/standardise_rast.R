@@ -446,7 +446,9 @@ standardise_rast <- function(in_rast,
           sel_rast_vect <- cast_rast(sel_rast_vect_path, "rastobject")
           j <- 0
           # continue interpolating until all the pixels in the polygon are covered
-          while (any(values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1)) {
+          max_iter_n <- 100 # maximum number of iterations
+          while (any(values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
+                 j < max_iter_n) {
             j <- j+1
             # sel_w <- focalWeight(sel_rast_fil, -buffer*sqrt(j), "circle")
             sel_w <- focalWeight(sel_rast_fil, mean(res(sel_rast_fil))*sqrt(j), "circle") # 1 pixel per time
@@ -456,6 +458,12 @@ standardise_rast <- function(in_rast,
               fun = function(x){weighted.mean(x,sel_w,na.rm=TRUE)},
               w = sel_w, pad=TRUE, NAonly=TRUE
             )
+          }
+          if (j == max_iter_n) {
+            warning(paste0(
+              "Borders and/or gaps have not been completely filled ",
+              "(maximum number of iterations was reached)."
+            ))
           }
 
         } else if (fill_method == "average") {
