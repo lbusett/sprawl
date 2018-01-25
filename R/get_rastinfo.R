@@ -95,8 +95,11 @@ get_rastinfo <- function(in_rast,
                  fnames      = in_rast@file@name,
                  Z           = in_rast@z,
                  dtype       = in_rast@file@datanotation,
-                 proj4string = get_proj4string(in_rast),
-                 units       = get_projunits(get_proj4string(in_rast)))
+                 proj4string = check_proj4string(raster::crs(in_rast),
+                                                 abort = FALSE),
+                 units       = get_projunits(check_proj4string(
+                   raster::crs(in_rast), abort = FALSE))
+    )
 
   }
   if (inherits(in_rast, "RasterStack")) {

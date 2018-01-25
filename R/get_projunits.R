@@ -3,7 +3,7 @@
 #'   valid proj4string or CRS
 #' @param proj4string valid proj4string or object of class `sp::CRS`
 #' @return `character` measure units of the provided proj4string (e.g., "m",
-#'   "dec.degrees", ...)
+#'   "dec.degrees", ...), or NA if it was not possible to retrieve the units.
 #' @examples
 #'
 #'   # latlong projection
@@ -39,6 +39,10 @@ get_projunits <- function(proj4string) {
            "proj4string. Aborting!")
     }
   }
+
+  if (is.na(proj4string@projargs)) {
+    return(NA)
+  } else {
   #   ________________________________________________________________________
   #   Find projection type                                                ####
   parse_proj <- stringr::str_split(proj4string@projargs, "\\+",
@@ -66,7 +70,7 @@ get_projunits <- function(proj4string) {
       }
     }
   }
-
+  }
   warning("get_projunits --> Unable to retrieve units !")
-  return("unknown")
+  return(NA)
 }
