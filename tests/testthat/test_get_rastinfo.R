@@ -32,4 +32,10 @@ test_that("get_rastinfo works as expected", {
   info <- get_rastinfo(getinfo_obj)
   expect_equal(info$indbands, 2)
 
+  # Calling on a raster without projection does not abort
+  r = raster::raster(ncol = 10, nrow = 20)
+  raster::crs(r) <- NA
+  info <- get_rastinfo(r)
+
+
 })

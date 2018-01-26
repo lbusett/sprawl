@@ -155,21 +155,21 @@ in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdoc
 ## epsg (SRID):    4326
 ## proj4string:    +proj=longlat +datum=WGS84 +no_defs
 ## # A tibble: 13 x 5
-##       id       lc_type category sup_catego          geometry
-##    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt; &lt;S3: sfc_POLYGON&gt;
-##  1     1      forest_1   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-##  2     2      forest_2   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-##  3     3       urban_1    Other      Other &lt;S3: sfc_POLYGON&gt;
-##  4     4    cropland_1 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-##  5     5    cropland_2 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-##  6     6      forest_3   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-##  7     7    reiver_bed    Other      Other &lt;S3: sfc_POLYGON&gt;
-##  8     8    cropland_3 Cropland Vegetation &lt;S3: sfc_POLYGON&gt;
-##  9     9  urban_2_part    Other      Other &lt;S3: sfc_POLYGON&gt;
-## 10    10 sparsfor_part   Forest Vegetation &lt;S3: sfc_POLYGON&gt;
-## 11    11         water    Other      Other &lt;S3: sfc_POLYGON&gt;
-## 12    12    small_feat    Other      Other &lt;S3: sfc_POLYGON&gt;
-## 13    13      out_feat    Other      Other &lt;S3: sfc_POLYGON&gt;</code></pre>
+##       id lc_type       category sup_catego geometry                       
+##    &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;S3: sfc_POLYGON&gt;              
+##  1  1.00 forest_1      Forest   Vegetation list(c(120.730226598245, 120.7…
+##  2  2.00 forest_2      Forest   Vegetation "list(c(120.366400705491, 120.…
+##  3  3.00 urban_1       Other    Other      "list(c(120.594103547488, 120.…
+##  4  4.00 cropland_1    Cropland Vegetation "list(c(120.637099475218, 120.…
+##  5  5.00 cropland_2    Cropland Vegetation list(c(120.72307110377, 120.74…
+##  6  6.00 forest_3      Forest   Vegetation "list(c(121.225596236059, 121.…
+##  7  7.00 reiver_bed    Other    Other      "list(c(120.42082493451, 120.4…
+##  8  8.00 cropland_3    Cropland Vegetation "list(c(120.770225107332, 120.…
+##  9  9.00 urban_2_part  Other    Other      list(c(120.583292659669, 120.5…
+## 10 10.0  sparsfor_part Forest   Vegetation "list(c(120.19576633666, 120.2…
+## 11 11.0  water         Other    Other      list(c(121.137743029623, 121.1…
+## 12 12.0  small_feat    Other    Other      list(c(120.780032942001, 120.7…
+## 13 13.0  out_feat      Other    Other      list(c(120.678108588576, 120.6…</code></pre>
 <p>, and in <code>in_rast</code> a raster time series with 46 bands:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">in_rast</code></pre></div>
 <pre><code>## class       : RasterStack 
@@ -198,15 +198,15 @@ in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdoc
 ## epsg (SRID):    NA
 ## proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 ## # A tibble: 6 x 10
-##    lc_type band_n    band_name n_pix_val     N value    id category
-##     &lt;fctr&gt;  &lt;int&gt;        &lt;chr&gt;     &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;
-## 1 forest_1      1 EVIts_test.1        61     1  4454     1   Forest
-## 2 forest_1      1 EVIts_test.1        61     2  4260     1   Forest
-## 3 forest_1      1 EVIts_test.1        61     3  4224     1   Forest
-## 4 forest_1      1 EVIts_test.1        61     4  4344     1   Forest
-## 5 forest_1      1 EVIts_test.1        61     5  4489     1   Forest
-## 6 forest_1      1 EVIts_test.1        61     6  4970     1   Forest
-## # ... with 2 more variables: sup_catego &lt;fctr&gt;, geometry &lt;S3: sfc_POINT&gt;</code></pre>
+##   lc_type band_n band_name n_pix_val     N value    id category sup_catego
+##   &lt;fct&gt;    &lt;int&gt; &lt;chr&gt;         &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;fct&gt;     
+## 1 forest…      1 EVIts_te…        61     1  4454  1.00 Forest   Vegetation
+## 2 forest…      1 EVIts_te…        61     2  4260  1.00 Forest   Vegetation
+## 3 forest…      1 EVIts_te…        61     3  4224  1.00 Forest   Vegetation
+## 4 forest…      1 EVIts_te…        61     4  4344  1.00 Forest   Vegetation
+## 5 forest…      1 EVIts_te…        61     5  4489  1.00 Forest   Vegetation
+## 6 forest…      1 EVIts_te…        61     6  4970  1.00 Forest   Vegetation
+## # ... with 1 more variable: geometry &lt;S3: sfc_POINT&gt;</code></pre>
 <ul>
 <li>
 <code>extracted_values$statdata</code> contains instead the statistics for each polygon and band. By default, average, standard deviation, minimum, maximum and median are computed (see the help of the function)</li>
@@ -219,16 +219,16 @@ in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdoc
 ## epsg (SRID):    NA
 ## proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 ## # A tibble: 6 x 15
-##    lc_type band_n    band_name        area n_pix n_pix_val      avg   med
-##     &lt;fctr&gt;  &lt;dbl&gt;        &lt;chr&gt; &lt;S3: units&gt; &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;
-## 1 forest_1      1 EVIts_test.1 3400057 m^2    61        61 4830.820  4747
-## 2 forest_1      2 EVIts_test.2 3400057 m^2    61        61 4605.131  4648
-## 3 forest_1      3 EVIts_test.3 3400057 m^2    61        61 4837.902  4834
-## 4 forest_1      4 EVIts_test.4 3400057 m^2    61        61 4484.984  4411
-## 5 forest_1      5 EVIts_test.5 3400057 m^2    61        61 4284.197  4237
-## 6 forest_1      6 EVIts_test.6 3400057 m^2    61        61 4374.525  4302
-## # ... with 7 more variables: sd &lt;dbl&gt;, min &lt;dbl&gt;, max &lt;dbl&gt;, id &lt;dbl&gt;,
-## #   category &lt;fctr&gt;, sup_catego &lt;fctr&gt;, geometry &lt;S3: sfc_POLYGON&gt;</code></pre>
+##   lc_type  band_n band_name area   n_pix n_pix_val   avg   med    sd   min
+##   &lt;fct&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;S3: &gt; &lt;int&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 forest_1   1.00 EVIts_te… 34000…    61        61  4831  4747   541  3731
+## 2 forest_1   2.00 EVIts_te… 34000…    61        61  4605  4648   511  3665
+## 3 forest_1   3.00 EVIts_te… 34000…    61        61  4838  4834   557  3640
+## 4 forest_1   4.00 EVIts_te… 34000…    61        61  4485  4411   474  3285
+## 5 forest_1   5.00 EVIts_te… 34000…    61        61  4284  4237   499  3469
+## 6 forest_1   6.00 EVIts_te… 34000…    61        61  4375  4302   471  3317
+## # ... with 5 more variables: max &lt;dbl&gt;, id &lt;dbl&gt;, category &lt;fct&gt;,
+## #   sup_catego &lt;fct&gt;, geometry &lt;S3: sfc_POLYGON&gt;</code></pre>
 <p>These results can be easily used for performing further analysis or plotting (<strong>coming soon !</strong>)</p>
 </div>
 </div>
@@ -245,7 +245,7 @@ in_rast  &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdoc
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

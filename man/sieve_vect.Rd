@@ -4,7 +4,7 @@
 \alias{sieve_vect}
 \title{FUNCTION_TITLE}
 \usage{
-sieve_vect(in_vect, min_patch_area, class_field, reassign_met = "bord_lgt",
+sieve_vect(in_vect, min_patch_area, class_field, reassign_met = "NULL",
   out_type = "sfobject", out_file = NULL, overwrite = FALSE,
   create_dir = FALSE, verbose = TRUE)
 }

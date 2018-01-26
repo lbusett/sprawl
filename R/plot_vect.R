@@ -659,10 +659,10 @@ plot_vect <- function(
                               size  = borders_size)
 
     if (!is.null(borders_txt_field)) {
-      if(borders_txt_field %in% names(borders)) {
+      if (borders_txt_field %in% names(borders)) {
 
         centroids <- st_centroid(borders)
-        centroids <-  do.call(rbind, st_geometry(centroids)) %>%
+        centroids <- do.call(rbind, st_geometry(centroids)) %>%
           as_tibble() %>% setNames(c("lon","lat"))
         borders <- borders %>%
           mutate(lon = centroids$lon, lat = centroids$lat)
