@@ -10,10 +10,12 @@ test_that("set_rastlabels works as expected", {
 
   context("Assign manual label names")
 
-  cat_rast <- set_rastlabels(in_rast, class_names = letters[1:5],
+  cat_rast <- set_rastlabels(in_rast,
+                             class_names = letters[1:5],
                              verbose = FALSE)
   expect_is(cat_rast, "Raster")
-  expect_equal(levels(cat_rast)[[1]]$Class, letters[1:5])
+  levs <- levels(cat_rast)[[1]]$Class
+  expect_equal(levs, letters[1:5])
 
   # wrong labels
   expect_warning(cat_rast <- set_rastlabels(in_rast, class_names = letters[1:4],

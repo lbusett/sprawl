@@ -111,7 +111,7 @@ al meglio queste condizioni:
 <br>
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-p1 <- plot_vect(indata, fill_var = "muz_n", subtitle = "MUZs", scalebar = F, show_grid = F, show_axis = F)
+p1 <- plot_vect(indata, fill_var = "muz_n", scalebar = F, show_grid = F, show_axis = F)
 p2 <- plot_vect(indata, fill_var = "soil_id", subtitle = "Tipo di Suolo", scalebar = F, show_axis = F)
 p3 <- plot_vect(indata, fill_var = "rho_0", palette_name = "RdYlBu", subtitle = "Resistività", scalebar = F, show_axis = F)
 p2 + p3 + p1 + plot_layout(ncol = 2) 
