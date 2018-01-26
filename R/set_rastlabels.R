@@ -61,6 +61,7 @@ set_rastlabels <- function(in_rast,
                            verbose      = TRUE) {
 
   call <- match.call()
+
   if (verbose) message("set_rastlabels --> categorizing `", call[[2]], "`")
   #   __________________________________________________________________________
   #   build the RAT for the new raster. Use class_names and colors          ####
@@ -70,8 +71,13 @@ set_rastlabels <- function(in_rast,
     stop("set_rastclasses --> the function currently support only single-band
          rasters. Aborting!")
   }
-  cat_rast <- raster::ratify(in_rast)
-  n_class  <- dim(cat_rast@data@attributes[[1]])[1]
+
+  # check if the input is already a ratified raster to avoid problems
+  # if number of labels are not coincident with number of unique values
+
+
+  if (length(in_rast@data@attributes) == 0) in_rast <- raster::ratify(in_rast)
+  n_class  <- dim(in_rast@data@attributes[[1]])[1]
 
   if (length(class_names) != n_class) {
     warning("set_rastlabels --> class_names not provided or not matching the  ",
@@ -80,21 +86,19 @@ set_rastlabels <- function(in_rast,
     class_names = NULL
   }
 
-
-
   if (is.null(class_names)) {
-    cat_rast@data@attributes[[1]]$Class <-
-      as.character(cat_rast@data@attributes[[1]]$ID)
+    in_rast@data@attributes[[1]]$Class <-
+      as.character(in_rast@data@attributes[[1]]$ID)
   } else {
-    cat_rast@data@attributes[[1]]$Class <- class_names
+    in_rast@data@attributes[[1]]$Class <- class_names
   }
 
   if (is.null(class_colors)) {
-    cat_rast@data@attributes[[1]]$Color = scales::hue_pal()(n_class)
+    in_rast@data@attributes[[1]]$Color = scales::hue_pal()(n_class)
   } else {
-    cat_rast@data@attributes[[1]]$Color = class_colors
+    in_rast@data@attributes[[1]]$Color = class_colors
   }
 
-  return(cat_rast)
+  return(in_rast)
 
 }
