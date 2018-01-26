@@ -546,8 +546,6 @@ plot_rast_gg <- function(
 
   }
 
-
-
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 

@@ -2,9 +2,10 @@
 #' @description function to reclassify values of a raster object or raster file
 #'   based on a reclassification matrix which specifies which value in the output
 #'   should be taken by different **intervals** of values of the input raster
-#'   (simple wrapper for the raster::reclassify function, providing a (somehow)
-#'   easier and extended I/O functionality and possibility to set the class names
-#'   for the new raster using `raster::ratify`
+#' @details The function is a  wrapper around the `raster::reclassify` function,
+#'   providing a (somehow) easier and extended I/O functionality and possibility
+#'   to easily set the class names and eventually plotting colors for the new raster
+#'   using `raster::ratify`
 #' @param in_rast Input raster file or "R" raster layer to be reclassified
 #' @param class_matrix `data.frame` 3 column data frame with column names equal
 #'   to `start`, `end`, `new` and `label`. Each line specifies an interval of values in
@@ -139,7 +140,6 @@ recategorize_rast <- function(in_rast,
               "from the number of unique classes requested\n for the output ",
               "raster. \nClass labels will be ignored!")
       class_matrix$label = class_matrix$new
-
     }
   } else {
     class_matrix$label = NA
@@ -164,6 +164,10 @@ recategorize_rast <- function(in_rast,
     na.omit() %>%
     as.character()
 
+  class_IDs <-  unique(class_matrix$new) %>%
+    na.omit() %>%
+    as.numeric()
+
   if (!all(is.na(unique(class_matrix$color)))) {
     class_colors <-  class_matrix %>%
       dplyr::group_by(new) %>%
@@ -178,29 +182,42 @@ recategorize_rast <- function(in_rast,
   }
 
   # ___________________________________________________________________________
-# Launch raster::reclassify, using intervals open on the left and closed ####
-# on the right, then apply raster::ratify to initialize the RAT on the
-# result
-if (is.null(out_file)) {
-  out_file <- tempfile(fileext = ".tif")
-}
+  # Launch raster::reclassify, using intervals open on the left and closed ####
+  # on the right, then apply raster::ratify to initialize the RAT on the
+  # result
+  if (is.null(out_file)) {
+    out_file <- tempfile(fileext = ".tif")
+  }
 
-recl_rast <- raster::reclassify(in_rast,
-                                class_matrix[,1:3],
-                                filename       = out_file,
-                                include.lowest = TRUE,
-                                right          = FALSE,
-                                overwrite      = overwrite,
-                                datatype       = ot) %>%
-  raster::ratify() %>%
-  sprawl::set_rastlabels(class_names =  class_names,
-                 class_colors = class_colors,
-                 verbose = FALSE)
+  recl_rast <- raster::reclassify(in_rast,
+                                  class_matrix[,1:3],
+                                  filename       = out_file,
+                                  include.lowest = TRUE,
+                                  right          = FALSE,
+                                  overwrite      = overwrite,
+                                  datatype       = ot) %>%
+    ratify()
 
+  # check which of the values specified in class_matrix are really present
+  # in the dataset to properly construct the RAT with class_names and colors
+  #
+  avail_ids <- which(!is.na(
+    match(class_IDs, recl_rast@data@attributes[[1]][["ID"]])))
+  class_names  <- class_names[avail_ids]
+  class_IDs    <- class_IDs[avail_ids]
+  class_colors <- class_colors[avail_ids]
+  recl_rast@data@attributes[[1]] <- data.frame(ID    = class_IDs,
+                                               Class = class_names)
 
-if (out_type == "rastobject") {
-  return(recl_rast)
-} else {
-  return(read_rast(out_file))
-}
+  # Now set the labels for the classes
+  recl_rast <- sprawl::set_rastlabels(recl_rast,
+                                      class_names =  class_names,
+                                      class_colors = class_colors,
+                                      verbose = FALSE)
+
+  if (out_type == "rastobject") {
+    return(recl_rast)
+  } else {
+    return(read_rast(out_file))
+  }
 }
