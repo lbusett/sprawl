@@ -1,12 +1,8 @@
-context("Aggregate raster on larger cells")
 testthat::test_that("Test On raster aggregation", {
+  context("aggregate_rast --> Aggregate raster on larger cells")
   # skip_on_cran()
   # skip_on_travis()
   library(sprawl.data)
-
-  # in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
-  #                        package = "sprawl.data")
-  # in_rast      <- read_rast(in_file, bands = 20)
 
   in_rast <- raster::raster(nrows = 50, ncols = 50) %>%
     raster::init("cell")

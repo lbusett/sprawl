@@ -8,15 +8,18 @@
 \alias{check_proj4string.CRS}
 \title{Check the validity of the input projection}
 \usage{
-check_proj4string(projection, abort = FALSE)
+check_proj4string(projection, abort = FALSE, verbose = TRUE)
 
-\method{check_proj4string}{default}(projection, abort = FALSE)
+\method{check_proj4string}{default}(projection, abort = FALSE,
+  verbose = TRUE)
 
-\method{check_proj4string}{numeric}(projection, abort = FALSE)
+\method{check_proj4string}{numeric}(projection, abort = FALSE,
+  verbose = TRUE)
 
-\method{check_proj4string}{character}(projection, abort = FALSE)
+\method{check_proj4string}{character}(projection, abort = FALSE,
+  verbose = TRUE)
 
-\method{check_proj4string}{CRS}(projection, abort = FALSE)
+\method{check_proj4string}{CRS}(projection, abort = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{projection}{\code{character} or \code{integer} corresponding to the
@@ -24,7 +27,7 @@ proj4string to be checked, the EPSG code or a numeric UTM zone; alternatively,
 a \link{CRS} object is accepted.}
 
 \item{abort}{\code{logical} if TRUE, the function aborts in case an invalid invalid
-projection is passed. Otherwise, the function returns "invalid", Default: TRUE}
+projection is passed. Otherwise, the function returns "NA", Default: TRUE}
 }
 \value{
 \code{character} proj4string of the object or file
