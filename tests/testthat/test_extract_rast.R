@@ -112,13 +112,15 @@ testthat::test_that(
     # Check that results are coherent with `raster::extract` on the test dataset
     # skip_on_travis()
     out_extract_rast  <- extract_rast(in_rast, in_polys, selbands = c(1,2),
-                                      verbose = F, keep_null = T, join_geom = F,
-                                      full_data = F, small = T,
+                                      verbose    = FALSE, keep_null = FALSE,
+                                      join_geom  = FALSE,
+                                      full_data  = FALSE,
+                                      small      = FALSE,
                                       comp_quant = FALSE)
     outcomp     <- out_extract_rast$stats$avg
     out_extract <- raster::extract(in_rast,
                                    as(in_polys, "Spatial"),
-                                   fun = "mean", na.rm = T)
+                                   fun = "mean", na.rm = TRUE)
     expect_equal(mean(as.numeric(out_extract), na.rm = TRUE),
                  mean(outcomp, na.rm = TRUE))
     outcustom <- extract_rast(in_rast, in_polys, selbands = c(1,2), verbose = F,
@@ -203,12 +205,6 @@ testthat::test_that("Test On points extraction", {
                       verbose = F, join_geom = F)
   testthat::expect_s3_class(out, "data.frame")
   testthat::expect_error(st_geometry(out))
-
-  in_polys <- read_vect("/home/lb/projects/ermes/datasets/Field_data/2016/Italy/Static_info/IT_Field_data_static_2016_20170216.shp",
-                        stringsAsFactors = TRUE)
-  in_rast  <- read_rast("/home/lb/nr_working/mirco/2016_IT_S2_L8/PhenoK_analysis/Input/LAI_Pheno_pos_ALL16_im.tif")
-
-  pro <- extract_rast(in_rast, in_polys)
 })
 
 

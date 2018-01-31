@@ -141,7 +141,7 @@ mask_rast <- function(in_rast,
       if (!is.na(mask_value)) raster::NAvalue(temp_rastermask) <- mask_value
     } else {
       #TODO Implement an automatic vectorization instead !!!!!
-      stop("raster mask has a diffewrent extent from `in_rast`. Aborting!")
+      stop("raster mask has a different extent from `in_rast`. Aborting!")
 
     }
 

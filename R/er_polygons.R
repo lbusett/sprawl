@@ -9,6 +9,7 @@
 #' @param n_selbands PARAM_DESCRIPTION
 #' @param date_check PARAM_DESCRIPTION
 #' @param er_opts PARAM_DESCRIPTION
+#' @param parallel PARAM_DESCRIPTION
 #' @param outside_feat PARAM_DESCRIPTION
 #' @param verb_foreach `logical` if TRUE, verbose output is sent out from within the foreach cycle,
 #' Default: FALSE
@@ -43,6 +44,7 @@ er_polygons <- function(in_vect_crop,
                         date_check,
                         er_opts,
                         outside_feat,
+                        parallel = FALSE,
                         verb_foreach = FALSE) {
 
   geometry <- mdxtnq <- y_min <- .N <- .SD <- band <- area <- . <- NULL
@@ -132,10 +134,16 @@ er_polygons <- function(in_vect_crop,
   #  setup the processing: initialize variables and foreach loop            ####
 
   # Setup the processing cluste using `sprawl_initcluster`
-
+  if (parallel) {
+    `%DO%` <- `%dopar%`
+  } else {
+    `%DO%` <- `%do%`
+    er_opts$ncores <- 1
+  }
   cl <- sprawl_initcluster(in_rast,
                            ncores = er_opts$ncores)
   cl_opts <- cl[[2]]
+
   if (er_opts$verbose) {
     message("extract_rast --> Extracting data from ", n_selbands,
             ifelse(date_check, " dates", " bands"),
@@ -143,18 +151,16 @@ er_polygons <- function(in_vect_crop,
     pbar <- utils::txtProgressBar(min = 0, max = n_selbands, initial = 0,
                                   style = 3)
   }
-
   #  ___________________________________________________________________________
   #  Extract data from in_rast - foreach cycle on selected bands of in_rast ####
 
-  results <- foreach::foreach(band = seq_len(cl_opts$n_bands),
+  results <- foreach::foreach(band = seq_len(n_selbands),
                               .packages = c("gdalUtils", "raster", "dplyr",
                                             "tibble", "data.table", "sf",
                                             "velox", "sprawl"),
                               .verbose      = verb_foreach
-  ) %dopar%
+  ) %DO%
   {
-
     # for (band in 1:1){
 
     all_data     <- list()
@@ -449,8 +455,10 @@ er_polygons <- function(in_vect_crop,
 
   } # End Foreach cycle on bands
 
-  parallel::stopCluster(cl$clust)
-# browser()
+  # if (parallel) {
+    parallel::stopCluster(cl$clust)
+  # }
+
   if (er_opts$verbose) message(
     "extract_rast --> Data extraction completed. Building outputs"
   )
@@ -511,7 +519,7 @@ er_polygons <- function(in_vect_crop,
     }
 
     if (er_opts$join_geom) {
-        stat_data[[eval(area_fld)]] <- sf::st_area(stat_data$geometry)
+      stat_data[[eval(area_fld)]] <- sf::st_area(stat_data$geometry)
     }
 
     # define the names and order of the output columns

@@ -62,7 +62,7 @@ get_proj4string.character <- function(in_obj) {
   #
 
   if (!file.exists(in_obj)) {
-    projargs <- check_proj4string(in_obj, abort = TRUE)
+    projargs <- check_proj4string(in_obj, abort = FALSE)
     if (projargs != "invalid") {
       return(projargs)
     }
@@ -79,7 +79,7 @@ get_proj4string.character <- function(in_obj) {
 
     projargs  <- as.character(
       gdalUtils::gdalsrsinfo(in_obj, as.CRS = TRUE)) %>%
-      check_proj4string(abort = TRUE)
+      check_proj4string(abort = FALSE)
     return(projargs)
   } else {
 
@@ -95,7 +95,7 @@ get_proj4string.numeric <- function(in_obj) {
   #   __________________________________________________________________________
   #   Try to interpret a number as a valid EPSG code or UTM zone            ####
   #
-  projargs <- check_proj4string(in_obj, abort = TRUE)
+  projargs <- check_proj4string(in_obj, abort = FALSE)
   return(projargs)
 }
 
@@ -109,7 +109,7 @@ get_proj4string.numeric <- function(in_obj) {
 get_proj4string.Raster <- function(in_obj) {
 
   projargs  <- sp::proj4string(in_obj) %>%
-    check_proj4string(abort = TRUE)
+    check_proj4string(abort = FALSE)
   return(projargs)
 }
 
@@ -124,7 +124,7 @@ get_proj4string.Raster <- function(in_obj) {
 get_proj4string.sf <- function(in_obj) {
 
   projargs <- sf::st_crs(in_obj)$proj4string %>%
-    check_proj4string(abort = TRUE)
+    check_proj4string(abort = FALSE)
   return(projargs)
 
 }
@@ -139,7 +139,7 @@ get_proj4string.sf <- function(in_obj) {
 get_proj4string.sfc <- function(in_obj) {
 
   projargs <- sf::st_crs(in_obj)$proj4string %>%
-    check_proj4string(abort = TRUE)
+    check_proj4string(abort = FALSE)
   return(projargs)
 
 }
@@ -154,7 +154,7 @@ get_proj4string.sfc <- function(in_obj) {
 get_proj4string.Spatial <- function(in_obj) {
 
   projargs  <- sp::proj4string(in_obj) %>%
-    check_proj4string(abort = TRUE)
+    check_proj4string(abort = FALSE)
   return(projargs)
 
 }

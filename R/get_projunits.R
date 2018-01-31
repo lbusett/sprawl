@@ -35,8 +35,8 @@ get_projunits <- function(proj4string) {
   if (class(proj4string) == "character") {
     proj4string <- try(sp::CRS(proj4string), silent = TRUE)
     if (class(proj4string) == "try-error"){
-      stop("get_projunits --> Unable to retrieve a valid CRS from the provided",
-           "proj4string. Aborting!")
+      warning("get_projunits --> Unable to retrieve units !")
+      return(NA)
     }
   }
   #   ________________________________________________________________________

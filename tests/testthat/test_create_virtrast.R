@@ -4,7 +4,7 @@ test_that("create_virtrast works as expected on Raster Layers", {
   in_file <- system.file("extdata/MODIS_test", "EVIts_test.tif",
                          package = "sprawl.data")
   in_rast <- read_rast(in_file, bands = 5)
-  vrt <- read_rast(create_virtrast(in_rast))
+  vrt     <- read_rast(create_virtrast(in_rast))
   expect_is(vrt, "RasterLayer")
   expect_equal(summary(getValues(vrt)), summary(getValues(in_rast)))
 
