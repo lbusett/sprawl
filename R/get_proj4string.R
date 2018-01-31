@@ -60,114 +60,117 @@ get_proj4string.character <- function(in_obj) {
   #   __________________________________________________________________________
   #   return immediately if a valid projstring was passed.                 ####
   #
-
   if (!file.exists(in_obj)) {
     projargs <- check_proj4string(in_obj, abort = FALSE)
-    if (projargs != "invalid") {
+    if (!is.na(projargs)) {
       return(projargs)
+    } else {
+      warning("get_proj4string --> ", call[[2]], " is not a valid proj4 string ",
+              "or spatial file name. Returning `NA`")
+      return(NA)
     }
-    # If all fails, abort.
-    stop("get_proj4string --> ", call[[2]], " is not a valid proj4 string ",
-         "or spatial file name. Aborting!")
+  } else {
+      #   __________________________________________________________________________
+      #   Otherwise, check if the character string corresponds to a valid spatial
+      #   object and retrieve its proj4
+
+      obj_type <- get_spatype(in_obj, abort = TRUE)
+      if (obj_type %in% c("rastfile", "vectfile")) {
+
+        projargs  <- as.character(
+          gdalUtils::gdalsrsinfo(in_obj, as.CRS = TRUE)) %>%
+          check_proj4string(abort = FALSE, verbose = FALSE)
+        if(is.na(projargs)) {
+          warning("get_proj4string --> ", call[[2]], "is not a valid raster or vector
+                  file. Returning `NA`")
+        }
+        return(projargs)
+      } else {
+
+        return(NA)
+      }
+    }
   }
-  #   __________________________________________________________________________
-  #   Otherwise, check if the character string corresponds to a valid spatial
-  #   object and retrieve its proj4
 
-  obj_type <- get_spatype(in_obj, abort = TRUE)
-  if (obj_type %in% c("rastfile", "vectfile")) {
+  get_proj4string.numeric <- function(in_obj) {
 
-    projargs  <- as.character(
-      gdalUtils::gdalsrsinfo(in_obj, as.CRS = TRUE)) %>%
+    call = match.call()
+    #   __________________________________________________________________________
+    #   Try to interpret a number as a valid EPSG code or UTM zone            ####
+    #
+    projargs <- check_proj4string(in_obj, abort = FALSE)
+    return(projargs)
+  }
+
+  #   ____________________________________________________________________________
+  #   Method for "rastobj" - use sp::proj4string                              ####
+
+  #' @rdname get_proj4string
+  #' @method get_proj4string Raster
+  #' @importFrom rgdal checkCRSArgs
+  #' @export
+  get_proj4string.Raster <- function(in_obj) {
+
+    projargs  <- sp::proj4string(in_obj) %>%
       check_proj4string(abort = FALSE)
     return(projargs)
-  } else {
+  }
 
-    stop("get_proj4string --> ", call[[2]], "is not a valid raster or vector
-           file. Aborting!")
+  #   ____________________________________________________________________________
+  #   Method for "sf" object - use sf::st_crs                                 ####
+  #
+
+  #' @rdname get_proj4string
+  #' @method get_proj4string sf
+  #' @importFrom rgdal checkCRSArgs
+  #' @export
+  get_proj4string.sf <- function(in_obj) {
+
+    projargs <- sf::st_crs(in_obj)$proj4string %>%
+      check_proj4string(abort = FALSE)
+    return(projargs)
 
   }
-}
 
-get_proj4string.numeric <- function(in_obj) {
+  #   ____________________________________________________________________________
+  #   Method for "sf" object - sf::st_crs                                     ####
 
-  call = match.call()
-  #   __________________________________________________________________________
-  #   Try to interpret a number as a valid EPSG code or UTM zone            ####
+  #' @rdname get_proj4string
+  #' @method get_proj4string sfc
+  #' @importFrom rgdal checkCRSArgs
+  #' @export
+  get_proj4string.sfc <- function(in_obj) {
+
+    projargs <- sf::st_crs(in_obj)$proj4string %>%
+      check_proj4string(abort = FALSE)
+    return(projargs)
+
+  }
+
+  #   ____________________________________________________________________________
+  #   Method for "Spatial" object - use sp::proj4string(object)               ####
   #
-  projargs <- check_proj4string(in_obj, abort = FALSE)
-  return(projargs)
-}
 
-#   ____________________________________________________________________________
-#   Method for "rastobj" - use sp::proj4string                              ####
+  #' @rdname get_proj4string
+  #' @method get_proj4string Spatial
+  #' @export
+  get_proj4string.Spatial <- function(in_obj) {
 
-#' @rdname get_proj4string
-#' @method get_proj4string Raster
-#' @importFrom rgdal checkCRSArgs
-#' @export
-get_proj4string.Raster <- function(in_obj) {
+    projargs  <- sp::proj4string(in_obj) %>%
+      check_proj4string(abort = FALSE)
+    return(projargs)
 
-  projargs  <- sp::proj4string(in_obj) %>%
-    check_proj4string(abort = FALSE)
-  return(projargs)
-}
+  }
 
-#   ____________________________________________________________________________
-#   Method for "sf" object - use sf::st_crs                                 ####
-#
+  #   ____________________________________________________________________________
+  #   Method for "sprawlext" object - read the CRS                            ####
+  #
 
-#' @rdname get_proj4string
-#' @method get_proj4string sf
-#' @importFrom rgdal checkCRSArgs
-#' @export
-get_proj4string.sf <- function(in_obj) {
+  #' @rdname get_proj4string
+  #' @method get_proj4string Spatial
+  #' @export
+  get_proj4string.sprawlext <- function(in_obj) {
 
-  projargs <- sf::st_crs(in_obj)$proj4string %>%
-    check_proj4string(abort = FALSE)
-  return(projargs)
+    return(in_obj@proj4string)
 
-}
-
-#   ____________________________________________________________________________
-#   Method for "sf" object - sf::st_crs                                     ####
-
-#' @rdname get_proj4string
-#' @method get_proj4string sfc
-#' @importFrom rgdal checkCRSArgs
-#' @export
-get_proj4string.sfc <- function(in_obj) {
-
-  projargs <- sf::st_crs(in_obj)$proj4string %>%
-    check_proj4string(abort = FALSE)
-  return(projargs)
-
-}
-
-#   ____________________________________________________________________________
-#   Method for "Spatial" object - use sp::proj4string(object)               ####
-#
-
-#' @rdname get_proj4string
-#' @method get_proj4string Spatial
-#' @export
-get_proj4string.Spatial <- function(in_obj) {
-
-  projargs  <- sp::proj4string(in_obj) %>%
-    check_proj4string(abort = FALSE)
-  return(projargs)
-
-}
-
-#   ____________________________________________________________________________
-#   Method for "sprawlext" object - read the CRS                            ####
-#
-
-#' @rdname get_proj4string
-#' @method get_proj4string Spatial
-#' @export
-get_proj4string.sprawlext <- function(in_obj) {
-
-  return(in_obj@proj4string)
-
-}
+  }

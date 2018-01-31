@@ -21,6 +21,6 @@ testthat::test_that("Test On raster aggregation", {
                          in_obj_zones,
                          FUN     = mean,
                          method  = "disk",
-                         verbose = T)
+                         verbose = F)
   expect_is(test, "RasterLayer")
 })
