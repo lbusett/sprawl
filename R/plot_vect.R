@@ -248,7 +248,7 @@ plot_vect <- function(
 ) {
 
   call = match.call()
-  geocol <- color <- NULL
+  color <- NULL
 
   in_vect <- cast_vect(in_vect, "sfobject")
   assertthat::assert_that(
