@@ -26,7 +26,7 @@
 sieve_vect <- function(in_vect,
                        min_patch_area,
                        class_field,
-                       reassign_met = "bord_lgt",
+                       reassign_met = "NULL",
                        out_type = "sfobject",
                        out_file = NULL,
                        overwrite = FALSE,
@@ -42,6 +42,7 @@ sieve_vect <- function(in_vect,
   in_geom <- sf::st_geometry(in_vect_big)
   for (pol in seq_along(in_geom)){
     curr_poly  <- in_geom[pol]
+
     pol_filled <- sf::st_polygon(curr_poly[[1]][1])
     if (length(curr_poly[[1]]) > 1) {
       h_ind <- 2
@@ -100,7 +101,7 @@ sieve_vect <- function(in_vect,
       sf::st_as_sf()
 
     notholes <- notholes %>%
-      dplyr::arrange(!!col_name) %>%
+      dplyr::arrange(idsieve) %>%
       dplyr::mutate(idsieve = bord_lines[[paste0("idsieve", ".1")]]) %>%
       sf::st_as_sf()
 

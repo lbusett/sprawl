@@ -250,7 +250,7 @@ plot_rast_gg <- function(
 ) {
 
   call <- match.call()
-  geometry <- NULL
+  geocol <- NULL
   #TODO find a way to avoid "require"
   #TODO Implement checks on input arguments (e.g., bands_to_plot, band_names)
   #TODO Verify possibility to have a "satellite" basemap
@@ -546,8 +546,6 @@ plot_rast_gg <- function(
 
   }
 
-
-
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
 
@@ -646,6 +644,7 @@ plot_rast_gg <- function(
   if (!is.null(borders_layer)) {
     if (is.null(basemap)) {
 
+      geocol <- attr(borders_layer, "sf_column")
       borders_layer <- sf::st_transform(borders_layer,
                                         get_proj4string(in_rast)) %>%
         crop_vect(plot_ext)
@@ -661,8 +660,8 @@ plot_rast_gg <- function(
         if (borders_txt_field %in% names(borders_layer)) {
           borders_layer <- borders_layer %>%
             dplyr::mutate(
-              lon = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[1]]),
-              lat = purrr::map_dbl(geometry, ~sf::st_centroid(.x)[[2]])) %>%
+              lon = purrr::map_dbl(geocol, ~sf::st_centroid(.x)[[1]]),
+              lat = purrr::map_dbl(geocol, ~sf::st_centroid(.x)[[2]])) %>%
             sf::st_as_sf()
           plot <- plot + geom_text(data = borders_layer,
                                    aes_string(label = borders_txt_field,

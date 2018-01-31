@@ -11,7 +11,7 @@ get_projunits(proj4string)
 }
 \value{
 \code{character} measure units of the provided proj4string (e.g., "m",
-"dec.degrees", ...)
+"dec.degrees", ...), or NA if it was not possible to retrieve the units.
 }
 \description{
 Function to retrieve projection units starting from a

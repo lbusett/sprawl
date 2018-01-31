@@ -48,11 +48,13 @@ the console in the form of messages}
 function to reclassify values of a raster object or raster file
 based on a reclassification matrix which specifies which value in the output
 should be taken by different \strong{intervals} of values of the input raster
-(simple wrapper for the raster::reclassify function, providing a (somehow)
-easier and extended I/O functionality and possibility to set the class names
-for the new raster using \code{raster::ratify}
 }
 \details{
+The function is a  wrapper around the \code{raster::reclassify} function,
+providing a (somehow) easier and extended I/O functionality and possibility
+to easily set the class names and eventually plotting colors for the new raster
+using \code{raster::ratify}
+
 \code{class_matrix} must be a 3-columns \code{data.frame} (or similar), including
 the \code{start}, \code{end}, \code{new}and \code{label} columns. It can be easily created by, for example:\preformatted{class_matrix <- tribble(~start, ~end, ~new, ~label
                              0,    1,   NA, NA         # values >=0 and < 1 will be set to NA

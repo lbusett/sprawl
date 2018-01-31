@@ -33,9 +33,6 @@ sieve_rast <- function(in_rast,
   if (is.null(out_file)) {
     out_file <- tempfile(fileext = ".tif")
   }
-  # poly_rast <- suppressMessages(rasterToPolygons(in_rast, dissolve = TRUE))%>%
-  #   sprawl::cast_vect("sfobject") %>%
-  #   sf::st_cast("POLYGON")
 
   tempshp <- tempfile(fileext = ".shp")
   poly_rast <- gdal_polygonizeR(in_rast,
@@ -48,21 +45,29 @@ sieve_rast <- function(in_rast,
     out_file <- tempfile(fileext = ".tif")
   }
 
-  out_rast <- sieve_vect(poly_rast,
-                            min_patch_area,
-                            reassign_met = "aaa",
-                            class_field = "class",
-                            out_type = "sfobject") %>%
-    mutate(class = as.numeric(class)) %>%
-    sf::st_sf() %>%
-    fasterize::fasterize(in_rast, field = "class") %>%
-    writeRaster(filename = out_file, overwrite = TRUE)
+  out_sf <- sieve_vect(poly_rast,
+                       min_patch_area,
+                       reassign_met = "aaa",
+                       class_field = "class",
+                       out_type = "sfobject") %>%
+     mutate(class = as.numeric(class)) %>%
+     sf::st_sf() %>%
+     sf::st_cast("MULTIPOLYGON")
 
-  aaa <- fasterize::fasterize(bbb, in_rast, field = "class")
-
-  if (out_type == "rastfile") {
-    out_file
+  if (out_type %in% c("rastfile", "rastobject")) {
+    out_rast <- fasterize::fasterize(in_rast, field = "class") %>%
+      writeRaster(filename = out_file, overwrite = TRUE,
+                  datatype = "INT1U")
+    ifelse(out_type == "rastfile", return(out_file), return(rastobject))
   } else {
-    out_rast
+    ifelse(out_type == "sfobject", return(out_sf))
+
   }
+
+  if (out_type == "sfobject") {
+    out_sf
+  } else {
+    tempshp
+  }
+
 }

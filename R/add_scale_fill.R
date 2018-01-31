@@ -68,6 +68,7 @@ add_scale_fill <- function(plot,
           na.value = ifelse(is.null(na.color), "grey50", na.color)
         )
       } else {
+
         plot <- plot + scale_fill_hue(
           labels   = if (is.null(leg_labels)) waiver() else leg_labels,
           na.value = ifelse(is.null(na.color),"grey50", na.color))

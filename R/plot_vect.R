@@ -256,7 +256,7 @@ plot_vect <- function(
     msg = "plot_vect --> `in_vect` is not a valid `sf` object. Aborting!"
   )
 
-  geocol <- attr(indata, "sf_column")
+  geocol <- attr(in_vect, "sf_column")
 
   if (!is.null(facet_var)) {
     if (!any(names(in_vect) == facet_var)) {
@@ -659,10 +659,10 @@ plot_vect <- function(
                               size  = borders_size)
 
     if (!is.null(borders_txt_field)) {
-      if(borders_txt_field %in% names(borders)) {
+      if (borders_txt_field %in% names(borders)) {
 
         centroids <- st_centroid(borders)
-        centroids <-  do.call(rbind, st_geometry(centroids)) %>%
+        centroids <- do.call(rbind, st_geometry(centroids)) %>%
           as_tibble() %>% setNames(c("lon","lat"))
         borders <- borders %>%
           mutate(lon = centroids$lon, lat = centroids$lat)

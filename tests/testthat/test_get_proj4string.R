@@ -38,12 +38,11 @@ testthat::test_that("Test projection string",{
   expect_warning(raster::crs(rastobj) <-
                    "+proj=lcc +lat_1=48 +lat_2=33 +lon_0=-100 +ellps=WGSìèàrwa4")  #nolint
 
-  expect_error(out <- get_proj4string(rastobj))
-  # expect_equal(out, "invalid")
-  expect_error(get_proj4string(rastobj))
+  context("get_proj4string returns NA on invalid projection")
+  expect_equal(expect_warning(get_proj4string(rastobj)), NA)
 
-  # warning/abort on invalid filename or object ----
-  expect_error(expect_warning(out <- get_proj4string("pippo.shp")))
+  # Return NA on invalid filename or object ----
+  expect_equal(expect_warning(out <- get_proj4string("pippo.shp")), NA)
 })
 context("Get/check projection string from a string or number")
 testthat::test_that("Test projection string",{
@@ -55,6 +54,7 @@ testthat::test_that("Test projection string",{
   library(raster)
   # expect_equal(out, "invalid")
 
+  context("Get proper proj4strings if the string is valid")
   expect_equal(get_proj4string(4326),
                "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
 
@@ -64,8 +64,9 @@ testthat::test_that("Test projection string",{
   expect_equal(get_proj4string("+init=epsg:4326"),
                "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
 
-  expect_error(get_proj4string("aaaa"))
-  expect_error(get_proj4string(123))
+  context("Return NA if the string is not valid")
+  expect_equal(expect_warning(get_proj4string("aaaa")), NA)
+  expect_equal(expect_warning(get_proj4string(123)), NA)
 }
 
 )
