@@ -256,7 +256,7 @@ plot_vect <- function(
     msg = "plot_vect --> `in_vect` is not a valid `sf` object. Aborting!"
   )
 
-  geocol <- attr(indata, "sf_column")
+  geocol <- attr(in_vect, "sf_column")
 
   if (!is.null(facet_var)) {
     if (!any(names(in_vect) == facet_var)) {
