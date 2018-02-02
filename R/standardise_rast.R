@@ -94,7 +94,7 @@
 #' @importFrom parallel detectCores makeCluster stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom sf st_buffer st_area st_geometry st_sf st_union
-#' @importFrom raster calc writeRaster values resample
+#' @importFrom raster calc writeRaster values resample mosaic
 #' @importFrom foreach foreach "%do%" "%dopar%"
 #' @importFrom jsonlite fromJSON
 #' @importFrom rgdal GDALinfo writeGDAL
