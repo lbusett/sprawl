@@ -214,6 +214,7 @@
 #' @importFrom methods is
 #' @importFrom stats as.formula
 #' @importFrom purrr map_dbl
+#' @importFrom stats setNames
 #' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous expand_scale
 #'  scale_y_continuous ggtitle theme element_blank element_text element_rect
 #'  geom_raster aes facet_wrap scale_fill_brewer scale_fill_distiller waiver
@@ -635,7 +636,7 @@ plot_vect <- function(
 
       centroids <- st_centroid(in_vect)
       centroids <-  do.call(rbind, st_geometry(centroids)) %>%
-        as_tibble() %>% setNames(c("lon","lat"))
+        as_tibble() %>% stats::setNames(c("lon","lat"))
       lab_layer <- in_vect %>%
         mutate(lon = centroids$lon, lat = centroids$lat)
       plot <- plot + geom_text(data = lab_layer,
@@ -663,7 +664,7 @@ plot_vect <- function(
 
         centroids <- st_centroid(borders)
         centroids <- do.call(rbind, st_geometry(centroids)) %>%
-          as_tibble() %>% setNames(c("lon","lat"))
+          as_tibble() %>% stats::setNames(c("lon","lat"))
         borders <- borders %>%
           mutate(lon = centroids$lon, lat = centroids$lat)
         plot <- plot + geom_text(data = borders,

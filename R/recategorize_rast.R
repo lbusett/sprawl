@@ -114,6 +114,8 @@ recategorize_rast <- function(in_rast,
                               overwrite   = FALSE,
                               verbose     = TRUE) {
 
+  color <- . <- NULL
+
   call <- match.call()
   if (verbose) message("recategorize_rast--> Reclassifying: ",
                        as.character(call[[2]]), " on values of: ",

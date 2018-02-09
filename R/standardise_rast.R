@@ -95,6 +95,7 @@
 #' @importFrom doParallel registerDoParallel
 #' @importFrom sf st_buffer st_area st_geometry st_sf st_union
 #' @importFrom raster calc writeRaster values resample
+#' @importFrom stats weighted.mean
 #' @importFrom foreach foreach "%do%" "%dopar%"
 #' @importFrom jsonlite fromJSON
 #' @importFrom rgdal GDALinfo writeGDAL
@@ -408,7 +409,7 @@ standardise_rast <- function(in_rast,
       }
 
       # Crop the values on the border of the buffer
-      if (buffer!=0) {
+      if (buffer != 0) {
         gdal_warp(in_rast_path, sel_rast_buf_path, mask=sel_vect_buf_path)
         sel_rast_buf <- cast_rast(sel_rast_buf_path, "rastobject")
       } else {
@@ -417,8 +418,8 @@ standardise_rast <- function(in_rast,
 
       # In case of negative buffer, use a grid larger than the input,
       # as needed by the focal
-      if (buffer<0) {
-        sel_rast_buf <- resample(sel_rast_buf, sel_rast_poly, method="ngb")
+      if (buffer < 0) {
+        sel_rast_buf <- resample(sel_rast_buf, sel_rast_poly, method = "ngb")
       }
 
 
@@ -434,29 +435,33 @@ standardise_rast <- function(in_rast,
       # using the method chosen with fill_method
 
       sel_rast_fil <- sel_rast_buf
-      if (buffer<0 & fill_borders == TRUE | fill_na == TRUE) {
+      if (buffer < 0 & fill_borders == TRUE | fill_na == TRUE) {
         if (fill_method == "focal") {
           # rasterize in_vect (reference for the surface to be filled)
           file.copy(sel_rast_poly_path, sel_rast_vect_path)
           gdalUtils::gdal_rasterize(
-            if (fill_borders==FALSE & buffer<0) {sel_vect_buf_path} else {sel_vect_path},
+            if (fill_borders == FALSE & buffer < 0) {sel_vect_buf_path} else {sel_vect_path},
             sel_rast_vect_path,
-            burn=1
+            burn = 1
           )
           sel_rast_vect <- cast_rast(sel_rast_vect_path, "rastobject")
           j <- 0
           # continue interpolating until all the pixels in the polygon are covered
           max_iter_n <- 100 # maximum number of iterations
-          while (any(values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
+          while (any(
+            values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
                  j < max_iter_n) {
-            j <- j+1
+
+            j <- j + 1
             # sel_w <- focalWeight(sel_rast_fil, -buffer*sqrt(j), "circle")
-            sel_w <- focalWeight(sel_rast_fil, mean(res(sel_rast_fil))*sqrt(j), "circle") # 1 pixel per time
+            sel_w <- raster::focalWeight(sel_rast_fil,
+                                         mean(res(sel_rast_fil))*sqrt(j),
+                                         "circle") # 1 pixel per time
             sel_w <- sel_w / max(sel_w) # adjustment required by focal to fix the problem with na.rm=TRUE
-            sel_rast_fil <- focal(
+            sel_rast_fil <- raster::focal(
               sel_rast_fil,
-              fun = function(x){weighted.mean(x,sel_w,na.rm=TRUE)},
-              w = sel_w, pad=TRUE, NAonly=TRUE
+              fun = function(x){stats::weighted.mean(x,sel_w,na.rm = TRUE)},
+              w = sel_w, pad = TRUE, NAonly = TRUE
             )
           }
           if (j == max_iter_n) {
@@ -523,7 +528,7 @@ standardise_rast <- function(in_rast,
   } # end of in_vect_buf FOREACH cycle
 
   ## Mosaic single rasters
-  if (length(rast_z_paths)==1) {
+  if (length(rast_z_paths) == 1) {
     # FIXME this IF cycle provides the following error (?):
     #  Error in setValues(r, as.vector(t(x))) :
     #    values must be numeric, integer, logical or factor
@@ -534,8 +539,8 @@ standardise_rast <- function(in_rast,
       "Mosaicing single polygons into the final raster..."
     ))
     rast_z_list <- lapply(rast_z_paths,raster)
-    rast_z_list$fun<- mean
-    rast_z <- do.call(mosaic, rast_z_list)
+    rast_z_list$fun <- mean
+    rast_z <- do.call(raster::mosaic, rast_z_list)
   }
 
   # close connections (doing it after having mosaiced them,

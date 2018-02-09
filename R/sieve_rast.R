@@ -18,12 +18,14 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom sf st_geometry st_area st_polygon
+#' @importFrom fasterize fasterize
 sieve_rast <- function(in_rast,
                        min_patch_area,
                        out_type  = "rastobject",
                        out_file  = NULL,
                        overwrite = FALSE,
                        verbose   = TRUE)  {
+
 
   call <- as.list(match.call())
   if (verbose) (message("sieve_rast --> Sieving: ",
@@ -45,12 +47,12 @@ sieve_rast <- function(in_rast,
     out_file <- tempfile(fileext = ".tif")
   }
 
-  out_sf <- sieve_vect(poly_rast,
+  out_sf <- sprawl::sieve_vect(poly_rast,
                        min_patch_area,
                        reassign_met = "aaa",
                        class_field = "class",
                        out_type = "sfobject") %>%
-     mutate(class = as.numeric(class)) %>%
+     dplyr::mutate(class = as.numeric(class)) %>%
      sf::st_sf() %>%
      sf::st_cast("MULTIPOLYGON")
 
@@ -58,7 +60,7 @@ sieve_rast <- function(in_rast,
     out_rast <- fasterize::fasterize(in_rast, field = "class") %>%
       writeRaster(filename = out_file, overwrite = TRUE,
                   datatype = "INT1U")
-    ifelse(out_type == "rastfile", return(out_file), return(rastobject))
+    ifelse(out_type == "rastfile", return(out_file), return(out_rast))
   } else {
     ifelse(out_type == "sfobject", return(out_sf))
 
