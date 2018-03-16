@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,12 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="write a spatial table to a PostGIS db table — write_vector_to_pgres" />
+
+<meta property="og:description" content="write spatial table to a PostGIS db table (simple wrapper around
+sf::st_write_db with automatic casting to sf objects and argument
+checks)" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -145,7 +153,8 @@ checks)</p>
     
 
     <pre class="usage"><span class='fu'>write_vector_to_pgres</span>(<span class='no'>in_vect</span>, <span class='no'>con</span>, <span class='no'>table_name</span>, <span class='kw'>schema</span> <span class='kw'>=</span> <span class='st'>"public"</span>,
-  <span class='kw'>make_valid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>make_valid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -183,6 +192,11 @@ Default: FALSE</p></td>
       <th>row.names</th>
       <td><p><code>logical</code> indicating if an additional row containing row numbers,
 should be added to the DB table, Default: FALSE</p></td>
+    </tr>
+    <tr>
+      <th>drop</th>
+      <td><p><code>logical</code> indicating if data should be appended to existing tables,
+Default: FALSE</p></td>
     </tr>
     </table>
     
@@ -238,7 +252,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

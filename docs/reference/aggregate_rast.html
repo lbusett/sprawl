@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,12 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="aggregate_rast — aggregate_rast" />
+
+<meta property="og:description" content="Function used to extract values of a single- or multi- band
+raster for pixels corresponding to the features of a vector (Polygon,
+Point or Line)" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -215,7 +223,25 @@ Default: FALSE</p></td>
                                      <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
  <span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>aggregate_rast</span>(<span class='no'>in_rast</span>,
                         <span class='no'>in_obj_zones</span>,
-                        <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>)</div><div class='output co'>#&gt; <span class='message'>aggregate_raster --&gt; Aggregating values of `in_rast` on cells of `in_obj_zones`</span></div><div class='output co'>#&gt; <span class='message'>  --&gt; Creating Fishnet on zones_rast</span></div><div class='output co'>#&gt; <span class='message'>  --&gt; Extracting values of in_val_rast on cells of in_zones_rast</span></div><div class='output co'>#&gt; <span class='message'>aggregate_raster --&gt; Assigning extracted values to a new raster</span></div></pre>
+                        <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>mean</span>)</div><div class='output co'>#&gt; <span class='message'>aggregate_raster --&gt; Aggregating values of `in_rast` on cells of `in_obj_zones`</span></div><div class='output co'>#&gt; <span class='message'>  --&gt; Creating Fishnet on zones_rast</span></div><div class='output co'>#&gt; <span class='message'>  --&gt; Extracting values of in_val_rast on cells of in_zones_rast</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:sprawl’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    last</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:raster’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, select, union</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='output co'>#&gt; <span class='message'>data.table 1.10.4.3</span></div><div class='output co'>#&gt; <span class='message'>  The fastest way to learn (by data.table authors): https://www.datacamp.com/courses/data-analysis-the-data-table-way</span></div><div class='output co'>#&gt; <span class='message'>  Documentation: ?data.table, example(data.table) and browseVignettes("data.table")</span></div><div class='output co'>#&gt; <span class='message'>  Release notes, videos and slides: http://r-datatable.com</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘data.table’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:dplyr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    between, first, last</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:sprawl’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    first</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:raster’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    shift</span></div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.5.1, GDAL 2.1.2, proj.4 4.9.3</span></div><div class='output co'>#&gt; <span class='message'>03</span></div><div class='output co'>#&gt; <span class='message'>aggregate_raster --&gt; Assigning extracted values to a new raster</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -242,7 +268,7 @@ Lorenzo Busetto, PhD (2017) email: <a href='mailto:lbusett@gmail.com'>lbusett@gm
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,11 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="read a vector spatial file to R — read_vect" />
+
+<meta property="og:description" content="function for easily opening a ESRI shapefile (or other OGR
+valid vector file by simply specifying its filename" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -191,26 +198,26 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
 #&gt; epsg (SRID):    4326
 #&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
 #&gt; # A tibble: 13 x 5
-#&gt;       id       lc_type category sup_catego          geometry
-#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;  &lt;simple_feature&gt;
-#&gt;  1     1      forest_1   Forest Vegetation &lt;POLYGON ((12...&gt;
-#&gt;  2     2      forest_2   Forest Vegetation &lt;POLYGON ((12...&gt;
-#&gt;  3     3       urban_1    Other      Other &lt;POLYGON ((12...&gt;
-#&gt;  4     4    cropland_1 Cropland Vegetation &lt;POLYGON ((12...&gt;
-#&gt;  5     5    cropland_2 Cropland Vegetation &lt;POLYGON ((12...&gt;
-#&gt;  6     6      forest_3   Forest Vegetation &lt;POLYGON ((12...&gt;
-#&gt;  7     7    reiver_bed    Other      Other &lt;POLYGON ((12...&gt;
-#&gt;  8     8    cropland_3 Cropland Vegetation &lt;POLYGON ((12...&gt;
-#&gt;  9     9  urban_2_part    Other      Other &lt;POLYGON ((12...&gt;
-#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;POLYGON ((12...&gt;
-#&gt; 11    11         water    Other      Other &lt;POLYGON ((12...&gt;
-#&gt; 12    12    small_feat    Other      Other &lt;POLYGON ((12...&gt;
-#&gt; 13    13      out_feat    Other      Other &lt;POLYGON ((12...&gt;</div><div class='input'>
- <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_file</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>)</div><div class='img'><img src='read_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+#&gt;       id lc_type       category sup_catego                             geometry
+#&gt;    &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;                             &lt;POLYGON [°]&gt;
+#&gt;  1  1.00 forest_1      Forest   Vegetation ((120.7302 15.784, 120.7369 15.784,…
+#&gt;  2  2.00 forest_2      Forest   Vegetation ((120.3664 15.39973, 120.3672 15.40…
+#&gt;  3  3.00 urban_1       Other    Other      ((120.5941 15.49767, 120.5947 15.49…
+#&gt;  4  4.00 cropland_1    Cropland Vegetation ((120.6371 15.46567, 120.6403 15.47…
+#&gt;  5  5.00 cropland_2    Cropland Vegetation ((120.7231 15.54363, 120.7406 15.54…
+#&gt;  6  6.00 forest_3      Forest   Vegetation ((121.2256 16.00655, 121.2387 16.01…
+#&gt;  7  7.00 reiver_bed    Other    Other      ((120.4208 15.33119, 120.4253 15.33…
+#&gt;  8  8.00 cropland_3    Cropland Vegetation ((120.7702 15.36887, 120.7725 15.37…
+#&gt;  9  9.00 urban_2_part  Other    Other      ((120.5833 15.17092, 120.5999 15.17…
+#&gt; 10 10.0  sparsfor_part Forest   Vegetation ((120.1958 15.17424, 120.2063 15.17…
+#&gt; 11 11.0  water         Other    Other      ((121.1377 15.85625, 121.1646 15.84…
+#&gt; 12 12.0  small_feat    Other    Other      ((120.78 15.93824, 120.7811 15.9381…
+#&gt; 13 13.0  out_feat      Other    Other      ((120.6781 16.09343, 120.6942 16.08…</div><div class='input'>
+ <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_file</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='read_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='reproj_vect.html'>reproj_vect</a></span>(<span class='no'>in_vect</span>,
       <span class='st'>"+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs"</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_vect --&gt; Reprojecting in_vect to +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs</span></div><div class='input'> <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>,
            <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"PHL"</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-           )</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "PHL", Level: 1</span></div><div class='img'><img src='read_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           )</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "PHL", Level: 1</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='read_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># open a shapefile as a `sp` object</span>
  <span class='no'>in_file</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                         <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
@@ -247,7 +254,7 @@ possibility of automatic re-casting to <code>*sp</code> objects</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

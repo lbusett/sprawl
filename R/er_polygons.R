@@ -341,7 +341,7 @@ er_polygons <- function(in_vect_crop,
 
             temp_outdata  <- temp_outdata[!(mdxtnq %in%
                                               unique(complete_polys$mdxtnq))]
-            message(dim(temp_outdata))
+            # message(dim(temp_outdata))
             # If something was computed for stat_data, add 1 to the counter
             chunk_n_summ  <- chunk_n_summ + 1
 

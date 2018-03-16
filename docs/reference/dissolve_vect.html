@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,27 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="dissolve attributes of a vector and aggregate its table — dissolve_vect" />
+
+<meta property="og:description" content="Perform a "dissolve" (a.k.a. aggregation) operation on a vector
+object according to a grouping variable, also aggregate values of the
+attribute table for all other columns over the same grouping variable.
+Aggregation of factor or character columns is done as follows:
+- If all polygons that are aggregated to a common dissolved polygon had
+the same value for the column, then the value is preserved;
+- If polygons had different values, the column takes the value "variable"
+or NA (depending on var_as_NA )
+Aggregation of factor or character columns is done as follows:- If the column represent a "quantity" (e.g., Population), the value for each
+  dissolved is computed as the sum of the values of the original
+  polygons belonging to it;
+" />
+
+<meta property="og:description" content="TODO
+- If the column represents a "density" (e.g., ton ha-1), the value for each
+dissolved is computed as the average of the values of the original
+polygons belonging to it, weighted by their area;  STILL TO BE IMPLEMENTED !
+CURRENTLY ALL COLUMNS ARE COMPUTED SIMPLY AS THE SUM !!!!" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -215,7 +238,7 @@ Default: FALSE</p></td>
 
  <span class='no'>in_vect</span>    <span class='kw'>&lt;-</span> <span class='fu'>get</span>(<span class='fu'>load</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"poly_lomb.RData"</span>,
     <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)))
- <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='img'><img src='dissolve_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"population"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>)</div><div class='img'><img src='dissolve_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='dissolve_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"population"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='dissolve_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># Dissolve the vector to provinces</span>
  <span class='no'>diss</span> <span class='kw'>&lt;-</span> <span class='fu'>dissolve_vect</span>(<span class='no'>in_vect</span>, <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = "NAME_2"</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Column `NAME_2` joining factor and character vector, coercing into character vector</span></div><div class='input'> <span class='no'>diss</span></div><div class='output co'>#&gt; Simple feature collection with 12 features and 4 fields
 #&gt; geometry type:  GEOMETRY
@@ -224,23 +247,23 @@ Default: FALSE</p></td>
 #&gt; epsg (SRID):    4326
 #&gt; proj4string:    +proj=longlat +datum=WGS84 +no_defs
 #&gt; # A tibble: 12 x 5
-#&gt;               NAME_2    NAME_1     year population          geometry
-#&gt;                &lt;chr&gt;    &lt;fctr&gt;    &lt;chr&gt;      &lt;dbl&gt;  &lt;simple_feature&gt;
-#&gt;  1           Bergamo Lombardia variable         28 &lt;POLYGON ((10...&gt;
-#&gt;  2           Brescia Lombardia variable         25 &lt;POLYGON ((10...&gt;
-#&gt;  3              Como Lombardia variable         39 &lt;POLYGON ((9....&gt;
-#&gt;  4           Cremona Lombardia variable         38 &lt;POLYGON ((9....&gt;
-#&gt;  5             Lecco Lombardia variable         41 &lt;POLYGON ((9....&gt;
-#&gt;  6              Lodi Lombardia variable        116 &lt;POLYGON ((9....&gt;
-#&gt;  7            Mantua Lombardia variable         18 &lt;POLYGON ((10...&gt;
-#&gt;  8            Milano Lombardia variable         16 &lt;POLYGON ((8....&gt;
-#&gt;  9 Monza and Brianza Lombardia variable         23 &lt;POLYGON ((9....&gt;
-#&gt; 10             Pavia Lombardia variable         14 &lt;MULTIPOLYGON...&gt;
-#&gt; 11           Sondrio Lombardia variable         51 &lt;POLYGON ((10...&gt;
-#&gt; 12            Varese Lombardia variable         13 &lt;POLYGON ((8....&gt;</div><div class='input'>
- <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>diss</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='img'><img src='dissolve_vect-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='no'>provinces</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='input'>
+#&gt;    NAME_2            NAME_1    year     population                     geometry
+#&gt;    &lt;chr&gt;             &lt;fct&gt;     &lt;chr&gt;         &lt;dbl&gt;               &lt;GEOMETRY [°]&gt;
+#&gt;  1 Bergamo           Lombardia variable       28.0 POLYGON ((10.10427 46.08951…
+#&gt;  2 Brescia           Lombardia variable       25.0 POLYGON ((10.50012 46.33554…
+#&gt;  3 Como              Lombardia variable       39.0 POLYGON ((9.295499 46.23737…
+#&gt;  4 Cremona           Lombardia variable       38.0 POLYGON ((9.551826 45.46125…
+#&gt;  5 Lecco             Lombardia variable       41.0 POLYGON ((9.491518 46.07167…
+#&gt;  6 Lodi              Lombardia variable      116   POLYGON ((9.532625 45.16629…
+#&gt;  7 Mantua            Lombardia variable       18.0 POLYGON ((10.69031 45.42357…
+#&gt;  8 Milano            Lombardia variable       16.0 POLYGON ((8.955621 45.6264,…
+#&gt;  9 Monza and Brianza Lombardia variable       23.0 POLYGON ((9.260717 45.74068…
+#&gt; 10 Pavia             Lombardia variable       14.0 MULTIPOLYGON (((8.814569 45…
+#&gt; 11 Sondrio           Lombardia variable       51.0 POLYGON ((10.25107 46.6226,…
+#&gt; 12 Varese            Lombardia variable       13.0 POLYGON ((8.772502 46.10313…</div><div class='input'>
+ <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>diss</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='dissolve_vect-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='no'>provinces</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='input'>
  <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>diss</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"population"</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
-         <span class='kw'>leg_position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>)</div><div class='img'><img src='dissolve_vect-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+         <span class='kw'>leg_position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='dissolve_vect-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
 </div></pre>
   </div>
@@ -267,7 +290,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

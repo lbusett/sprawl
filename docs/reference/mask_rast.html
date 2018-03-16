@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,14 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Mask a raster based on a vector — mask_rast" />
+
+<meta property="og:description" content="Masks a raster file or object on the basis of a vector file or object.
+Pixels not covered by the vector features are set to NoData. If the input raster
+is multi-band, the mask is automatically applied to all bands. An optional
+buffer can be applied to the input vector to allow a more "lenient" masking,
+or to remove also the borders of the vector." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -260,7 +270,7 @@ string corresponding to the filename of the created raster (if out_type ==
                        <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a></span>(<span class='no'>in_polys</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/projection'>proj4string</a></span>(<span class='no'>in_rast</span>))
 <span class='no'>masked</span>   <span class='kw'>&lt;-</span> <span class='fu'>mask_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>masked</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>in_polys</span>)</div><div class='img'><img src='mask_rast-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -286,7 +296,7 @@ Lorenzo Busetto, PhD (2017) email: <a href='mailto:lbusett@gmail.com'>lbusett@gm
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
