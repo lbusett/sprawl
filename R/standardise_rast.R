@@ -12,12 +12,13 @@
 #'  - `zscore_rast()` computes the Z-score on the input raster
 #'      (equivalent to `standardise_rast(method = "zscore")`);
 #'  - `fixborders_rast()` can be used to replace border values
-#'      (equivalent to `standardise_rast(method = "input", by_poly = TRUE)`);
+#'      (equivalent to `standardise_rast(method = "input", by_poly = TRUE,
+#'      dataType = NA, scaleFactor = 1)`);
 #'  - `fillgaps_rast()` is used to fill gaps (NA values) without using
 #'      polygon masks
 #'      (equivalent to `standardise_rast(by_poly = FALSE, min_area = 0,
 #'      method = "input", fill_na = TRUE, fill_borders = FALSE, buffer = 0,
-#'      parallel = FALSE)`).
+#'      parallel = FALSE, dataType = NA, scaleFactor = 1)`).
 #'
 #'  By default, input raster values are standardised basing on the averages
 #'  and standard deviations computed within each polygon (it is possible to
@@ -82,6 +83,16 @@
 #'  (in this case, it is runned on a single core).
 #' @param format (optional) Format of the output file (in a
 #'  format recognised by GDAL). Default is to maintain each input format.
+#' @param dataType (optional) Numeric datatype of the ouptut rasters.
+#'  if "Float32" or "Float64" is chosen, numeric values are not rescaled;
+#'  if "Int16" or "UInt16", values are multiplicated by `scaleFactor` argument.
+#'  If "NA" is used (default), the same dataType of `in_rast` is used.
+#' @param scaleFactor (optional) Scale factor for output values when an integer
+#'  datatype is chosen (default values with `method = "zscore"` are 1000
+#'  for "Int16" and "UInt16" and 1E8 for "Int32" and "UInt32";
+#'  with different `method` values, defalt is 1).
+#'  Notice that, using "UInt16" and "UInt32" types,
+#'  negative values will be truncated to 0.
 #' @param compress (optional) In the case a GTiff format is
 #'  present, the compression indicated with this parameter is used.
 #'  Default is "DEFLATE".
@@ -94,7 +105,7 @@
 #' @importFrom parallel detectCores makeCluster stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom sf st_buffer st_area st_geometry st_sf st_union
-#' @importFrom raster calc writeRaster values resample
+#' @importFrom raster calc writeRaster values resample mosaic
 #' @importFrom stats weighted.mean
 #' @importFrom foreach foreach "%do%" "%dopar%"
 #' @importFrom jsonlite fromJSON
@@ -220,6 +231,8 @@ standardise_rast <- function(in_rast,
                              buffer = 0,
                              parallel = TRUE,
                              format = NA,
+                             dataType = NA,
+                             scaleFactor = NA,
                              compress = "DEFLATE",
                              overwrite = FALSE
 ) {
@@ -300,12 +313,37 @@ standardise_rast <- function(in_rast,
     )
   }
 
+  # assign dataType value
+  if (is.na(dataType)) {
+    dataType <- as.character(suppressWarnings(attr(GDALinfo(in_rast),"df")[1,"GDType"]))
+  }
+  # convert unsigned formats (with the exception of "input" method)
+  if (!method %in% c("input")) {
+    if (grepl("^UInt",dataType)) {
+      dataType <- paste0("U",dataType)
+    } else if (grepl("^Byte$",dataType)) {
+      dataType <- "Int16"
+    }
+  }
+  # assign scaleFactor value
+  if (is.na(scaleFactor)) {
+    scaleFactor <- if (!method %in% c("zscore")) {
+      1
+    } else if (grepl("^Int32$",dataType)) {
+      1E8
+    } else if (grepl("^Int16$",dataType)) {
+      1E3
+    } else if (grepl("^Float",dataType)) {
+      1
+    }
+  }
+
   # set the function for the chosen method
   standardise <- switch(
     method,
-    zscore = function(x,avg,std){(x-avg)/std},
-    center = function(x,avg,std=NA){x-avg},
-    input = function(x,avg=NA,std=NA){x},
+    zscore = function(x,avg,std){scaleFactor*(x-avg)/std},
+    center = function(x,avg,std=NA){scaleFactor*(x-avg)},
+    input = function(x,avg=NA,std=NA){scaleFactor*x},
     stop("Value of attribute \"method\" not recognised.")
   )
 
@@ -450,7 +488,7 @@ standardise_rast <- function(in_rast,
           max_iter_n <- 100 # maximum number of iterations
           while (any(
             values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
-                 j < max_iter_n) {
+            j < max_iter_n) {
 
             j <- j + 1
             # sel_w <- focalWeight(sel_rast_fil, -buffer*sqrt(j), "circle")
@@ -560,10 +598,15 @@ standardise_rast <- function(in_rast,
     }
     sgdf_z <- as(rast_z, "SpatialGridDataFrame")
     sgdf_z@data[,1][is.na(sgdf_z@data[,1])] <- NA # NaN to NA
+    sel_nodata <- switch(
+      dataType,
+      Int16=-2^15, UInt16=2^16-1, Int32=-2^31, UInt32=2^32-1,
+      Float32=-9999, Float64=-9999, Byte=255
+    )
     writeGDAL(
       sgdf_z, out_file,
       drivername = format,
-      type = "Float32", mvFlag = -2^31, # not correct for Float32, but managed by QGIS
+      type = dataType, mvFlag = sel_nodata,
       options = if(format == "GTiff") {paste0("COMPRESS=",compress)}#,
       # overwrite = overwrite
     )
@@ -591,6 +634,8 @@ zscore_rast <- function(in_rast,
                         buffer = 0,
                         parallel = TRUE,
                         format = NA,
+                        dataType = NA,
+                        scaleFactor = NA,
                         compress = "DEFLATE",
                         overwrite = FALSE
 ) {
@@ -606,6 +651,8 @@ zscore_rast <- function(in_rast,
                    buffer = buffer,
                    parallel = parallel,
                    format = format,
+                   dataType = dataType,
+                   scaleFactor = scaleFactor,
                    compress = compress,
                    overwrite = overwrite)
 }
@@ -622,6 +669,8 @@ fixborders_rast <- function(in_rast,
                             buffer = 0,
                             parallel = TRUE,
                             format = NA,
+                            dataType = NA,
+                            scaleFactor = 1,
                             compress = "DEFLATE",
                             overwrite = FALSE
 ) {
@@ -662,6 +711,8 @@ fillgaps_rast <- function(in_rast,
                    buffer = 0,
                    parallel = FALSE,
                    format = format,
+                   dataType = NA,
+                   scaleFactor = 1,
                    compress = compress,
                    overwrite = overwrite)
 }
