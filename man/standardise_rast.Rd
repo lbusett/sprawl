@@ -11,22 +11,25 @@
 standardise_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
   min_area = 0, method = "zscore", fill_method = "focal",
   fill_na = TRUE, fill_borders = TRUE, buffer = 0, parallel = TRUE,
-  format = NA, compress = "DEFLATE", overwrite = FALSE)
+  format = NA, dataType = NA, scaleFactor = NA, compress = "DEFLATE",
+  overwrite = FALSE)
 
 standardize_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
   min_area = 0, method = "zscore", fill_method = "focal",
   fill_na = TRUE, fill_borders = TRUE, buffer = 0, parallel = TRUE,
-  format = NA, compress = "DEFLATE", overwrite = FALSE)
+  format = NA, dataType = NA, scaleFactor = NA, compress = "DEFLATE",
+  overwrite = FALSE)
 
 zscore_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
   min_area = 0, fill_method = "focal", fill_na = TRUE,
   fill_borders = TRUE, buffer = 0, parallel = TRUE, format = NA,
-  compress = "DEFLATE", overwrite = FALSE)
+  dataType = NA, scaleFactor = NA, compress = "DEFLATE",
+  overwrite = FALSE)
 
 fixborders_rast(in_rast, out_file = NA, in_vect = NULL, min_area = 0,
   fill_method = "focal", fill_na = TRUE, fill_borders = TRUE,
-  buffer = 0, parallel = TRUE, format = NA, compress = "DEFLATE",
-  overwrite = FALSE)
+  buffer = 0, parallel = TRUE, format = NA, dataType = NA,
+  scaleFactor = 1, compress = "DEFLATE", overwrite = FALSE)
 
 fillgaps_rast(in_rast, out_file = NA, fill_method = "focal", format = NA,
   compress = "DEFLATE", overwrite = FALSE)
@@ -103,6 +106,18 @@ runned on a single core. This value is not considered if \code{by_poly = TRUE}
 \item{format}{(optional) Format of the output file (in a
 format recognised by GDAL). Default is to maintain each input format.}
 
+\item{dataType}{(optional) Numeric datatype of the ouptut rasters.
+if "Float32" or "Float64" is chosen, numeric values are not rescaled;
+if "Int16" or "UInt16", values are multiplicated by \code{scaleFactor} argument.
+If "NA" is used (default), the same dataType of \code{in_rast} is used.}
+
+\item{scaleFactor}{(optional) Scale factor for output values when an integer
+datatype is chosen (default values with \code{method = "zscore"} are 1000
+for "Int16" and "UInt16" and 1E8 for "Int32" and "UInt32";
+with different \code{method} values, defalt is 1).
+Notice that, using "UInt16" and "UInt32" types,
+negative values will be truncated to 0.}
+
 \item{compress}{(optional) In the case a GTiff format is
 present, the compression indicated with this parameter is used.
 Default is "DEFLATE".}
@@ -131,10 +146,10 @@ Some aliases are set for specific functions:
 \item \code{zscore_rast()} computes the Z-score on the input raster
 (equivalent to \code{standardise_rast(method = "zscore")});
 \item \code{fixborders_rast()} can be used to replace border values
-(equivalent to \code{standardise_rast(method = "input", by_poly = TRUE)});
+(equivalent to \code{standardise_rast(method = "input", by_poly = TRUE, dataType = NA, scaleFactor = 1)});
 \item \code{fillgaps_rast()} is used to fill gaps (NA values) without using
 polygon masks
-(equivalent to \code{standardise_rast(by_poly = FALSE, min_area = 0, method = "input", fill_na = TRUE, fill_borders = FALSE, buffer = 0, parallel = FALSE)}).
+(equivalent to \code{standardise_rast(by_poly = FALSE, min_area = 0, method = "input", fill_na = TRUE, fill_borders = FALSE, buffer = 0, parallel = FALSE, dataType = NA, scaleFactor = 1)}).
 }
 
 By default, input raster values are standardised basing on the averages
