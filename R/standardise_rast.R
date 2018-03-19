@@ -94,8 +94,8 @@
 #' @importFrom parallel detectCores makeCluster stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom sf st_buffer st_area st_geometry st_sf st_union
-#' @importFrom raster calc writeRaster values resample
 #' @importFrom stats weighted.mean
+#' @importFrom raster calc writeRaster values resample mosaic
 #' @importFrom foreach foreach "%do%" "%dopar%"
 #' @importFrom jsonlite fromJSON
 #' @importFrom rgdal GDALinfo writeGDAL
@@ -399,14 +399,18 @@ standardise_rast <- function(in_rast,
 
     if (continue_sel_poly) { # see the note above
 
-
       ## 1. Generate raster covering only the buffer of the selected polygon
 
       # Crop values on the border of the polygon
       if (TRUE) { # TODO exclude cases in which this is not needed
         gdal_warp(in_rast_path, sel_rast_poly_path, mask=sel_vect_path)
-        sel_rast_poly <- cast_rast(sel_rast_poly_path, "rastobject")
       }
+
+      if (!file.exists(sel_rast_poly_path)) {continue_sel_poly <- FALSE}
+    }
+    if (continue_sel_poly) { # see the note above
+
+      sel_rast_poly <- cast_rast(sel_rast_poly_path, "rastobject")
 
       # Crop the values on the border of the buffer
       if (buffer != 0) {
@@ -520,9 +524,10 @@ standardise_rast <- function(in_rast,
 
       ## 5. Export output raster
       writeRaster(sel_rast_z, sel_rast_z_path)
-      print(sel_rast_z_path)
       sel_rast_z_path
 
+    } else {
+      NULL
     } # end of continue_sel_poly IF cycle
 
   } # end of in_vect_buf FOREACH cycle
