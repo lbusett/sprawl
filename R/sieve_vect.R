@@ -19,8 +19,8 @@
 #' @rdname sieve_vect
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
-#' @importFrom sf st_geometry st_area st_polygon summarise.sf
-#' @export summarise.sf
+#' @importFrom sf st_geometry st_area st_polygon
+#' @importFrom dplyr summarise
 
 
 sieve_vect <- function(in_vect,
