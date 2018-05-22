@@ -62,12 +62,12 @@ get_raststats <- function(in_rast,
   #   Launch gdalinfo over the vrt file                                   ####
   if (hist | quantiles) get_hists = TRUE else get_hists = FALSE
   gdalinfo_str <- paste(
-    in_vrt,
+    shQuote(in_vrt),
     "-stats",
     ifelse(get_hists, "-hist", "")
   )
 
-  stats <- system2("gdalinfo" , args = gdalinfo_str, stdout = TRUE)
+  stats <- try(system2("gdalinfo" , args = gdalinfo_str, stdout = TRUE))
   if (!is.null(attr(stats, "status"))) {
     stop("get_raststats --> Extraction of statistics failed. Aborting! \n\n",
          "The call was: \n",
@@ -82,11 +82,16 @@ get_raststats <- function(in_rast,
   stats_df <- stats[which(lapply(stats,
                                  FUN = function(x) grep("Minimum=", x)) == 1)]
 
-  stats_df <- data.table::rbindlist(lapply(stats_df, FUN = function(x) {
-    vals <- as.numeric(stringr::str_split_fixed(x, "," ,4) %>%
-                         stringr::str_split_fixed("=" , n = 4) %>% .[,2])
-    data.frame(min = vals[1], max = vals[2], avg = vals[3], sd = vals[4])
-  }))
+  if (length(stats_df) != 0){
+    stats_df <- data.table::rbindlist(lapply(stats_df, FUN = function(x) {
+      vals <- as.numeric(stringr::str_split_fixed(x, "," ,4) %>%
+                           stringr::str_split_fixed("=" , n = 4) %>% .[,2])
+      data.frame(min = vals[1], max = vals[2], avg = vals[3], sd = vals[4])
+    }))
+  } else {
+    stats_df <- data.frame(min = NA, max = NA,
+                           avg = NA, sd = NA)
+  }
 
   stats_df[["band"]] <- seq_len(dim(stats_df)[1])
 
