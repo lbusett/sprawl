@@ -18,8 +18,6 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-<!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -27,18 +25,6 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Generate a standardised raster — standardise_rast" />
-
-<meta property="og:description" content="This function can be used to process a raster in order to
-obtain standardised values (Z-scores) within polygons of a specified
-vector file or R spatial object, and/or
-replace values of the raster near to the borders of the polygons with
-local or global averages, and/or
-fill holes (NA values) with local or global averages.
-" />
-
-<meta property="og:description" content="Some aliases are set for specific functions (see details)." />
-<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -167,22 +153,25 @@ local or global averages, and/or</p></li>
     <pre class="usage"><span class='fu'>standardise_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>in_vect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_poly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"zscore"</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>,
   <span class='kw'>fill_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fill_borders</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>dataType</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>scaleFactor</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>standardize_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>in_vect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_poly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"zscore"</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>,
   <span class='kw'>fill_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fill_borders</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>dataType</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>scaleFactor</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>zscore_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>in_vect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_poly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>, <span class='kw'>fill_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>fill_borders</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>dataType</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>scaleFactor</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>fixborders_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>in_vect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>, <span class='kw'>fill_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fill_borders</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>dataType</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>scaleFactor</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>fillgaps_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
@@ -284,6 +273,22 @@ runned on a single core. This value is not considered if <code>by_poly = TRUE</c
 format recognised by GDAL). Default is to maintain each input format.</p></td>
     </tr>
     <tr>
+      <th>dataType</th>
+      <td><p>(optional) Numeric datatype of the ouptut rasters.
+if "Float32" or "Float64" is chosen, numeric values are not rescaled;
+if "Int16" or "UInt16", values are multiplicated by <code>scaleFactor</code> argument.
+If "NA" is used (default), the same dataType of <code>in_rast</code> is used.</p></td>
+    </tr>
+    <tr>
+      <th>scaleFactor</th>
+      <td><p>(optional) Scale factor for output values when an integer
+datatype is chosen (default values with <code>method = "zscore"</code> are 1000
+for "Int16" and "UInt16" and 1E8 for "Int32" and "UInt32";
+with different <code>method</code> values, defalt is 1).
+Notice that, using "UInt16" and "UInt32" types,
+negative values will be truncated to 0.</p></td>
+    </tr>
+    <tr>
       <th>compress</th>
       <td><p>(optional) In the case a GTiff format is
 present, the compression indicated with this parameter is used.
@@ -306,10 +311,10 @@ overwritten? (default: FALSE)</p></td>
 <li><p><code>zscore_rast()</code> computes the Z-score on the input raster
 (equivalent to <code>standardise_rast(method = "zscore")</code>);</p></li>
 <li><p><code>fixborders_rast()</code> can be used to replace border values
-(equivalent to <code>standardise_rast(method = "input", by_poly = TRUE)</code>);</p></li>
+(equivalent to <code>standardise_rast(method = "input", by_poly = TRUE, dataType = NA, scaleFactor = 1)</code>);</p></li>
 <li><p><code>fillgaps_rast()</code> is used to fill gaps (NA values) without using
 polygon masks
-(equivalent to <code>standardise_rast(by_poly = FALSE, min_area = 0, method = "input", fill_na = TRUE, fill_borders = FALSE, buffer = 0, parallel = FALSE)</code>).</p></li>
+(equivalent to <code>standardise_rast(by_poly = FALSE, min_area = 0, method = "input", fill_na = TRUE, fill_borders = FALSE, buffer = 0, parallel = FALSE, dataType = NA, scaleFactor = 1)</code>).</p></li>
 </ul>
     <p>By default, input raster values are standardised basing on the averages
 and standard deviations computed within each polygon (it is possible to
@@ -455,7 +460,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>
