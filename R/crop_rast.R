@@ -227,8 +227,8 @@ crop_rast <- function(rast_object,
                               ifelse(!is.null(out_nodata),
                                      paste0("-a_nodata ", out_nodata),
                                      ""),
-                              temp_vrt,
-                              out_file)
+                              shQuote(temp_vrt),
+                              shQuote(out_file))
 
     out <- system2(file.path(find_gdal(), "gdal_translate"),
                    args = translate_string, stdout = TRUE)

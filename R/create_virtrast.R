@@ -86,8 +86,8 @@ create_virtrast <- function(in_rast,
       if (!is.null(out_extent)) paste0("-te ", paste(out_extent, collapse = " ")),
       paste(paste("-b ", rastinfo$indbands),
             collapse = " "),
-      out_vrt_file,
-      rast_file)
+      shQuote(out_vrt_file),
+      shQuote(rast_file))
   }
 
   vrt_build <- suppressWarnings(try(system2(file.path(find_gdal(), "gdalbuildvrt"),

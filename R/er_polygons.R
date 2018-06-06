@@ -122,8 +122,8 @@ er_polygons <- function(in_vect_crop,
                        "-tr", paste(er_opts$rastres, collapse = " "),
                        "-ot" , ot, sep = " ",
                        "-of GTiff",
-                       temp_shapefile,
-                       temp_rasterfile)
+                       shQuote(temp_shapefile),
+                       shQuote(temp_rasterfile))
 
   system2(file.path(find_gdal(), "gdal_rasterize"), args = rast_string,
           stdout = NULL)

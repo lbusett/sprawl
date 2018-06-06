@@ -60,7 +60,10 @@ gdal_polygonizeR <- function(x,
     } else stop('x must be a file path (character string), or a Raster object.')
 
     out <- system2('python', args = (paste0(sprintf('"%1$s" "%2$s" -f "%3$s" "%4$s.shp"',
-                                                    pypath, rastpath, gdalformat, outshape), " -fieldname id")),
+                                                    pypath,
+                                                    rastpath,
+                                                    gdalformat,
+                                                    outshape), " -fieldname id")),
                    stdout = TRUE)
     if (isTRUE(readpoly)) {
 

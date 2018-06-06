@@ -250,7 +250,6 @@ extract_rast <- function(in_rast,
     } else {
       outside_feat  <- NULL
     }
-
     # Now crop the raster on the vector extent. This speeds-up consistently the
     # processing in case the vectors cover only a part of the raster
 
