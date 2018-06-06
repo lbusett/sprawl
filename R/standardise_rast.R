@@ -315,7 +315,7 @@ standardise_rast <- function(in_rast,
 
   # assign dataType value
   if (is.na(dataType)) {
-    dataType <- as.character(suppressWarnings(attr(GDALinfo(in_rast),"df")[1,"GDType"]))
+    dataType <- as.character(suppressWarnings(attr(GDALinfo(in_rast_path),"df")[1,"GDType"]))
   }
   # convert unsigned formats (with the exception of "input" method)
   if (!method %in% c("input")) {
