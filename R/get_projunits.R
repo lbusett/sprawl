@@ -35,12 +35,13 @@ get_projunits <- function(proj4string) {
   if (class(proj4string) == "character") {
     proj4string <- try(sp::CRS(proj4string), silent = TRUE)
     if (class(proj4string) == "try-error"){
-      warning("get_projunits --> Unable to retrieve units !")
+      warning("get_projunits --> Unable to retrieve units, returning `NA`!")
       return(NA)
     }
   }
 
   if (is.na(proj4string@projargs)) {
+    warning("get_projunits --> Unable to retrieve units, returning `NA`!")
     return(NA)
   } else {
   #   ________________________________________________________________________
@@ -71,6 +72,6 @@ get_projunits <- function(proj4string) {
     }
   }
   }
-  warning("get_projunits --> Unable to retrieve units !")
+  warning("get_projunits --> Unable to retrieve units, returning `NA`!")
   return(NA)
 }

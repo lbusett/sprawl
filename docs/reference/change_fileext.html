@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,11 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="change file extension — change_fileext" />
+
+<meta property="og:description" content="Helper function allowing to quckly change the extension of
+a file name" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -143,7 +150,7 @@
 a file name</p>
     
 
-    <pre class="usage"><span class='fu'>change_fileext</span>(<span class='no'>in_file</span>, <span class='no'>new_ext</span>, <span class='kw'>new_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>change_fileext</span>(<span class='no'>in_file</span>, <span class='kw'>new_ext</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>new_path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -154,7 +161,8 @@ a file name</p>
     </tr>
     <tr>
       <th>new_ext</th>
-      <td><p><code>character</code> new file extension (e.g., ".png")</p></td>
+      <td><p><code>character</code> new file extension (e.g., ".png"). If NULL (the
+default), the basename without extension is return, Deafault: NULL</p></td>
     </tr>
     <tr>
       <th>new_path</th>
@@ -202,7 +210,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

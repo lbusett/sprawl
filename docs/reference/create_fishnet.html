@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,15 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Create a "fishnet" vector over the extent of a spatial object — create_fishnet" />
+
+<meta property="og:description" content="Function to create a polygon fishnet of specified resolution
+over a raster dataset. By default, the fishnet is built so that
+each cell corresponds to a raster cell. If the pix_for_cell argument is
+set, then the polygons of the fishnet are built so to include the specified
+number of cells in each direction. If the cellsize option is set, a fishnet
+of the specified resolution is created over the extent of the raster)" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -223,20 +234,25 @@ Default: TRUE.</p></td>
   <span class='co'># create a fishnet over an input raster file and save it as a shapefile</span>
   <span class='fu'>library</span>(<span class='no'>raster</span>)
   <span class='fu'>library</span>(<span class='no'>sprawl</span>)
-  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)
-
+  <span class='fu'>library</span>(<span class='no'>rasterVis</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: lattice</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘lattice’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:sprawl’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    levelplot</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: latticeExtra</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: RColorBrewer</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘latticeExtra’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:ggplot2’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    layer</span></div><div class='input'>
   <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='build_testraster.html'>build_testraster</a></span>(<span class='fl'>20</span>,<span class='fl'>40</span>,<span class='fl'>1</span>)
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_obj</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>
-  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-6.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>4</span>,<span class='fl'>2</span>))</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_obj</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-7.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
-  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>25</span>,<span class='fl'>25</span>))</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_obj</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>pix_for_cell</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>4</span>,<span class='fl'>2</span>))</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_obj</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>25</span>,<span class='fl'>25</span>))</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_obj</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
   <span class='co'># plotting with `exact_csize` = FALSE creates a grid that covers the extent with</span>
   <span class='co'># regular cells, by adapting the cellsize (see `sf::st_make_grid`)</span>
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>25</span>,<span class='fl'>25</span>),
-                                  <span class='kw'>exact_csize</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_obj</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                                  <span class='kw'>exact_csize</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='output co'>#&gt; <span class='message'>crop_vect --&gt; cropping . on extent of in_obj</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersection assumes that they are planar</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
   <span class='co'># using shape = "hex" gives and hexagonal grid instead</span>
   <span class='no'>fishnet</span>  <span class='kw'>&lt;-</span> <span class='fu'>create_fishnet</span>(<span class='no'>in_rast</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>25</span>,<span class='fl'>25</span>),
-                                  <span class='kw'>exact_csize</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"hex"</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                                  <span class='kw'>exact_csize</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"hex"</span>)</div><div class='output co'>#&gt; <span class='message'>create_fishnet --&gt; Creating Fishnet over in_rast</span></div><div class='input'>  <span class='fu'><a href='plot_rast.html'>plot_rast</a></span>(<span class='no'>in_rast</span>, <span class='kw'>in_poly</span> <span class='kw'>=</span> <span class='no'>fishnet</span>)</div><div class='img'><img src='create_fishnet-5.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -264,7 +280,7 @@ Lorenzo Busetto, PhD (2017) email: <a href='mailto:lbusett@gmail.com'>lbusett@gm
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

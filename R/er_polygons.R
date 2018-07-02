@@ -47,15 +47,15 @@ er_polygons <- function(in_vect_crop,
                         parallel = FALSE,
                         verb_foreach = FALSE) {
 
-  geometry <- mdxtnq <- y_min <- .N <- .SD <- band <- area <- . <- NULL
-
+  mdxtnq <- y_min <- .N <- .SD <- band <- . <- NULL
+  geocol <- attr(in_vect, "sf_column")
   #   crop in_vect to in_rast extent if necessary and identify "removed"    ####
   #   features + Find names of the attribute fields of the original shapefile
 
   if (er_opts$verbose) message("extract_rast --> Cropping the zones object on ",
                                "extent of the raster")
 
-  names_shp <- names(in_vect_crop)[!names(in_vect_crop) %in% c("mdxtnq", "geometry")] #nolint
+  names_shp <- names(in_vect_crop)[!names(in_vect_crop) %in% c("mdxtnq", geocol)] #nolint
 
   #   __________________________________________________________________________
   #   If `er_opts$rastres` is not null and is er_opts$smaller tha the       ####
@@ -122,8 +122,8 @@ er_polygons <- function(in_vect_crop,
                        "-tr", paste(er_opts$rastres, collapse = " "),
                        "-ot" , ot, sep = " ",
                        "-of GTiff",
-                       temp_shapefile,
-                       temp_rasterfile)
+                       shQuote(temp_shapefile),
+                       shQuote(temp_rasterfile))
 
   system2(file.path(find_gdal(), "gdal_rasterize"), args = rast_string,
           stdout = NULL)
@@ -195,26 +195,38 @@ er_polygons <- function(in_vect_crop,
         message("extract_rast --> Computing bounding boxes of input polygons")
       }
 
-      bboxes <- lapply(sf::st_geometry(in_vect_crop),
+      #old
+      # bboxes <- lapply(sf::st_geometry(in_vect_crop),
+      #                  FUN = function(x) {
+      #                    bb <- sf::st_bbox(x)
+      #                    data.frame(y_min = bb[2], y_max = bb[4])
+      #                  }) %>%
+      #   data.table::rbindlist() %>%
+      #   .[, "mdxtnq" := seq_len(dim(.)[1])] %>%
+      #   data.table::setkey("mdxtnq")
+
+      #new
+        bboxes <- lapply(sf::st_geometry(in_vect_crop),
                        FUN = function(x) {
                          bb <- sf::st_bbox(x)
                          data.frame(y_min = bb[2], y_max = bb[4])
                        }) %>%
         data.table::rbindlist() %>%
-        .[, "mdxtnq" := seq_len(dim(.)[1])] %>%
+        .[, "mdxtnq" := in_vect_crop$mdxtnq] %>%
         data.table::setkey("mdxtnq")
+
 
       #
       #
       #
-      # bboxes <- in_vect_crop[c("mdxtnq", "geometry")] %>%
+      # bboxes <- in_vect_crop[c("mdxtnq", geocol)] %>%
       #   data.table::data.table() %>%
       #   sf::st_as_sf()
       # bboxes <- bboxes[, list(min_y = sf::st_bbox(geometry)[2],
       #                         max_y = sf::st_bbox(geometry)[4]),
       #                  by = "mdxtnq"]
     } else {
-      bboxes <- in_vect_crop[c("mdxtnq", "geometry")]
+      bboxes <- in_vect_crop[c("mdxtnq", geocol)]
     }
 
     # -_______________________________________________________________________
@@ -341,7 +353,7 @@ er_polygons <- function(in_vect_crop,
 
             temp_outdata  <- temp_outdata[!(mdxtnq %in%
                                               unique(complete_polys$mdxtnq))]
-            message(dim(temp_outdata))
+            # message(dim(temp_outdata))
             # If something was computed for stat_data, add 1 to the counter
             chunk_n_summ  <- chunk_n_summ + 1
 
@@ -354,6 +366,8 @@ er_polygons <- function(in_vect_crop,
 
     } # end cycle on chunks
 
+
+    # browser()
     #   ______________________________________________________________________
     #   bind data from all chunks in `all_data`  and 'stat_data'          ####
     if (er_opts$full_data) {
@@ -492,9 +506,11 @@ er_polygons <- function(in_vect_crop,
 
       stat_data <- stat_data[{data.table::as.data.table(in_vect_crop) %>%
           data.table::setkey("mdxtnq")}]
-      # Add a column for area
+
+      # Remove geocol if needed
+
       if (!er_opts$join_geom) {
-        stat_data <- stat_data[, geometry := NULL]
+        stat_data <- stat_data[, eval(geocol) := NULL]
       }
 
     } else {
@@ -503,7 +519,7 @@ er_polygons <- function(in_vect_crop,
         join_cols <- c(join_cols, eval(er_opts$id_field))
       }
       if (er_opts$join_geom) {
-        join_cols <- c(join_cols,"geometry")
+        join_cols <- c(join_cols, geocol)
       }
 
       stat_data <- stat_data[{
@@ -512,63 +528,63 @@ er_polygons <- function(in_vect_crop,
 
     }
     # }
-    if (!any(names_shp == "area")) {
-      area_fld <- "area"
-    } else {
-      area_fld <- "area_sprawl"
-    }
+    # if (!any(names_shp == "area")) {
+    #   area_fld <- "area"
+    # } else {
+    #   area_fld <- "area_sprawl"
+    # }
 
-    if (er_opts$join_geom) {
-      stat_data[[eval(area_fld)]] <- sf::st_area(stat_data$geometry)
-    }
+    # if (er_opts$join_geom) {
+    #   stat_data[[eval(area_fld)]] <- sf::st_area(stat_data$geometry)
+    # }
 
     # define the names and order of the output columns
 
     if (er_opts$rast_type == "continuous") {
 
       if (!is.null(er_opts$FUN)) {
-        keep_cols <- c("mdxtnq", "band_n", "date", area_fld,
+        keep_cols <- c("mdxtnq", "band_n", "date",
                        "n_pix", "n_pix_val", "myfun",
                        names_shp,
-                       "geometry")
+                       geocol)
       } else {
 
         if (!er_opts$comp_quant) {
-          keep_cols <- c("mdxtnq", "band_n", "date", area_fld,
+          keep_cols <- c("mdxtnq", "band_n", "date",
                          "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
                          names_shp,
-                         "geometry")
+                         geocol)
         } else {
-          keep_cols <- c("mdxtnq", "band_n", "date", area_fld,
+          keep_cols <- c("mdxtnq", "band_n", "date",
                          "n_pix", "n_pix_val", "avg", "med", "sd", "min", "max",
                          "q01", "q05","q15", "q25", "q35", "q45", "q55", "q65",
                          "q75", "q85", "q95", "q99",
                          names_shp,
-                         "geometry")
+                         geocol)
         }
       }
     } else {
       if (!er_opts$comp_freq) {
-        keep_cols <- c("mdxtnq", "band_n", "date", area_fld,
+        keep_cols <- c("mdxtnq", "band_n", "date",
                        "n_pix", "n_pix_val", "mode",
                        names_shp,
-                       "geometry")
+                       geocol)
       } else {
 
         which_freqs <- grep("freq_", names(stat_data))
         keep_cols <- c(
-          "mdxtnq", "band_n", "date", area_fld,
+          "mdxtnq", "band_n", "date",
           "n_pix", "n_pix_val", "mode",
           gsub("mdtxtnQ_", "", names(stat_data)[which_freqs]), #nolint
           names_shp,
-          "geometry")
+          geocol)
         names(stat_data)[which_freqs] <-
           gsub("mdtxtnQ_", "", names(stat_data)[which_freqs])
       }
     }
 
     if (!er_opts$join_geom) {
-      keep_cols <- keep_cols[which(!keep_cols %in% c(area_fld, "geometry"))]
+      keep_cols <- keep_cols[which(keep_cols !=  geocol)]
       # if (!er_opts$join_feat_tbl) stat_data <- stat_data[, geometry := NULL]
     }
 

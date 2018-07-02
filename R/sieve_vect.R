@@ -19,8 +19,8 @@
 #' @rdname sieve_vect
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
-#' @importFrom sf st_geometry st_area st_polygon summarise.sf
-#' @export summarise.sf
+#' @importFrom sf st_geometry st_area st_polygon
+
 
 
 sieve_vect <- function(in_vect,
@@ -33,9 +33,10 @@ sieve_vect <- function(in_vect,
                        create_dir = FALSE,
                        verbose = TRUE) {
 
-  names(in_vect)[names(in_vect) == class_field] = "idsieve"
+  . <- lgt <- id <- NULL
 
-    # browser()
+  names(in_vect)[names(in_vect) == class_field] = "idsieve1753817538"
+
   areas         <- as.numeric(sf::st_area(in_vect))
 
   in_vect_big   <- in_vect[which(areas >= min_patch_area), ]
@@ -101,8 +102,8 @@ sieve_vect <- function(in_vect,
       sf::st_as_sf()
 
     notholes <- notholes %>%
-      dplyr::arrange(idsieve) %>%
-      dplyr::mutate(idsieve = bord_lines[[paste0("idsieve", ".1")]]) %>%
+      dplyr::arrange(idsieve17538) %>%
+      dplyr::mutate(idsieve17538 = bord_lines[[paste0("idsieve17538", ".1")]]) %>%
       sf::st_as_sf()
 
   }
@@ -110,11 +111,11 @@ sieve_vect <- function(in_vect,
   # re-add notholes to in_vect_filled, with reassigned class, and dissolve
   # boundaries
   in_vect_filled <- rbind(in_vect_filled, notholes) %>%
-    group_by(idsieve) %>%
+    group_by(idsieve17538) %>%
     sf::st_as_sf() %>%
     summarise(do_union = TRUE)
 
-  names(in_vect_filled)[names(in_vect_filled) == "idsieve"] = class_field
+  names(in_vect_filled)[names(in_vect_filled) == "idsieve17538"] = class_field
 
 
   if (out_type == "sfobject") {

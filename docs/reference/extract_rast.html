@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,11 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="extract raster values on features of a vector — extract_rast" />
+
+<meta property="og:description" content="Function used to extract values of a single- or multi- band raster
+for pixels corresponding to the features of a vector (Polygon, Point or Line)" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -305,27 +312,26 @@ ncores is re-set to the minimum between those two.</p></td>
 <span class='no'>in_rast</span>  <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/zvalues'>setZ</a></span>(<span class='no'>in_rast</span>, <span class='fu'><a href='doytodate.html'>doytodate</a></span>(<span class='fu'>seq</span>(<span class='fl'>1</span>,<span class='fl'>366</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>8</span>), <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2013</span>))
 
 <span class='no'>out</span>      <span class='kw'>&lt;-</span> <span class='fu'>extract_rast</span>(<span class='no'>in_rast</span>, <span class='no'>in_polys</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ncores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                         <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='st'>"lc_type"</span>)
-
+                         <span class='kw'>id_field</span> <span class='kw'>=</span> <span class='st'>"lc_type"</span>)</div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='output co'>#&gt; <span class='message'>04</span></div><div class='input'>
 <span class='co'># Statistics for the different polygons</span>
 
-<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 6 features and 14 fields
+<span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/headtail'>head</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>)</div><div class='output co'>#&gt; Simple feature collection with 6 features and 13 fields
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12918420 ymin: 1752797 xmax: 12920610 ymax: 1755103
 #&gt; epsg (SRID):    NA
 #&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
-#&gt; # A tibble: 6 x 15
-#&gt;    lc_type band_n       date        area n_pix n_pix_val      avg   med
-#&gt;     &lt;fctr&gt;  &lt;dbl&gt;     &lt;date&gt; &lt;S3: units&gt; &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 forest_1      1 2013-01-01 3400057 m^2    61        61 4830.820  4747
-#&gt; 2 forest_1      2 2013-01-09 3400057 m^2    61        61 4605.131  4648
-#&gt; 3 forest_1      3 2013-01-17 3400057 m^2    61        61 4837.902  4834
-#&gt; 4 forest_1      4 2013-01-25 3400057 m^2    61        61 4484.984  4411
-#&gt; 5 forest_1      5 2013-02-02 3400057 m^2    61        61 4284.197  4237
-#&gt; 6 forest_1      6 2013-02-10 3400057 m^2    61        61 4374.525  4302
-#&gt; # ... with 7 more variables: sd &lt;dbl&gt;, min &lt;dbl&gt;, max &lt;dbl&gt;, id &lt;dbl&gt;,
-#&gt; #   category &lt;fctr&gt;, sup_catego &lt;fctr&gt;, geometry &lt;simple_feature&gt;</div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>date</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>avg</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>lc_type</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>lc_type</span>)) +
+#&gt; # A tibble: 6 x 14
+#&gt;   lc_type band_n date       n_pix n_pix_val   avg   med    sd   min   max    id
+#&gt;   &lt;fct&gt;    &lt;dbl&gt; &lt;date&gt;     &lt;int&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 forest…   1.00 2013-01-01    61        61  4831  4747   541  3731  5987  1.00
+#&gt; 2 forest…   2.00 2013-01-09    61        61  4605  4648   511  3665  5547  1.00
+#&gt; 3 forest…   3.00 2013-01-17    61        61  4838  4834   557  3640  5827  1.00
+#&gt; 4 forest…   4.00 2013-01-25    61        61  4485  4411   474  3285  5275  1.00
+#&gt; 5 forest…   5.00 2013-02-02    61        61  4284  4237   499  3469  5318  1.00
+#&gt; 6 forest…   6.00 2013-02-10    61        61  4375  4302   471  3317  5363  1.00
+#&gt; # ... with 3 more variables: category &lt;fct&gt;, sup_catego &lt;fct&gt;,
+#&gt; #   geometry &lt;POLYGON [m]&gt;</div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>out</span>$<span class='no'>stats</span>, <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>date</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>avg</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>lc_type</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>lc_type</span>)) +
    <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_path'>geom_line</a></span>() +
    <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>lc_type</span>) +
    <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_light</a></span>()</div><div class='img'><img src='extract_rast-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
@@ -342,15 +348,15 @@ ncores is re-set to the minimum between those two.</p></td>
 #&gt; epsg (SRID):    NA
 #&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs
 #&gt; # A tibble: 6 x 10
-#&gt;    lc_type band_n       date n_pix_val     N value    id category sup_catego
-#&gt;     &lt;fctr&gt;  &lt;int&gt;     &lt;date&gt;     &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;fctr&gt;     &lt;fctr&gt;
-#&gt; 1 forest_1      1 2013-01-01        61     1  4454     1   Forest Vegetation
-#&gt; 2 forest_1      1 2013-01-01        61     2  4260     1   Forest Vegetation
-#&gt; 3 forest_1      1 2013-01-01        61     3  4224     1   Forest Vegetation
-#&gt; 4 forest_1      1 2013-01-01        61     4  4344     1   Forest Vegetation
-#&gt; 5 forest_1      1 2013-01-01        61     5  4489     1   Forest Vegetation
-#&gt; 6 forest_1      1 2013-01-01        61     6  4970     1   Forest Vegetation
-#&gt; # ... with 1 more variables: geometry &lt;simple_feature&gt;</div><div class='input'>
+#&gt;   lc_type  band_n date       n_pix_val     N value    id category sup_catego
+#&gt;   &lt;fct&gt;     &lt;int&gt; &lt;date&gt;         &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;fct&gt;     
+#&gt; 1 forest_1      1 2013-01-01        61     1  4454  1.00 Forest   Vegetation
+#&gt; 2 forest_1      1 2013-01-01        61     2  4260  1.00 Forest   Vegetation
+#&gt; 3 forest_1      1 2013-01-01        61     3  4224  1.00 Forest   Vegetation
+#&gt; 4 forest_1      1 2013-01-01        61     4  4344  1.00 Forest   Vegetation
+#&gt; 5 forest_1      1 2013-01-01        61     5  4489  1.00 Forest   Vegetation
+#&gt; 6 forest_1      1 2013-01-01        61     6  4970  1.00 Forest   Vegetation
+#&gt; # ... with 1 more variable: geometry &lt;POINT [m]&gt;</div><div class='input'>
 
 </div></pre>
   </div>
@@ -377,7 +383,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

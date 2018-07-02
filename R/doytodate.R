@@ -19,9 +19,11 @@ doytodate <- function(doys, year, verbose = TRUE){
     stop("doytodate --> 'doys' and 'year' must be numeric ! Aborting !" )
   }
 
-  if (!length(year) == 1) {
+  if (!length(year) == 1 & !(length(year) == length(doys))) {
     stop("doytodate --> 'year' must be a single value ! Aborting !" )
   }
+
+  #TODO vectorize this check!!!!
   # check for leap year (derived from `lubridate`)
   if (!((year %% 4 == 0) & ((year %% 100 != 0) | (year %% 400 == 0)))) {
     range <- c(0,365)

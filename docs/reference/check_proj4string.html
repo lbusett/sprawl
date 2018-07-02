@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,12 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Check the validity of the input projection — check_proj4string" />
+
+<meta property="og:description" content="helper function used to check that the input projection
+(passed as UTM zone, EPSG code, PROJ4 string or CRS object)
+is a valid string or CRS." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -144,19 +152,22 @@
 is a valid string or CRS.</p>
     
 
-    <pre class="usage"><span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for numeric</span>
-<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for CRS</span>
-<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>check_proj4string</span>(<span class='no'>projection</span>, <span class='kw'>abort</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -164,13 +175,13 @@ is a valid string or CRS.</p>
     <tr>
       <th>projection</th>
       <td><p><code>character</code> or <code>integer</code> corresponding to the
-proj4string to be checked, the EPSG code or a numeric UTM zone; alternatively,
-a CRS object is accepted.</p></td>
+proj4string to be checked, the EPSG code or a UTM zone (e.g. "32N");
+alternatively, a CRS object is accepted.</p></td>
     </tr>
     <tr>
       <th>abort</th>
       <td><p><code>logical</code> if TRUE, the function aborts in case an invalid invalid
-projection is passed. Otherwise, the function returns "invalid", Default: TRUE</p></td>
+projection is passed. Otherwise, the function returns "NA", Default: TRUE</p></td>
     </tr>
     </table>
     
@@ -189,7 +200,8 @@ projection is passed. Otherwise, the function returns "invalid", Default: TRUE</
 <span class='fu'>check_proj4string</span>(<span class='st'>"32631"</span>)</div><div class='output co'>#&gt; [1] "+init=epsg:32631 +proj=utm +zone=31 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
 <span class='fu'>check_proj4string</span>(<span class='fl'>32633</span>)</div><div class='output co'>#&gt; [1] "+init=epsg:32633 +proj=utm +zone=33 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
 <span class='fu'>check_proj4string</span>(<span class='fl'>30</span>)</div><div class='output co'>#&gt; [1] "+proj=utm +zone=30 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
-<span class='fu'>check_proj4string</span>(<span class='st'>"example of invalid string"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: check_proj4string --&gt; Invalid projection detected!</span></div><div class='output co'>#&gt; [1] "invalid"</div><div class='input'>
+<span class='fu'>check_proj4string</span>(<span class='st'>"example of invalid string"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: check_proj4string --&gt; Invalid projection detected,</span>
+#&gt; <span class='warning'>                           returning `NA`!</span></div><div class='output co'>#&gt; [1] NA</div><div class='input'>
 <span class='fu'>library</span>(<span class='no'>sp</span>)
 <span class='fu'>check_proj4string</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='st'>"+init=epsg:32632"</span>))</div><div class='output co'>#&gt; [1] "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"</div><div class='input'>
 <span class='fu'>library</span>(<span class='no'>raster</span>)
@@ -225,7 +237,7 @@ Luigi Ranghetti, phD (2017) <a href='mailto:ranghetti.l@irea.cnr.it'>ranghetti.l
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

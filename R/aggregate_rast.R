@@ -127,8 +127,8 @@ aggregate_rast <- function(in_val_rast,
                               "-te ", paste(sf::st_bbox(in_fish),
                                             collapse = " "),
                               "-co COMPRESS=DEFLATE",
-                              tempvecfile,
-                              out_file)
+                              shQuote(tempvecfile),
+                              shQuote(out_file))
     rastout <- suppressWarnings(try(system2(file.path(find_gdal(),"gdal_rasterize"),
                                             args = rasterize_string,
                                             stdout = NULL, stderr = TRUE),

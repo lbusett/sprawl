@@ -656,8 +656,10 @@ plot_rast_gg <- function(
                  # expand = FALSE,
                  xlim = xlims,
                  ylim = ylims)
+
       if (!is.null(borders_txt_field)) {
         if (borders_txt_field %in% names(borders_layer)) {
+
           borders_layer <- borders_layer %>%
             dplyr::mutate(
               lon = purrr::map_dbl(geocol, ~sf::st_centroid(.x)[[1]]),

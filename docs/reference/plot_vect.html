@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,29 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="plot a map based on a <code>vector</code> object using `ggplot::geom_sf`` — plot_vect" />
+
+<meta property="og:description" content="Plot a raster object using ggplot with an (optional) basemap.
+The function allows to:
+Plot either only the geometry of in_vect, or a map with different
+fill colors based on a column of in_vect;
+Plot a single- or multi-band image using facet_wrap (args facet_var,
+facet_rows);
+"Easily" select different palettes (arg palette_name) for the fill
+variable;
+Easily control plotting limits on the z-dimension, specifying either
+values or quantiles ranges (args zlims, zlims_type), as well as how
+the outlier values are represented (args outliers_style and
+outliers_color)
+Easily control breaks and labels in legends (args leg_type, leg_breaks,
+leg_labels, leg_position)
+Automatically add a scalebar to the plot (argsscalebar, scalebar_dist,
+scalebar_txt_dist, scalebar_txt_size)
+Easily add an additional "vector" layer (e.g., administrative boundaries)
+(args borders_layer, borders_color, borders_....)
+See the description of the arguments for details on their use
+" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -163,7 +188,8 @@ See the description of the arguments for details on their use</p></li>
 
     <pre class="usage"><span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
   <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>point_shape</span> <span class='kw'>=</span> <span class='st'>"circle"</span>, <span class='kw'>point_linecolor</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
-  <span class='kw'>point_linesize</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>scale_transform</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>point_linesize</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>txt_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>txt_size</span> <span class='kw'>=</span> <span class='fl'>2.5</span>, <span class='kw'>txt_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>, <span class='kw'>scale_transform</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>transparency</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>facet_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>facet_rows</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>levels_to_plot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"grey15"</span>,
   <span class='kw'>borders_size</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>borders_txt_size</span> <span class='kw'>=</span> <span class='fl'>2.5</span>,
@@ -221,6 +247,21 @@ a "POINT" or "MULTIPOINT" object, Default: 0.2</p></td>
       <td><p><code>character</code> name of the column of <code>in_vect</code> to be used for
 coloring the different polygons. If NULL, only the geometry is plotted,
 Default: NULL</p></td>
+    </tr>
+    <tr>
+      <th>txt_field</th>
+      <td><p>name of the column of <code>borders_layer</code> to be used to
+add text labels to <code>borders_layer</code> (if provided), Default: NULL (no labels)</p></td>
+    </tr>
+    <tr>
+      <th>txt_size</th>
+      <td><p>size of the txt labels derived from <code>borders_layer</code>,
+Default: 2</p></td>
+    </tr>
+    <tr>
+      <th>txt_color</th>
+      <td><p>color of the txt labels derived from <code>borders_layer</code>,
+Default: "grey15"</p></td>
     </tr>
     <tr>
       <th>scale_transform</th>
@@ -476,13 +517,13 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
  <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>get</span>(<span class='fu'>load</span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>, <span class='st'>"poly_lomb.RData"</span>,
                                  <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)))
  <span class='co'># plot only geometry</span>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>1.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-8.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>line_color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>line_size</span> <span class='kw'>=</span> <span class='fl'>1.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-9.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># plot with a fill on a cartegorical variable with a single "level"</span>
- <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='img'><img src='plot_vect-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+ <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-10.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
  <span class='co'># change the palette, add a scalebar and remove the grid</span>
  <span class='fu'>plot_vect</span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>,<span class='kw'>show_axis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"Set3"</span>,
-           <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot_vect-11.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-11.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
  <span class='co'># plot with a fill on a continuous variable with two "levels", using facets</span>
  <span class='co'># and a diverging palette. also add a "borders" layer with a different</span>
@@ -491,15 +532,15 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
            <span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>, <span class='kw'>scalebar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>50</span>,
            <span class='kw'>grid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>5</span>,<span class='fl'>20</span>), <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"yellow"</span>, <span class='st'>"green"</span>),
            <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"ITA"</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>2</span>),
-           <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: st_centroid does not give correct centroids for longitude/latitude data</span></div><div class='img'><img src='plot_vect-12.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+           <span class='kw'>borders_color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>borders_txt_field</span> <span class='kw'>=</span> <span class='st'>"NAME_2"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "ITA", Level: 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: st_centroid does not give correct centroids for longitude/latitude data</span></div><div class='img'><img src='plot_vect-12.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
  <span class='co'># plot a "points" layer</span>
  <span class='fu'>library</span>(<span class='no'>sp</span>)
  <span class='fu'>demo</span>(<span class='no'>meuse</span>, <span class='kw'>ask</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
- <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='img'><img src='plot_vect-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"copper"</span>,
+ <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-13.png' alt='' width='700' height='432.632880098887' /></div><div class='input'> <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"copper"</span>,
                   <span class='kw'>point_shape</span> <span class='kw'>=</span> <span class='st'>"diamond"</span>,
                   <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>,
-                  <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='img'><img src='plot_vect-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+                  <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-14.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -527,7 +568,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
