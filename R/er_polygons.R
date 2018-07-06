@@ -195,14 +195,26 @@ er_polygons <- function(in_vect_crop,
         message("extract_rast --> Computing bounding boxes of input polygons")
       }
 
-      bboxes <- lapply(sf::st_geometry(in_vect_crop),
+      #old
+      # bboxes <- lapply(sf::st_geometry(in_vect_crop),
+      #                  FUN = function(x) {
+      #                    bb <- sf::st_bbox(x)
+      #                    data.frame(y_min = bb[2], y_max = bb[4])
+      #                  }) %>%
+      #   data.table::rbindlist() %>%
+      #   .[, "mdxtnq" := seq_len(dim(.)[1])] %>%
+      #   data.table::setkey("mdxtnq")
+
+      #new
+        bboxes <- lapply(sf::st_geometry(in_vect_crop),
                        FUN = function(x) {
                          bb <- sf::st_bbox(x)
                          data.frame(y_min = bb[2], y_max = bb[4])
                        }) %>%
         data.table::rbindlist() %>%
-        .[, "mdxtnq" := seq_len(dim(.)[1])] %>%
+        .[, "mdxtnq" := in_vect_crop$mdxtnq] %>%
         data.table::setkey("mdxtnq")
+
 
       #
       #
@@ -354,6 +366,8 @@ er_polygons <- function(in_vect_crop,
 
     } # end cycle on chunks
 
+
+    # browser()
     #   ______________________________________________________________________
     #   bind data from all chunks in `all_data`  and 'stat_data'          ####
     if (er_opts$full_data) {
