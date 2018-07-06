@@ -4,6 +4,7 @@
 \alias{standardise_rast}
 \alias{standardize_rast}
 \alias{zscore_rast}
+\alias{rbias_rast}
 \alias{fixborders_rast}
 \alias{fillgaps_rast}
 \title{Generate a standardised raster}
@@ -21,7 +22,13 @@ standardize_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
   overwrite = FALSE)
 
 zscore_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
-  min_area = 0, fill_method = "focal", fill_na = TRUE,
+  min_area = 0, fill_method = "source", fill_na = TRUE,
+  fill_borders = TRUE, buffer = 0, parallel = TRUE, format = NA,
+  dataType = NA, scaleFactor = NA, compress = "DEFLATE",
+  overwrite = FALSE)
+
+rbias_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
+  min_area = 0, fill_method = "source", fill_na = TRUE,
   fill_borders = TRUE, buffer = 0, parallel = TRUE, format = NA,
   dataType = NA, scaleFactor = NA, compress = "DEFLATE",
   overwrite = FALSE)
@@ -58,6 +65,7 @@ polygons.}
 Accepted values are:
 \itemize{
 \item \code{"zscore"} (default): compute the Z-score (real standardisation);
+\item \code{"rbias"}: compute the rbias;
 \item \code{"center"}: center values over the average;
 \item \code{"input"}: do not standardise values (this method makes sense only
 with \code{fill_method != "input"}, as a method to
@@ -68,15 +76,15 @@ interpolate values of border or holes).
 (if \code{buffer < 0}) and holes (if \code{fill_na = TRUE}).
 Accepted values are:
 \itemize{
-\item \code{"focal"} (default): a focal weight is applied to borders, so values
+\item \code{"source"}: (default, faster method): standardised input values
+are maintained (but they do not concur to compute average and
+standard deviation values used to standardise);
+\item \code{"focal"} (slower): a focal weight is applied to borders, so values
 near the border of buffers are expanded (see details in the function
 code);
 \item \code{"average"}: the averaged value within each polygon buffer
-(corresponding to 0 with \code{method = "zscore"} or \code{"center"})
+(corresponding to 0 with \code{method = "zscore"}, \code{"rbias"} or \code{"center"})
 is repeaded;
-\item \code{"source"}: standardised input values are maintained (but they do not
-concur to compute average and standard deviation values used to
-sdtandardise).
 }}
 
 \item{fill_na}{Logical: if TRUE (default), NA values within polygons are
@@ -131,7 +139,7 @@ NULL if \code{out_file} is not NULL; the output RasterLayer otherwise.
 \description{
 This function can be used to process a raster in order to
 \enumerate{
-\item obtain standardised values (Z-scores) within polygons of a specified
+\item obtain standardised values within polygons of a specified
 vector file or R spatial object, and/or
 \item replace values of the raster near to the borders of the polygons with
 local or global averages, and/or
@@ -145,6 +153,8 @@ Some aliases are set for specific functions:
 \itemize{
 \item \code{zscore_rast()} computes the Z-score on the input raster
 (equivalent to \code{standardise_rast(method = "zscore")});
+\item \code{rbias_rast()} computes the rbias on the input raster
+(equivalent to \code{standardise_rast(method = "rbias")});
 \item \code{fixborders_rast()} can be used to replace border values
 (equivalent to \code{standardise_rast(method = "input", by_poly = TRUE, dataType = NA, scaleFactor = 1)});
 \item \code{fillgaps_rast()} is used to fill gaps (NA values) without using

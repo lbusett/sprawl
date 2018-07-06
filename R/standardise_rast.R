@@ -1,6 +1,6 @@
 #' @title Generate a standardised raster
 #' @description This function can be used to process a raster in order to
-#'  1) obtain standardised values (Z-scores) within polygons of a specified
+#'  1) obtain standardised values within polygons of a specified
 #'      vector file or R spatial object, and/or
 #'  2) replace values of the raster near to the borders of the polygons with
 #'      local or global averages, and/or
@@ -11,6 +11,8 @@
 #'  Some aliases are set for specific functions:
 #'  - `zscore_rast()` computes the Z-score on the input raster
 #'      (equivalent to `standardise_rast(method = "zscore")`);
+#'  - `rbias_rast()` computes the rbias on the input raster
+#'      (equivalent to `standardise_rast(method = "rbias")`);
 #'  - `fixborders_rast()` can be used to replace border values
 #'      (equivalent to `standardise_rast(method = "input", by_poly = TRUE,
 #'      dataType = NA, scaleFactor = 1)`);
@@ -45,6 +47,7 @@
 #' @param method Character: the method used to standardise values.
 #'  Accepted values are:
 #'  * `"zscore"` (default): compute the Z-score (real standardisation);
+#'  * `"rbias"`: compute the rbias;
 #'  * `"center"`: center values over the average;
 #'  * `"input"`: do not standardise values (this method makes sense only
 #'      with `fill_method != "input"`, as a method to
@@ -52,15 +55,15 @@
 #' @param fill_method Character: the method used to fill buffered areas
 #'  (if `buffer < 0`) and holes (if `fill_na = TRUE`).
 #'  Accepted values are:
-#'  * `"focal"` (default): a focal weight is applied to borders, so values
+#'  * `"source"`: (default, faster method): standardised input values
+#'      are maintained (but they do not concur to compute average and
+#'      standard deviation values used to standardise);
+#'  * `"focal"` (slower): a focal weight is applied to borders, so values
 #'      near the border of buffers are expanded (see details in the function
 #'      code);
 #'  * `"average"`: the averaged value within each polygon buffer
-#'      (corresponding to 0 with `method = "zscore"` or `"center"`)
+#'      (corresponding to 0 with `method = "zscore"`, `"rbias"` or `"center"`)
 #'      is repeaded;
-#'  * `"source"`: standardised input values are maintained (but they do not
-#'      concur to compute average and standard deviation values used to
-#'      sdtandardise).
 #' @param fill_na Logical: if TRUE (default), NA values within polygons are
 #'  filled using the method selected with argument `fill_method`;
 #'  if FALSE, they are letf to NA.
@@ -104,11 +107,16 @@
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom parallel detectCores makeCluster stopCluster
 #' @importFrom doParallel registerDoParallel
-#' @importFrom sf st_buffer st_area st_geometry st_sf st_union
-#' @importFrom stats weighted.mean
-#' @importFrom raster calc writeRaster values resample mosaic
+#' @importFrom fasterize fasterize
+#' @importFrom sf st_area st_bbox st_buffer st_cast st_crop st_geometry
+#'  st_set_geometry st_set_precision st_sf st_union
+#' @importFrom stats weighted.mean sd
+#' @importFrom raster calc focal focalWeight raster res resample select values
+#'  writeRaster
 #' @importFrom foreach foreach "%do%" "%dopar%"
 #' @importFrom jsonlite fromJSON
+#' @importFrom stringr str_pad
+#' @importFrom dplyr left_join mutate
 #' @importFrom rgdal GDALinfo writeGDAL
 #' @importFrom gdalUtils gdalwarp gdal_rasterize
 #' @importFrom methods as
@@ -239,6 +247,7 @@ standardise_rast <- function(in_rast,
 
   # verify input raster
   in_rast_path <- cast_rast(in_rast, "rastfile")
+  in_rast <- cast_rast(in_rast, "rastobject")
 
   # verify input vect
   if (!is.null(in_vect)){
@@ -250,6 +259,11 @@ standardise_rast <- function(in_rast,
     ))
     buffer <- 0 # buffering does not make sense on a whole raster
   }
+
+  # crop vector
+  in_vect_cropped <- sf::st_crop(in_vect, sf::st_bbox(in_rast)) %>%
+    sf::st_set_precision(10000) %>%
+    dplyr::mutate(id_geom = paste0("ID_", stringr::str_pad(seq(1, dim(.)[1],1), 6, "left", "0")))
 
   # check output format
   if (is.na(format)) {
@@ -273,7 +287,7 @@ standardise_rast <- function(in_rast,
 
   # buffer if required
   if (buffer!=0) {
-    in_vect_buf <- sf::st_buffer(in_vect, buffer)
+    in_vect_buf <- sf::st_buffer(in_vect_cropped, buffer)
   }
 
   # If not working by polygon, join all features
@@ -283,10 +297,10 @@ standardise_rast <- function(in_rast,
       "[",Sys.time(),"] ",
       "Dissolving polyons..."
     ))
-    in_vect <- sf::st_union(in_vect)
-    in_vect <- sf::st_sf(
+    in_vect_cropped <- sf::st_union(in_vect_cropped)
+    in_vect_cropped <- sf::st_sf(
       data.frame(id = "All",
-                 geometry = sf::st_geometry(in_vect))
+                 geometry = sf::st_geometry(in_vect_cropped))
     )
     if (buffer!=0) {
       in_vect_buf <- sf::st_union(in_vect_buf)
@@ -314,283 +328,356 @@ standardise_rast <- function(in_rast,
   }
 
   # assign dataType value
+  in_dataType <- as.character(suppressWarnings(attr(GDALinfo(in_rast_path),"df")[1,"GDType"]))
   if (is.na(dataType)) {
-    dataType <- as.character(suppressWarnings(attr(GDALinfo(in_rast_path),"df")[1,"GDType"]))
+    dataType <- in_dataType
+  }
+  # check dataType
+  if (!method %in% c("zscore","rbias") & dataType != in_dataType & is.na(scaleFactor)) {
+    warning(paste0(
+      "Setting dataType parameter without defining scaleFactor ",
+      "is allowed only for \"zscore\" and \"rbias\" methods; ",
+      "coercing to input data type (",in_dataType,")."
+    ))
+    dataType <- in_dataType
+    scaleFactor <- 1
   }
   # convert unsigned formats (with the exception of "input" method)
-  if (!method %in% c("input")) {
+  if (method %in% c("zscore","rbias","center")) {
     if (grepl("^UInt",dataType)) {
       dataType <- paste0("U",dataType)
-    } else if (grepl("^Byte$",dataType)) {
-      dataType <- "Int16"
+      # } else if (grepl("^Byte$",dataType)) {
+      #   dataType <- "Int16"
     }
   }
+  # assign shiftFactor value
+  # (used only for Byte outputType in computing zscore and rbias)
+  shiftFactor <- if (
+    method %in% c("zscore", "rbias") &
+    dataType == "Byte" &
+    is.na(scaleFactor)
+  ) {100} else {0}
   # assign scaleFactor value
   if (is.na(scaleFactor)) {
-    scaleFactor <- if (!method %in% c("zscore")) {
+    scaleFactor <- if (!method %in% c("zscore", "rbias")) {
       1
     } else if (grepl("^Int32$",dataType)) {
       1E8
     } else if (grepl("^Int16$",dataType)) {
       1E3
+    } else if (grepl("^Byte$",dataType)) {
+      1E2
     } else if (grepl("^Float",dataType)) {
-      1
+      if (method == "zscore") {1} else {100} # because rbias is in %
     }
   }
+  # set minimum/maximum values
+  out_range <- switch(
+    dataType,
+    Byte = c(0,200),
+    Int16 = c(-2^15+1,2^15-1), Int32 = c(-2^31+1,2^31-1),
+    UInt16 = c(0,2^16-2), UInt32 = c(0,2^32-2),
+    Float32 = c(-Inf,Inf), Float64 = c(-Inf,Inf)
+  )
+  # set na output value
+  sel_nodata <- switch(
+    dataType,
+    Byte=255,
+    Int16=-2^15, Int32=-2^31,
+    UInt16=2^16-1, UInt32=2^32-1,
+    Float32=scaleFactor*1E4-1, Float64=scaleFactor*1E4-1
+  )
+
 
   # set the function for the chosen method
+  clip <- function(y, ymin, ymax) {
+    ifelse(is.na(y), NA, ifelse(y < ymin, ymin, ifelse(y > ymax, ymax, y)))
+  }
   standardise <- switch(
     method,
-    zscore = function(x,avg,std){scaleFactor*(x-avg)/std},
-    center = function(x,avg,std=NA){scaleFactor*(x-avg)},
-    input = function(x,avg=NA,std=NA){scaleFactor*x},
+    zscore = function(x,avg,std,min=-Inf,max=Inf){clip(shiftFactor+scaleFactor*(x-avg)/std, min, max)},
+    rbias = function(x,avg,std=NA,min=-Inf,max=Inf){
+      # clip_rast(shiftFactor+scaleFactor*(x-avg)/avg, min, max)
+      calc(shiftFactor+scaleFactor*(x-avg)/avg, function(x) {clip(x, ymin=min, ymax=max)})
+    },
+    center = function(x,avg,std=NA,min=-Inf,max=Inf){clip(shiftFactor+scaleFactor*(x-avg), min, max)},
+    input = function(x,avg=NA,std=NA,min=-Inf,max=Inf){clip(shiftFactor+scaleFactor*x, min, max)},
     stop("Value of attribute \"method\" not recognised.")
   )
 
-  # Computing the required n_cores
-  n_cores <- if (parallel==FALSE | by_poly==FALSE | nrow(in_vect)==1) {
-    1
-  } else if (is.numeric(parallel)) {
-    as.integer(parallel)
+
+  # New faster method when fill_method = "source":
+  # do not cycle on polygons, but use fasterize
+  if (fill_method %in% c("source")) {
+
+    # Compute avg-std values for each field
+    extr_val <- sprawl::extract_rast(in_rast, in_vect_buf, full_data = FALSE, parallel = FALSE,
+                                     id_field = "id_geom", small = FALSE)$stats %>%
+      dplyr::select(id_geom, c(avg,sd)) %>%
+      sf::st_set_geometry(NULL)
+
+    # join values with the vector of polygons
+    vect_join <- dplyr::left_join(in_vect_cropped, extr_val)
+
+    # rasterize them
+    rast_avg <- fasterize::fasterize(sf::st_cast(vect_join, "POLYGON"), in_rast, field = "avg")
+    rast_std <- fasterize::fasterize(sf::st_cast(vect_join, "POLYGON"), in_rast, field = "sd")
+
+    # compute the standardised raster
+    rast_z <- standardise(in_rast, rast_avg, rast_std, out_range[1], out_range[2])
+
+    # end of faster method for fill_methdod "source"
   } else {
-    min(parallel::detectCores() - 1, 8) # use at most 8 cores
-  }
-  if (n_cores<=1) {
-    `%DO%` <- `%do%`
-    parallel <- FALSE
-    by_poly <- FALSE
-    n_cores <- 1
-  } else {
-    `%DO%` <- `%dopar%`
-    parallel <- TRUE
-  }
 
-  # Cycle on single polygons
-  message(paste0(
-    "[",Sys.time(),"] ",
-    "Starting to standardise raster",
-    if (by_poly==TRUE) {" within each polygon"},
-    "..."
-  ))
-  if (parallel) {
-    cluster <- parallel::makeCluster(n_cores)
-    doParallel::registerDoParallel(cluster)
-  }
-  rast_z_paths <- foreach(i = seq_along(in_vect[[1]]),
-                          .packages = c("sf", "sprawl", "raster"),
-                          .verbose = FALSE,
-                          .combine = "rbind"
-  ) %DO% {
+    # old method: cycle on polygons
 
-    ## Create names of temporary files
-    # vect: selected polygon
-    sel_vect_path <- cast_vect(in_vect[i,], "vectfile")
-    # vect: buffer on the selected polygon
-    if (buffer!=0) {sel_vect_buf_path <- cast_vect(in_vect_buf[i,], "vectfile")}
-    # rast_vect: rasterised polygon (used for masking)
-    sel_rast_vect_path <- tempfile(fileext = "_vect.tif")
-    # rast_poly: input raster used as reference (cropped on the border of the polygon)
-    sel_rast_poly_path <- tempfile(fileext = "_poly.tif")
-    # rast_buf: raster used to compute metrics (cropped on the border of the buffered polygon)
-    sel_rast_buf_path <- tempfile(fileext = "_buf.tif")
-    # rast_filled: raster with the values (originals and filled) to be cropped on the border of the polygon
-    sel_rast_fil_path <- tempfile(fileext = "_fil.tif")
-    # rast_crop: raster with the values to be standardised (cropped on the border of the polygon)
-    sel_rast_crop_path <- tempfile(fileext = "_crop.tif")
-    # rast_z: raster with the standardised values (cropped on the border of the polygon)
-    sel_rast_z_path <- tempfile(fileext = "_z.tif")
-
-
-    ## Checks on polygon area
-
-    # Check that the area of the polygon is > min_area
-    sel_vect <- cast_vect(sel_vect_path, "sfobject")
-    if (st_area(st_geometry(sel_vect)) <= min_area * units::ud_units$m^2) {
-      warning(paste0(
-        "Polygon ",i," will not be considered, since it is smaller (",
-        round(st_area(st_geometry(sel_vect))),
-        " m²) than the minimum accepted area (",min_area," m²)."
-      ))
-      continue_sel_poly <- FALSE
+    # Computing the required n_cores
+    n_cores <- if (parallel==FALSE | by_poly==FALSE | nrow(in_vect)==1) {
+      1
+    } else if (is.numeric(parallel)) {
+      as.integer(parallel)
     } else {
-      continue_sel_poly <- TRUE # logical: if TRUE, the chunk in the foreach cycle
-      # can continue computing the map of zscore; if FALSE, it does not continue
-      # with the selected polygon. This is a workaround of using "break", which
-      # does not work with "foreach" cycles.
+      min(parallel::detectCores() - 1, 8) # use at most 8 cores
+    }
+    if (n_cores<=1) {
+      `%DO%` <- `%do%`
+      parallel <- FALSE
+      by_poly <- FALSE
+      n_cores <- 1
+    } else {
+      `%DO%` <- `%dopar%`
+      parallel <- TRUE
     }
 
-    # Check that the area of the buffer is > min_area
-    if (continue_sel_poly & buffer<0) {
-      sel_vect_buf <- cast_vect(sel_vect_buf_path, "sfobject")
-      if (st_area(st_geometry(sel_vect_buf)) <= min_area * units::ud_units$m^2) {
+    # Cycle on single polygons
+    message(paste0(
+      "[",Sys.time(),"] ",
+      "Starting to standardise raster",
+      if (by_poly==TRUE) {" within each polygon"},
+      "..."
+    ))
+    if (parallel) {
+      cluster <- parallel::makeCluster(n_cores)
+      doParallel::registerDoParallel(cluster)
+    }
+    rast_z_paths <- foreach(i = seq_along(in_vect[[1]]),
+                            .packages = c("sf", "sprawl", "raster"),
+                            .verbose = FALSE,
+                            .combine = "rbind"
+    ) %DO% {
+
+      ## Create names of temporary files
+      # vect: selected polygon
+      sel_vect_path <- cast_vect(in_vect[i,], "vectfile")
+      # vect: buffer on the selected polygon
+      if (buffer!=0) {sel_vect_buf_path <- cast_vect(in_vect_buf[i,], "vectfile")}
+      # rast_vect: rasterised polygon (used for masking)
+      sel_rast_vect_path <- tempfile(fileext = "_vect.tif")
+      # rast_poly: input raster used as reference (cropped on the border of the polygon)
+      sel_rast_poly_path <- tempfile(fileext = "_poly.tif")
+      # rast_buf: raster used to compute metrics (cropped on the border of the buffered polygon)
+      sel_rast_buf_path <- tempfile(fileext = "_buf.tif")
+      # rast_filled: raster with the values (originals and filled) to be cropped on the border of the polygon
+      sel_rast_fil_path <- tempfile(fileext = "_fil.tif")
+      # rast_crop: raster with the values to be standardised (cropped on the border of the polygon)
+      sel_rast_crop_path <- tempfile(fileext = "_crop.tif")
+      # rast_z: raster with the standardised values (cropped on the border of the polygon)
+      sel_rast_z_path <- tempfile(fileext = "_z.tif")
+
+
+      ## Checks on polygon area
+
+      # Check that the area of the polygon is > min_area
+      sel_vect <- cast_vect(sel_vect_path, "sfobject")
+      if (st_area(st_geometry(sel_vect)) <= min_area * units::ud_units$m^2) {
         warning(paste0(
-          "Polygon ",i," will not be considered, since its buffer is smaller (",
-          round(st_area(st_geometry(sel_vect_buf))),
-          " m²) than the minimum accepted area (",min_area," m²). ",
-          "To consider it, try to use a higher value for \"buffer\" argument."
+          "Polygon ",i," will not be considered, since it is smaller (",
+          round(st_area(st_geometry(sel_vect))),
+          " m²) than the minimum accepted area (",min_area," m²)."
         ))
         continue_sel_poly <- FALSE
       } else {
-        continue_sel_poly <- TRUE
-      }
-    }
-
-    if (continue_sel_poly) { # see the note above
-
-      ## 1. Generate raster covering only the buffer of the selected polygon
-
-      # Crop values on the border of the polygon
-      if (TRUE) { # TODO exclude cases in which this is not needed
-        gdal_warp(in_rast_path, sel_rast_poly_path, mask=sel_vect_path)
+        continue_sel_poly <- TRUE # logical: if TRUE, the chunk in the foreach cycle
+        # can continue computing the map of zscore; if FALSE, it does not continue
+        # with the selected polygon. This is a workaround of using "break", which
+        # does not work with "foreach" cycles.
       }
 
-      if (!file.exists(sel_rast_poly_path)) {continue_sel_poly <- FALSE}
-    }
-    if (continue_sel_poly) { # see the note above
-
-      sel_rast_poly <- cast_rast(sel_rast_poly_path, "rastobject")
-
-      # Crop the values on the border of the buffer
-      if (buffer != 0) {
-        gdal_warp(in_rast_path, sel_rast_buf_path, mask=sel_vect_buf_path)
-        sel_rast_buf <- cast_rast(sel_rast_buf_path, "rastobject")
-      } else {
-        sel_rast_buf <- sel_rast_poly
+      # Check that the area of the buffer is > min_area
+      if (continue_sel_poly & buffer<0) {
+        sel_vect_buf <- cast_vect(sel_vect_buf_path, "sfobject")
+        if (st_area(st_geometry(sel_vect_buf)) <= min_area * units::ud_units$m^2) {
+          warning(paste0(
+            "Polygon ",i," will not be considered, since its buffer is smaller (",
+            round(st_area(st_geometry(sel_vect_buf))),
+            " m²) than the minimum accepted area (",min_area," m²). ",
+            "To consider it, try to use a higher value for \"buffer\" argument."
+          ))
+          continue_sel_poly <- FALSE
+        } else {
+          continue_sel_poly <- TRUE
+        }
       }
 
-      # In case of negative buffer, use a grid larger than the input,
-      # as needed by the focal
-      if (buffer < 0) {
-        sel_rast_buf <- resample(sel_rast_buf, sel_rast_poly, method = "ngb")
+      if (continue_sel_poly) { # see the note above
+
+        ## 1. Generate raster covering only the buffer of the selected polygon
+
+        # Crop values on the border of the polygon
+        if (TRUE) { # TODO exclude cases in which this is not needed
+          gdal_warp(in_rast_path, sel_rast_poly_path, mask=sel_vect_path)
+        }
+
+        if (!file.exists(sel_rast_poly_path)) {continue_sel_poly <- FALSE}
       }
+      if (continue_sel_poly) { # see the note above
+
+        sel_rast_poly <- cast_rast(sel_rast_poly_path, "rastobject")
+
+        # Crop the values on the border of the buffer
+        if (buffer != 0) {
+          gdal_warp(in_rast_path, sel_rast_buf_path, mask=sel_vect_buf_path)
+          sel_rast_buf <- cast_rast(sel_rast_buf_path, "rastobject")
+        } else {
+          sel_rast_buf <- sel_rast_poly
+        }
+
+        # In case of negative buffer, use a grid larger than the input,
+        # as needed by the focal
+        if (buffer < 0) {
+          sel_rast_buf <- resample(sel_rast_buf, sel_rast_poly, method = "ngb")
+        }
 
 
-      ## 2. Compute the metrics required to standardise
-      sel_rast_avg <- mean(values(sel_rast_buf), na.rm=TRUE)
-      sel_rast_std <- sd(values(sel_rast_buf), na.rm=TRUE)
+        ## 2. Compute the metrics required to standardise
+        sel_rast_avg <- mean(values(sel_rast_buf), na.rm=TRUE)
+        sel_rast_std <- sd(values(sel_rast_buf), na.rm=TRUE)
 
 
-      ## 3. Manage the values of pixels between the border of the polygon and the buffer
-      # TODO manage this case also with buffer>=0, as a method to fill gaps
-      # Case 1 (negative buffer):
-      # fill the values between the border of the polygon and the buffer
-      # using the method chosen with fill_method
+        ## 3. Manage the values of pixels between the border of the polygon and the buffer
+        # TODO manage this case also with buffer>=0, as a method to fill gaps
+        # Case 1 (negative buffer):
+        # fill the values between the border of the polygon and the buffer
+        # using the method chosen with fill_method
 
-      sel_rast_fil <- sel_rast_buf
-      if (buffer < 0 & fill_borders == TRUE | fill_na == TRUE) {
-        if (fill_method == "focal") {
-          # rasterize in_vect (reference for the surface to be filled)
-          file.copy(sel_rast_poly_path, sel_rast_vect_path)
-          gdalUtils::gdal_rasterize(
-            if (fill_borders == FALSE & buffer < 0) {sel_vect_buf_path} else {sel_vect_path},
-            sel_rast_vect_path,
-            burn = 1
-          )
-          sel_rast_vect <- cast_rast(sel_rast_vect_path, "rastobject")
-          j <- 0
-          # continue interpolating until all the pixels in the polygon are covered
-          max_iter_n <- 100 # maximum number of iterations
-          while (any(
-            values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
-            j < max_iter_n) {
-
-            j <- j + 1
-            # sel_w <- focalWeight(sel_rast_fil, -buffer*sqrt(j), "circle")
-            sel_w <- raster::focalWeight(sel_rast_fil,
-                                         mean(res(sel_rast_fil))*sqrt(j),
-                                         "circle") # 1 pixel per time
-            sel_w <- sel_w / max(sel_w) # adjustment required by focal to fix the problem with na.rm=TRUE
-            sel_rast_fil <- raster::focal(
-              sel_rast_fil,
-              fun = function(x){stats::weighted.mean(x,sel_w,na.rm = TRUE)},
-              w = sel_w, pad = TRUE, NAonly = TRUE
+        sel_rast_fil <- sel_rast_buf
+        if (buffer < 0 & fill_borders == TRUE | fill_na == TRUE) {
+          if (fill_method == "focal") {
+            # rasterize in_vect (reference for the surface to be filled)
+            file.copy(sel_rast_poly_path, sel_rast_vect_path)
+            gdalUtils::gdal_rasterize(
+              if (fill_borders == FALSE & buffer < 0) {sel_vect_buf_path} else {sel_vect_path},
+              sel_rast_vect_path,
+              burn = 1
             )
+            sel_rast_vect <- cast_rast(sel_rast_vect_path, "rastobject")
+            j <- 0
+            # continue interpolating until all the pixels in the polygon are covered
+            max_iter_n <- 100 # maximum number of iterations
+            while (any(
+              values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
+              j < max_iter_n) {
+
+              j <- j + 1
+              # sel_w <- focalWeight(sel_rast_fil, -buffer*sqrt(j), "circle")
+              sel_w <- raster::focalWeight(sel_rast_fil,
+                                           mean(res(sel_rast_fil))*sqrt(j),
+                                           "circle") # 1 pixel per time
+              sel_w <- sel_w / max(sel_w) # adjustment required by focal to fix the problem with na.rm=TRUE
+              sel_rast_fil <- raster::focal(
+                sel_rast_fil,
+                fun = function(x){stats::weighted.mean(x,sel_w,na.rm = TRUE)},
+                w = sel_w, pad = TRUE, NAonly = TRUE
+              )
+            }
+            if (j == max_iter_n) {
+              warning(paste0(
+                "Borders and/or gaps have not been completely filled ",
+                "(maximum number of iterations was reached)."
+              ))
+            }
+
+          } else if (fill_method == "average") {
+            # fill NA and mask outside polygon
+            sel_rast_fil[is.na(sel_rast_fil)] <- sel_rast_avg
+
+          } else if (fill_method == "source") {
+            # load unbuffered values
+            sel_rast_fil <- sel_rast_poly
+
+          } else {
+            stop("Value of attribute \"fill_method\" not recognised.")
           }
-          if (j == max_iter_n) {
-            warning(paste0(
-              "Borders and/or gaps have not been completely filled ",
-              "(maximum number of iterations was reached)."
-            ))
-          }
 
-        } else if (fill_method == "average") {
-          # fill NA and mask outside polygon
-          sel_rast_fil[is.na(sel_rast_fil)] <- sel_rast_avg
-
-        } else if (fill_method == "source") {
-          # load unbuffered values
-          sel_rast_fil <- sel_rast_poly
-
-        } else {
-          stop("Value of attribute \"fill_method\" not recognised.")
         }
 
-      }
 
+        ## 4. Crop on borders
 
-      ## 4. Crop on borders
+        if (fill_na==TRUE) {
+          # if fill_na, mask only outside polygon
+          writeRaster(sel_rast_fil, sel_rast_fil_path)
+          gdal_warp(
+            sel_rast_fil_path, sel_rast_crop_path,
+            mask = if (fill_borders==FALSE & buffer<0) {sel_vect_buf_path} else {sel_vect_path}
+          )
+          sel_rast_crop <- cast_rast(sel_rast_crop_path, "rastobject")
 
-      if (fill_na==TRUE) {
-        # if fill_na, mask only outside polygon
-        writeRaster(sel_rast_fil, sel_rast_fil_path)
-        gdal_warp(
-          sel_rast_fil_path, sel_rast_crop_path,
-          mask = if (fill_borders==FALSE & buffer<0) {sel_vect_buf_path} else {sel_vect_path}
-        )
-        sel_rast_crop <- cast_rast(sel_rast_crop_path, "rastobject")
+        } else if (buffer<0) {
+          # if buffer<0 but not filling NA, mask outside polygon AND inside holes
+          sel_rast_crop <- sel_rast_fil
+          if (fill_borders==TRUE) {
+            sel_rast_crop[is.na(sel_rast_poly)] <- NA
+          } else {
+            sel_rast_crop[is.na(sel_rast_buf)] <- NA
+          }
+          writeRaster(sel_rast_crop, sel_rast_crop_path)
 
-      } else if (buffer<0) {
-        # if buffer<0 but not filling NA, mask outside polygon AND inside holes
-        sel_rast_crop <- sel_rast_fil
-        if (fill_borders==TRUE) {
-          sel_rast_crop[is.na(sel_rast_poly)] <- NA
         } else {
-          sel_rast_crop[is.na(sel_rast_buf)] <- NA
+          # if buffer>=0, no masking is needed (holes are left as original)
+          sel_rast_crop <- sel_rast_poly
         }
-        writeRaster(sel_rast_crop, sel_rast_crop_path)
+
+
+
+        ## 4. Standardise
+        sel_rast_z <- standardise(sel_rast_crop, sel_rast_avg, sel_rast_std)
+
+
+        ## 5. Export output raster
+        writeRaster(sel_rast_z, sel_rast_z_path)
+        sel_rast_z_path
 
       } else {
-        # if buffer>=0, no masking is needed (holes are left as original)
-        sel_rast_crop <- sel_rast_poly
-      }
+        NULL
+      } # end of continue_sel_poly IF cycle
 
+    } # end of in_vect_buf FOREACH cycle
 
-
-      ## 4. Standardise
-      sel_rast_z <- standardise(sel_rast_crop, sel_rast_avg, sel_rast_std)
-
-
-      ## 5. Export output raster
-      writeRaster(sel_rast_z, sel_rast_z_path)
-      sel_rast_z_path
-
+    ## Mosaic single rasters
+    if (length(rast_z_paths) == 1) {
+      # FIXME this IF cycle provides the following error (?):
+      #  Error in setValues(r, as.vector(t(x))) :
+      #    values must be numeric, integer, logical or factor
+      rast_z <- raster(rast_z_paths)
     } else {
-      NULL
-    } # end of continue_sel_poly IF cycle
+      message(paste0(
+        "[",Sys.time(),"] ",
+        "Mosaicing single polygons into the final raster..."
+      ))
+      rast_z_list <- lapply(rast_z_paths,raster)
+      rast_z_list$fun <- mean
+      rast_z <- do.call(raster::mosaic, rast_z_list)
+    }
 
-  } # end of in_vect_buf FOREACH cycle
+    # close connections (doing it after having mosaiced them,
+    # because stopCluster deletes the temporary files of each R session)
+    if (parallel) {
+      parallel::stopCluster(cl = cluster)
+    }
 
-  ## Mosaic single rasters
-  if (length(rast_z_paths) == 1) {
-    # FIXME this IF cycle provides the following error (?):
-    #  Error in setValues(r, as.vector(t(x))) :
-    #    values must be numeric, integer, logical or factor
-    rast_z <- raster(rast_z_paths)
-  } else {
-    message(paste0(
-      "[",Sys.time(),"] ",
-      "Mosaicing single polygons into the final raster..."
-    ))
-    rast_z_list <- lapply(rast_z_paths,raster)
-    rast_z_list$fun <- mean
-    rast_z <- do.call(raster::mosaic, rast_z_list)
   }
 
-  # close connections (doing it after having mosaiced them,
-  # because stopCluster deletes the temporary files of each R session)
-  if (parallel) {
-    parallel::stopCluster(cl = cluster)
-  }
 
   # write output
   if (!is.na(out_file)) {
@@ -603,11 +690,6 @@ standardise_rast <- function(in_rast,
     }
     sgdf_z <- as(rast_z, "SpatialGridDataFrame")
     sgdf_z@data[,1][is.na(sgdf_z@data[,1])] <- NA # NaN to NA
-    sel_nodata <- switch(
-      dataType,
-      Int16=-2^15, UInt16=2^16-1, Int32=-2^31, UInt32=2^32-1,
-      Float32=-9999, Float64=-9999, Byte=255
-    )
     writeGDAL(
       sgdf_z, out_file,
       drivername = format,
@@ -633,7 +715,7 @@ zscore_rast <- function(in_rast,
                         in_vect = NULL,
                         by_poly  = TRUE,
                         min_area = 0,
-                        fill_method = "focal",
+                        fill_method = "source",
                         fill_na = TRUE,
                         fill_borders = TRUE,
                         buffer = 0,
@@ -650,6 +732,42 @@ zscore_rast <- function(in_rast,
                    by_poly  = by_poly,
                    min_area = min_area,
                    method = "zscore",
+                   fill_method = fill_method,
+                   fill_na = fill_na,
+                   fill_borders = fill_borders,
+                   buffer = buffer,
+                   parallel = parallel,
+                   format = format,
+                   dataType = dataType,
+                   scaleFactor = scaleFactor,
+                   compress = compress,
+                   overwrite = overwrite)
+}
+
+#' @export
+#' @rdname standardise_rast
+rbias_rast <- function(in_rast,
+                       out_file = NA,
+                       in_vect = NULL,
+                       by_poly  = TRUE,
+                       min_area = 0,
+                       fill_method = "source",
+                       fill_na = TRUE,
+                       fill_borders = TRUE,
+                       buffer = 0,
+                       parallel = TRUE,
+                       format = NA,
+                       dataType = NA,
+                       scaleFactor = NA,
+                       compress = "DEFLATE",
+                       overwrite = FALSE
+) {
+  standardise_rast(in_rast,
+                   out_file = out_file,
+                   in_vect = in_vect,
+                   by_poly  = by_poly,
+                   min_area = min_area,
+                   method = "rbias",
                    fill_method = fill_method,
                    fill_na = fill_na,
                    fill_borders = fill_borders,

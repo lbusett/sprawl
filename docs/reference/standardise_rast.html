@@ -18,13 +18,32 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Generate a standardised raster — standardise_rast" />
+
+<meta property="og:description" content="This function can be used to process a raster in order to
+obtain standardised values within polygons of a specified
+vector file or R spatial object, and/or
+replace values of the raster near to the borders of the polygons with
+local or global averages, and/or
+fill holes (NA values) with local or global averages.
+" />
+
+<meta property="og:description" content="Some aliases are set for specific functions (see details)." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -34,16 +53,14 @@
 <![endif]-->
 
 
-<!-- Google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-84499524-3"></script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  ga('create', 'UA-84499524-3', 'auto');
-  ga('send', 'pageview');
-
+  gtag('config', 'UA-84499524-3');
 </script>
 
   </head>
@@ -59,8 +76,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">sprawl</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">sprawl</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -125,6 +146,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -132,15 +154,18 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate a standardised raster</h1>
+    <small class="dont-index">Source: <a href='https://github.com/lbusett/sprawl//blob/master/R/standardise_rast.R'><code>R/standardise_rast.R</code></a></small>
+    <div class="hidden name"><code>standardise_rast.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function can be used to process a raster in order to</p><ol>
-<li><p>obtain standardised values (Z-scores) within polygons of a specified
+<li><p>obtain standardised values within polygons of a specified
 vector file or R spatial object, and/or</p></li>
 <li><p>replace values of the raster near to the borders of the polygons with
 local or global averages, and/or</p></li>
@@ -149,6 +174,7 @@ local or global averages, and/or</p></li>
 
     <p>Some aliases are set for specific functions (see details).</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>standardise_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>in_vect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_poly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"zscore"</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>,
@@ -163,7 +189,13 @@ local or global averages, and/or</p></li>
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>zscore_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>in_vect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_poly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>, <span class='kw'>fill_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"source"</span>, <span class='kw'>fill_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>fill_borders</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>dataType</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>scaleFactor</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>rbias_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>in_vect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>by_poly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>min_area</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"source"</span>, <span class='kw'>fill_na</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>fill_borders</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>dataType</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>scaleFactor</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>,
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
@@ -176,7 +208,7 @@ local or global averages, and/or</p></li>
 <span class='fu'>fillgaps_rast</span>(<span class='no'>in_rast</span>, <span class='kw'>out_file</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>fill_method</span> <span class='kw'>=</span> <span class='st'>"focal"</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
   <span class='kw'>compress</span> <span class='kw'>=</span> <span class='st'>"DEFLATE"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -213,6 +245,7 @@ polygons.</p></td>
       <td><p>Character: the method used to standardise values.
 Accepted values are:</p><ul>
 <li><p><code>"zscore"</code> (default): compute the Z-score (real standardisation);</p></li>
+<li><p><code>"rbias"</code>: compute the rbias;</p></li>
 <li><p><code>"center"</code>: center values over the average;</p></li>
 <li><p><code>"input"</code>: do not standardise values (this method makes sense only
 with <code>fill_method != "input"</code>, as a method to
@@ -224,15 +257,15 @@ interpolate values of border or holes).</p></li>
       <td><p>Character: the method used to fill buffered areas
 (if <code>buffer &lt; 0</code>) and holes (if <code>fill_na = TRUE</code>).
 Accepted values are:</p><ul>
-<li><p><code>"focal"</code> (default): a focal weight is applied to borders, so values
+<li><p><code>"source"</code>: (default, faster method): standardised input values
+are maintained (but they do not concur to compute average and
+standard deviation values used to standardise);</p></li>
+<li><p><code>"focal"</code> (slower): a focal weight is applied to borders, so values
 near the border of buffers are expanded (see details in the function
 code);</p></li>
 <li><p><code>"average"</code>: the averaged value within each polygon buffer
-(corresponding to 0 with <code>method = "zscore"</code> or <code>"center"</code>)
+(corresponding to 0 with <code>method = "zscore"</code>, <code>"rbias"</code> or <code>"center"</code>)
 is repeaded;</p></li>
-<li><p><code>"source"</code>: standardised input values are maintained (but they do not
-concur to compute average and standard deviation values used to
-sdtandardise).</p></li>
 </ul></td>
     </tr>
     <tr>
@@ -310,6 +343,8 @@ overwritten? (default: FALSE)</p></td>
     <p>Some aliases are set for specific functions:</p><ul>
 <li><p><code>zscore_rast()</code> computes the Z-score on the input raster
 (equivalent to <code>standardise_rast(method = "zscore")</code>);</p></li>
+<li><p><code>rbias_rast()</code> computes the rbias on the input raster
+(equivalent to <code>standardise_rast(method = "rbias")</code>);</p></li>
 <li><p><code>fixborders_rast()</code> can be used to replace border values
 (equivalent to <code>standardise_rast(method = "input", by_poly = TRUE, dataType = NA, scaleFactor = 1)</code>);</p></li>
 <li><p><code>fillgaps_rast()</code> is used to fill gaps (NA values) without using
@@ -460,11 +495,14 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
