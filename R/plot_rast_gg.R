@@ -374,9 +374,10 @@ plot_rast_gg <- function(
   #   ____________________________________________________________________________
   #   Fortify the raster to allow ggplotting                                  ####
 
-  in_rast_fort <- ggplot2::fortify(in_rast, format = "long") %>%
+  in_rast_fort <- raster::as.data.frame(in_rast, xy = T) %>%
+    tidyr::gather(., key = "band", value = "value", -c(x, y)) %>%
     data.table::as.data.table()
-  names(in_rast_fort)[1:2] <- c("x", "y")
+  # names(in_rast_fort)[1:2] <- c("x", "y")
 
 
   #   __________________________________________________________________________
