@@ -690,6 +690,9 @@ standardise_rast <- function(in_rast,
     }
     sgdf_z <- as(rast_z, "SpatialGridDataFrame")
     sgdf_z@data[,1][is.na(sgdf_z@data[,1])] <- NA # NaN to NA
+    if (is(sgdf_z@data[,1], "logical")) {
+      sgdf_z@data[,1] <- as.numeric(sgdf_z@data[,1])
+    }
     writeGDAL(
       sgdf_z, out_file,
       drivername = format,
