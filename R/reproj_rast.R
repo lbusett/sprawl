@@ -181,8 +181,8 @@ reproj_rast <- function(in_rast,
     # "-srcnodata '-Inf' " ,
     # "-dstnodata '-Inf' ",
     " ",
-    srcfile, " ",
-    out_file
+    shQuote(srcfile), " ",
+    shQuote(out_file)
   )
 
   out <- system2(file.path(find_gdal(), "gdalwarp"), args = warp_string,

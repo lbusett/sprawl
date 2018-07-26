@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,11 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="sprawlext class — sprawlext-class" />
+
+<meta property="og:description" content="An S4 class to represent the extent of a spatial object,
+associated with its proj4string." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -195,12 +202,12 @@ associated with its proj4string.</p>
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12897000 ymin: 1685995 xmax: 12973680 ymax: 1789545
 #&gt; epsg (SRID):    NA
-#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs</div><div class='output co'>#&gt; <span class='message'>POLYGON ((12897004.419 1685994.974, 12897004.41...</span></div><div class='input'><span class='fu'>as</span>(<span class='no'>ex_sprawlext</span>, <span class='st'>"sfc_POINT"</span>)</div><div class='output co'>#&gt; Geometry set for 4 features 
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs</div><div class='output co'>#&gt; <span class='message'>POLYGON ((12897004 1685995, 12897004 1789545, 1...</span></div><div class='input'><span class='fu'>as</span>(<span class='no'>ex_sprawlext</span>, <span class='st'>"sfc_POINT"</span>)</div><div class='output co'>#&gt; Geometry set for 4 features 
 #&gt; geometry type:  POINT
 #&gt; dimension:      XY
 #&gt; bbox:           xmin: 12897000 ymin: 1685995 xmax: 12973680 ymax: 1789545
 #&gt; epsg (SRID):    NA
-#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs</div><div class='output co'>#&gt; <span class='message'>POINT (12897004.419 1685994.974)</span></div><div class='output co'>#&gt; <span class='message'>POINT (12897004.419 1789545.366)</span></div><div class='output co'>#&gt; <span class='message'>POINT (12973682.673 1789545.366)</span></div><div class='output co'>#&gt; <span class='message'>POINT (12973682.673 1685994.974)</span></div><div class='input'>
+#&gt; proj4string:    +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs</div><div class='output co'>#&gt; <span class='message'>POINT (12897004 1685995)</span></div><div class='output co'>#&gt; <span class='message'>POINT (12897004 1789545)</span></div><div class='output co'>#&gt; <span class='message'>POINT (12973683 1789545)</span></div><div class='output co'>#&gt; <span class='message'>POINT (12973683 1685995)</span></div><div class='input'>
 <span class='co'># Extract proj4string CRS</span>
 <span class='no'>ex_crs</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='no'>ex_sprawlext</span>, <span class='st'>"CRS"</span>)
 <span class='no'>ex_crs</span></div><div class='output co'>#&gt; CRS arguments:
@@ -244,7 +251,7 @@ associated with its proj4string.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

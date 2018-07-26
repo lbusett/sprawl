@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,12 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="crop a vector on the extent of a different spatial file — crop_vect" />
+
+<meta property="og:description" content="Function allowing to crop an input vector object or shapefile on the extent of a
+different spatial object. in_vect must be an *sp, *sf object or vector file, while ext_obj should
+be a valid spatial object (sp, sf, vector file, raster or raster file name)" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -186,7 +194,8 @@ valid filenames of raster or vector files)</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
  <span class='fu'>library</span>(<span class='no'>raster</span>)
- <span class='fu'>library</span>(<span class='no'>sf</span>)</div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.5.1, GDAL 2.1.2, proj.4 4.9.3</span></div><div class='input'> <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>, <span class='st'>"lc_polys.shp"</span>,
+ <span class='fu'>library</span>(<span class='no'>sf</span>)
+ <span class='no'>in_polys</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>, <span class='st'>"lc_polys.shp"</span>,
                                          <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>,
                                   <span class='st'>"EVIts_test.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
@@ -220,7 +229,7 @@ valid filenames of raster or vector files)</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

@@ -126,7 +126,7 @@ create_fishnet <- function(in_obj,
                                  what = "polygons")
     fish <- sf::st_sf(cell_id = seq_len(length(geometry)[1]),
                       geometry = geometry) %>%
-      crop_vect(in_obj, verbose = verbose)
+      crop_vect(., in_obj, verbose = verbose)
   } else {
     ext_poly <- as(out_ext , "sfc_POLYGON")
     geometry <- sf::st_make_grid(ext_poly,
@@ -136,7 +136,9 @@ create_fishnet <- function(in_obj,
                           type = 'hexagonal',
                           n = length(geometry), offset = c(0,0.5))
     fish <- sp::HexPoints2SpatialPolygons(hexes) %>%
-      sf::st_as_sf(hexes)
+      sf::st_as_sf(hexes) %>%
+      crop_vect(., in_obj, verbose = verbose) %>%
+      dplyr::mutate(cell_id =  seq_len(length(geometry)[1]))
   }
   if (is.null(out_file)) {
     return(fish)

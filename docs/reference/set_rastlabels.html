@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,10 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Assign labels and plotting colors to a categorical raster — set_rastlabels" />
+
+<meta property="og:description" content="Assign labels and plotting colors to a categorical raster" />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -195,24 +201,12 @@ functionality of specifying specific names for the classes.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
   <span class='fu'>library</span>(<span class='no'>raster</span>)
-  <span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:gridExtra’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    combine</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:sprawl’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    last</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:raster’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, select, union</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'>  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>5</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>library</span>(<span class='no'>dplyr</span>)
+  <span class='no'>in_rast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/raster'>raster</a></span>(<span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>5</span>) <span class='kw'>%&gt;%</span>
     <span class='kw pkg'>raster</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/init'>init</a></span>(<span class='st'>"row"</span>)
   <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>in_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt; NULL</div><div class='input'>
   <span class='co'># categorize and assign standard class names</span>
-  <span class='no'>cat_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast</span></div><div class='output co'>#&gt; <span class='warning'>Warning: set_rastlabels --&gt; class_names not provided or not matching the  number of classes of in_rast. </span>
+  <span class='no'>cat_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>)</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing `in_rast`</span></div><div class='output co'>#&gt; <span class='warning'>Warning: set_rastlabels --&gt; class_names not provided or not matching the  number of classes of in_rast. </span>
 #&gt; <span class='warning'> Class names will beignored!</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;   ID Class   Color
 #&gt; 1  1     1 #F8766D
 #&gt; 2  2     2 #A3A500
@@ -222,7 +216,7 @@ functionality of specifying specific names for the classes.</p>
   <span class='co'># categorize and assign custom class names</span>
   <span class='no'>cat_rast</span> <span class='kw'>&lt;-</span> <span class='fu'>set_rastlabels</span>(<span class='no'>in_rast</span>,
                               <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Water"</span>, <span class='st'>"Land"</span>,
-                              <span class='st'>"Vegetation"</span>, <span class='st'>"Urban"</span>, <span class='st'>"Other"</span>))</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast and assigning class names based on  c</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;   ID      Class   Color
+                              <span class='st'>"Vegetation"</span>, <span class='st'>"Urban"</span>, <span class='st'>"Other"</span>))</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing `in_rast`</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;   ID      Class   Color
 #&gt; 1  1      Water #F8766D
 #&gt; 2  2       Land #A3A500
 #&gt; 3  3 Vegetation #00BF7D
@@ -233,7 +227,7 @@ functionality of specifying specific names for the classes.</p>
                               <span class='kw'>class_names</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Water"</span>, <span class='st'>"Land"</span>,
                               <span class='st'>"Vegetation"</span>, <span class='st'>"Urban"</span>, <span class='st'>"Other"</span>),
                               <span class='kw'>class_colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"blue"</span>, <span class='st'>"maroon"</span>,
-                              <span class='st'>"green"</span>, <span class='st'>"red"</span>, <span class='st'>"black"</span>))</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing in_rast and assigning class names based on  c</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]][<span class='fl'>1</span>]</div><div class='output co'>#&gt;   ID
+                              <span class='st'>"green"</span>, <span class='st'>"red"</span>, <span class='st'>"black"</span>))</div><div class='output co'>#&gt; <span class='message'>set_rastlabels --&gt; categorizing `in_rast`</span></div><div class='input'>  <span class='fu'><a href='http://www.rdocumentation.org/packages/raster/topics/factor'>levels</a></span>(<span class='no'>cat_rast</span>)<span class='kw'>[[</span><span class='fl'>1</span>]][<span class='fl'>1</span>]</div><div class='output co'>#&gt;   ID
 #&gt; 1  1
 #&gt; 2  2
 #&gt; 3  3
@@ -270,7 +264,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

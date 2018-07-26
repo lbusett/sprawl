@@ -12,12 +12,13 @@
 #'  - `zscore_rast()` computes the Z-score on the input raster
 #'      (equivalent to `standardise_rast(method = "zscore")`);
 #'  - `fixborders_rast()` can be used to replace border values
-#'      (equivalent to `standardise_rast(method = "input", by_poly = TRUE)`);
+#'      (equivalent to `standardise_rast(method = "input", by_poly = TRUE,
+#'      dataType = NA, scaleFactor = 1)`);
 #'  - `fillgaps_rast()` is used to fill gaps (NA values) without using
 #'      polygon masks
 #'      (equivalent to `standardise_rast(by_poly = FALSE, min_area = 0,
 #'      method = "input", fill_na = TRUE, fill_borders = FALSE, buffer = 0,
-#'      parallel = FALSE)`).
+#'      parallel = FALSE, dataType = NA, scaleFactor = 1)`).
 #'
 #'  By default, input raster values are standardised basing on the averages
 #'  and standard deviations computed within each polygon (it is possible to
@@ -82,6 +83,16 @@
 #'  (in this case, it is runned on a single core).
 #' @param format (optional) Format of the output file (in a
 #'  format recognised by GDAL). Default is to maintain each input format.
+#' @param dataType (optional) Numeric datatype of the ouptut rasters.
+#'  if "Float32" or "Float64" is chosen, numeric values are not rescaled;
+#'  if "Int16" or "UInt16", values are multiplicated by `scaleFactor` argument.
+#'  If "NA" is used (default), the same dataType of `in_rast` is used.
+#' @param scaleFactor (optional) Scale factor for output values when an integer
+#'  datatype is chosen (default values with `method = "zscore"` are 1000
+#'  for "Int16" and "UInt16" and 1E8 for "Int32" and "UInt32";
+#'  with different `method` values, defalt is 1).
+#'  Notice that, using "UInt16" and "UInt32" types,
+#'  negative values will be truncated to 0.
 #' @param compress (optional) In the case a GTiff format is
 #'  present, the compression indicated with this parameter is used.
 #'  Default is "DEFLATE".
@@ -94,6 +105,7 @@
 #' @importFrom parallel detectCores makeCluster stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom sf st_buffer st_area st_geometry st_sf st_union
+#' @importFrom stats weighted.mean
 #' @importFrom raster calc writeRaster values resample mosaic
 #' @importFrom foreach foreach "%do%" "%dopar%"
 #' @importFrom jsonlite fromJSON
@@ -219,6 +231,8 @@ standardise_rast <- function(in_rast,
                              buffer = 0,
                              parallel = TRUE,
                              format = NA,
+                             dataType = NA,
+                             scaleFactor = NA,
                              compress = "DEFLATE",
                              overwrite = FALSE
 ) {
@@ -299,12 +313,37 @@ standardise_rast <- function(in_rast,
     )
   }
 
+  # assign dataType value
+  if (is.na(dataType)) {
+    dataType <- as.character(suppressWarnings(attr(GDALinfo(in_rast_path),"df")[1,"GDType"]))
+  }
+  # convert unsigned formats (with the exception of "input" method)
+  if (!method %in% c("input")) {
+    if (grepl("^UInt",dataType)) {
+      dataType <- paste0("U",dataType)
+    } else if (grepl("^Byte$",dataType)) {
+      dataType <- "Int16"
+    }
+  }
+  # assign scaleFactor value
+  if (is.na(scaleFactor)) {
+    scaleFactor <- if (!method %in% c("zscore")) {
+      1
+    } else if (grepl("^Int32$",dataType)) {
+      1E8
+    } else if (grepl("^Int16$",dataType)) {
+      1E3
+    } else if (grepl("^Float",dataType)) {
+      1
+    }
+  }
+
   # set the function for the chosen method
   standardise <- switch(
     method,
-    zscore = function(x,avg,std){(x-avg)/std},
-    center = function(x,avg,std=NA){x-avg},
-    input = function(x,avg=NA,std=NA){x},
+    zscore = function(x,avg,std){scaleFactor*(x-avg)/std},
+    center = function(x,avg,std=NA){scaleFactor*(x-avg)},
+    input = function(x,avg=NA,std=NA){scaleFactor*x},
     stop("Value of attribute \"method\" not recognised.")
   )
 
@@ -398,17 +437,21 @@ standardise_rast <- function(in_rast,
 
     if (continue_sel_poly) { # see the note above
 
-
       ## 1. Generate raster covering only the buffer of the selected polygon
 
       # Crop values on the border of the polygon
       if (TRUE) { # TODO exclude cases in which this is not needed
         gdal_warp(in_rast_path, sel_rast_poly_path, mask=sel_vect_path)
-        sel_rast_poly <- cast_rast(sel_rast_poly_path, "rastobject")
       }
 
+      if (!file.exists(sel_rast_poly_path)) {continue_sel_poly <- FALSE}
+    }
+    if (continue_sel_poly) { # see the note above
+
+      sel_rast_poly <- cast_rast(sel_rast_poly_path, "rastobject")
+
       # Crop the values on the border of the buffer
-      if (buffer!=0) {
+      if (buffer != 0) {
         gdal_warp(in_rast_path, sel_rast_buf_path, mask=sel_vect_buf_path)
         sel_rast_buf <- cast_rast(sel_rast_buf_path, "rastobject")
       } else {
@@ -417,8 +460,8 @@ standardise_rast <- function(in_rast,
 
       # In case of negative buffer, use a grid larger than the input,
       # as needed by the focal
-      if (buffer<0) {
-        sel_rast_buf <- resample(sel_rast_buf, sel_rast_poly, method="ngb")
+      if (buffer < 0) {
+        sel_rast_buf <- resample(sel_rast_buf, sel_rast_poly, method = "ngb")
       }
 
 
@@ -434,29 +477,33 @@ standardise_rast <- function(in_rast,
       # using the method chosen with fill_method
 
       sel_rast_fil <- sel_rast_buf
-      if (buffer<0 & fill_borders == TRUE | fill_na == TRUE) {
+      if (buffer < 0 & fill_borders == TRUE | fill_na == TRUE) {
         if (fill_method == "focal") {
           # rasterize in_vect (reference for the surface to be filled)
           file.copy(sel_rast_poly_path, sel_rast_vect_path)
           gdalUtils::gdal_rasterize(
-            if (fill_borders==FALSE & buffer<0) {sel_vect_buf_path} else {sel_vect_path},
+            if (fill_borders == FALSE & buffer < 0) {sel_vect_buf_path} else {sel_vect_path},
             sel_rast_vect_path,
-            burn=1
+            burn = 1
           )
           sel_rast_vect <- cast_rast(sel_rast_vect_path, "rastobject")
           j <- 0
           # continue interpolating until all the pixels in the polygon are covered
           max_iter_n <- 100 # maximum number of iterations
-          while (any(values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
-                 j < max_iter_n) {
-            j <- j+1
+          while (any(
+            values(as.integer(!is.na(sel_rast_vect)) - as.integer(!is.na(sel_rast_fil))) == 1) &
+            j < max_iter_n) {
+
+            j <- j + 1
             # sel_w <- focalWeight(sel_rast_fil, -buffer*sqrt(j), "circle")
-            sel_w <- focalWeight(sel_rast_fil, mean(res(sel_rast_fil))*sqrt(j), "circle") # 1 pixel per time
+            sel_w <- raster::focalWeight(sel_rast_fil,
+                                         mean(res(sel_rast_fil))*sqrt(j),
+                                         "circle") # 1 pixel per time
             sel_w <- sel_w / max(sel_w) # adjustment required by focal to fix the problem with na.rm=TRUE
-            sel_rast_fil <- focal(
+            sel_rast_fil <- raster::focal(
               sel_rast_fil,
-              fun = function(x){weighted.mean(x,sel_w,na.rm=TRUE)},
-              w = sel_w, pad=TRUE, NAonly=TRUE
+              fun = function(x){stats::weighted.mean(x,sel_w,na.rm = TRUE)},
+              w = sel_w, pad = TRUE, NAonly = TRUE
             )
           }
           if (j == max_iter_n) {
@@ -515,15 +562,16 @@ standardise_rast <- function(in_rast,
 
       ## 5. Export output raster
       writeRaster(sel_rast_z, sel_rast_z_path)
-      print(sel_rast_z_path)
       sel_rast_z_path
 
+    } else {
+      NULL
     } # end of continue_sel_poly IF cycle
 
   } # end of in_vect_buf FOREACH cycle
 
   ## Mosaic single rasters
-  if (length(rast_z_paths)==1) {
+  if (length(rast_z_paths) == 1) {
     # FIXME this IF cycle provides the following error (?):
     #  Error in setValues(r, as.vector(t(x))) :
     #    values must be numeric, integer, logical or factor
@@ -534,8 +582,8 @@ standardise_rast <- function(in_rast,
       "Mosaicing single polygons into the final raster..."
     ))
     rast_z_list <- lapply(rast_z_paths,raster)
-    rast_z_list$fun<- mean
-    rast_z <- do.call(mosaic, rast_z_list)
+    rast_z_list$fun <- mean
+    rast_z <- do.call(raster::mosaic, rast_z_list)
   }
 
   # close connections (doing it after having mosaiced them,
@@ -555,13 +603,18 @@ standardise_rast <- function(in_rast,
     }
     sgdf_z <- as(rast_z, "SpatialGridDataFrame")
     sgdf_z@data[,1][is.na(sgdf_z@data[,1])] <- NA # NaN to NA
+    sel_nodata <- switch(
+      dataType,
+      Int16=-2^15, UInt16=2^16-1, Int32=-2^31, UInt32=2^32-1,
+      Float32=-9999, Float64=-9999, Byte=255
+    )
     if (is(sgdf_z@data[,1], "logical")) {
       sgdf_z@data[,1] <- as.numeric(sgdf_z@data[,1])
     }
     writeGDAL(
       sgdf_z, out_file,
       drivername = format,
-      type = "Float32", mvFlag = -2^31, # not correct for Float32, but managed by QGIS
+      type = dataType, mvFlag = sel_nodata,
       options = if(format == "GTiff") {paste0("COMPRESS=",compress)}#,
       # overwrite = overwrite
     )
@@ -589,6 +642,8 @@ zscore_rast <- function(in_rast,
                         buffer = 0,
                         parallel = TRUE,
                         format = NA,
+                        dataType = NA,
+                        scaleFactor = NA,
                         compress = "DEFLATE",
                         overwrite = FALSE
 ) {
@@ -604,6 +659,8 @@ zscore_rast <- function(in_rast,
                    buffer = buffer,
                    parallel = parallel,
                    format = format,
+                   dataType = dataType,
+                   scaleFactor = scaleFactor,
                    compress = compress,
                    overwrite = overwrite)
 }
@@ -620,6 +677,8 @@ fixborders_rast <- function(in_rast,
                             buffer = 0,
                             parallel = TRUE,
                             format = NA,
+                            dataType = NA,
+                            scaleFactor = 1,
                             compress = "DEFLATE",
                             overwrite = FALSE
 ) {
@@ -660,6 +719,8 @@ fillgaps_rast <- function(in_rast,
                    buffer = 0,
                    parallel = FALSE,
                    format = format,
+                   dataType = NA,
+                   scaleFactor = 1,
                    compress = compress,
                    overwrite = overwrite)
 }

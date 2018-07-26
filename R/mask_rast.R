@@ -207,8 +207,8 @@ mask_rast <- function(in_rast,
                               "-te", paste(get_extent(in_rast)@extent, collapse = " "), #nolint
                               "-tr", paste(rastinfo$res, collapse = " "),
                               "-ot Byte",
-                              temp_shapefile,
-                              temp_rastermask)
+                              shQuote(temp_shapefile),
+                              shQuote(temp_rastermask))
 
     system2(file.path(find_gdal(), "gdal_rasterize"),
             args = rasterize_string, stdout = NULL)

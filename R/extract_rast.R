@@ -132,7 +132,8 @@ extract_rast <- function(in_rast,
                          join_geom     = TRUE,
                          keep_null     = FALSE,
                          verbose       = TRUE,
-                         ncores        = NULL
+                         ncores        = NULL,
+                         parallel      = FALSE
 )
 {
   # create a list containing processing parameters (used to facilitate passing
@@ -249,7 +250,6 @@ extract_rast <- function(in_rast,
     } else {
       outside_feat  <- NULL
     }
-
     # Now crop the raster on the vector extent. This speeds-up consistently the
     # processing in case the vectors cover only a part of the raster
 
@@ -257,8 +257,9 @@ extract_rast <- function(in_rast,
                               in_vect_crop,
                               out_type = "rastobject",
                               compress = "DEFLATE",
-                              verbose = verbose)
-
+                              verbose = verbose,
+                              mask = TRUE)
+# browser()
     # reset some useful info as that of the original file
     # TODO change "crop_rast" behaviour to keep this info from the original !
     # names(in_rast_crop) <- names(in_rast)
@@ -296,7 +297,8 @@ extract_rast <- function(in_rast,
                               n_selbands,
                               date_check,
                               er_opts,
-                              outside_feat)
+                              outside_feat,
+                              parallel)
 
     }
 

@@ -18,6 +18,8 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -25,6 +27,23 @@
 <script src="../pkgdown.js"></script>
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Reproject a vector "R" object or file — reproj_vect" />
+
+<meta property="og:description" content="Reproject a vector "R" object or file to a different reference
+system. The function is a simple wrapper around sf::st_tranform with
+additional checks on inputs allowing to specify the output projection
+in several ways:
+1: passing a valid proj4 string (e.g., reproj_vect(in_vect, "+init=epsg:4326")
+2: passing a numeric or character that can be interpreted as an
+EPSG code (e.g., reproj_vect(in_vect, 4326));
+3: passing the name of a valid R vector or raster object:
+(e.g.,reproj_vect(in_vect, rast_obj), with rast_obj
+being an existing R object;
+4: passing the path to a valid vector or raster file:
+EPSG code (e.g.,reproj_vect(in_vect, "D:/Temp/myfile.tif")
+The reprojected vector can be automatically saved to a shapefile through
+write_shape by specifying a valid path with the out_file argument." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -212,13 +231,15 @@ path of the file where the reprojected input was saved (if out_type == "vectfile
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='fu'>library</span>(<span class='no'>sprawl.data</span>)
-<span class='fu'>library</span>(<span class='no'>gridExtra</span>)
-<span class='co'># reproject a vector file</span>
+<span class='fu'>library</span>(<span class='no'>gridExtra</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘gridExtra’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:dplyr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    combine</span></div><div class='input'><span class='co'># reproject a vector file</span>
 <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/shapes"</span>,<span class='st'>"lc_polys.shp"</span>,
                                    <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>)
 <span class='no'>in_vect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_vect.html'>read_vect</a></span>(<span class='no'>in_vect</span>)
 <span class='no'>bounds</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='get_boundaries.html'>get_boundaries</a></span>(<span class='st'>"PHL"</span>, <span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>get_boundaries --&gt; Downloading data for: "PHL", Level: 1</span></div><div class='input'>
-<span class='fu'>message</span>(<span class='st'>"Input projection is: "</span>, <span class='fu'><a href='get_proj4string.html'>get_proj4string</a></span>(<span class='no'>in_vect</span>))</div><div class='output co'>#&gt; <span class='message'>Input projection is: +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0</span></div><div class='input'><span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='no'>bounds</span>)</div><div class='img'><img src='reproj_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>message</span>(<span class='st'>"Input projection is: "</span>, <span class='fu'><a href='get_proj4string.html'>get_proj4string</a></span>(<span class='no'>in_vect</span>))</div><div class='output co'>#&gt; <span class='message'>Input projection is: +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0</span></div><div class='input'><span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='no'>bounds</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='reproj_vect-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='co'># reproject to 3857 (web mercator)</span>
 <span class='no'>out_proj</span> <span class='kw'>&lt;-</span>  <span class='fl'>3857</span>
 <span class='no'>out_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>reproj_vect</span>(<span class='no'>in_vect</span>, <span class='fl'>3857</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_vect --&gt; Reprojecting in_vect to +init=epsg:3857 +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs</span></div><div class='input'>
@@ -233,30 +254,30 @@ path of the file where the reprojected input was saved (if out_type == "vectfile
 #&gt; epsg (SRID):    NA
 #&gt; proj4string:    +proj=merc +lon_0=0 +lat_ts=0 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +units=m +no_defs
 #&gt; # A tibble: 13 x 5
-#&gt;       id       lc_type category sup_catego          geometry
-#&gt;    &lt;dbl&gt;         &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;  &lt;simple_feature&gt;
-#&gt;  1     1      forest_1   Forest Vegetation &lt;POLYGON ((13...&gt;
-#&gt;  2     2      forest_2   Forest Vegetation &lt;POLYGON ((13...&gt;
-#&gt;  3     3       urban_1    Other      Other &lt;POLYGON ((13...&gt;
-#&gt;  4     4    cropland_1 Cropland Vegetation &lt;POLYGON ((13...&gt;
-#&gt;  5     5    cropland_2 Cropland Vegetation &lt;POLYGON ((13...&gt;
-#&gt;  6     6      forest_3   Forest Vegetation &lt;POLYGON ((13...&gt;
-#&gt;  7     7    reiver_bed    Other      Other &lt;POLYGON ((13...&gt;
-#&gt;  8     8    cropland_3 Cropland Vegetation &lt;POLYGON ((13...&gt;
-#&gt;  9     9  urban_2_part    Other      Other &lt;POLYGON ((13...&gt;
-#&gt; 10    10 sparsfor_part   Forest Vegetation &lt;POLYGON ((13...&gt;
-#&gt; 11    11         water    Other      Other &lt;POLYGON ((13...&gt;
-#&gt; 12    12    small_feat    Other      Other &lt;POLYGON ((13...&gt;
-#&gt; 13    13      out_feat    Other      Other &lt;POLYGON ((13...&gt;</div><div class='input'>
+#&gt;       id lc_type       category sup_catego                             geometry
+#&gt;    &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;                             &lt;POLYGON [m]&gt;
+#&gt;  1  1.00 forest_1      Forest   Vegetation ((13439627 1779722, 13440374 177972…
+#&gt;  2  2.00 forest_2      Forest   Vegetation ((13399126 1735311, 13399217 173567…
+#&gt;  3  3.00 urban_1       Other    Other      ((13424474 1746623, 13424535 174670…
+#&gt;  4  4.00 cropland_1    Cropland Vegetation ((13429260 1742926, 13429620 174411…
+#&gt;  5  5.00 cropland_2    Cropland Vegetation ((13438831 1751932, 13440785 175263…
+#&gt;  6  6.00 forest_3      Forest   Vegetation ((13494772 1805481, 13496236 180626…
+#&gt;  7  7.00 reiver_bed    Other    Other      ((13405185 1727398, 13405679 172763…
+#&gt;  8  8.00 cropland_3    Cropland Vegetation ((13444080 1731748, 13444335 173205…
+#&gt;  9  9.00 urban_2_part  Other    Other      ((13423271 1708906, 13425121 170900…
+#&gt; 10 10.0  sparsfor_part Forest   Vegetation ((13380132 1709289, 13381309 170930…
+#&gt; 11 11.0  water         Other    Other      ((13484992 1788081, 13487983 178682…
+#&gt; 12 12.0  small_feat    Other    Other      ((13445172 1797572, 13445287 179756…
+#&gt; 13 13.0  out_feat      Other    Other      ((13433826 1815546, 13435617 181480…</div><div class='input'>
 <span class='co'># use a different spatial file or object to set the output projection:</span>
 <span class='no'>rast</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='read_rast.html'>read_rast</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata/MODIS_test"</span>, <span class='st'>"EVIts_test.tif"</span>,
   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sprawl.data"</span>))
 <span class='no'>out_vect</span> <span class='kw'>&lt;-</span> <span class='fu'>reproj_vect</span>(<span class='no'>in_vect</span>, <span class='no'>rast</span>)</div><div class='output co'>#&gt; <span class='message'>reproj_vect --&gt; Reprojecting in_vect to projection ofrast</span></div><div class='input'>
 <span class='fu'>message</span>(<span class='st'>"Output projection is: "</span>, <span class='fu'><a href='get_proj4string.html'>get_proj4string</a></span>(<span class='no'>out_vect</span>))</div><div class='output co'>#&gt; <span class='message'>Output projection is: +proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs</span></div><div class='input'>
 <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>in_vect</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='no'>bounds</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>,
-   <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Original (lat/lon)"</span>)</div><div class='img'><img src='reproj_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+   <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Original (lat/lon)"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='reproj_vect-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 <span class='fu'><a href='plot_vect.html'>plot_vect</a></span>(<span class='no'>out_vect</span>, <span class='kw'>borders_layer</span> <span class='kw'>=</span> <span class='no'>bounds</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"category"</span>,
-   <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Reprojected (sinusoidal)"</span>)</div><div class='img'><img src='reproj_vect-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+   <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Reprojected (sinusoidal)"</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='reproj_vect-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 
 </div></pre>
   </div>
@@ -285,7 +306,7 @@ Lorenzo Busetto, phD (2017) <a href='mailto:lbusett@gmail.com'>lbusett@gmail.com
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

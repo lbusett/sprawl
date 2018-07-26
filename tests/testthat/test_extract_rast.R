@@ -112,7 +112,8 @@ testthat::test_that(
     # Check that results are coherent with `raster::extract` on the test dataset
     # skip_on_travis()
     out_extract_rast  <- extract_rast(in_rast, in_polys, selbands = c(1,2),
-                                      verbose    = FALSE, keep_null = FALSE,
+                                      verbose    = FALSE,
+                                      keep_null = FALSE,
                                       join_geom  = FALSE,
                                       full_data  = FALSE,
                                       small      = FALSE,
