@@ -120,7 +120,7 @@ create_fishnet <- function(in_obj,
   }
 
   if (shape == "rect") {
-    ext_poly <- as(out_ext, "sfc_POLYGON")
+    ext_poly <- .sprawlext_to_poly(out_ext)
     geometry <- sf::st_make_grid(ext_poly,
                                  cellsize,
                                  what = "polygons")
@@ -128,7 +128,7 @@ create_fishnet <- function(in_obj,
                       geometry = geometry) %>%
       crop_vect(., in_obj, verbose = verbose)
   } else {
-    ext_poly <- as(out_ext , "sfc_POLYGON")
+    ext_poly <- .sprawlext_to_poly(out_ext)
     geometry <- sf::st_make_grid(ext_poly,
                                  cellsize,
                                  what = "corners")

@@ -255,7 +255,7 @@ standardise_rast <- function(in_rast,
   } else {
     in_vect <- sf::st_sf(data.frame(
       id = "All",
-      geometry = as(get_extent(in_rast_path), "sfc_POLYGON")
+      geometry = .sprawlext_to_poly(get_extent(in_rast_path))
     ))
     buffer <- 0 # buffering does not make sense on a whole raster
   }
