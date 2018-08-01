@@ -395,13 +395,30 @@ standardise_rast <- function(in_rast,
   }
   standardise <- switch(
     method,
-    zscore = function(x,avg,std,min=-Inf,max=Inf){clip(shiftFactor+scaleFactor*(x-avg)/std, min, max)},
-    rbias = function(x,avg,std=NA,min=-Inf,max=Inf){
-      # clip_rast(shiftFactor+scaleFactor*(x-avg)/avg, min, max)
-      calc(shiftFactor+scaleFactor*(x-avg)/avg, function(x) {clip(x, ymin=min, ymax=max)})
+    zscore = function(x,avg,std,min=-Inf,max=Inf){
+      reclassify(
+        shiftFactor+scaleFactor*(x-avg)/std,
+        c(-Inf,min,min, max,Inf,max)
+      )
     },
-    center = function(x,avg,std=NA,min=-Inf,max=Inf){clip(shiftFactor+scaleFactor*(x-avg), min, max)},
-    input = function(x,avg=NA,std=NA,min=-Inf,max=Inf){clip(shiftFactor+scaleFactor*x, min, max)},
+    rbias = function(x,avg,std=NA,min=-Inf,max=Inf){
+      reclassify(
+        shiftFactor+scaleFactor*(x-avg)/avg,
+        c(-Inf,min,min, max,Inf,max)
+      )
+    },
+    center = function(x,avg,std=NA,min=-Inf,max=Inf){
+      reclassify(
+        shiftFactor+scaleFactor*(x-avg),
+        c(-Inf,min,min, max,Inf,max)
+      )
+    },
+    input = function(x,avg=NA,std=NA,min=-Inf,max=Inf){
+      reclassify(
+        shiftFactor+scaleFactor*x,
+        c(-Inf,min,min, max,Inf,max)
+      )
+    },
     stop("Value of attribute \"method\" not recognised.")
   )
 
