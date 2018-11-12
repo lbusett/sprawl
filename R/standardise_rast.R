@@ -393,34 +393,20 @@ standardise_rast <- function(in_rast,
   clip <- function(y, ymin, ymax) {
     ifelse(is.na(y), NA, ifelse(y < ymin, ymin, ifelse(y > ymax, ymax, y)))
   }
-  standardise <- switch(
-    method,
-    zscore = function(x,avg,std,min=-Inf,max=Inf){
-      reclassify(
-        shiftFactor+scaleFactor*(x-avg)/std,
-        c(-Inf,min,min, max,Inf,max)
-      )
-    },
-    rbias = function(x,avg,std=NA,min=-Inf,max=Inf){
-      reclassify(
-        shiftFactor+scaleFactor*(x-avg)/avg,
-        c(-Inf,min,min, max,Inf,max)
-      )
-    },
-    center = function(x,avg,std=NA,min=-Inf,max=Inf){
-      reclassify(
-        shiftFactor+scaleFactor*(x-avg),
-        c(-Inf,min,min, max,Inf,max)
-      )
-    },
-    input = function(x,avg=NA,std=NA,min=-Inf,max=Inf){
-      reclassify(
-        shiftFactor+scaleFactor*x,
-        c(-Inf,min,min, max,Inf,max)
-      )
-    },
-    stop("Value of attribute \"method\" not recognised.")
-  )
+  standardise <- function(x,avg,std,min=-Inf,max=Inf,method="zscore") {
+    standardise_formula <- switch(
+      method,
+      zscore = "(x-avg)/std",
+      rbias = "(x-avg)/avg",
+      center = "x-avg",
+      input = "x",
+      stop("Value of attribute \"method\" not recognised.")
+    )
+    suppressWarnings(calc(
+      shiftFactor+scaleFactor*(eval(parse(text=standardise_formula))),
+      function(x) {clip(x, ymin=min, ymax=max)}
+    ))
+  }
 
 
   # New faster method when fill_method = "source":
@@ -441,7 +427,7 @@ standardise_rast <- function(in_rast,
     rast_std <- fasterize::fasterize(sf::st_cast(vect_join, "POLYGON"), in_rast, field = "sd")
 
     # compute the standardised raster
-    rast_z <- standardise(in_rast, rast_avg, rast_std, out_range[1], out_range[2])
+    rast_z <- standardise(in_rast, rast_avg, rast_std, out_range[1], out_range[2], method)
 
     # end of faster method for fill_methdod "source"
   } else {
@@ -658,7 +644,7 @@ standardise_rast <- function(in_rast,
 
 
         ## 4. Standardise
-        sel_rast_z <- standardise(sel_rast_crop, sel_rast_avg, sel_rast_std)
+        sel_rast_z <- standardise(sel_rast_crop, sel_rast_avg, sel_rast_std, method)
 
 
         ## 5. Export output raster
