@@ -37,7 +37,7 @@ select_extent <- function(in_object = NULL,
   if (is.null(in_object)) {
     in_object <- raster::raster(nrows = 18, ncols = 36, vals  = 0) %.>%
       get_extent(.) %.>%
-      as(., "sfc_POLYGON")
+      .sprawlext_to_poly()
     transparency = 1
   }
   #   ________________________________________________________________________

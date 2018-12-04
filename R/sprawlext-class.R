@@ -81,7 +81,7 @@ setAs("sprawlext", "SpatialPolygons", function(from) {
   as.sprawlext.Spatial(from, "SpatialPolygons")
 })
 
-setAs("sprawlext", "sfc_POLYGON", function(from) {
+.sprawlext_to_poly <- function(from) {
   cbbox_ext <- from@extent
   out_st <- sf::st_polygon(list(rbind(
     c(cbbox_ext["xmin"], cbbox_ext["ymin"]),
@@ -92,9 +92,9 @@ setAs("sprawlext", "sfc_POLYGON", function(from) {
   ) %>%
     sf::st_sfc(crs = from@proj4string)
   return(out_st)
-})
+}
 
-setAs("sprawlext", "sfc_POINT", function(from) {
+.sprawlext_to_point <- function(from) {
   cbbox_ext <- from@extent
   out_st <- sf::st_sfc(
     sf::st_point(c(cbbox_ext["xmin"], cbbox_ext["ymin"])),
@@ -103,4 +103,8 @@ setAs("sprawlext", "sfc_POINT", function(from) {
     sf::st_point(c(cbbox_ext["xmax"], cbbox_ext["ymin"])),
     crs = from@proj4string)
   return(out_st)
-})
+}
+
+setAs("sprawlext", "sfc_POLYGON", .sprawlext_to_poly)
+
+setAs("sprawlext", "sfc_POINT", .sprawlext_to_point)

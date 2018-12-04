@@ -216,7 +216,7 @@
 #'  geom_raster aes facet_wrap scale_fill_brewer scale_fill_distiller waiver
 #'  geom_polygon scale_colour_manual guides guide_legend scale_color_manual
 #'  coord_fixed ggplot
-#' @importFrom ggspatial geom_osm
+#' @importFrom ggspatial annotation_map_tile
 #' @importFrom raster stack sampleRegular nlayers
 #' @importFrom RColorBrewer brewer.pal.info
 #' @importFrom rosm osm.types
@@ -500,7 +500,7 @@ plot_rast_gg <- function(
   if (!is.null(basemap)) {
 
     osm_plot <- suppressMessages(
-      ggspatial::geom_osm(zoomin = zoomin, type   = basemap, progress = "none")
+      ggspatial::annotation_map_tile(zoomin = zoomin, type   = basemap, progress = "none")
     )
     plot <- plot + osm_plot
   }

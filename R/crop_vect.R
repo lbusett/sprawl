@@ -63,7 +63,7 @@ crop_vect <- function(in_vect,
   obj_bbox    <- get_extent(ext_obj)
   invect_proj <- get_proj4string(in_vect)
   inobj_proj  <- get_proj4string(ext_obj)
-  obj_boundaries <- as(obj_bbox, "sfc_POLYGON")
+  obj_boundaries <- .sprawlext_to_poly(obj_bbox)
   if (invect_proj != inobj_proj) {
     obj_boundaries <- sf::st_transform(obj_boundaries, invect_proj)
   }

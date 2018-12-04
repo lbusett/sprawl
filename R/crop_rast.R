@@ -108,8 +108,10 @@ crop_rast <- function(rast_object,
 
   # Abort gracefully if not intersecting (TODO: Add test) ####
   test_intersect <- suppressMessages(
-    sf::st_intersects(as(rast_bbox, "sfc_POLYGON"),
-                      as(crop_bbox, "sfc_POLYGON"))[[1]]
+    sf::st_intersects(
+      .sprawlext_to_poly(rast_bbox),
+      .sprawlext_to_poly(crop_bbox)
+    )[[1]]
   )
   if (length(test_intersect) == 0) {
 
