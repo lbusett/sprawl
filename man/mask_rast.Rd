@@ -7,7 +7,8 @@
 mask_rast(in_rast, mask, mask_value = 0, crop = FALSE, buffer = NULL,
   out_type = "rastobject", out_file = NULL, out_dtype = NULL,
   out_nodata = NULL, compress = "None", overwrite = FALSE,
-  parallel = FALSE, cores = parallel::detectCores() - 2, verbose = TRUE)
+  parallel = FALSE, cores = parallel::detectCores() - 2,
+  verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{Raster file or object inheriting class \code{raster} to be masked}

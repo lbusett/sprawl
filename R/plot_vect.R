@@ -213,7 +213,6 @@
 #' @importFrom grid unit
 #' @importFrom methods is
 #' @importFrom stats as.formula
-#' @importFrom purrr map_dbl
 #' @importFrom stats setNames
 #' @importFrom ggplot2 theme_bw fortify ggplot scale_x_continuous expand_scale
 #'  scale_y_continuous ggtitle theme element_blank element_text element_rect

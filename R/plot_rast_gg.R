@@ -12,8 +12,7 @@
 #'     `outliers_color`)
 #'   - Easily control breaks and labels in legends (args `leg_type`, `leg_breaks`,
 #'     `leg_labels`)
-#'   - Automatically add a scalebar to the plot (args`scalebar`, `scalebar_dist`,
-#'     `scalebar_txt_dist`, `scalebar_txt_size`)
+#'   - Automatically add a scalebar to the plot (args`scalebar`, `scalebar_width`)
 #'   - Easily add an additional "vector" layer (e.g., administrative boundaries)
 #'     (args`borders_layer`, `borders_color`, `borders_....`)
 #' See the description of the arguments for details on their use
@@ -121,11 +120,15 @@
 #'   Default: "grey15"
 #' @param scalebar `logical` If TRUE, add a scalebar on the bottom right corner,
 #'   Default: TRUE
-#' @param scalebar_dist `numeric` Width of the scale bar (in km). If NULL, it
-#'   is computed automatically on the basis of the range in x direction,
-#'   Default: NULL
-#' @param scalebar_txt_dist `numeric` Distance between scalebar and its labels.
-#'   Adjust this in case of overlap, Default: 0.30
+#' @param scalebar_width `numeric` The (suggested) proportion of the plot area
+#'  which the scalebar should occupy. This is directly passed to
+#'  `ggspatial::annotation_scale()`, Default: NULL, equaling to the default in
+#'  `annotation_scale`, equal to 0.25.
+#'  NOTE: If you want to further customize the scale bar, create the plot
+#'  with scalebar = FALSE, and then add the scalebar with something like
+#'  plot <- plot + ggspatial::annotation_scale(...)
+#' @param scalebar_location `character` Where to put the scale bar ("tl" for top left, etc.),
+#'  Default: "br"
 #' @param transparency `numeric [0,1]`, transparency of the raster layer. Higher
 #'   values lead to higher transparency, Default: 0 (ignored if basemap == NULL)
 #' @param na.color `character`, color to be used to plot NA values,
@@ -189,21 +192,21 @@
 #'  # values outliers and better use the palette on high values (note that
 #'  # outliers can be set as transparent!) + increase maxpixels to plot at
 #'  # full resolution.
-#'  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 500e5,
+#'  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 5e5,
 #'              palette_name = "RdYlBu",
-#'              zlims = c(0.10, 0.999), zlims_type = "percs",
+#'              zlims = c(0.10, 0.90), zlims_type = "percs",
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
 #'              outliers_style = "censor",
-#'              outliers_colors = c("transparent", "purple"))
+#'              outliers_colors = c("yellow", "purple"))
 #'
 #'  # Adjust `maxpixels` to speed-up rendering by sacrificing quality
-#'  plot_rast_gg(in_rast, basemap = "osm", maxpixels = 10e4,
+#'  plot_rast_gg(in_rast,basemap = "osm",
+#'              maxpixels = 10e4,
 #'              palette_name = "RdYlBu",
 #'              zlims = c(0.10, 0.999), zlims_type = "percs",
 #'              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
-#'              outliers_style = "to_minmax",
-#'              leg_type = "discrete")
-#'
+#'              outliers_style = "to_minmax", na.value = 0 ,
+#'              leg_type = "discrete", borders_layer = borders)
 #' @rdname plot_rast_gg
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
@@ -240,10 +243,11 @@ plot_rast_gg <- function(
   basemap      = NULL, zoomin = 0,
   borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
   borders_txt_field = NULL, borders_txt_size = 3, borders_txt_color = "grey15",
-  scalebar     = TRUE, scalebar_dist = NULL, scalebar_txt_dist = 0.03,
+  scalebar     = TRUE, scalebar_width = NULL, scalebar_location = "br",
   transparency = 0,
   na.color     = NULL, na.value = NULL,
-  show_axis    = TRUE, show_grid = TRUE, grid_color = "grey20",
+  show_axis    = TRUE,
+  show_grid = TRUE, grid_color = "grey20",
   title = NULL, subtitle = NULL,
   theme        = theme_bw(),
   verbose      = TRUE
@@ -374,25 +378,34 @@ plot_rast_gg <- function(
   #   ____________________________________________________________________________
   #   Fortify the raster to allow ggplotting                                  ####
 
-  in_rast_fort <- ggplot2::fortify(in_rast, format = "long") %>%
+
+  in_rast_fort <-  raster::as.data.frame(in_rast, xy = TRUE) %>%
     data.table::as.data.table()
-  names(in_rast_fort)[1:2] <- c("x", "y")
 
+  if (length(attributes(in_rast@data)$attributes) != 0 &&
+      length((attributes(in_rast@data)$attributes[[1]][["ID"]])) != 0) {
+    in_rast_fort <- in_rast_fort[, c(1:3)]
+  }
 
+  in_rast_fort <- in_rast_fort %>%
+    data.table::melt(., id.vars = c("x", "y"), variable.name = "band")
+
+  # in_rast_fort = data.table::melt(in_rast_fort, id.vars = c("x", "y"))
+  # data.table::setnames(in_rast_fort)
   #   __________________________________________________________________________
   #   If band_names not passed use the band names found in the file - these are
   #   used to set the strip labels in case of faceted plot !
-
-  if (is.null(band_names)) {
-    in_rast_fort[[3]] <- factor(in_rast_fort[[3]], labels = rastinfo$bnames)
-  } else {
-    in_rast_fort[[3]] <- factor(in_rast_fort[[3]], labels = band_names)
-  }
+# browser()
+  # if (is.null(band_names)) {
+  #   setnames(in_rast_fort, c("x", "y",  rastinfo$bnames))
+  # } else {
+  #   setnames(in_rast_fort, c("x", "y",  bnames))
+  # }
 
   if (!is.null(na.value)) {
     in_rast_fort[value == na.value, value := NA]
   }
-
+  # browser()osm.types()
   #   _________________________________________________________________________
   #   if transparent NA, remove the NAs from the data to speed-up rendering ####
   if (!is.null(na.color)) {
@@ -418,6 +431,8 @@ plot_rast_gg <- function(
 
       out_low_tbl  <- subset(in_rast_fort, value < zlims[1])
       out_high_tbl <- subset(in_rast_fort, value > zlims[2])
+      in_rast_fort <- subset(in_rast_fort, value <= zlims[2] & value >= zlims[1])
+
 
       if (out_high_color == "transparent") {
         in_rast_fort <- subset(in_rast_fort,
@@ -500,7 +515,8 @@ plot_rast_gg <- function(
   if (!is.null(basemap)) {
 
     osm_plot <- suppressMessages(
-      ggspatial::annotation_map_tile(zoomin = zoomin, type   = basemap, progress = "none")
+      ggspatial::annotation_map_tile(zoomin = zoomin, type   = basemap,
+                                     progress = "none")
     )
     plot <- plot + osm_plot
   }
@@ -511,7 +527,7 @@ plot_rast_gg <- function(
   plot <- plot +
     geom_raster(data = in_rast_fort, aes(x, y, fill = value),
                 alpha = 1 - transparency, na.rm = TRUE ,
-                hjust = 1, vjust = 1 )
+                hjust = 0.5, vjust = 0.5 )
   if (rastinfo$nbands > 1) {
     plot <- plot + facet_wrap(~band, nrow = facet_rows, drop = TRUE)
   }
@@ -523,7 +539,7 @@ plot_rast_gg <- function(
 
     if (assertthat::has_attr(in_rast, "data")) {
 
-      if (length(in_rast@data@attributes)!= 0){
+      if (length(in_rast@data@attributes) != 0){
         leg_labels <- in_rast@data@attributes[[1]]$Class
       }
     }
@@ -548,7 +564,7 @@ plot_rast_gg <- function(
 
   #   __________________________________________________________________________
   #   Modify the palette according to variable type and palette             ####
-
+  # browser()
   plot <- add_scale_fill(plot,
                          palette,
                          scale_transform,
@@ -629,10 +645,10 @@ plot_rast_gg <- function(
     }
 
     plot <- plot + geom_raster(data = out_high_tbl,
-                               aes(x = x, y = y), hjust = 1 , vjust = 1,
+                               aes(x = x, y = y), hjust = 0.5 , vjust = 0.5,
                                fill = out_high_color, na.rm = TRUE)
     plot <- plot + geom_raster(data = out_low_tbl,
-                               aes(x = x, y = y), hjust = 1 , vjust = 1,
+                               aes(x = x, y = y), hjust = 0.5 , vjust = 0.5,
                                fill = out_low_color,
                                na.rm = TRUE)
 
@@ -642,45 +658,51 @@ plot_rast_gg <- function(
   ##  If borders passed, add a "borders" layer                              ####
 
   if (!is.null(borders_layer)) {
-    if (is.null(basemap)) {
+    # if (is.null(basemap)) {
 
-      geocol <- attr(borders_layer, "sf_column")
-      borders_layer <- sf::st_transform(borders_layer,
-                                        get_proj4string(in_rast)) %>%
-        crop_vect(plot_ext)
-      plot <- plot + geom_sf(data  = borders_layer,
-                             fill  = "transparent",
-                             color = borders_color,
-                             size  = borders_size) +
-        coord_sf(crs = get_proj4string(in_rast),
-                 # expand = FALSE,
-                 xlim = xlims,
-                 ylim = ylims)
+    geocol <- attr(borders_layer, "sf_column")
 
-      if (!is.null(borders_txt_field)) {
-        if (borders_txt_field %in% names(borders_layer)) {
+    borders_layer <- sf::st_transform(borders_layer,
+                                      get_proj4string(in_rast)) %>%
+      crop_vect(plot_ext)
+    # browser()
+    plot <- plot + geom_sf(data  = borders_layer,
+                           fill  = "transparent",
+                           color = borders_color,
+                           size  = borders_size)
+    # browser()
+    # +
+    #   coord_sf(crs = get_proj4string(in_rast),
+    #            # expand = FALSE,
+    #            xlim = xlims,
+    #            ylim = ylims)
 
-          borders_layer <- borders_layer %>%
-            dplyr::mutate(
-              lon = purrr::map_dbl(geocol, ~sf::st_centroid(.x)[[1]]),
-              lat = purrr::map_dbl(geocol, ~sf::st_centroid(.x)[[2]])) %>%
-            sf::st_as_sf()
-          plot <- plot + geom_text(data = borders_layer,
-                                   aes_string(label = borders_txt_field,
-                                              x = "lon", y = "lat"),
-                                   size = borders_txt_size,
-                                   color = borders_txt_color)
-        }
+    if (!is.null(borders_txt_field)) {
+      if (borders_txt_field %in% names(borders_layer)) {
+
+        centroids <- sf::st_centroid(sf::st_geometry(borders_layer)) %>%
+          sf::st_coordinates(.)
+        borders_layer <- borders_layer %>%
+          dplyr::mutate(
+            lon = centroids[,1],
+            lat = centroids[,2])
+
+        plot <- plot + geom_text(data = borders_layer,
+                                 aes_string(label = borders_txt_field,
+                                            x = "lon", y = "lat"),
+                                 size = borders_txt_size,
+                                 color = borders_txt_color)
       }
-    } else {
-      warning("plot_rast_gg --> You can not currently use both a `basemap`" ,
-              "and a `borders_layer`. The `borders_layer` will be ignored.",
-              "This will be fixed in future versions.")
     }
+    # } else {
+    #   warning("plot_rast_gg --> You can not currently use both a `basemap`" ,
+    #           "and a `borders_layer`. The `borders_layer` will be ignored.",
+    #           "This will be fixed in future versions.")
+    # }
   }
-
+  # browser()
   # set axes names
-  if (rastinfo$units == "dec.degrees") {
+  if (rastinfo$units == "dec.degrees" | !is.null(basemap)) {
     xlab = "Longitude"
     ylab = "Latitude"
   } else {
@@ -688,20 +710,7 @@ plot_rast_gg <- function(
     ylab = paste0("Northing [",rastinfo$units,"]")
   }
 
-  #   _________________________________________________________________________
-  #   Add scalebar                                                          ####
-
-  if (scalebar) {
-
-    plot <- plot +
-      sprawl_scalebar(in_rast,
-                      scalebar_dist  = scalebar_dist,
-                      x.min = xlims[1], x.max = xlims[2],
-                      y.min = ylims[1], y.max = ylims[2],
-                      location = "bottomright", st.size = 3.5,
-                      st.bottom = FALSE, model = NULL,
-                      st.dist = scalebar_txt_dist, units = rastinfo$units)
-  }
+  plot <- plot + scale_x_continuous(xlab) + scale_y_continuous(ylab)
 
   #   __________________________________________________________________________
   #   Finalize the plot and return it                                       ####
@@ -713,22 +722,36 @@ plot_rast_gg <- function(
           panel.ontop = T,
           panel.background = element_rect(fill = "transparent"))
 
-  if (is.null(basemap)) {
-    plot <- plot  +
-      coord_sf(crs = get_proj4string(in_rast), ndiscr = 1000) +
-      theme(axis.title.x = element_blank(), axis.title.y = element_blank())
-  } else {
-    plot <- plot +
-      coord_fixed() +
-      scale_x_continuous(xlab,
-                         # expand = expand_scale(mult = 0.0005),
-                         limits = c(xlims[1], xlims[2])) +
-      scale_y_continuous(ylab,
-                         # expand = expand_scale(mult = 0.0005),
-                         limits = c(ylims[1], ylims[2]))
+  plot <- plot + coord_sf()
 
+  # if (is.null(basemap) && grid_type == "native") {
+  #   plot <- plot +
+  #     coord_sf(datum = sf::st_crs(proj4string(in_rast)))
+  #   # coord_sf(datum = 3857)
+  # } else {
+  #   browser()
+  #   plot <- plot  +
+  #     coord_sf(crs = sf::st_crs(3857), ndiscr = 1000,
+  #              datum = sf::st_crs(3857))
+  # }
 
+  #   _________________________________________________________________________
+  #   Add scalebar                                                          ####
+
+  if (scalebar) {
+
+    plot <- plot + ggspatial::annotation_scale(
+      width_hint = ifelse(is.null(scalebar_width), 0.25, scalebar_width),
+      location = scalebar_location)
+    # plot + sprawl_scalebar(in_rast,
+    #                  scalebar_dist  = scalebar_dist,
+    #                  x.min = xlims[1], x.max = xlims[2],
+    #                  y.min = ylims[1], y.max = ylims[2],
+    #                  location = "bottomright", st.size = 3.5,
+    #                  st.bottom = FALSE, model = NULL,
+    #                  st.dist = scalebar_txt_dist, units = rastinfo$units)
   }
+
   # Remove graticule if show_grid == TRUE
   if (!show_grid) {
     plot <- plot + theme(panel.grid.major = element_line(colour = 'transparent'),

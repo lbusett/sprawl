@@ -4,9 +4,10 @@
 \alias{aggregate_rast}
 \title{aggregate_rast}
 \usage{
-aggregate_rast(in_val_rast, in_zones_rast, FUN = mean, maxchunk = 5e+07,
-  method = "disk", out_type = "rastobject", out_file = NULL,
-  nodata_in = NULL, verbose = TRUE, overwrite = FALSE)
+aggregate_rast(in_val_rast, in_zones_rast, FUN = mean,
+  maxchunk = 5e+07, method = "disk", out_type = "rastobject",
+  out_file = NULL, nodata_in = NULL, verbose = TRUE,
+  overwrite = FALSE)
 }
 \arguments{
 \item{in_val_rast}{Object of class \code{Raster*} or filename corresponding to a

@@ -33,7 +33,7 @@ add_scale_fill <- function(plot,
                            outliers_style,
                            direction,
                            ...) {
-
+# browser()
   if (!exists("scale_transform")) {
     trans <- NULL
   } else {
@@ -56,7 +56,7 @@ add_scale_fill <- function(plot,
 
       plot <- plot + scale_fill_manual(
         values   = leg_colors,
-        labels   = if (is.null(leg_labels)) waiver() else leg_labels,
+        # labels   = if (is.null(leg_labels)) waiver() else leg_labels,
         na.value = ifelse(is.null(na.color), "grey50", na.color)
       )
     } else {
@@ -82,6 +82,7 @@ add_scale_fill <- function(plot,
     # TODO add support for scale_fill_viridis and maybe scale_fill_gradient
 
     if (palette$source == "brewer") {
+      # browser()
       plot <- plot + scale_fill_distiller(
         title,
         limits  = zlims,

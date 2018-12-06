@@ -111,12 +111,12 @@
 #' @importFrom sf st_area st_bbox st_buffer st_cast st_crop st_geometry
 #'  st_set_geometry st_set_precision st_sf st_union
 #' @importFrom stats weighted.mean sd
-#' @importFrom raster calc focal focalWeight raster res resample select values
+#' @importFrom raster calc focal focalWeight raster res resample values
 #'  writeRaster
 #' @importFrom foreach foreach "%do%" "%dopar%"
 #' @importFrom jsonlite fromJSON
 #' @importFrom stringr str_pad
-#' @importFrom dplyr left_join mutate
+#' @importFrom dplyr left_join mutate select
 #' @importFrom rgdal GDALinfo writeGDAL
 #' @importFrom gdalUtils gdalwarp gdal_rasterize
 #' @importFrom methods as
@@ -269,7 +269,7 @@ standardise_rast <- function(in_rast,
   if (is.na(format)) {
     format <- suppressWarnings(attributes(GDALinfo(in_rast_path))[["driver"]])
   }
-  gdal_formats <- fromJSON(
+  gdal_formats <- jsonlite::fromJSON(
     # system.file("extdata","gdal_formats.json",package="fidolasen")
     readLines("https://raw.githubusercontent.com/ranghetti/fidolasen/master/inst/extdata/gdal_formats.json")
   )
@@ -414,7 +414,7 @@ standardise_rast <- function(in_rast,
   if (fill_method %in% c("source")) {
 
     # Compute avg-std values for each field
-    extr_val <- sprawl::extract_rast(in_rast, in_vect_buf, full_data = FALSE, parallel = FALSE,
+    extr_val <- extract_rast(in_rast, in_vect_buf, full_data = FALSE, parallel = FALSE,
                                      id_field = "id_geom", small = FALSE)$stats %>%
       dplyr::select(id_geom, c(avg,sd)) %>%
       sf::st_set_geometry(NULL)

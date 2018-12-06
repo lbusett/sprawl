@@ -1,0 +1,15 @@
+pandoc: 2.3.1
+pkgdown: 1.2.0
+pkgdown_sha: ~
+articles:
+  CONDUCT: articles/CONDUCT.html
+  cat_rast_example: articles/cat_rast_example.html
+  coding_style: articles/coding_style.html
+  contributing: articles/contributing.html
+  examples: articles/examples.html
+  extract_rast_example: articles/extract_rast_example.html
+  faq: articles/faq.html
+  plot_rast_gg_example: articles/plot_rast_gg_example.html
+  plot_vect_example: articles/plot_vect_example.html
+  sprawl: sprawl.html
+

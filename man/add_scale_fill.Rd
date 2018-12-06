@@ -5,7 +5,8 @@
 \title{add a scale_fill palette to a ggplot}
 \usage{
 add_scale_fill(plot, palette, scale_transform, title, na.color, zlims,
-  leg_breaks, leg_labels, leg_colors, leg_type, outliers_style, direction, ...)
+  leg_breaks, leg_labels, leg_colors, leg_type, outliers_style, direction,
+  ...)
 }
 \arguments{
 \item{plot}{\code{gg} object to which the fill scale has to be added.}

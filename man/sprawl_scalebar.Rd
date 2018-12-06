@@ -6,9 +6,10 @@
 \usage{
 sprawl_scalebar(in_obj, location = "bottomright", scalebar_dist = NULL,
   height = 0.02, st.dist = 0.01, st.bottom = TRUE, st.size = 3.5,
-  st.color = "black", box.fill = c("black", "white"), box.color = "black",
-  dd2km = FALSE, model, x.min, x.max, y.min, y.max, anchor = NULL,
-  facet.var = NULL, facet.lev = NULL, units = "m")
+  st.color = "black", box.fill = c("black", "white"),
+  box.color = "black", dd2km = FALSE, model, x.min, x.max, y.min,
+  y.max, anchor = NULL, facet.var = NULL, facet.lev = NULL,
+  units = "m")
 }
 \arguments{
 \item{in_obj}{\code{Raster} object passed to \code{plot_rast_gg} or \code{plot_vect} to which

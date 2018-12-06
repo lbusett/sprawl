@@ -6,9 +6,9 @@
 \usage{
 plot_rast(in_rast, band = 1, in_poly = NULL, in_points = NULL,
   background = FALSE, limits = NULL, tails = c(0, 1),
-  palette = "RdYlGn", legend_type = "standard", col_outlow = "gray10",
-  col_outhigh = "gray90", maxpixels = 5e+05, title = "Raster Plot",
-  plot_now = TRUE, ...)
+  palette = "RdYlGn", legend_type = "standard",
+  col_outlow = "gray10", col_outhigh = "gray90", maxpixels = 5e+05,
+  title = "Raster Plot", plot_now = TRUE, ...)
 }
 \arguments{
 \item{in_rast}{Input raster object or file}

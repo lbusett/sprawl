@@ -9,17 +9,17 @@
 \alias{fillgaps_rast}
 \title{Generate a standardised raster}
 \usage{
-standardise_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
-  min_area = 0, method = "zscore", fill_method = "focal",
-  fill_na = TRUE, fill_borders = TRUE, buffer = 0, parallel = TRUE,
-  format = NA, dataType = NA, scaleFactor = NA, compress = "DEFLATE",
-  overwrite = FALSE)
+standardise_rast(in_rast, out_file = NA, in_vect = NULL,
+  by_poly = TRUE, min_area = 0, method = "zscore",
+  fill_method = "focal", fill_na = TRUE, fill_borders = TRUE,
+  buffer = 0, parallel = TRUE, format = NA, dataType = NA,
+  scaleFactor = NA, compress = "DEFLATE", overwrite = FALSE)
 
-standardize_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
-  min_area = 0, method = "zscore", fill_method = "focal",
-  fill_na = TRUE, fill_borders = TRUE, buffer = 0, parallel = TRUE,
-  format = NA, dataType = NA, scaleFactor = NA, compress = "DEFLATE",
-  overwrite = FALSE)
+standardize_rast(in_rast, out_file = NA, in_vect = NULL,
+  by_poly = TRUE, min_area = 0, method = "zscore",
+  fill_method = "focal", fill_na = TRUE, fill_borders = TRUE,
+  buffer = 0, parallel = TRUE, format = NA, dataType = NA,
+  scaleFactor = NA, compress = "DEFLATE", overwrite = FALSE)
 
 zscore_rast(in_rast, out_file = NA, in_vect = NULL, by_poly = TRUE,
   min_area = 0, fill_method = "source", fill_na = TRUE,
@@ -38,8 +38,8 @@ fixborders_rast(in_rast, out_file = NA, in_vect = NULL, min_area = 0,
   buffer = 0, parallel = TRUE, format = NA, dataType = NA,
   scaleFactor = 1, compress = "DEFLATE", overwrite = FALSE)
 
-fillgaps_rast(in_rast, out_file = NA, fill_method = "focal", format = NA,
-  compress = "DEFLATE", overwrite = FALSE)
+fillgaps_rast(in_rast, out_file = NA, fill_method = "focal",
+  format = NA, compress = "DEFLATE", overwrite = FALSE)
 }
 \arguments{
 \item{in_rast}{The input raster or path.}

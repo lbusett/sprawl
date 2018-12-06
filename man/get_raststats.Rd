@@ -4,7 +4,8 @@
 \alias{get_raststats}
 \title{Retrieve statistics about value of a raster object}
 \usage{
-get_raststats(in_rast, quantiles = FALSE, hist = FALSE, verbose = TRUE)
+get_raststats(in_rast, quantiles = FALSE, hist = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{a \code{Raster} object or the filename of a valid raster}

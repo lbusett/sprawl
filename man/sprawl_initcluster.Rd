@@ -4,8 +4,8 @@
 \alias{sprawl_initcluster}
 \title{initialize clustered processing on multiband raster}
 \usage{
-sprawl_initcluster(in_rast, ncores = NULL, bands = NULL, maxchunk = 5e+06,
-  out_on_console = FALSE)
+sprawl_initcluster(in_rast, ncores = NULL, bands = NULL,
+  maxchunk = 5e+06, out_on_console = FALSE)
 }
 \arguments{
 \item{in_rast}{PARAM_DESCRIPTION}

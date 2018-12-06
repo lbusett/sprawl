@@ -4,9 +4,10 @@
 \alias{create_fishnet}
 \title{Create a "fishnet" vector over the extent of a spatial object}
 \usage{
-create_fishnet(in_obj, pix_for_cell = 1, shape = "rect", cellsize = NULL,
-  exact_csize = TRUE, out_file = NULL, overwrite = TRUE,
-  crop_layer = NULL, verbose = TRUE)
+create_fishnet(in_obj, pix_for_cell = 1, shape = "rect",
+  cellsize = NULL, exact_csize = TRUE, out_file = NULL,
+  out_type = "sf", overwrite = TRUE, crop_layer = NULL,
+  verbose = TRUE)
 }
 \arguments{
 \item{in_obj}{raster/vector file or object, or sprawlext object on which extent
@@ -25,13 +26,10 @@ dimensions of the desired #' cells in the x and y directions (if only one
 element is provided, the same cellsize is used in each direction),
 Default: NULL}
 
-\item{exact_csize}{\code{logical} If TRUE, the function strictly adheres to what
-specified in \code{cellsize} or \code{pix_for_cell} (i.e., it does not alter the fishnet
-cell to get a regular fishnet over the raster). The last column/row of the
-fisnhet have therefore a different area, but the other cells respect what
-specified by the user (i.e., having a regular 2x2 km grid).}
-
 \item{out_file}{\code{logical} PARAM_DESCRIPTION, Default: FALSE.}
+
+\item{out_type}{\code{character [}sf\code{, }sfc\code{]} if \code{sf}, return an \code{sf} POLYGON
+object, with a \code{cell_id} column. If \code{sfc} return only the geometry, default: \code{sf}}
 
 \item{overwrite}{\code{logical} PARAM_DESCRIPTION, Default: TRUE.}
 
@@ -74,12 +72,6 @@ DETAILS
   plot_rast(in_rast, in_poly = fishnet)
 
   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25))
-  plot_rast(in_rast, in_poly = fishnet)
-
-  # plotting with `exact_csize` = FALSE creates a grid that covers the extent with
-  # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
-  fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
-                                  exact_csize = FALSE)
   plot_rast(in_rast, in_poly = fishnet)
 
   # using shape = "hex" gives and hexagonal grid instead

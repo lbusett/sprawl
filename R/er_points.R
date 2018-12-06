@@ -22,14 +22,14 @@
 #' @importFrom magrittr %>%
 
 er_points <- function(in_vect_crop,
-                        in_vect,
-                        in_rast,
-                        seldates,
-                        selbands,
-                        n_selbands,
-                        date_check,
-                        er_opts,
-                        outside_feat) {
+                      in_vect,
+                      in_rast,
+                      seldates,
+                      selbands,
+                      n_selbands,
+                      date_check,
+                      er_opts,
+                      outside_feat) {
 
   # To avoid NOTES on check
   mdxtnq <- value  <- . <- NULL
@@ -99,21 +99,34 @@ er_points <- function(in_vect_crop,
       sf::st_as_sf()
 
     if (!is.null(er_opts$id_field)) {
+      tempnames <- if (length(in_rast@z) != 0) {
+        c(eval(er_opts$id_field), "date", "band_n")
+      } else {
+        c(eval(er_opts$id_field), "band_name", "band_n")
+      }
+
       tserie <- tserie %>%
         dplyr::select(-mdxtnq) %>%
         dplyr::select(
           c(1,2, which(names(.) == er_opts$id_field),
-            which(!(names(.) %in% c("date", "band_n", eval(er_opts$id_field)))))
+            which(!(names(.) %in% tempnames)))
           )
     } else {
+
       names(tserie)[3] <- "id_feat"
+      tempnames <- c("id_feat", "band_name", "band_n")
+      tserie <- tserie %>%
+        dplyr::select(
+          c(1,2, which(names(.) == er_opts$id_field),
+            which(!(names(.) %in% tempnames)))
+          )
     }
     if (!er_opts$join_geom) {
       sf::st_geometry(tserie) <- NULL
     }
 
     if (!er_opts$join_feat_tbl) {
-      sf::st_geometry(tserie) <- NULL
+      # sf::st_geometry(tserie) <- NULL
       tserie <- tserie[c(1:4),]
     }
 

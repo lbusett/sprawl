@@ -82,7 +82,6 @@
 #' @export
 #' @author Lorenzo Busetto, phD (2017) <lbusett@gmail.com>
 #' @importFrom assertthat assert_that
-#' @importFrom wrapr "%.>%"
 
 reproj_rast <- function(in_rast,
                         in_projobj,
@@ -147,9 +146,9 @@ reproj_rast <- function(in_rast,
   #   the area included in the bbox of in_projobj is included in the
   #   output raster
   if (crop & !is(in_projobj, "character")) {
-    te = get_extent(in_projobj) %.>%
-      reproj_extent(., out_proj = in_proj, enlarge = TRUE) %.>%
-      (.@extent) %.>%
+    te = get_extent(in_projobj) %>%
+      reproj_extent(., out_proj = in_proj, enlarge = TRUE) %>%
+      (.@extent) %>%
       (. + c(-pix_buff*res(in_rast)[1], -pix_buff*res(in_rast)[2],
              pix_buff*res(in_rast)[1], pix_buff*res(in_rast)[2]))
   }

@@ -67,8 +67,8 @@ gdal_polygonizeR <- function(x,
                    stdout = TRUE)
     if (isTRUE(readpoly)) {
 
-      out_file <- sprawl::change_fileext(outshape, "shp")
-      shp <- sprawl::read_vect(out_file)
+      out_file <- change_fileext(outshape, "shp")
+      shp <- read_vect(out_file)
       return(shp)
     }
     return(NULL)

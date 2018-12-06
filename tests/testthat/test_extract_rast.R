@@ -7,7 +7,7 @@ library(sf)
 # This builds a test raster and polygon shape with variable conditions:
 # polygons inside, outside and partially inside the raster !
 
-in_rast  <- build_testraster(100,100,2)
+in_rast <- build_testraster(100,100,2)
 set.seed(1)
 in_polys <- create_fishnet(in_rast, pix_for_cell = 5) %>%
   dplyr::sample_n(size = 10) %>%
@@ -38,7 +38,7 @@ testthat::test_that("Basic test on polygons extraction", {
   # skip_on_cran()
   # skip_on_travis()
 
-  # check errors in input selbands
+  context("handle errors in input selbands")
   expect_error(extract_rast(in_rast, in_polys, selbands = c(2,1)))
   expect_error(extract_rast(in_rast, in_polys, selbands = c(2,NA)))
   expect_error(extract_rast(in_rast, in_polys, selbands = 1))
@@ -58,9 +58,22 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_message(out <- extract_rast(in_rast, in_polys, selbands = c(1,2),
                                      verbose = FALSE))
   expect_is(out, "list")
+  context("extract_rast - basic functionality")
   out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
                        small = F, join_geom = F)
-  # Check that chunked and non-chunked processing yields the same results
+  expect_is(out, "list")
+  expect_is(out$stats, "data.frame")
+  context("extract_rast - join_geom = TRUE")
+  out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
+                       small = F, join_geom = T)
+  expect_is(out$stats, "sf")
+
+  context("extract_rast - join_fest_tbl = TRUE")
+  out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
+                       small = F, join_fest_tbl = T)
+  expect_is(out$stats, "sf")
+
+  context("extract_rast - chunked and non-chunked processing yields the same results")
   out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
                        selbands = c(1,2), small = F, join_geom = F)
   out2 <- extract_rast(in_rast, in_polys, verbose = F, keep_null = T,
@@ -171,7 +184,7 @@ testthat::test_that("Test On categorical raster extraction", {
 })
 
 # Test On Points ####
-context("Extract data from raster - on points")
+
 testthat::test_that("Test On points extraction", {
   # skip_on_cran()
   skip_on_travis()
@@ -181,22 +194,28 @@ testthat::test_that("Test On points extraction", {
                                     package = "sprawl.data"))
   in_file  <- system.file("extdata/MODIS_test", "EVIts_test.tif",
                           package = "sprawl.data")
-  in_rast  <- read_rast(in_file)
-  in_rast  <- raster::setZ(in_rast, doytodate(seq(1,366, by = 8), year = 2013))
-  out <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
+  in_rast  <- read_rast(in_file)[[1:2]]
+  in_rast  <- raster::setZ(in_rast, doytodate(seq(1,9, by = 8), year = 2013))
+  context("Extract data from raster - on points")
+  out <- extract_rast(in_rast, in_pts, id_field = "id",
                       verbose = F, keep_null = T, long_format = T)
   # On `long = TRUE` (Default) output is `sf`
   testthat::expect_is(out, "sf")
 
   # Output is equal to raster::extract
   out_extract <- raster::extract(in_rast[[1:2]], as(in_pts, "Spatial"),
-                                 sp = TRUE)@data
+                                 sp = TRUE)@data %>%
+    dplyr::arrange(., id, group)
+
   out2 <- out %>%
     dplyr::select(-band_n) %>%
-    tidyr::spread(band_name, value)
+    tidyr::spread(date, value) %>%
+    dplyr::arrange(., id, group)
   sf::st_geometry(out2) <- NULL
+  names(out2) <- names(out_extract)
 
-  testthat::expect_equal(out2[,3:4], out_extract[,3:4])
+  testthat::expect_equal(as.matrix(out2[,3:4]),
+                         as.matrix(out_extract[,3:4]))
 
   out <- extract_rast(in_rast[[1:2]], in_pts, id_field = "id",
                       verbose = F, keep_null = T, long_format = T)
@@ -206,6 +225,14 @@ testthat::test_that("Test On points extraction", {
                       verbose = F, join_geom = F)
   testthat::expect_s3_class(out, "data.frame")
   testthat::expect_error(st_geometry(out))
+
+  context("Extract data from raster - on points - Z not set")
+   in_rast  <- read_rast(in_file)[[1:2]]
+   out <- extract_rast(in_rast, in_pts, id_field = "id",
+                      verbose = F, keep_null = T, long_format = T)
+  # On `long = TRUE` (Default) output is `sf`
+  testthat::expect_is(out, "sf")
+  testthat::expect_equal(names(out)[1], "band_name")
 })
 
 
