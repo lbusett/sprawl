@@ -395,7 +395,7 @@ plot_rast_gg <- function(
   #   __________________________________________________________________________
   #   If band_names not passed use the band names found in the file - these are
   #   used to set the strip labels in case of faceted plot !
-# browser()
+  # browser()
   # if (is.null(band_names)) {
   #   setnames(in_rast_fort, c("x", "y",  rastinfo$bnames))
   # } else {
@@ -429,10 +429,30 @@ plot_rast_gg <- function(
     #   containing only values above / below limits
     if (outliers_style == "censor") {
 
-      out_low_tbl  <- subset(in_rast_fort, value < zlims[1])
-      out_high_tbl <- subset(in_rast_fort, value > zlims[2])
-      in_rast_fort <- subset(in_rast_fort, value <= zlims[2] & value >= zlims[1])
+      cur_navalue <- raster::NAvalue(in_rast)
+      if (!is.na(cur_navalue) && !is.null(cur_navalue) && cur_navalue < 0) {
+        out_low_tbl  <- subset(in_rast_fort, value < zlims[1] &
+                                 value > cur_navalue)
+        out_high_tbl <- subset(in_rast_fort, value > zlims[2] &
+                                 value > cur_navalue)
+        in_rast_fort <- subset(in_rast_fort,
+                               (value <= zlims[2] & value >= zlims[1]) |
+                                 is.na(value))
+      }
 
+      if (!is.na(cur_navalue) && !is.null(cur_navalue) && cur_navalue > 0) {
+        out_low_tbl  <- subset(in_rast_fort, value < zlims[1] &
+                                 value < cur_navalue)
+        out_high_tbl <- subset(in_rast_fort, value > zlims[2] &
+                                 value < cur_navalue)
+        in_rast_fort <- subset(in_rast_fort,
+                               (value <= zlims[2] & value >= zlims[1]) |
+                                 is.na(value))
+      }
+
+      # out_low_tbl  <- subset(in_rast_fort, value < zlims[1])
+      # out_high_tbl <- subset(in_rast_fort, value > zlims[2])
+      # in_rast_fort <- subset(in_rast_fort, value <= zlims[2] & value >= zlims[1])
 
       if (out_high_color == "transparent") {
         in_rast_fort <- subset(in_rast_fort,
@@ -526,7 +546,7 @@ plot_rast_gg <- function(
 
   plot <- plot +
     geom_raster(data = in_rast_fort, aes(x, y, fill = value),
-                alpha = 1 - transparency, na.rm = TRUE ,
+                alpha = 1 - transparency, na.rm = FALSE ,
                 hjust = 0.5, vjust = 0.5 )
   if (rastinfo$nbands > 1) {
     plot <- plot + facet_wrap(~band, nrow = facet_rows, drop = TRUE)

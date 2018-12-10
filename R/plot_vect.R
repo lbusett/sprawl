@@ -78,7 +78,7 @@
 #'   2. object of class `sprawl_ext` OR
 #'   3. any object from which an extent can be retrieved using `sprawl::get_extent()`.
 #'
-#'  If NULL, plotting extent is retrieved from `in_rast`, Default: NULL
+#'  If NULL, plotting extent is retrieved from `in_vect`, Default: NULL
 #' @param zoomin `numeric`, Adjustment factor for basemap zoom. Negative values
 #'   lead to less detailed basemap, but larger text. Default: 0 (Currently not
 #'   yet supported!)
@@ -201,6 +201,7 @@
 #'  plot_vect(meuse, fill_var = "copper",
 #'                   point_shape = "diamond",
 #'                   palette_name = "RdYlGn",
+#'                   point_size = 2,
 #'                   scalebar_dist = 0.5)
 #'
 #' @rdname plot_vect
@@ -460,7 +461,7 @@ plot_vect <- function(
     theme(panel.grid.major = element_line(color = grid_color, linetype = 3),
           panel.grid.minor = element_blank()) +
     coord_sf(crs = get_proj4string(in_vect), ndiscr = 1000,
-             expand = FALSE,
+             expand = TRUE,
              xlim = c(xlims[1], xlims[2]),
              ylim = c(ylims[1], ylims[2])) +
     theme(axis.title.x = element_blank(), axis.title.y = element_blank()) +
@@ -632,17 +633,21 @@ plot_vect <- function(
 
   if (!is.null(txt_field)) {
     if (txt_field %in% names(in_vect)) {
-
-      centroids <- st_centroid(in_vect)
-      centroids <-  do.call(rbind, st_geometry(centroids)) %>%
-        as_tibble() %>% stats::setNames(c("lon","lat"))
-      lab_layer <- in_vect %>%
-        mutate(lon = centroids$lon, lat = centroids$lat)
-      plot <- plot + geom_text(data = lab_layer,
-                               aes_string(label = txt_field,
-                                          x = "lon", y = "lat"),
-                               size = txt_size,
-                               color = txt_color)
+# browser()
+      plot <- plot + geom_sf_text(data = in_vect,
+                                   aes_string(label = txt_field))
+                    # centroids <- st_centroid(in_vect)
+                    # centroids <-  do.call(rbind, st_geometry(centroids)) %>%
+                    #   as_tibble() %>% stats::setNames(c("lon","lat"))
+                    # lab_layer <- in_vect %>%
+                    #   mutate(lon = centroids$lon, lat = centroids$lat)
+                    # plot <- plot + geom_sf_label()
+                    #
+                    #   geom_text(data = lab_layer,
+                    #                          aes_string(label = txt_field,
+                    #                                     x = "lon", y = "lat"),
+                    #                          size = txt_size,
+                    #                          color = txt_color)
     }
   }
 
@@ -687,15 +692,15 @@ plot_vect <- function(
 
   if (scalebar) {
 
-    plot <- plot +
-      sprawl_scalebar(in_vect,
-                      scalebar_dist  = scalebar_dist,
-                      location = scalebar_pos,
-                      x.min = xlims[1], x.max = xlims[2],
-                      y.min = ylims[1], y.max = ylims[2],
-                      st.size = 3.5,
-                      st.bottom = FALSE, model = NULL,
-                      st.dist = scalebar_txt_dist)
+    plot <- plot + ggspatial::annotation_scale()
+    # sprawl_scalebar(in_vect,
+    #                 scalebar_dist  = scalebar_dist,
+    #                 location = scalebar_pos,
+    #                 x.min = xlims[1], x.max = xlims[2],
+    #                 y.min = ylims[1], y.max = ylims[2],
+    #                 st.size = 3.5,
+    #                 st.bottom = FALSE, model = NULL,
+    #                 st.dist = scalebar_txt_dist)
 
     #   _________________________________________________________________________
     # Center the title - can be overriden in case after plot completion      ####

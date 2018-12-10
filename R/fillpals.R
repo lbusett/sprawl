@@ -24,6 +24,9 @@ fillpals <- function() {
   fill_pals   <- rbind(
     cbind(name = row.names(RColorBrewer::brewer.pal.info),
           RColorBrewer::brewer.pal.info, source = "brewer"),
+    data.frame(name = c("magma", "inferno", "plasma", "viridis", "cividis"),
+               maxcolors = 256, category = "seq", colorblind = TRUE,
+               source = "virdisLite"),
     data.frame(name = "hue", maxcolors = 1000, category = "qual",
                colorblind = FALSE, source = "ggplot"),
     make.row.names = FALSE

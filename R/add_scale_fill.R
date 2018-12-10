@@ -33,12 +33,12 @@ add_scale_fill <- function(plot,
                            outliers_style,
                            direction,
                            ...) {
-# browser()
+  # browser()
   if (!exists("scale_transform")) {
     trans <- NULL
   } else {
-      trans <- scale_transform
-    }
+    trans <- scale_transform
+  }
   # ____________________________________________________________________________
   # Qualitative palette: use scal_fill_hue or scale_fill_brewer             ####
   # or manual (requires also specifying leg_colors)
@@ -60,6 +60,7 @@ add_scale_fill <- function(plot,
         na.value = ifelse(is.null(na.color), "grey50", na.color)
       )
     } else {
+
       if (palette$source == "brewer") {
         plot <- plot + scale_fill_brewer(
           type = "qual",
@@ -98,7 +99,28 @@ add_scale_fill <- function(plot,
         trans    = ifelse(is.null(trans), "identity", trans)
       )
     }
-  }
 
+    if (palette$source == "virdisLite") {
+      virpal <- switch(as.character(palette$name),
+                       "magma"   = "A",
+                       "inferno" = "B",
+                       "plasma"  = "C",
+                       "viridis" = "D",
+                       "cividis" = "E")
+      plot <- plot + scale_fill_viridis_c(
+        title,
+        limits  = zlims,
+        breaks  = if (is.null(leg_breaks)) waiver() else leg_breaks,
+        labels  = if (is.null(leg_labels)) waiver() else leg_labels,
+        option  = virpal,
+        guide   = leg_type,
+        oob     = ifelse(outliers_style == "to_minmax",
+                         scales::squish, scales::censor), #nolint
+        direction = direction,
+        na.value = ifelse(is.null(na.color), "grey50", na.color),
+        trans    = ifelse(is.null(trans), "identity", trans)
+      )
+    }
+  }
   plot
 }
