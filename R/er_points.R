@@ -140,5 +140,5 @@ er_points <- function(in_vect_crop,
     }
 
   }
-  return(tibble::as_tibble(tserie))
+  return(tserie)
 }

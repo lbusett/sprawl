@@ -65,13 +65,15 @@ testthat::test_that("Basic test on polygons extraction", {
   expect_is(out$stats, "data.frame")
   context("extract_rast - join_geom = TRUE")
   out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
-                       small = F, join_geom = T)
+                       small = F, join_geom = T ,join_feat_tbl = F)
   expect_is(out$stats, "sf")
+  expect_equal(!any(names(in_polys)[1:4] %in% names(out$stats)), TRUE)
 
-  context("extract_rast - join_fest_tbl = TRUE")
+  context("extract_rast - join_feat_tbl = TRUE")
   out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
-                       small = F, join_fest_tbl = T)
+                       small = F)
   expect_is(out$stats, "sf")
+  expect_equal(all(names(in_polys)[1:4] %in% names(out$stats)), TRUE)
 
   context("extract_rast - chunked and non-chunked processing yields the same results")
   out  <- extract_rast(in_rast, in_polys, verbose = T, keep_null = T,
@@ -198,7 +200,8 @@ testthat::test_that("Test On points extraction", {
   in_rast  <- raster::setZ(in_rast, doytodate(seq(1,9, by = 8), year = 2013))
   context("Extract data from raster - on points")
   out <- extract_rast(in_rast, in_pts, id_field = "id",
-                      verbose = F, keep_null = T, long_format = T)
+                      verbose = F, keep_null = T, long_format = T,
+                      join_geom = T)
   # On `long = TRUE` (Default) output is `sf`
   testthat::expect_is(out, "sf")
 

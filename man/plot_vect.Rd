@@ -109,7 +109,7 @@ yet supported!)}
 2. object of class \code{sprawl_ext} OR
 3. any object from which an extent can be retrieved using \code{sprawl::get_extent()}.
 
-If NULL, plotting extent is retrieved from \code{in_rast}, Default: NULL}
+If NULL, plotting extent is retrieved from \code{in_vect}, Default: NULL}
 
 \item{zlims}{\code{numeric array [2]} limits governing the range of
 values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
@@ -288,6 +288,7 @@ DETAILS
  plot_vect(meuse, fill_var = "copper",
                   point_shape = "diamond",
                   palette_name = "RdYlGn",
+                  point_size = 2,
                   scalebar_dist = 0.5)
 
 }

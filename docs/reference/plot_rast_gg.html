@@ -47,8 +47,7 @@ the outlier values are represented (args outliers_style and
 outliers_color)
 Easily control breaks and labels in legends (args leg_type, leg_breaks,
 leg_labels)
-Automatically add a scalebar to the plot (argsscalebar, scalebar_dist,
-scalebar_txt_dist, scalebar_txt_size)
+Automatically add a scalebar to the plot (argsscalebar, scalebar_width)
 Easily add an additional &quot;vector&quot; layer (e.g., administrative boundaries)
 (argsborders_layer, borders_color, borders_....)
 See the description of the arguments for details on their use
@@ -93,7 +92,7 @@ See the description of the arguments for details on their use
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sprawl</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -192,8 +191,7 @@ the outlier values are represented (args <code>outliers_style</code> and
 <code>outliers_color</code>)</p></li>
 <li><p>Easily control breaks and labels in legends (args <code>leg_type</code>, <code>leg_breaks</code>,
 <code>leg_labels</code>)</p></li>
-<li><p>Automatically add a scalebar to the plot (args<code>scalebar</code>, <code>scalebar_dist</code>,
-<code>scalebar_txt_dist</code>, <code>scalebar_txt_size</code>)</p></li>
+<li><p>Automatically add a scalebar to the plot (args<code>scalebar</code>, <code>scalebar_width</code>)</p></li>
 <li><p>Easily add an additional "vector" layer (e.g., administrative boundaries)
 (args<code>borders_layer</code>, <code>borders_color</code>, <code>borders_....</code>)
 See the description of the arguments for details on their use</p></li>
@@ -517,12 +515,12 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
  <span class='co'># values outliers and better use the palette on high values (note that</span>
  <span class='co'># outliers can be set as transparent!) + increase maxpixels to plot at</span>
  <span class='co'># full resolution.</span>
- <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"osm"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>500e5</span>,
+ <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>, <span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"osm"</span>, <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>5e5</span>,
              <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlBu"</span>,
-             <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.10</span>, <span class='fl'>0.999</span>), <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"percs"</span>,
+             <span class='kw'>zlims</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.10</span>, <span class='fl'>0.90</span>), <span class='kw'>zlims_type</span> <span class='kw'>=</span> <span class='st'>"percs"</span>,
              <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"gNDVI - 14/03/2016"</span>, <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"From RapidEye"</span>,
              <span class='kw'>outliers_style</span> <span class='kw'>=</span> <span class='st'>"censor"</span>,
-             <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"transparent"</span>, <span class='st'>"purple"</span>))</div><div class='output co'>#&gt; <span class='message'>plot_rast_gg --&gt; Reprojecting the input raster to epsg:3857</span></div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_rast` to +init=epsg:3857 +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs</span></div><div class='img'><img src='plot_rast_gg-5.png' alt='' width='700' height='433' /></div><div class='input'>
+             <span class='kw'>outliers_colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"yellow"</span>, <span class='st'>"purple"</span>))</div><div class='output co'>#&gt; <span class='message'>plot_rast_gg --&gt; Reprojecting the input raster to epsg:3857</span></div><div class='output co'>#&gt; <span class='message'>reproj_rast --&gt; Reprojecting `in_rast` to +init=epsg:3857 +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs</span></div><div class='img'><img src='plot_rast_gg-5.png' alt='' width='700' height='433' /></div><div class='input'>
  <span class='co'># Adjust `maxpixels` to speed-up rendering by sacrificing quality</span>
  <span class='fu'>plot_rast_gg</span>(<span class='no'>in_rast</span>,<span class='kw'>basemap</span> <span class='kw'>=</span> <span class='st'>"osm"</span>,
              <span class='kw'>maxpixels</span> <span class='kw'>=</span> <span class='fl'>10e4</span>,
@@ -553,7 +551,7 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
    </div>
