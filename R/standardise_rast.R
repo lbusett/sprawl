@@ -644,7 +644,7 @@ standardise_rast <- function(in_rast,
 
 
         ## 4. Standardise
-        sel_rast_z <- standardise(sel_rast_crop, sel_rast_avg, sel_rast_std, method)
+        sel_rast_z <- standardise(sel_rast_crop, sel_rast_avg, sel_rast_std, method = method)
 
 
         ## 5. Export output raster
