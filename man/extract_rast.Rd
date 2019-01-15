@@ -4,12 +4,13 @@
 \alias{extract_rast}
 \title{extract raster values on features of a vector}
 \usage{
-extract_rast(in_rast, in_vect, na.value = NULL, rast_type = "continuous",
-  selbands = NULL, rastres = NULL, id_field = NULL, summ_data = TRUE,
-  full_data = TRUE, comp_quant = FALSE, comp_freq = FALSE,
-  long_format = TRUE, FUN = NULL, small = TRUE, na.rm = TRUE,
-  maxchunk = 5e+07, join_feat_tbl = TRUE, join_geom = TRUE,
-  keep_null = FALSE, verbose = TRUE, ncores = NULL, parallel = FALSE)
+extract_rast(in_rast, in_vect, na.value = NULL,
+  rast_type = "continuous", selbands = NULL, rastres = NULL,
+  id_field = NULL, summ_data = TRUE, full_data = TRUE,
+  comp_quant = FALSE, comp_freq = FALSE, long_format = TRUE,
+  FUN = NULL, small = TRUE, na.rm = TRUE, maxchunk = 5e+07,
+  join_feat_tbl = TRUE, join_geom = TRUE, keep_null = FALSE,
+  verbose = TRUE, ncores = NULL, parallel = FALSE)
 }
 \arguments{
 \item{in_rast}{input raster. Can be either:

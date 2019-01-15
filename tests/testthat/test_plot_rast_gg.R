@@ -12,15 +12,15 @@ test_that("plot_rast_gg works as expected", {
 
   p <- plot_rast_gg(in_rast,
                     palette_name = "RdYlGn",
-                    zlims = c(0.05, 0.95),
-                    zlims_type = "percs",
-                    outliers_style = "to_minmax",
+                    zlims = c(2, 9),
+                    zlims_type = "vals",
+                    outliers_style = "censor",
                     outliers_colors = c("blue", "yellow"),
                     rast_type = "continuous")
   expect_is(p, "gg")
   expect_silent(p)
 
-  p <- plot_rast_gg(in_rast, scalebar_dist = 1,
+  p <- plot_rast_gg(in_rast,
                     palette_name = "hue",
                     zlims = c(0.05, 0.95),
                     zlims_type = "percs",
@@ -31,25 +31,27 @@ test_that("plot_rast_gg works as expected", {
   expect_is(p, "gg")
   expect_silent(p)
 
-  p <- plot_rast_gg(in_rast, scalebar_dist = 1,
+  p <- plot_rast_gg(in_rast,
                     palette_name = "hue",
-                    zlims = c(0.05, 0.95),
+                    zlims = c(0.20, 0.90),
                     zlims_type = "percs",
                     outliers_style = "censor", leg_type = "discrete",
                     outliers_colors = c("blue", "yellow"),
-                    borders_layer = create_fishnet(in_rast, pix_for_cell = 2))
+                    borders_layer = create_fishnet(in_rast,
+                                                   pix_for_cell = 2))
   expect_is(p, "gg")
   expect_silent(p)
 
-
-
-  expect_warning(p <-plot_rast_gg(in_rast, scalebar_dist = 1,
-                                  palette_name = "Greens",
-                                  zlims = c(0.05, 0.95),
-                                  zlims_type = "percs",
-                                  outliers_style = "censor", leg_type = "discrete",
-                                  outliers_colors = c("blue", "yellow"),
-                                  borders_layer = create_fishnet(in_rast, pix_for_cell = 2)))
+  expect_warning(
+    p <- plot_rast_gg(
+      in_rast,
+      palette_name = "Greens",
+      zlims = c(0.05, 0.95),
+      zlims_type = "percs",
+      outliers_style = "censor", leg_type = "discrete",
+      outliers_colors = c("blue", "yellow"),
+      borders_layer = create_fishnet(in_rast, pix_for_cell = 2))
+  )
 
   expect_is(p, "gg")
   expect_silent(p)
@@ -60,12 +62,12 @@ test_that("plot_rast_gg works as expected", {
     set_rastlabels(class_names = letters[1:20])
 
 
-  p <- plot_rast_gg(in_rast, scalebar_dist = 1, palette_name = "manual",
+  p <- plot_rast_gg(in_rast,  palette_name = "manual",
                     leg_colors = c("red"))
   expect_is(p, "gg")
   expect_error(print(p))
 
-  p <- plot_rast_gg(in_rast, scalebar_dist = 1, palette_name = "manual",
+  p <- plot_rast_gg(in_rast,  palette_name = "manual",
                     leg_colors = rainbow(20))
   expect_is(p, "gg")
   expect_silent(p)

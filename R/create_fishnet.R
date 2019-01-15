@@ -17,11 +17,8 @@
 #'   dimensions of the desired #' cells in the x and y directions (if only one
 #'   element is provided, the same cellsize is used in each direction),
 #'   Default: NULL
-#' @param exact_csize `logical` If TRUE, the function strictly adheres to what
-#'   specified in `cellsize` or `pix_for_cell` (i.e., it does not alter the fishnet
-#'   cell to get a regular fishnet over the raster). The last column/row of the
-#'   fisnhet have therefore a different area, but the other cells respect what
-#'   specified by the user (i.e., having a regular 2x2 km grid).
+#' @param out_type `character [`sf`, `sfc`]` if `sf`, return an `sf` POLYGON
+#'  object, with a `cell_id` column. If `sfc` return only the geometry, default: `sf`
 #' @param out_file `logical` PARAM_DESCRIPTION, Default: FALSE.
 #' @param overwrite `logical` PARAM_DESCRIPTION, Default: TRUE.
 #' @param crop_layer `logical` object of class `Extent`. If not null, the
@@ -51,12 +48,6 @@
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25))
 #'   plot_rast(in_rast, in_poly = fishnet)
 #'
-#'   # plotting with `exact_csize` = FALSE creates a grid that covers the extent with
-#'   # regular cells, by adapting the cellsize (see `sf::st_make_grid`)
-#'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
-#'                                   exact_csize = FALSE)
-#'   plot_rast(in_rast, in_poly = fishnet)
-#'
 #'   # using shape = "hex" gives and hexagonal grid instead
 #'   fishnet  <- create_fishnet(in_rast, cellsize = c(25,25),
 #'                                   exact_csize = TRUE, shape = "hex")
@@ -73,6 +64,7 @@ create_fishnet <- function(in_obj,
                            cellsize     = NULL,
                            exact_csize  = TRUE,
                            out_file     = NULL,
+                           out_type     = "sf",
                            overwrite    = TRUE,
                            crop_layer   = NULL,
                            verbose      = TRUE) {
@@ -84,43 +76,26 @@ create_fishnet <- function(in_obj,
   #   __________________________________________________________________________
   #   Check the arguments                                                   ####
   #
+  assertthat::assert_that(out_type %in% c("sf", "sfc"))
 
   in_ext <- out_ext <- get_extent(in_obj)
-  # if (in_type == "rastfile") {
-  #   in_obj <- read_rast(in_obj)
-  # }
 
-  if (is.null(cellsize)) {
-    cellsize <- raster::res(in_obj) * pix_for_cell
-  } else {
-    if (length(cellsize) == 1) {
-      cellsize <- c(cellsize, cellsize)
-    }
-  }
+  # check if `in_obj` is a raster. If so, and cellsize is notset, use
+  # pix_for_cell instead
 
-  #   __________________________________________________________________________
-
-  # in_ext <- out_ext <- get_extent(in_obj)
-
-  if (exact_csize & shape == "rect") {
-    #   extend the extent so that it contains an integer number of cells   ####
-    x_range <- in_ext@extent[3] - in_ext@extent[1]
-    y_range <- in_ext@extent[4] - in_ext@extent[2]
-
-    fullcells_x <- x_range / cellsize[1]
-    fullcells_y <- y_range / cellsize[2]
-
-    if (!(fullcells_x - floor(fullcells_x)) == 0 ) {
-      out_ext@extent[3] <- out_ext@extent[1] + cellsize[1] * (floor(fullcells_x) + 1) #nolint
-    }
-
-    if (!(fullcells_y - floor(fullcells_y)) == 0 ) {
-      out_ext@extent[4] <- out_ext@extent[2] + cellsize[2] * (floor(fullcells_y) + 1) #nolint
+  if (inherits(in_obj, c("RasterLayer", "RasterBrick", "RasterStack"))) {
+    if (is.null(cellsize)) {
+      cellsize <- raster::res(in_obj) * pix_for_cell
+    } else {
+      if (length(cellsize) == 1) {
+        cellsize <- c(cellsize, cellsize)
+      }
     }
   }
 
   if (shape == "rect") {
-    ext_poly <- .sprawlext_to_poly(out_ext)
+    ext_poly <- sf::st_as_sfc(sf::st_bbox(in_ext@extent,
+                              crs = in_ext@proj4string))
     geometry <- sf::st_make_grid(ext_poly,
                                  cellsize,
                                  what = "polygons")
@@ -128,17 +103,9 @@ create_fishnet <- function(in_obj,
                       geometry = geometry) %>%
       crop_vect(., in_obj, verbose = verbose)
   } else {
-    ext_poly <- .sprawlext_to_poly(out_ext)
+    ext_poly <- sf::st_as_sfc(sf::st_bbox(in_obj))
     geometry <- sf::st_make_grid(ext_poly,
-                                 cellsize,
-                                 what = "corners")
-    hexes <- sp::spsample(as(geometry,"Spatial"),
-                          type = 'hexagonal',
-                          n = length(geometry), offset = c(0,0.5))
-    fish <- sp::HexPoints2SpatialPolygons(hexes) %>%
-      sf::st_as_sf(hexes) %>%
-      crop_vect(., in_obj, verbose = verbose) %>%
-      dplyr::mutate(cell_id =  seq_len(length(geometry)[1]))
+                                 cellsize, square = FALSE)
   }
   if (is.null(out_file)) {
     return(fish)

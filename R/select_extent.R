@@ -25,7 +25,7 @@
 #' @importFrom mapview viewExtent mapview
 #' @importFrom raster raster
 #' @importFrom sf st_dimension
-#' @importFrom wrapr "%.>%"
+
 select_extent <- function(in_object = NULL,
                           reproject = TRUE,
                           transparency = 0.5) {
@@ -35,8 +35,8 @@ select_extent <- function(in_object = NULL,
   #  Create dummy dataset with global extenction if in_object = NULL        ####
   #  and reset transparency to 1
   if (is.null(in_object)) {
-    in_object <- raster::raster(nrows = 18, ncols = 36, vals  = 0) %.>%
-      get_extent(.) %.>%
+    in_object <- raster::raster(nrows = 18, ncols = 36, vals  = 0) %>%
+      get_extent(.) %>%
       .sprawlext_to_poly()
     transparency = 1
   }

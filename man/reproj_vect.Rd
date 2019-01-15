@@ -4,8 +4,9 @@
 \alias{reproj_vect}
 \title{Reproject a vector "R" object or file}
 \usage{
-reproj_vect(in_vect, in_projobj, out_file = NULL, out_type = "vectobject",
-  out_class = NULL, overwrite = FALSE, verbose = TRUE)
+reproj_vect(in_vect, in_projobj, out_file = NULL,
+  out_type = "vectobject", out_class = NULL, overwrite = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{in_vect}{A vector object (\code{*sf} or \code{sp}), or the path to a vector file}

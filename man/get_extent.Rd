@@ -11,30 +11,35 @@
 \alias{get_extent.sf}
 \alias{get_extent.sfc}
 \alias{get_extent.Spatial}
-\alias{get_extent.sprawlext}
 \title{return the extent of a spatial object or file (with projection)}
 \usage{
 get_extent(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{default}(in_object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{default}(in_object, proj4string = NULL,
+  abort = FALSE)
 
-\method{get_extent}{sprawlext}(in_object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{sprawlext}(in_object, proj4string = NULL,
+  abort = FALSE)
 
 \method{get_extent}{Extent}(in_object, proj4string, abort = FALSE)
 
 \method{get_extent}{matrix}(in_object, proj4string, abort = FALSE)
 
-\method{get_extent}{character}(in_object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{character}(in_object, proj4string = NULL,
+  abort = FALSE)
 
-\method{get_extent}{Raster}(in_object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{Raster}(in_object, proj4string = NULL,
+  abort = FALSE)
 
 \method{get_extent}{sf}(in_object, proj4string = NULL, abort = FALSE)
 
 \method{get_extent}{sfc}(in_object, proj4string = NULL, abort = FALSE)
 
-\method{get_extent}{Spatial}(in_object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{Spatial}(in_object, proj4string = NULL,
+  abort = FALSE)
 
-\method{get_extent}{Spatial}(in_object, proj4string = NULL, abort = FALSE)
+\method{get_extent}{Spatial}(in_object, proj4string = NULL,
+  abort = FALSE)
 }
 \arguments{
 \item{in_object}{\code{character} corresponding to the name of a R object, or a

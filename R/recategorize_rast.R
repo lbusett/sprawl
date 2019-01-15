@@ -212,10 +212,10 @@ recategorize_rast <- function(in_rast,
                                                Class = class_names)
 
   # Now set the labels for the classes
-  recl_rast <- sprawl::set_rastlabels(recl_rast,
-                                      class_names =  class_names,
-                                      class_colors = class_colors,
-                                      verbose = FALSE)
+  recl_rast <- set_rastlabels(recl_rast,
+                              class_names =  class_names,
+                              class_colors = class_colors,
+                              verbose = FALSE)
 
   if (out_type == "rastobject") {
     return(recl_rast)

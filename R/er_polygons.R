@@ -340,7 +340,7 @@ er_polygons <- function(in_vect_crop,
                                          unique(complete_polys$mdxtnq)) %>%
               data.table::setkey("mdxtnq")
 
-            stat_data[[chunk_n_summ]] <- sprawl::summarize_data(
+            stat_data[[chunk_n_summ]] <- summarize_data(
               data_for_summary,
               er_opts$rast_type,
               "mdxtnq",

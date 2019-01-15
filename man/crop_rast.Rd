@@ -6,8 +6,8 @@
 \usage{
 crop_rast(rast_object, ext_object, mask = FALSE, pad = 1,
   out_type = "rastobject", out_file = NULL, out_dtype = NULL,
-  out_nodata = NULL, compress = "None", parallel = FALSE, cores = NULL,
-  verbose = TRUE)
+  out_nodata = NULL, compress = "None", parallel = FALSE,
+  cores = NULL, verbose = TRUE)
 }
 \arguments{
 \item{rast_object}{either an \code{R} object of class \code{Raster}, or a character string

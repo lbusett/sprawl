@@ -5,12 +5,13 @@
 \title{plot a map based on a \code{vector} object using `ggplot::geom_sf``}
 \usage{
 plot_vect(in_vect, line_color = "black", line_size = 0.2,
-  point_size = 0.2, point_shape = "circle", point_linecolor = "black",
-  point_linesize = 0.01, fill_var = NULL, txt_field = NULL,
-  txt_size = 2.5, txt_color = "grey15", scale_transform = NULL,
-  transparency = 0, facet_var = NULL, facet_rows = NULL,
-  levels_to_plot = NULL, borders_layer = NULL, borders_color = "grey15",
-  borders_size = 0.2, borders_txt_field = NULL, borders_txt_size = 2.5,
+  point_size = 0.2, point_shape = "circle",
+  point_linecolor = "black", point_linesize = 0.01, fill_var = NULL,
+  txt_field = NULL, txt_size = 2.5, txt_color = "grey15",
+  scale_transform = NULL, transparency = 0, facet_var = NULL,
+  facet_rows = NULL, levels_to_plot = NULL, borders_layer = NULL,
+  borders_color = "grey15", borders_size = 0.2,
+  borders_txt_field = NULL, borders_txt_size = 2.5,
   borders_txt_color = "grey15", basemap = NULL, zoomin = 0,
   extent = NULL, zlims = NULL, zlims_type = "vals",
   outliers_style = "censor", outliers_colors = c("grey10", "grey90"),
@@ -108,7 +109,7 @@ yet supported!)}
 2. object of class \code{sprawl_ext} OR
 3. any object from which an extent can be retrieved using \code{sprawl::get_extent()}.
 
-If NULL, plotting extent is retrieved from \code{in_rast}, Default: NULL}
+If NULL, plotting extent is retrieved from \code{in_vect}, Default: NULL}
 
 \item{zlims}{\code{numeric array [2]} limits governing the range of
 values to be plotted (e.g., c(0.2,0.4)), Default: NULL}
@@ -287,6 +288,7 @@ DETAILS
  plot_vect(meuse, fill_var = "copper",
                   point_shape = "diamond",
                   palette_name = "RdYlGn",
+                  point_size = 2,
                   scalebar_dist = 0.5)
 
 }

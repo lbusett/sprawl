@@ -4,7 +4,8 @@
 \alias{plot_rasthist}
 \title{plot the frequency histogram of values of a raster}
 \usage{
-plot_rasthist(in_rast, variable = "freq", type = "hist", verbose = TRUE)
+plot_rasthist(in_rast, variable = "freq", type = "hist",
+  verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{a \code{Raster} object, or a file path corresponding to a valid

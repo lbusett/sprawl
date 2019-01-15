@@ -16,3 +16,5 @@
 ^index\.md$
 ^rosm.cache$
 ^codemeta\.json$
+vignettes/articles/muzs_temp2.Rmd
+vignettes/articles/muzs_tepm.Rmd

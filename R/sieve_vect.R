@@ -127,7 +127,7 @@ sieve_vect <- function(in_vect,
       out_file <- tempfile(fileext = ".shp")
     }
 
-    sprawl::write_shape(in_vect_filled,
+    write_shape(in_vect_filled,
                         out_file,
                         overwrite  = overwrite,
                         verbose    = FALSE,

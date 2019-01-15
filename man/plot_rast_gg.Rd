@@ -8,16 +8,16 @@ plot_rast_gg(in_rast, rast_type = NULL, palette_name = NULL,
   direction = 1, scale_transform = NULL, leg_type = NULL,
   leg_labels = NULL, leg_colors = NULL, leg_breaks = NULL,
   leg_position = "right", maxpixels = 1e+05, band_names = NULL,
-  bands_to_plot = NULL, facet_rows = 2, extent = NULL, zlims = NULL,
-  zlims_type = "vals", outliers_style = "censor",
-  outliers_colors = c("grey10", "grey90"), basemap = NULL, zoomin = 0,
-  borders_layer = NULL, borders_color = "grey15", borders_size = 0.2,
-  borders_txt_field = NULL, borders_txt_size = 3,
-  borders_txt_color = "grey15", scalebar = TRUE, scalebar_dist = NULL,
-  scalebar_txt_dist = 0.03, transparency = 0, na.color = NULL,
-  na.value = NULL, show_axis = TRUE, show_grid = TRUE,
-  grid_color = "grey20", title = NULL, subtitle = NULL,
-  theme = theme_bw(), verbose = TRUE)
+  bands_to_plot = NULL, facet_rows = 2, extent = NULL,
+  zlims = NULL, zlims_type = "vals", outliers_style = "censor",
+  outliers_colors = c("grey10", "grey90"), basemap = NULL,
+  zoomin = 0, borders_layer = NULL, borders_color = "grey15",
+  borders_size = 0.2, borders_txt_field = NULL, borders_txt_size = 3,
+  borders_txt_color = "grey15", scalebar = TRUE,
+  scalebar_width = NULL, scalebar_location = "br", transparency = 0,
+  na.color = NULL, na.value = NULL, show_axis = TRUE,
+  show_grid = TRUE, grid_color = "grey20", title = NULL,
+  subtitle = NULL, theme = theme_bw(), verbose = TRUE)
 }
 \arguments{
 \item{in_rast}{\code{Raster} object to be plotted. Both mono- and multi-band
@@ -158,12 +158,16 @@ Default: "grey15"}
 \item{scalebar}{\code{logical} If TRUE, add a scalebar on the bottom right corner,
 Default: TRUE}
 
-\item{scalebar_dist}{\code{numeric} Width of the scale bar (in km). If NULL, it
-is computed automatically on the basis of the range in x direction,
-Default: NULL}
+\item{scalebar_width}{\code{numeric} The (suggested) proportion of the plot area
+which the scalebar should occupy. This is directly passed to
+\code{ggspatial::annotation_scale()}, Default: NULL, equaling to the default in
+\code{annotation_scale}, equal to 0.25.
+NOTE: If you want to further customize the scale bar, create the plot
+with scalebar = FALSE, and then add the scalebar with something like
+plot <- plot + ggspatial::annotation_scale(...)}
 
-\item{scalebar_txt_dist}{\code{numeric} Distance between scalebar and its labels.
-Adjust this in case of overlap, Default: 0.30}
+\item{scalebar_location}{\code{character} Where to put the scale bar ("tl" for top left, etc.),
+Default: "br"}
 
 \item{transparency}{\code{numeric [0,1]}, transparency of the raster layer. Higher
 values lead to higher transparency, Default: 0 (ignored if basemap == NULL)}
@@ -212,8 +216,7 @@ the outlier values are represented (args \code{outliers_style} and
 \code{outliers_color})
 \item Easily control breaks and labels in legends (args \code{leg_type}, \code{leg_breaks},
 \code{leg_labels})
-\item Automatically add a scalebar to the plot (args\code{scalebar}, \code{scalebar_dist},
-\code{scalebar_txt_dist}, \code{scalebar_txt_size})
+\item Automatically add a scalebar to the plot (args\code{scalebar}, \code{scalebar_width})
 \item Easily add an additional "vector" layer (e.g., administrative boundaries)
 (args\code{borders_layer}, \code{borders_color}, \code{borders_....})
 See the description of the arguments for details on their use
@@ -262,21 +265,21 @@ library(ggspatial)
  # values outliers and better use the palette on high values (note that
  # outliers can be set as transparent!) + increase maxpixels to plot at
  # full resolution.
- plot_rast_gg(in_rast, basemap = "osm", maxpixels = 500e5,
+ plot_rast_gg(in_rast, basemap = "osm", maxpixels = 5e5,
              palette_name = "RdYlBu",
-             zlims = c(0.10, 0.999), zlims_type = "percs",
+             zlims = c(0.10, 0.90), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
              outliers_style = "censor",
-             outliers_colors = c("transparent", "purple"))
+             outliers_colors = c("yellow", "purple"))
 
  # Adjust `maxpixels` to speed-up rendering by sacrificing quality
- plot_rast_gg(in_rast, basemap = "osm", maxpixels = 10e4,
+ plot_rast_gg(in_rast,basemap = "osm",
+             maxpixels = 10e4,
              palette_name = "RdYlBu",
              zlims = c(0.10, 0.999), zlims_type = "percs",
              title = "gNDVI - 14/03/2016", subtitle = "From RapidEye",
-             outliers_style = "to_minmax",
-             leg_type = "discrete")
-
+             outliers_style = "to_minmax", na.value = 0 ,
+             leg_type = "discrete", borders_layer = borders)
 }
 \author{
 Lorenzo Busetto, phD (2017) \href{mailto:lbusett@gmail.com}{lbusett@gmail.com}

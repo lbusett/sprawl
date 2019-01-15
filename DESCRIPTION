@@ -1,7 +1,7 @@
 Package: sprawl
 Date: 2018-01-03
 Title: Spatial Processing (in) R: Amorphous Wrapper Library
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(person("Lorenzo", "Busetto", email = "lbusett@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9634-6038")),
              person("Luigi", "Ranghetti", email = "ranghetti.l@irea.cnr.it", role = c("aut")))
 Description: Simplify execution of **frequently performed spatial processing tasks** 
@@ -24,9 +24,10 @@ Depends:
     R (>= 3.3.2)
 Imports: scales, assertthat, data.table, raster, sf, sp, stats, checkmate, rgdal, tibble, 
  dplyr, glue, lubridate, tidyr, foreach, gdalUtils, velox, parallel, utils, RColorBrewer, 
- methods, stringr, tcltk, tools, ggplot2, ggspatial, purrr, rosm, grid, latticeExtra, rasterVis, 
- grDevices, mapedit, mapview, shiny, doParallel, maptools, DBI,testthat, wrapr, magrittr, jsonlite
-Remotes: lbusett/sprawl.data, tidyverse/ggplot2, ecohealthalliance/fasterize
+ methods, stringr, tcltk, tools, ggplot2, ggspatial, rosm, grid, lattice, latticeExtra, rasterVis, 
+ grDevices, mapedit, mapview, shiny, doParallel, maptools, DBI,testthat, wrapr, magrittr, jsonlite, 
+ fasterize, ggplot2
+Remotes: lbusett/sprawl.data
 Suggests: knitr,
           rmarkdown,
           sprawl.data,

@@ -6,8 +6,13 @@ testthat::test_that("check_proj4string works as expected", {
 
   # valid character
   expect_equal(
-    check_proj4string("32"),
-    "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
+    check_proj4string("32N"),
+    "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
+
+    expect_equal(
+    check_proj4string("32S"),
+    "+init=epsg:32732 +proj=utm +zone=32 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
+
 
   expect_equal(
     check_proj4string(sp::CRS("+init=epsg:32632")),
@@ -17,7 +22,7 @@ testthat::test_that("check_proj4string works as expected", {
 
   expect_equal(
     check_proj4string(32),
-    "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
+    "+init=epsg:32632 +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0") #nolint
 
   expect_equal(
     check_proj4string(3857),

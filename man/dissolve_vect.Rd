@@ -4,8 +4,9 @@
 \alias{dissolve_vect}
 \title{dissolve attributes of a vector and aggregate its table}
 \usage{
-dissolve_vect(in_vect, dissolve_var, var_as_NA = FALSE, out_file = NULL,
-  out_type = "vectobject", overwrite = FALSE, verbose = TRUE)
+dissolve_vect(in_vect, dissolve_var, var_as_NA = FALSE,
+  out_file = NULL, out_type = "vectobject", overwrite = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{in_vect}{Either a \code{R} vector object (\code{sf} or \code{sp}), or the path to
