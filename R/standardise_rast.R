@@ -120,6 +120,7 @@
 #' @importFrom rgdal GDALinfo writeGDAL
 #' @importFrom gdalUtils gdalwarp gdal_rasterize
 #' @importFrom methods as
+#' @importFrom exactextractr exact_extract
 #' @examples
 #' \dontrun{
 #' # These examples cannot be runned globally;
@@ -414,13 +415,16 @@ standardise_rast <- function(in_rast,
   if (fill_method %in% c("source")) {
 
     # Compute avg-std values for each field
-    extr_val <- extract_rast(in_rast, in_vect_buf, full_data = FALSE, parallel = FALSE,
-                                     id_field = "id_geom", small = FALSE)$stats %>%
-      dplyr::select(id_geom, c(avg,sd)) %>%
-      sf::st_set_geometry(NULL)
+    # extr_val <- extract_rast(in_rast, in_vect_buf, full_data = FALSE, parallel = FALSE,
+    #                                  id_field = "id_geom", small = FALSE)$stats %>%
+    #   dplyr::select(id_geom, c(avg,sd)) %>%
+    #   sf::st_set_geometry(NULL)
+    extr_val <- exactextractr::exact_extract(in_rast, in_vect_buf, fun = c("mean","stdev"))
+    names(extr_val) <- c("avg", "sd")
+    extr_val$id_geom <- in_vect_buf$id_geom
 
     # join values with the vector of polygons
-    vect_join <- dplyr::left_join(in_vect_cropped, extr_val)
+    vect_join <- dplyr::left_join(in_vect_cropped, extr_val, by = "id_geom")
 
     # rasterize them
     rast_avg <- fasterize::fasterize(sf::st_cast(vect_join, "POLYGON"), in_rast, field = "avg")

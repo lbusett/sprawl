@@ -26,7 +26,7 @@ Imports: scales, assertthat, data.table, raster, sf, sp, stats, checkmate, rgdal
  dplyr, glue, lubridate, tidyr, foreach, gdalUtils, parallel, utils, RColorBrewer, 
  methods, stringr, tcltk, tools, ggplot2, ggspatial, rosm, grid, lattice, latticeExtra, rasterVis, 
  grDevices, mapedit, mapview, shiny, doParallel, maptools, DBI,testthat, wrapr, magrittr, jsonlite, 
- fasterize, ggplot2
+ fasterize, ggplot2, exactextractr
 Remotes: lbusett/sprawl.data
 Suggests: knitr,
           rmarkdown,
