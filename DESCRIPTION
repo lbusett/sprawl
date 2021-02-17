@@ -23,7 +23,7 @@ Description: Simplify execution of **frequently performed spatial processing tas
 Depends:
     R (>= 3.3.2)
 Imports: scales, assertthat, data.table, raster, sf, sp, stats, checkmate, rgdal, tibble, 
- dplyr, glue, lubridate, tidyr, foreach, gdalUtils, velox, parallel, utils, RColorBrewer, 
+ dplyr, glue, lubridate, tidyr, foreach, gdalUtils, parallel, utils, RColorBrewer, 
  methods, stringr, tcltk, tools, ggplot2, ggspatial, rosm, grid, lattice, latticeExtra, rasterVis, 
  grDevices, mapedit, mapview, shiny, doParallel, maptools, DBI,testthat, wrapr, magrittr, jsonlite, 
  fasterize, ggplot2
@@ -37,6 +37,6 @@ BugReports: https://github.com/lbusett/sprawl/issues
 Encoding: UTF-8
 License: GPL-3 + file LICENSE
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

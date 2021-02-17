@@ -271,9 +271,9 @@ standardise_rast <- function(in_rast,
   }
   gdal_formats <- jsonlite::fromJSON(
     # system.file("extdata","gdal_formats.json",package="fidolasen")
-    readLines("https://raw.githubusercontent.com/ranghetti/fidolasen/master/inst/extdata/gdal_formats.json")
+    readLines("https://raw.githubusercontent.com/ranghetti/sen2r/master/inst/extdata/settings/gdal_formats.json")
   )
-  sel_driver <- gdal_formats[gdal_formats$name==format,]
+  sel_driver <- gdal_formats$drivers[gdal_formats$drivers$name==format,]
   if (nrow(sel_driver)==0) {
     stop(paste0(
       "Format \"",format,"\" is not recognised; ",

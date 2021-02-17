@@ -25,11 +25,11 @@
 #' @importFrom dplyr case_when filter
 #' @importFrom foreach foreach "%dopar%"
 #' @importFrom gdalUtils gdal_translate
-#' @importFrom raster res setZ raster writeRaster getValues extent yFromRow extract xyFromCell
+#' @importFrom raster res setZ raster writeRaster getValues coordinates extent
+#'  yFromRow extract xyFromCell
 #' @importFrom sf st_bbox st_as_sf st_geometry st_set_crs st_area
 #' @importFrom sp proj4string
 #' @importFrom tibble as_tibble
-#' @importFrom velox velox
 #' @importFrom parallel stopCluster
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom magrittr %>%
@@ -157,7 +157,7 @@ er_polygons <- function(in_vect_crop,
   results <- foreach::foreach(band = seq_len(n_selbands),
                               .packages = c("gdalUtils", "raster", "dplyr",
                                             "tibble", "data.table", "sf",
-                                            "velox", "sprawl"),
+                                            "sprawl"),
                               .verbose      = verb_foreach
   ) %DO%
   {
@@ -286,18 +286,27 @@ er_polygons <- function(in_vect_crop,
             # compute coordinates and save coordinates for the chunk in the
             # "coords" list
 
-            temp_velox <- velox::velox(matrix(nrow = chunkrows,
-                                              ncol = cl_opts$ncols),
-                                       extent = as.numeric(ext_chunk),
-                                       res = er_opts$rastres,
-                                       crs = sp::proj4string(in_band))
+            # temp_velox <- velox::velox(matrix(nrow = chunkrows,
+            #                                   ncol = cl_opts$ncols),
+            #                            extent = as.numeric(ext_chunk),
+            #                            res = er_opts$rastres,
+            #                            crs = sp::proj4string(in_band))
+            temp_raster <- raster(
+              ncol = cl_opts$ncols,
+              nrow = chunkrows,
+              xmn = as.numeric(ext_chunk)[1], xmx = as.numeric(ext_chunk)[3],
+              ymn = as.numeric(ext_chunk)[2], ymx = as.numeric(ext_chunk)[4],
+              crs = sp::proj4string(in_band),
+              resolution = er_opts$rastres
+            )
 
             # Note: here `out_data$cell - start_cell` makes so that the first
             # cell of the chunk ends up in position 1 in the temporary velox
             # (otherwise, out_data$cell is > than the number of cells in
             # tempvelox, after the first chunk)
 
-            coords <- temp_velox$getCoordinates()[(out_data$cell - start_cell),]
+            # coords <- temp_velox$getCoordinates()[(out_data$cell - start_cell),]
+            coords <- raster::coordinates(temp_raster)[(out_data$cell - start_cell),]
 
             # add coordinates to the data table and remove the "cell" column
             out_data <- out_data[,c("cell", "x_coord", "y_coord") :=
