@@ -693,6 +693,11 @@ standardise_rast <- function(in_rast,
     }
     sgdf_z <- as(rast_z, "SpatialGridDataFrame")
     sgdf_z@data[,1][is.na(sgdf_z@data[,1])] <- NA # NaN to NA
+    sel_nodata <- switch(
+      dataType,
+      Int16=-2^15, UInt16=2^16-1, Int32=-2^31, UInt32=2^32-1,
+      Float32=-9999, Float64=-9999, Byte=255
+    )
     if (is(sgdf_z@data[,1], "logical")) {
       sgdf_z@data[,1] <- as.numeric(sgdf_z@data[,1])
     }

@@ -359,7 +359,7 @@ yet supported!)</p></td>
 <strong>coordinates</strong> OR
 2. object of class <code>sprawl_ext</code> OR
 3. any object from which an extent can be retrieved using <code><a href='get_extent.html'>sprawl::get_extent()</a></code>.</p>
-<p>If NULL, plotting extent is retrieved from <code>in_rast</code>, Default: NULL</p></td>
+<p>If NULL, plotting extent is retrieved from <code>in_vect</code>, Default: NULL</p></td>
     </tr>
     <tr>
       <th>zlims</th>
@@ -558,6 +558,7 @@ saved to the specified variable. Otherwise, it is plotted immediately.</p>
  <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: `fill_var` not specified. Only the geometry will be plotted!</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-6.png' alt='' width='700' height='433' /></div><div class='input'> <span class='fu'>plot_vect</span>(<span class='no'>meuse</span>, <span class='kw'>fill_var</span> <span class='kw'>=</span> <span class='st'>"copper"</span>,
                   <span class='kw'>point_shape</span> <span class='kw'>=</span> <span class='st'>"diamond"</span>,
                   <span class='kw'>palette_name</span> <span class='kw'>=</span> <span class='st'>"RdYlGn"</span>,
+                  <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>2</span>,
                   <span class='kw'>scalebar_dist</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='img'><img src='plot_vect-7.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

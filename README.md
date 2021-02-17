@@ -15,6 +15,15 @@
 sprawl - Spatial Processing (in) R: Amorphous Wrapper Library
 =============================================================
 
+ARCHIVING SPRAWL
+-------------------
+
+__Unfortunately, I am at the moment unable to continue working on this. In hindsight, it was probably NOT a clever idea to try "wrapping" functionalities of several rapidly-changing packages. 
+I therefore suggest anyone stumbling on this to NOT try installing the package at the moment. I am currently considering to remove it 
+from github altogether. Sorry for that!__
+
+
+
 Intro and rationale
 -------------------
 
