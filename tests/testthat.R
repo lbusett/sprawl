@@ -1,5 +1,0 @@
-Sys.setenv("R_TESTS" = "")
-library(testthat)
-# library(sprawl)
-test_check("sprawl")
-# test_check("sprawl", filter = "cast_vect")
